@@ -1,0 +1,76 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>xzcode</groupId>
+    <artifactId>ggserver</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    
+  </parent>
+  <artifactId>ggserver-socket</artifactId>
+  <name>ggserver-socket</name>
+  <packaging>jar</packaging>
+  
+  <dependencies>
+  
+	<dependency>
+	    <groupId>com.google.code.gson</groupId>
+	    <artifactId>gson</artifactId>
+	</dependency>
+
+	<dependency>
+	    <groupId>commons-codec</groupId>
+	    <artifactId>commons-codec</artifactId>
+	</dependency>
+	
+	<dependency>
+	    <groupId>io.netty</groupId>
+	    <artifactId>netty-handler</artifactId>
+	    <version>${netty.version}</version>
+	</dependency>
+	
+	<dependency>
+	    <groupId>io.netty</groupId>
+	    <artifactId>netty-buffer</artifactId>
+	    <version>${netty.version}</version>
+	</dependency>
+	
+	<dependency>
+	    <groupId>io.netty</groupId>
+	    <artifactId>netty-common</artifactId>
+	    <version>${netty.version}</version>
+	</dependency>
+	
+	<dependency>
+	    <groupId>io.netty</groupId>
+	    <artifactId>netty-codec</artifactId>
+	    <version>${netty.version}</version>
+	</dependency>
+	
+	<dependency>
+	    <groupId>io.netty</groupId>
+	    <artifactId>netty-codec-http</artifactId>
+	    <version>${netty.version}</version>
+	</dependency>
+	
+	<dependency>
+	    <groupId>io.github.classgraph</groupId>
+	    <artifactId>classgraph</artifactId>
+	    <version>4.6.29</version>
+	</dependency>
+	
+	<dependency>
+	    <groupId>org.msgpack</groupId>
+	    <artifactId>msgpack-core</artifactId>
+	    <version>0.8.16</version>
+	</dependency>
+	
+	<dependency>
+	    <groupId>org.msgpack</groupId>
+	    <artifactId>jackson-dataformat-msgpack</artifactId>
+	    <version>0.8.16</version>
+	</dependency>
+	
+	
+  
+  </dependencies>
+</project>

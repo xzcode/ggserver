@@ -1,0 +1,156 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  
+  <groupId>xzcode</groupId>
+  <artifactId>ggserver</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <name>ggserver</name>
+  
+  <description>ggserver.</description>
+  
+  
+  <properties>
+    <jdk.version>1.8</jdk.version>
+    <spring.boot.version>2.0.8.RELEASE</spring.boot.version>
+    <netty.version>4.1.33.Final</netty.version>
+  </properties>
+  
+     <profiles>
+     
+        <profile>
+            <id>dev</id>
+            <properties>
+				<nexus.public>http://common.host:8081/repository/maven-public/</nexus.public>
+                <nexus.host>http://common.host:8081/repository/maven-snapshots/</nexus.host>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        
+        <profile>
+            <id>release</id>
+            <properties>
+				<nexus.public>http://release.host:8081/repository/maven-public/</nexus.public>
+                <nexus.host>http://release.host:8081/repository/maven-releases/</nexus.host>
+            </properties>
+        </profile>
+    </profiles>
+    
+    
+	<repositories>
+		<repository>
+			<id>nexus-public</id>
+			<url>${nexus.public}</url>
+			<snapshots>
+				<enabled>true</enabled>
+				<updatePolicy>always</updatePolicy>
+				<checksumPolicy>warn</checksumPolicy>
+			</snapshots>
+		</repository>
+
+	</repositories>
+
+	
+	<dependencyManagement>
+	
+	    <dependencies>
+	    
+	    	<dependency>
+				<groupId>xzcode</groupId>
+				<artifactId>ggserver-socket</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>xzcode</groupId>
+				<artifactId>ggserver-game</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+	    
+	    
+			<dependency>
+			    <groupId>com.google.code.gson</groupId>
+			    <artifactId>gson</artifactId>
+			    <version>2.8.5</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-autoconfigure</artifactId>
+				<version>${spring.boot.version}</version>
+			</dependency>
+			
+			
+			
+			<dependency>
+			    <groupId>commons-codec</groupId>
+			    <artifactId>commons-codec</artifactId>
+			    <version>1.11</version>
+			</dependency>
+				        
+	        
+	    </dependencies>
+	</dependencyManagement>
+
+    <dependencies>
+
+		<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>1.7.25</version>
+			</dependency>
+
+    </dependencies>
+    
+    <distributionManagement>
+        <repository>
+            <id>nexus-releases</id>
+            <url>${nexus.host}</url>
+        </repository>
+        <!--这是打成快照版本的配置，如果不用这个snapshotRepository标签，打包失败，会报权限问题 -->
+        <snapshotRepository>
+            <id>nexus-snapshots</id>
+            <url>${nexus.host}</url>
+        </snapshotRepository>
+    </distributionManagement>
+    
+    <build>  
+        <plugins>  
+            <plugin>  
+                <groupId>org.apache.maven.plugins</groupId>  
+                <artifactId>maven-compiler-plugin</artifactId>  
+                <version>3.1</version>  
+                <configuration>  
+                    <source>${jdk.version}</source>  
+                    <target>${jdk.version}</target>  
+                </configuration>  
+            </plugin>  
+            
+            <!-- 要将源码放上去，需要加入这个插件 -->
+            <plugin>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.0.1</version>
+                <configuration>
+                    <attach>true</attach>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            
+        </plugins>  
+    </build>
+  
+  <modules>
+  	<module>ggserver-socket</module>
+  	<module>ggserver-spring-starter</module>
+  	<module>ggserver-game</module>
+  </modules>
+</project>
