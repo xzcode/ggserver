@@ -59,7 +59,7 @@
 	    
 	    	<dependency>
 				<groupId>xzcode</groupId>
-				<artifactId>ggserver-socket</artifactId>
+				<artifactId>ggserver-core</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			
@@ -149,8 +149,10 @@
     </build>
   
   <modules>
-  	<module>ggserver-socket</module>
   	<module>ggserver-spring-starter</module>
+  	<module>ggserver-core</module>
   	<module>ggserver-game</module>
+  	<module>ggserver-docs</module>
+  	<module>ggserver-monitor</module>
   </modules>
 </project>
