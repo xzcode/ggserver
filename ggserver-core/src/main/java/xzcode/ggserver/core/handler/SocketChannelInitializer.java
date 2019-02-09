@@ -9,13 +9,12 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.timeout.IdleStateHandler;
 import xzcode.ggserver.core.config.GGServerConfig;
+import xzcode.ggserver.core.executor.GGServerTaskExecutor;
 import xzcode.ggserver.core.handler.common.InboundCommonHandler;
 import xzcode.ggserver.core.handler.common.OutboundCommonHandler;
 import xzcode.ggserver.core.handler.idle.IdleHandler;
-import xzcode.ggserver.core.handler.serializer.factory.SerializerFactory;
 import xzcode.ggserver.core.handler.tcp.DecodeHandler;
 import xzcode.ggserver.core.handler.tcp.EncodeHandler;
-import xzcode.ggserver.core.message.receive.executor.RequestMessageTaskExecutor;
 
 /**
  * 默认channel初始化处理器
@@ -32,19 +31,12 @@ public class SocketChannelInitializer extends ChannelInitializer<SocketChannel> 
 	private GGServerConfig config;
 	
 	
-	private RequestMessageTaskExecutor taskExecutor;
-	
 	public SocketChannelInitializer() {
 	}
 	
 
-	public SocketChannelInitializer(
-			GGServerConfig config, 
-			RequestMessageTaskExecutor taskExecutor
-			) {
-		super();
+	public SocketChannelInitializer(GGServerConfig config) {
 		this.config = config;
-		this.taskExecutor = taskExecutor;
 	}
 	
 	
@@ -93,12 +85,5 @@ public class SocketChannelInitializer extends ChannelInitializer<SocketChannel> 
 		this.config = config;
 	}
 	
-	public RequestMessageTaskExecutor getTaskExecutor() {
-		return taskExecutor;
-	}
-	
-	public void setTaskExecutor(RequestMessageTaskExecutor taskExecutor) {
-		this.taskExecutor = taskExecutor;
-	}
 
 }

@@ -9,9 +9,9 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import xzcode.ggserver.core.config.GGServerConfig;
 import xzcode.ggserver.core.config.scanner.GGComponentScanner;
+import xzcode.ggserver.core.executor.GGServerTaskExecutor;
+import xzcode.ggserver.core.executor.factory.EventLoopGroupThreadFactory;
 import xzcode.ggserver.core.handler.SocketChannelInitializer;
-import xzcode.ggserver.core.message.receive.executor.RequestMessageTaskExecutor;
-import xzcode.ggserver.core.message.receive.executor.factory.EventLoopGroupThreadFactory;
 import xzcode.ggserver.core.starter.IGGServerStarter;
 
 public class DefaultSocketServerStarter implements IGGServerStarter {
@@ -24,14 +24,11 @@ public class DefaultSocketServerStarter implements IGGServerStarter {
 	
 	private EventLoopGroup workerGroup;
 	
-	private RequestMessageTaskExecutor taskExecutor;
 	
     
     public DefaultSocketServerStarter(GGServerConfig config) {
         
     	this.config = config;
-        
-        this.taskExecutor = new RequestMessageTaskExecutor(config);
         
         GGComponentScanner.scan(
         		config.getComponentObjectManager(),
@@ -45,7 +42,7 @@ public class DefaultSocketServerStarter implements IGGServerStarter {
     
     public IGGServerStarter run() {
     	
-        bossGroup = new NioEventLoopGroup(config.getBossThreadSize(),new EventLoopGroupThreadFactory("Netty Boss Group"));// (1)
+        bossGroup = new NioEventLoopGroup(config.getBossThreadSize(),new EventLoopGroupThreadFactory("Netty Boss Group"));
         
         workerGroup = new NioEventLoopGroup(config.getBossThreadSize(),new EventLoopGroupThreadFactory("Netty Worker Group"));
         
@@ -59,10 +56,7 @@ public class DefaultSocketServerStarter implements IGGServerStarter {
             boot.channel(NioServerSocketChannel.class); // (3)
             
             //设置消息处理器
-            boot.childHandler(new SocketChannelInitializer(
-            		config, 
-            		taskExecutor
-            		));
+            boot.childHandler(new SocketChannelInitializer(config));
             
             boot.option(ChannelOption.SO_BACKLOG, 128);         // (5)
             boot.childOption(ChannelOption.SO_KEEPALIVE, true); // (6)
@@ -70,9 +64,6 @@ public class DefaultSocketServerStarter implements IGGServerStarter {
             // 绑定端口并开始接受连接，此时线程将阻塞不会继续往下执行
             ChannelFuture f = boot.bind(config.getPort()).sync(); // (7)
     
-            // Wait until the server socket is closed.
-            // In this example, this does not happen, but you can do that to gracefully
-            // shut down your server.
             f.channel().closeFuture().sync();
         } catch (Exception e) {
         	throw new RuntimeException("Socket server start failed !! ", e);

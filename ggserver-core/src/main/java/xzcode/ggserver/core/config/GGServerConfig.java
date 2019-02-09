@@ -2,13 +2,16 @@ package xzcode.ggserver.core.config;
 
 import java.util.Arrays;
 
+import io.netty.channel.EventLoopGroup;
+import io.netty.channel.nio.NioEventLoopGroup;
 import xzcode.ggserver.core.component.GGComponentManager;
 import xzcode.ggserver.core.event.EventInvokerManager;
+import xzcode.ggserver.core.executor.GGServerTaskExecutor;
+import xzcode.ggserver.core.executor.factory.EventLoopGroupThreadFactory;
 import xzcode.ggserver.core.handler.serializer.ISerializer;
 import xzcode.ggserver.core.handler.serializer.factory.SerializerFactory;
 import xzcode.ggserver.core.message.filter.MessageFilterManager;
 import xzcode.ggserver.core.message.receive.RequestMessageManager;
-import xzcode.ggserver.core.message.receive.executor.RequestMessageTaskExecutor;
 import xzcode.ggserver.core.message.send.SendMessageManager;
 import xzcode.ggserver.core.session.UserSessonManager;
 
@@ -34,15 +37,11 @@ public class GGServerConfig {
 	
 	private int 		workThreadSize = 0;
 
-	private int 		reqTaskCorePoolSize = 10;
-	private int 		reqTaskMaxPoolSize = 100;
-	private long 		reqTaskKeepAliveTime = 10000;
-	private int 		reqTaskTaskQueueSize = 100;
+	private int 		executorCorePoolSize = 10;
+	private int 		executorMaxPoolSize = 100;
+	private long 		executorKeepAliveTime = 10000;
+	private int 		executorTaskQueueSize = 100;
 	
-	private int 		timeoutTaskCorePoolSize = 10;
-	private int 		timeoutTaskMaxPoolSize = 100;
-	private int 		timeoutTaskTaskQueueSize = 100;
-
 
 	private boolean 	idleCheckEnabled = true;
 	private long 		readerIdleTime = 5000;
@@ -70,7 +69,7 @@ public class GGServerConfig {
 	private EventInvokerManager eventInvokerManager = new EventInvokerManager();
 	private UserSessonManager userSessonManager = new UserSessonManager();
 	
-	private RequestMessageTaskExecutor requestMessageTaskExecutor;
+	private GGServerTaskExecutor taskExecutor = new GGServerTaskExecutor(this);
 	
 	
 	public static interface ServerTypeConstants{
@@ -89,12 +88,6 @@ public class GGServerConfig {
 		return serializer;
 	}
 	
-	public void setTaskExecutor(RequestMessageTaskExecutor taskExecutor) {
-		this.requestMessageTaskExecutor = taskExecutor;
-	}
-	public RequestMessageTaskExecutor getTaskExecutor() {
-		return requestMessageTaskExecutor;
-	}
 	
 	public boolean isEnabled() {
 		return enabled;
@@ -270,40 +263,37 @@ public class GGServerConfig {
 	}
 
 	public int getReqTaskCorePoolSize() {
-		return reqTaskCorePoolSize;
+		return executorCorePoolSize;
 	}
 
 	public void setReqTaskCorePoolSize(int reqTaskCorePoolSize) {
-		this.reqTaskCorePoolSize = reqTaskCorePoolSize;
+		this.executorCorePoolSize = reqTaskCorePoolSize;
 	}
 
 	public int getReqTaskMaxPoolSize() {
-		return reqTaskMaxPoolSize;
+		return executorMaxPoolSize;
 	}
 
 	public void setReqTaskMaxPoolSize(int reqTaskMaxPoolSize) {
-		this.reqTaskMaxPoolSize = reqTaskMaxPoolSize;
+		this.executorMaxPoolSize = reqTaskMaxPoolSize;
 	}
 
 	public long getReqTaskKeepAliveTime() {
-		return reqTaskKeepAliveTime;
+		return executorKeepAliveTime;
 	}
 
 	public void setReqTaskKeepAliveTime(long reqTaskKeepAliveTime) {
-		this.reqTaskKeepAliveTime = reqTaskKeepAliveTime;
+		this.executorKeepAliveTime = reqTaskKeepAliveTime;
 	}
 
 	public int getReqTaskTaskQueueSize() {
-		return reqTaskTaskQueueSize;
+		return executorTaskQueueSize;
 	}
 
 	public void setReqTaskTaskQueueSize(int reqTaskTaskQueueSize) {
-		this.reqTaskTaskQueueSize = reqTaskTaskQueueSize;
+		this.executorTaskQueueSize = reqTaskTaskQueueSize;
 	}
 
-	public RequestMessageTaskExecutor getRequestMessageTaskExecutor() {
-		return requestMessageTaskExecutor;
-	}
 
 	public GGComponentManager getComponentManager() {
 		return componentManager;
@@ -312,7 +302,12 @@ public class GGServerConfig {
 	public void setComponentManager(GGComponentManager componentManager) {
 		this.componentManager = componentManager;
 	}
-	
+	public GGServerTaskExecutor getTaskExecutor() {
+		return taskExecutor;
+	}
+	public void setTaskExecutor(GGServerTaskExecutor taskExecutor) {
+		this.taskExecutor = taskExecutor;
+	}
 	
 
 }

@@ -1,4 +1,4 @@
-package xzcode.ggserver.core.message.receive.executor.factory;
+package xzcode.ggserver.core.executor.factory;
 
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;

@@ -23,8 +23,8 @@ import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.ssl.SslContext;
 import xzcode.ggserver.core.config.GGServerConfig;
 import xzcode.ggserver.core.config.scanner.GGComponentScanner;
+import xzcode.ggserver.core.executor.factory.EventLoopGroupThreadFactory;
 import xzcode.ggserver.core.handler.WebSocketChannelInitializer;
-import xzcode.ggserver.core.message.receive.executor.factory.EventLoopGroupThreadFactory;
 import xzcode.ggserver.core.starter.IGGServerStarter;
 
 /**
@@ -80,9 +80,9 @@ public class WebSocketServerStarter implements IGGServerStarter {
     
     public IGGServerStarter run() {
     	
-        bossGroup = new NioEventLoopGroup(config.getBossThreadSize(),new EventLoopGroupThreadFactory("Socket Boss Group"));// (1)
+        bossGroup = new NioEventLoopGroup(config.getBossThreadSize(),new EventLoopGroupThreadFactory("Boss Group"));// (1)
         
-        workerGroup = new NioEventLoopGroup(config.getBossThreadSize(),new EventLoopGroupThreadFactory("Socket Worker Group"));
+        workerGroup = new NioEventLoopGroup(config.getBossThreadSize(),new EventLoopGroupThreadFactory("Worker Group"));
         
         try {
         	
@@ -108,9 +108,6 @@ public class WebSocketServerStarter implements IGGServerStarter {
             // 绑定端口并开始接受连接，此时线程将阻塞不会继续往下执行
             ChannelFuture f = boot.bind(config.getPort()).sync(); // (7)
     
-            // Wait until the server socket is closed.
-            // In this example, this does not happen, but you can do that to gracefully
-            // shut down your server.
             f.channel().closeFuture().sync();
         }catch (Exception e) {
         	throw new RuntimeException("Socket server start failed !! ", e);

@@ -1,4 +1,4 @@
-package xzcode.ggserver.core.message.receive.executor;
+package xzcode.ggserver.core.executor.task;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
