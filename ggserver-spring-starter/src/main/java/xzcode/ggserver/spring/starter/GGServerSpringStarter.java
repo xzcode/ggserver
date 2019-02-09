@@ -17,17 +17,17 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
-import xzcode.ggserver.socket.config.GGSocketConfig;
-import xzcode.ggserver.socket.executor.SocketServerTaskExecutor;
-import xzcode.ggserver.socket.serializer.factory.SerializerFactory;
-import xzcode.ggserver.socket.starter.SocketServerStarter;
-import xzcode.ggserver.socket.starter.impl.DefaultSocketServerStarter;
-import xzcode.ggserver.socket.starter.impl.WebSocketServerStarter;
-import xzcode.ggserver.socket.utils.SocketServerService;
+import xzcode.ggserver.core.GGServer;
+import xzcode.ggserver.core.config.GGServerConfig;
+import xzcode.ggserver.core.handler.serializer.factory.SerializerFactory;
+import xzcode.ggserver.core.message.receive.executor.RequestMessageTaskExecutor;
+import xzcode.ggserver.core.starter.IGGServerStarter;
+import xzcode.ggserver.core.starter.impl.DefaultSocketServerStarter;
+import xzcode.ggserver.core.starter.impl.WebSocketServerStarter;
 
 @Configuration
 @ConditionalOnProperty(prefix = GGServerSpringStarter.PROPERTIES_PREFIX, name = "enabled", havingValue = "true")
-@ConditionalOnMissingBean({SocketServerStarter.class})
+@ConditionalOnMissingBean({IGGServerStarter.class})
 public class GGServerSpringStarter implements ApplicationContextAware {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GGServerSpringStarter.class);
@@ -37,23 +37,23 @@ public class GGServerSpringStarter implements ApplicationContextAware {
     private ApplicationContext applicationContext;
 
     @Bean
-    public SocketServerStarter socketServerStarter() {
+    public IGGServerStarter iGGServerStarter() {
     	
-    	SocketServerStarter starter = null;;
+    	IGGServerStarter starter = null;;
 
-        GGSocketConfig config = gGSocketConfig();
+        GGServerConfig config = gGServerConfig();
         
-        config.setTaskExecutor(new SocketServerTaskExecutor(config));
+        config.setTaskExecutor(new RequestMessageTaskExecutor(config));
         
         config.setSerializer(SerializerFactory.geSerializer(config.getSerializerType()));
 
         LOGGER.info(config.toString());
 
 
-        if (GGSocketConfig.ServerTypeConstants.SOCKET.equals(config.getServerType())) {
+        if (GGServerConfig.ServerTypeConstants.SOCKET.equals(config.getServerType())) {
         	starter =  new DefaultSocketServerStarter(config);
 
-        } else if (GGSocketConfig.ServerTypeConstants.WEBSOCKET.equals(config.getServerType())) {
+        } else if (GGServerConfig.ServerTypeConstants.WEBSOCKET.equals(config.getServerType())) {
         	starter = new WebSocketServerStarter(config);
         } else {
             Assert.state(true, "Unsupported serverType:" + config.getServerType() + "!");
@@ -73,15 +73,15 @@ public class GGServerSpringStarter implements ApplicationContextAware {
 
     @Bean
     @ConfigurationProperties(prefix = GGServerSpringStarter.PROPERTIES_PREFIX)
-    public SocketServerService socketServerService() {
-        return new SocketServerService(gGSocketConfig());
+    public GGServer gGServer() {
+        return new GGServer(gGServerConfig());
     }
     
     
     @Bean
     @ConfigurationProperties(prefix = GGServerSpringStarter.PROPERTIES_PREFIX)
-    public GGSocketConfig gGSocketConfig() {
-    	return new GGSocketConfig();
+    public GGServerConfig gGServerConfig() {
+    	return new GGServerConfig();
     }
 
     /**
@@ -90,7 +90,7 @@ public class GGServerSpringStarter implements ApplicationContextAware {
      * @author zai
      * 2017-10-30
      */
-    public void beanDefinitionRegistry(GGSocketConfig config) {
+    public void beanDefinitionRegistry(GGServerConfig config) {
 
         //获取BeanFactory
         DefaultListableBeanFactory defaultListableBeanFactory = (DefaultListableBeanFactory) this.applicationContext.getAutowireCapableBeanFactory();
