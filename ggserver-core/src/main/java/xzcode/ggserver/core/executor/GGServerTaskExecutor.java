@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import xzcode.ggserver.core.config.GGServerConfig;
 import xzcode.ggserver.core.executor.task.TimeoutInvokeTask;
 import xzcode.ggserver.core.executor.task.TimeoutRunnable;
+import xzcode.ggserver.core.executor.timeout.ISetTimeoutExecution;
 
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -17,7 +18,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author zai
  * 2018-05-29
  */
-public class GGServerTaskExecutor extends ScheduledThreadPoolExecutor{
+public class GGServerTaskExecutor extends ScheduledThreadPoolExecutor implements ISetTimeoutExecution{
 	
 	private static final Logger logger = LoggerFactory.getLogger(GGServerTaskExecutor.class);
 	
@@ -48,37 +49,19 @@ public class GGServerTaskExecutor extends ScheduledThreadPoolExecutor{
 		
 	}
 	
-	/**
-	 * 设置超时任务
-	 * @param runnable
-	 * @param timeoutMilliSec
-	 * @return
-	 * 
-	 * @author zai
-	 * 2019-02-09 18:42:03
-	 */
+	@Override
 	public ScheduledFuture<?> setTimeout(Runnable runnable, long timeoutMilliSec) {
 		TimeoutInvokeTask task = new TimeoutInvokeTask(runnable);
 		ScheduledFuture<?> future = this.scheduleWithFixedDelay(task, timeoutMilliSec, timeoutMilliSec , TimeUnit.MILLISECONDS);
 		task.setFuture(future);
 		return future;
 	}
-	
-	/**
-	 * 设置超时任务
-	 * @param runnable
-	 * @param timeoutMilliSec
-	 * @return
-	 * 
-	 * @author zai
-	 * 2019-02-09 18:42:22
-	 */
+	@Override
 	public ScheduledFuture<?> setTimeout(TimeoutRunnable runnable, long timeoutMilliSec) {
 		TimeoutInvokeTask task = new TimeoutInvokeTask(runnable);
 		ScheduledFuture<?> future = this.scheduleWithFixedDelay(task, timeoutMilliSec, timeoutMilliSec , TimeUnit.MILLISECONDS);
 		task.setFuture(future);
 		runnable.setTimeoutFuture(future);
-		runnable.setTimeoutMillisec(timeoutMilliSec);
 		return future;
 	}
 

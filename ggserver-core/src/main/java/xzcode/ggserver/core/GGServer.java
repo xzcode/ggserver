@@ -1,10 +1,13 @@
 package xzcode.ggserver.core;
 
 import java.lang.reflect.ParameterizedType;
+import java.util.concurrent.ScheduledFuture;
 
 import xzcode.ggserver.core.config.GGServerConfig;
 import xzcode.ggserver.core.event.EventRunnableInvoker;
 import xzcode.ggserver.core.event.IEventInvoker;
+import xzcode.ggserver.core.executor.task.TimeoutRunnable;
+import xzcode.ggserver.core.executor.timeout.ISetTimeoutExecution;
 import xzcode.ggserver.core.message.receive.IOnMessageAction;
 import xzcode.ggserver.core.message.receive.invoker.OnMessagerInvoker;
 import xzcode.ggserver.core.message.send.ISendMessage;
@@ -17,7 +20,7 @@ import xzcode.ggserver.core.session.GGSessionThreadLocalUtil;
  * 
  * @author zai 2017-08-04
  */
-public class GGServer implements ISendMessage{
+public class GGServer implements ISendMessage, ISetTimeoutExecution{
 	
 	private GGServerConfig serverConfig;
 	
@@ -188,12 +191,22 @@ public class GGServer implements ISendMessage{
 	}
 
 
+	@Override
+	public void send(String action, Object message) {
+		this.serverConfig.getSendMessageManager().send(action, message);
+		
+	}
 
 
 	@Override
-	public void send(String action, Object message) {
-		// TODO Auto-generated method stub
-		
+	public ScheduledFuture<?> setTimeout(Runnable runnable, long timeoutMilliSec) {
+		return this.serverConfig.getTaskExecutor().setTimeout(runnable, timeoutMilliSec);
+	}
+
+
+	@Override
+	public ScheduledFuture<?> setTimeout(TimeoutRunnable runnable, long timeoutMilliSec) {
+		return this.serverConfig.getTaskExecutor().setTimeout(runnable, timeoutMilliSec);
 	}
 
 }

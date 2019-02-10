@@ -12,6 +12,4 @@ public interface TimeoutRunnable extends Runnable {
 	
 	void setTimeoutFuture(ScheduledFuture<?> timeoutFuture);
 	
-	void setTimeoutMillisec(long timeoutMillisec);
-	
 }
