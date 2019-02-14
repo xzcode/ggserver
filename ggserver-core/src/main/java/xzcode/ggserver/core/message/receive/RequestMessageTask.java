@@ -51,6 +51,7 @@ public class RequestMessageTask implements Runnable{
 		this.message = message;
 		this.session = session;
 		this.action = action;
+		this.config = config;
 	}
 
 

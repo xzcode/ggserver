@@ -33,6 +33,17 @@ public interface IRoomGameController<R, P extends Player> {
 	 * @author zai 2019-02-10 14:19:14
 	 */
 	void eachPlayer(R room, ForEachPlayer<P> eachPlayer);
+	
+	/**
+	 * 遍历所有玩家并返回布尔值
+	 * 
+	 * @param room
+	 * @param eachPlayer
+	 * @return
+	 * @author zai
+	 * 2019-02-11 10:56:05
+	 */
+	boolean boolEachPlayer(R room, BoolForEachPlayer<P> eachPlayer);
 
 	/**
 	 * 广播给所有玩家
@@ -43,4 +54,6 @@ public interface IRoomGameController<R, P extends Player> {
 	 * @author zai 2019-01-25 11:06:29
 	 */
 	void bcToAllPlayer(R room, String actionId, Object message);
+
+	
 }

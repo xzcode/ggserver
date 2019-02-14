@@ -1,7 +1,7 @@
 package xzcode.ggserver.game.common.holder.timeout;
 
 import xzcode.ggserver.game.common.interfaces.finish.CheckFinishedAction;
-import xzcode.ggserver.game.common.interfaces.finish.IFinishAble;
+import xzcode.ggserver.game.common.interfaces.finish.ICheckFinishHolder;
 import xzcode.ggserver.game.common.interfaces.finish.OnFinishAction;
 
 /**
@@ -10,7 +10,7 @@ import xzcode.ggserver.game.common.interfaces.finish.OnFinishAction;
  * @author zai
  * 2019-01-21 11:59:37
  */
-public abstract class FinishAbleTimeoutHolder extends TimeoutHolder implements IFinishAble{
+public abstract class FinishAbleTimeoutHolder extends TimeoutHolder implements ICheckFinishHolder{
 
 	
 	/**
@@ -28,12 +28,12 @@ public abstract class FinishAbleTimeoutHolder extends TimeoutHolder implements I
 	}
 
 	@Override
-	public void onCheckFinished(CheckFinishedAction checkFinishedAction) {
+	public void onCheckFinish(CheckFinishedAction checkFinishedAction) {
 		this.checkFinishedAction = checkFinishedAction;
 	}
 
 	@Override
-	public boolean isFinished() {
+	public boolean checkFinish() {
 		if (!finished) {
 			if (checkFinishedAction != null) {
 				this.finished = checkFinishedAction.check(this);
@@ -50,7 +50,7 @@ public abstract class FinishAbleTimeoutHolder extends TimeoutHolder implements I
 	
 
 	@Override
-	public void runFinished() {
+	public void runOnFinishAction() {
 		if (onFinishAction != null) {
 			onFinishAction.action(this);
 		}

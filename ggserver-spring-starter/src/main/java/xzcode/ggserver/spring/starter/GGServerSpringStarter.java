@@ -32,7 +32,7 @@ public class GGServerSpringStarter implements ApplicationContextAware {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GGServerSpringStarter.class);
 
-    public static final String PROPERTIES_PREFIX = "xz.socket";
+    public static final String PROPERTIES_PREFIX = "ggserver";
 
     private ApplicationContext applicationContext;
 
@@ -73,7 +73,7 @@ public class GGServerSpringStarter implements ApplicationContextAware {
 
     @Bean
     @ConfigurationProperties(prefix = GGServerSpringStarter.PROPERTIES_PREFIX)
-    public GGServer gGServer() {
+    public GGServer ggServer() {
         return new GGServer(gGServerConfig());
     }
     

@@ -56,6 +56,9 @@ public class MethodInvoker implements IRequestMessageInvoker{
 	public Object invoke(String requestTag, Object message) throws Exception {
 		//如果消息体为空
 		if (message == null) {
+			if (method.getParameterCount() > 0) {
+				return method.invoke(componentObj, message);
+			}
 			return method.invoke(componentObj);
 		}
 		//如果消息体不为空

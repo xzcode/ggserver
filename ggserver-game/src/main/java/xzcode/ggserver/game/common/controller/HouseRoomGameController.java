@@ -31,6 +31,18 @@ public abstract class HouseRoomGameController<H extends House<R, P>, R extends R
 	}
 	
 	@Override
+	public boolean boolEachPlayer(R room, BoolForEachPlayer<P> eachPlayer) {
+		Map<Object, P> players = room.getPlayers();
+		for (Object key : players.keySet()) {
+			P p = players.get(key);
+			if (!eachPlayer.each(p)) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	@Override
 	public Object getCurrentPlayerId() {
 		return getGGServer().getSession().getRegisteredUserId();
 	};

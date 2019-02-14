@@ -1,6 +1,6 @@
 package xzcode.ggserver.game.common.holder.timeout;
 
-import xzcode.ggserver.game.common.interfaces.finish.IAutoFinishAble;
+import xzcode.ggserver.game.common.interfaces.finish.ICheckAutoFinishHolder;
 import xzcode.ggserver.game.common.interfaces.finish.OnAutoFinishAction;
 import xzcode.ggserver.game.common.interfaces.timeout.TimeoutAction;
 
@@ -10,7 +10,7 @@ import xzcode.ggserver.game.common.interfaces.timeout.TimeoutAction;
  * @author zai
  * 2019-01-28 16:42:14
  */
-public class AutoFinishAbleTimeoutHolder extends FinishAbleTimeoutHolder implements IAutoFinishAble{
+public class AutoFinishAbleTimeoutHolder extends FinishAbleTimeoutHolder implements ICheckAutoFinishHolder{
 
 	protected OnAutoFinishAction onAutoFinishAction;
 	
@@ -33,7 +33,7 @@ public class AutoFinishAbleTimeoutHolder extends FinishAbleTimeoutHolder impleme
 	}
 
 	@Override
-	public void runAutoFinish() {
+	public void runAutoFinishAction() {
 		if (onAutoFinishAction != null) {
 			onAutoFinishAction.action(this);
 		}
@@ -45,15 +45,15 @@ public class AutoFinishAbleTimeoutHolder extends FinishAbleTimeoutHolder impleme
 			return super.getTimeoutAction();
 		}
 		return ()-> {
-			if (this.isFinished()) {
+			if (this.checkFinish()) {
 				return;
 			}
 			synchronized(getLockObj()) {
-				if (this.isFinished()) {
+				if (this.checkFinish()) {
 					return;
 				}
 				//执行自动完成操作
-				this.runAutoFinish();
+				this.runAutoFinishAction();
 			}
 		};
 	}

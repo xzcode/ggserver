@@ -67,11 +67,14 @@ public class GGComponentScanner {
 				GGFilter filter = clazz.getAnnotation(GGFilter.class);
 				if (filter != null) {
 					MessageFilterModel messageFilterModel = new MessageFilterModel();
+					messageFilterModel.setFilterClazz(clazz);
+					/*
 					if (clazzInstance instanceof GGRequestFilter) {
 						messageFilterModel.setFilterClazz(GGRequestFilter.class);
 					}else if (clazzInstance instanceof GGResponseFilter) {
 						messageFilterModel.setFilterClazz(GGResponseFilter.class);
 					}
+					*/
 					int value = filter.value();
 					int order = filter.order();
 					messageFilterModel.setOrder(value);

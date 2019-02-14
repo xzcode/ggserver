@@ -1,7 +1,9 @@
 package xzcode.ggserver.core.message.filter;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +38,7 @@ public class MessageFilterManager {
 	 * 2019-02-09 14:24:04
 	 */
 	public void updateComponentObject(GGComponentManager componentObjectMapper) {
+		
 		for (MessageFilterModel filterModel : requestFilters) {
 			Object object = componentObjectMapper.getComponentObject(filterModel.getFilterClazz());
 			if (object instanceof GGRequestFilter ) {
@@ -44,6 +47,7 @@ public class MessageFilterManager {
 				filterModel.setResponseFilter((GGResponseFilter) object);	
 			}
 		}
+		
 	}
 	
 	/**
