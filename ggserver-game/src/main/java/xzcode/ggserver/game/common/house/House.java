@@ -19,7 +19,15 @@ public abstract class House<R extends Room<P>, P extends Player> {
 	
 	private static final Logger logger = LoggerFactory.getLogger(House.class);
 	
+	/**
+	 * 大厅id
+	 */
 	private Object houseId;
+	
+	/**
+	 * 游戏id
+	 */
+	private Object gameId;
 	
 	/**
 	 * 获取最大房间数
@@ -167,5 +175,13 @@ public abstract class House<R extends Room<P>, P extends Player> {
 	
 	public void setHouseId(Object houseId) {
 		this.houseId = houseId;
+	}
+	
+	public Object getGameId() {
+		return gameId;
+	}
+	
+	public void setGameId(Object gameId) {
+		this.gameId = gameId;
 	}
 }
