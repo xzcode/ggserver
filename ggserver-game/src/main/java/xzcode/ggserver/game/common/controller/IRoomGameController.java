@@ -2,8 +2,17 @@ package xzcode.ggserver.game.common.controller;
 
 import java.util.Map;
 
+import xzcode.ggserver.game.common.interfaces.condition.ICheckCondition;
 import xzcode.ggserver.game.common.player.Player;
 
+/**
+ * 房间游戏控制器接口
+ * 
+ * @param <R>
+ * @param <P>
+ * @author zai
+ * 2019-02-16 17:57:18
+ */
 public interface IRoomGameController<R, P extends Player> {
 
 	/**
@@ -23,6 +32,17 @@ public interface IRoomGameController<R, P extends Player> {
 	 * @author zai 2019-02-10 14:34:15
 	 */
 	P getPlayer(R room, Object playerId);
+	
+	/**
+	 * 根据条件获取玩家
+	 * 
+	 * @param room
+	 * @param condition
+	 * @return
+	 * @author zai
+	 * 2019-02-16 17:48:42
+	 */
+	P getPlayer(R room, ICheckCondition<P> condition);
 
 	/**
 	 * 遍历所有玩家
@@ -54,6 +74,28 @@ public interface IRoomGameController<R, P extends Player> {
 	 * @author zai 2019-01-25 11:06:29
 	 */
 	void bcToAllPlayer(R room, String actionId, Object message);
+
+	
+	/**
+	 * 随机获取玩家
+	 * 
+	 * @return
+	 * @author zai
+	 * 2019-02-16 17:59:11
+	 */
+	P getRandomPlayer(R room);
+
+	/**
+	 * 随机获取满足条件的玩家
+	 * 
+	 * @param condition
+	 * @return
+	 * @author zai
+	 * 2019-02-16 18:03:09
+	 */
+	P getRandomPlayer(R room, ICheckCondition<P> condition);
+
+	
 
 	
 }

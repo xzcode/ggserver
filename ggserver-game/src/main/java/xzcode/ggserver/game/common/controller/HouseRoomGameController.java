@@ -1,15 +1,20 @@
 package xzcode.ggserver.game.common.controller;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import xzcode.ggserver.game.common.house.House;
+import xzcode.ggserver.game.common.interfaces.condition.ICheckCondition;
 import xzcode.ggserver.game.common.player.Player;
 import xzcode.ggserver.game.common.room.Room;
 
 /**
- * 基础游戏控制器
+ * 大厅房间游戏游戏控制器
  * 
  * @author zai 2019-01-06 14:34:21
  */
@@ -40,6 +45,43 @@ public abstract class HouseRoomGameController<H extends House<R, P>, R extends R
 			}
 		}
 		return true;
+	}
+	
+	@Override
+	public P getPlayer(R room, ICheckCondition<P> condition) {
+		Map<Object, P> players = room.getPlayers();
+		P p = null;
+		for (Object key : players.keySet()) {
+			p = players.get(key);
+			if (condition.check(p)) {
+				return p;
+			}
+		}
+		return p;
+	}
+	
+	@Override
+	public P getRandomPlayer(R room) {
+		Map<Object, P> players = room.getPlayers();
+		Object[] keys = players.keySet().toArray();
+		ThreadLocalRandom random = ThreadLocalRandom.current();
+		P p = players.get(random.nextInt(keys.length));
+		return p;
+	}
+	
+	@Override
+	public P getRandomPlayer(R room, ICheckCondition<P> condition) {
+		Map<Object, P> players = room.getPlayers();
+		List<P> plist = new ArrayList<>(players.size());
+		for (Object key : players.keySet()) {
+			P p = players.get(key);
+			if (condition.check(players.get(p))) {
+				plist.add(p);
+			}
+		}
+		ThreadLocalRandom random = ThreadLocalRandom.current();
+		P p = plist.get(random.nextInt(plist.size()));
+		return p;
 	}
 	
 	@Override
