@@ -56,6 +56,30 @@ public abstract class HouseRoomGameController<H extends House<R, P>, R extends R
 		}
 		return p;
 	}
+	
+	@Override
+	public List<P> getPlayerList(R room) {
+		Map<Object, P> players = room.getPlayers();
+		List<P> pList = new ArrayList<>(players.size());
+		for (Object key : players.keySet()) {
+			pList.add(players.get(key));
+		}
+		return pList;
+	}
+	
+	@Override
+	public List<P> getPlayers(R room, ICheckCondition<P> condition) {
+		Map<Object, P> players = room.getPlayers();
+		List<P> pList = new ArrayList<>(players.size());
+		P p = null;
+		for (Object key : players.keySet()) {
+			p = players.get(key);
+			if (condition.check(p)) {
+				pList.add(p);
+			}
+		}
+		return pList;
+	}
 
 	@Override
 	public P getRandomPlayer(R room) {

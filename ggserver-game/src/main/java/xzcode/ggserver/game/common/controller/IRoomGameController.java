@@ -1,5 +1,6 @@
 package xzcode.ggserver.game.common.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import xzcode.ggserver.game.common.interfaces.condition.ICheckCondition;
@@ -104,5 +105,26 @@ public interface IRoomGameController<R, P extends Player> {
 	 * @return
 	 */
 	P getNextPlayer(R room ,P curplayer ,ICheckCondition<P> condition );
+
+	/**
+	 * 根据条件获取玩家
+	 * 
+	 * @param room
+	 * @param condition
+	 * @return
+	 * @author zai
+	 * 2019-02-20 19:01:58
+	 */
+	List<P> getPlayers(R room, ICheckCondition<P> condition);
+
+	/**
+	 * 获取玩家列表
+	 * 
+	 * @param room
+	 * @return
+	 * @author zai
+	 * 2019-02-20 20:36:06
+	 */
+	List<P> getPlayerList(R room);
 	
 }

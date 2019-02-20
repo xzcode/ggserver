@@ -13,7 +13,8 @@ import xzcode.ggserver.game.common.player.Player;
  * 
  * @author zai 2018-05-24
  */
-public abstract class Room<P extends Player>{	/**
+public abstract class Room<P extends Player>{	
+	/**
 	 * 房间id
 	 */
 	protected Object roomId;
@@ -32,19 +33,54 @@ public abstract class Room<P extends Player>{	/**
 	 * 房主编号
 	 */
 	protected String ownerUserNo;
-
+	
 	/**
-	 * 最大玩家数量
+	 * 获取最大玩家数
+	 * 
+	 * @return
+	 * @author zai
+	 * 2019-02-20 19:07:54
 	 */
-	//protected int maxPalyerNum;
+	public abstract int getMaxPalyerNum();	
+	
+	/**
+	 * 移除玩家
+	 * 
+	 * @param playerId
+	 * @return
+	 * @author zai
+	 * 2019-02-20 19:10:19
+	 */
+	public P removePlayer(Object playerId) {
+		return players.remove(playerId);
+	}
 
 	/**
 	 * 玩家集合
 	 */
 	protected Map<Object, P> players = new ConcurrentHashMap<>();
-
+	
+	
+	/**
+	 * 是否满员
+	 * 
+	 * @return
+	 * @author zai
+	 * 2019-02-20 20:24:18
+	 */
 	public boolean isFullPlayers() {
 		return players.size() >= this.getMaxPalyerNum();
+	}
+	
+	/**
+	 * 获取当前玩家数
+	 * 
+	 * @return
+	 * @author zai
+	 * 2019-02-20 20:24:50
+	 */
+	public int getPlayerNum() {
+		return players.size();
 	}
 	
 	
@@ -114,5 +150,5 @@ public abstract class Room<P extends Player>{	/**
 		this.ownerUserNo = ownerUserNo;
 	}
 
+}
 
-public abstract int getMaxPalyerNum();	}
