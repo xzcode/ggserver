@@ -96,6 +96,13 @@ public interface IRoomGameController<R, P extends Player> {
 	P getRandomPlayer(R room, ICheckCondition<P> condition);
 
 	
-
+	/**
+	 * 获取指定条件下，首个满足条件的玩家(多个玩家的时候)
+	 * @param room
+	 * @param curplayer
+	 * @param condition
+	 * @return
+	 */
+	P getNextPlayer(R room ,P curplayer ,ICheckCondition<P> condition );
 	
 }
