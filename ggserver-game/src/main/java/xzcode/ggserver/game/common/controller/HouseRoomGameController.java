@@ -18,9 +18,8 @@ import xzcode.ggserver.game.common.room.Room;
  * 
  * @author zai 2019-01-06 14:34:21
  */
-public abstract class HouseRoomGameController<H extends House<R, P>, R extends Room<P>, P extends Player>
-	extends GGServerGameController 
-	implements IPlayerGameController<P>, IRoomGameController<R, P>, IHouseGameController<H> {
+public abstract class HouseRoomGameController<H extends House<R, P>, R extends Room<P>, P extends Player> extends
+		GGServerGameController implements IPlayerGameController<P>, IRoomGameController<R, P>, IHouseGameController<H> {
 
 	private static final Logger logger = LoggerFactory.getLogger(HouseRoomGameController.class);
 
@@ -82,36 +81,39 @@ public abstract class HouseRoomGameController<H extends House<R, P>, R extends R
 		return p;
 	}
 
+	/**
+	 * 获取指定条件下，下一个玩家 wmc
+	 * 2019-02-20 15:30:50
+	 */
 	@Override
 	public P getNextPlayer(R room, P curplayer, ICheckCondition<P> condition) {
-//		int maxPlayerCount = room.getMaxPalyerNum();
-//		Map<Object, P> players = room.getPlayers();
-//		List<P> plist = new ArrayList<>(players.size());
-//		for (Object key : players.keySet()) {
-//			P p = players.get(key);
-//			if (condition.check(players.get(p))) {
-//				plist.add(p);
-//			}
-//		}
-//		
-//		P p = null;
-//		plist.sort((x, y) -> x.getSeatNum() - y.getSeatNum());
-//		if (curplayer.getSeatNum() == maxPlayerCount) {
-//			p = plist.get(0);
-//			if (p == null) {
-//				return null;
-//			} else {
-//				return p;
-//			}
-//		}
-//		for (P s : plist) {
-//			if (s.getSeatNum() > curplayer.getSeatNum()) {
-//				return s;
-//			}
-//		}
+
+		List<P> pList = room.getOrderPlayerList();
+		if (pList.size() == 0) {
+			return null;
+		}
+		int maxPlayerOrder = pList.size();// 当前玩家数量
+		P p = null;
+		boolean isMaxOrderPlayers = curplayer.getSeatNum() == maxPlayerOrder;// 用来作为基准查找下一个玩的本身是否是最后一个玩家
+		for (P ps : pList) {
+			if (condition.check(ps)) {
+
+				if (isMaxOrderPlayers) {
+					p = pList.get(0);
+					if (p == null) {
+						return null;
+					} else {
+						return p;
+					}
+				} else {
+
+					if (ps.getSeatNum() > curplayer.getSeatNum()) {
+						return ps;
+					}
+				}
+			}
+		}
 		return null;
-		
-		
 	}
 
 	@Override
