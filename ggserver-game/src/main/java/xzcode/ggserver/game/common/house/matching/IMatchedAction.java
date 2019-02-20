@@ -10,6 +10,6 @@ package xzcode.ggserver.game.common.house.matching;
 public interface IMatchedAction {
 	
 	
-	void onMatch(MachingHouse<?, ?> house);
+	void onMatch(MachingPlayerHouse<?, ?> house);
 
 }

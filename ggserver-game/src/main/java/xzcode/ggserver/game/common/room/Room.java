@@ -6,13 +6,13 @@ import java.util.concurrent.ConcurrentHashMap;
 import xzcode.ggserver.game.common.player.Player;
 
 /**
- * 漳浦游戏房间
+ * 游戏房间
  * 
  * 
  * @author zai
  * 2018-05-24
  */
-public class Room<P extends Player>{
+public abstract class Room<P extends Player>{
 	
 	/**
 	 * 房间id
@@ -38,13 +38,18 @@ public class Room<P extends Player>{
 	/**
 	 * 最大玩家数量
 	 */
-	protected int maxPalyerNum;
+	//protected int maxPalyerNum;
 	
 	
 	/**
 	 * 玩家集合
 	 */
 	protected Map<Object, P> players = new ConcurrentHashMap<>();
+	
+	
+	public boolean isFullPlayers() {
+		return players.size() >= this.getMaxPalyerNum();
+	}
 	
 	
 	public Map<Object, P> getPlayers() {
@@ -108,16 +113,7 @@ public class Room<P extends Player>{
 	}
 
 
-	public int getMaxPalyerNum() {
-		return maxPalyerNum;
-	}
-
-
-	public void setMaxPalyerNum(int maxPalyerNum) {
-		this.maxPalyerNum = maxPalyerNum;
-	}
-	
-	
+	public abstract int getMaxPalyerNum();
 	
 	
 	

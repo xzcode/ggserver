@@ -66,9 +66,26 @@ public class RobotManager<P extends Player> {
 			Object randomKey = keys[random.nextInt(keys.length)];
 			list.add(robotMap.remove(randomKey));
 		}
-		
 		return list;
+	}
+	
+	/**
+	 * 获取一个机器人玩家
+	 * 
+	 * @return
+	 * @author zai
+	 * 2019-02-20 17:27:34
+	 */
+	public P takeOneRandomRobot() {
+		if (robotMap.size() < 1) {
+			return null;
+		}
 		
+		Random random = new Random();
+		KeySetView<Object,P> keySetView = robotMap.keySet();
+		Object[] keys = keySetView.toArray();
+		Object randomKey = keys[random.nextInt(keys.length)];
+		return robotMap.remove(randomKey);
 	}
 
 }

@@ -16,7 +16,7 @@ import xzcode.ggserver.game.common.room.Room;
  * @author zai
  * 2019-01-22 19:02:38
  */
-public abstract class TimeoutMachingHouse< R extends Room<P>, P extends Player> extends MachingHouse<R, P>{
+public abstract class TimeoutMachingHouse< R extends Room<P>, P extends Player> extends MachingPlayerHouse<R, P>{
 	
 	private static final Logger logger = LoggerFactory.getLogger(TimeoutMachingHouse.class);
 	
