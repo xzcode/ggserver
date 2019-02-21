@@ -52,7 +52,7 @@ public class AutoFinishAbleTimeoutHolder extends FinishAbleTimeoutHolder impleme
 				if (this.checkFinish()) {
 					return;
 				}
-				//执行自动完成操作
+				//如果没有完成，才执行自动完成操作
 				this.runAutoFinishAction();
 			}
 		};

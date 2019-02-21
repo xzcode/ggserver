@@ -126,5 +126,26 @@ public interface IRoomGameController<R, P extends Player> {
 	 * 2019-02-20 20:36:06
 	 */
 	List<P> getPlayerList(R room);
+
+	/**
+	 * 获取一个座位号
+	 * 
+	 * @param room
+	 * @return
+	 * @author zai
+	 * 2019-02-21 11:15:34
+	 */
+	int getSeatNum(R room);
+	
+	/**
+	 * 获取最大玩家数
+	 * 
+	 * @return
+	 * @author zai
+	 * 2019-02-21 11:07:05
+	 */
+	int getMaxPlayerNum();
+
+	
 	
 }

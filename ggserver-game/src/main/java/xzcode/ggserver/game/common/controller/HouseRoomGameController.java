@@ -3,6 +3,7 @@ package xzcode.ggserver.game.common.controller;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.slf4j.Logger;
@@ -96,7 +97,7 @@ public abstract class HouseRoomGameController<H extends House<R, P>, R extends R
 		List<P> plist = new ArrayList<>(players.size());
 		for (Object key : players.keySet()) {
 			P p = players.get(key);
-			if (condition.check(players.get(p))) {
+			if (condition.check(players.get(key))) {
 				plist.add(p);
 			}
 		}
@@ -139,6 +140,24 @@ public abstract class HouseRoomGameController<H extends House<R, P>, R extends R
 		}
 		return null;
 	}
+	
+	@Override
+	public int getSeatNum(R room) {
+		int maxPlayerNum = getMaxPlayerNum();
+		List<Integer> nums = new ArrayList<>(maxPlayerNum);
+		for (int i = 1; i <= maxPlayerNum; i++) {
+			nums.add(i);
+		}
+		synchronized (room) {
+			Map<Object, P> players = getPlayers(room);
+			for (Entry<Object, P> entry : players.entrySet()) {
+				nums.remove(new Integer(entry.getValue().getSeatNum()));
+			}
+			return nums.get(0);
+		}
+	};
+	
+	
 
 	@Override
 	public Object getCurrentPlayerId() {
