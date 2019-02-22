@@ -49,6 +49,7 @@ public abstract class MachingRoomHouse<R extends Room<P>, P extends Player> exte
 	 * 2019-01-24 11:11:28
 	 */
 	public void addMachingRoomHolder(MachingRoomHolder<R, P> roomHolder) {
+		roomHolder.setMatched(false);
 		this.machingRoomHolders.put(roomHolder.getRoom().getRoomNo(), roomHolder);
 	}
 	
@@ -67,6 +68,7 @@ public abstract class MachingRoomHouse<R extends Room<P>, P extends Player> exte
 	public MachingRoomHolder<R, P> getMachingHolder(Object key) {
 		return machingRoomHolders.get(key);
 	}
+	
 	
 	/**
 	 * 取消并移除玩家匹配容器

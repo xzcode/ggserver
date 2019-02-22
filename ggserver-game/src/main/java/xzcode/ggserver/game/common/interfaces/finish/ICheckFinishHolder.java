@@ -37,14 +37,6 @@ public interface ICheckFinishHolder {
 	boolean checkFinish();
 	
 	/**
-	 * 主动设置完成状态
-	 * 
-	 * @author zai
-	 * 2019-01-28 17:00:39
-	 */
-	void setFinished(boolean finished);
-	
-	/**
 	 * 执行完成后的行为
 	 * 
 	 * @author zai

@@ -13,10 +13,6 @@ import xzcode.ggserver.game.common.interfaces.finish.OnFinishAction;
 public abstract class FinishAbleTimeoutHolder extends TimeoutHolder implements ICheckFinishHolder{
 
 	
-	/**
-	 * 是否已完成
-	 */
-	protected boolean finished;
 	
 	protected OnFinishAction onFinishAction;
 	
@@ -34,20 +30,11 @@ public abstract class FinishAbleTimeoutHolder extends TimeoutHolder implements I
 
 	@Override
 	public boolean checkFinish() {
-		if (!finished) {
-			if (checkFinishedAction != null) {
-				this.finished = checkFinishedAction.check(this);
-			}
+		if (checkFinishedAction != null) {
+			return checkFinishedAction.check(this);
 		}
-		return finished;
+		return false;
 	}
-
-	
-	@Override
-	public void setFinished(boolean finished) {
-		this.finished = finished;
-	}
-	
 
 	@Override
 	public void runOnFinishAction() {
