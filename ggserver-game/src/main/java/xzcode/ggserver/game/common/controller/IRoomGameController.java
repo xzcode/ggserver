@@ -75,6 +75,18 @@ public interface IRoomGameController<R, P extends Player> {
 	 * @author zai 2019-01-25 11:06:29
 	 */
 	void bcToAllPlayer(R room, String actionId, Object message);
+	
+	/**
+	 * 广播给所有满足条件的玩家
+	 * @param room
+	 * @param actionId
+	 * @param message
+	 * @param condition
+	 * 
+	 * @author zai
+	 * 2019-02-23 16:49:17
+	 */
+	void bcToAllPlayer(R room, String actionId, Object message, ICheckCondition<P> condition);
 
 	
 	/**
@@ -145,6 +157,18 @@ public interface IRoomGameController<R, P extends Player> {
 	 * 2019-02-21 11:07:05
 	 */
 	int getMaxPlayerNum();
+
+	/**
+	 * 玩家迭代
+	 * @param room
+	 * @param iteration
+	 * 
+	 * @author zai
+	 * 2019-02-23 16:03:00
+	 */
+	void iteratePlayer(R room, PlayerIteration<P> iteration);
+
+	
 
 	
 	

@@ -1,9 +1,9 @@
 package xzcode.ggserver.game.common.room;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 import xzcode.ggserver.game.common.player.Player;
 
@@ -88,8 +88,8 @@ public abstract class Room<P extends Player>{
 		return players;
 	}
 
-	public P getPlayer(Object userId) {
-		return players.get(userId);
+	public P getPlayer(Object playerId) {
+		return players.get(playerId);
 	}
 	/**
 	 * 获取房间当前按座位号排序玩家列表
@@ -99,13 +99,7 @@ public abstract class Room<P extends Player>{
 	 * 2019-02-20 15:30:50
 	 */
 	public List<P> getOrderPlayerList() {
-		List<P> OrderPlayerList = new ArrayList<>(players.size());
-		for (Object key : players.keySet()) {
-			P p = players.get(key);
-			OrderPlayerList.add(p);
-		}
-		OrderPlayerList.sort((x, y) -> x.getSeatNum() - y.getSeatNum());
-		return OrderPlayerList;
+		return players.entrySet().stream().map((entry) -> entry.getValue()).sorted((x, y) -> x.getSeatNum() - y.getSeatNum()).collect(Collectors.toList());
 	}
 
 	/**

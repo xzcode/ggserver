@@ -12,7 +12,8 @@ import xzcode.ggserver.game.common.interfaces.timeout.TimeoutAction;
  * @author zai
  * 2019-01-21 11:59:37
  */
-public abstract class TimeoutHolder implements TimeoutRunnable{
+public class TimeoutHolder implements TimeoutRunnable{
+	
 	
 	protected TimeoutAction timeoutAction;
 	
@@ -22,6 +23,40 @@ public abstract class TimeoutHolder implements TimeoutRunnable{
 	 */
 	protected ScheduledFuture<?> timeoutFuture;
 	
+	/**
+	 * 是否已运行过
+	 * @return
+	 * 
+	 * @author zai
+	 * 2019-02-23 15:29:36
+	 */
+	public boolean hasRan() {
+		return timeoutFuture != null;
+	}
+	
+	
+	/**
+	 * 检查是否在指定时间内将会超时
+	 * @param millisecs
+	 * @return
+	 * 
+	 * @author zai
+	 * 2019-02-23 14:37:34
+	 */
+	public boolean isTimeoutLessThan(long millisecs) {
+		return this.timeoutFuture.getDelay(TimeUnit.MILLISECONDS) <= millisecs;
+	}
+	
+	/**
+	 * 是否已超时
+	 * @return
+	 * 
+	 * @author zai
+	 * 2019-02-23 15:13:24
+	 */
+	public boolean isTimeout() {
+		return this.timeoutFuture.getDelay(TimeUnit.MILLISECONDS) <= 0 ;
+	}
 	
 	/**
 	 * 初始化超时信息
@@ -34,8 +69,6 @@ public abstract class TimeoutHolder implements TimeoutRunnable{
 	public void initTimeout(ScheduledFuture<?> timeoutFuture) {
 		this.timeoutFuture = timeoutFuture;
 	}
-	
-
 
 
 	public TimeoutHolder(ScheduledFuture<?> timeoutFuture) {
@@ -70,20 +103,6 @@ public abstract class TimeoutHolder implements TimeoutRunnable{
 		
 	}
 
-
-	/**
-	 * 检查是否超时
-	 * 
-	 * @return
-	 * @author zai
-	 * 2019-01-28 12:00:04
-	 */
-	public boolean checkTimeout() {
-		return this.timeoutFuture.getDelay(TimeUnit.MILLISECONDS) <= 0;
-	}
-
-
-
 	/**
 	 * 取消任务
 	 * 
@@ -101,7 +120,7 @@ public abstract class TimeoutHolder implements TimeoutRunnable{
 	/**
 	 * 获取剩余时间
 	 * 
-	 * @return
+	 * @return 返回剩余时间（毫秒）
 	 * @author zai
 	 * 2019-01-21 13:20:23
 	 */

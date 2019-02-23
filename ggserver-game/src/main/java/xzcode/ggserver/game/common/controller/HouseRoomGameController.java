@@ -1,14 +1,13 @@
 package xzcode.ggserver.game.common.controller;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ThreadLocalRandom;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import xzcode.ggserver.game.common.house.House;
 import xzcode.ggserver.game.common.interfaces.condition.ICheckCondition;
 import xzcode.ggserver.game.common.player.Player;
@@ -20,25 +19,36 @@ import xzcode.ggserver.game.common.room.Room;
  * @author zai 2019-01-06 14:34:21
  */
 public abstract class HouseRoomGameController<H extends House<R, P>, R extends Room<P>, P extends Player> extends
-		GGServerGameController implements IPlayerGameController<P>, IRoomGameController<R, P>, IHouseGameController<H> {
+		GGServerGameController 
+		implements 
+		IPlayerGameController<P>, 
+		IRoomGameController<R, P>, 
+		IHouseGameController<H> {
 
 	private static final Logger logger = LoggerFactory.getLogger(HouseRoomGameController.class);
 
 	@Override
 	public void eachPlayer(R room, ForEachPlayer<P> eachPlayer) {
 		Map<Object, P> players = room.getPlayers();
-		for (Object key : players.keySet()) {
-			P p = players.get(key);
-			eachPlayer.each(p);
+		for (Entry<Object, P> e : players.entrySet()) {
+			eachPlayer.each(e.getValue());
+		}
+	}
+	
+	@Override
+	public void iteratePlayer(R room, PlayerIteration<P> iteration) {
+		Map<Object, P> players = room.getPlayers();
+		Iterator<Entry<Object, P>> it = players.entrySet().iterator();
+		if (it.hasNext()) {
+			iteration.it(it.next().getValue(), it.next(), it);			
 		}
 	}
 
 	@Override
 	public boolean boolEachPlayer(R room, BoolForEachPlayer<P> eachPlayer) {
 		Map<Object, P> players = room.getPlayers();
-		for (Object key : players.keySet()) {
-			P p = players.get(key);
-			if (!eachPlayer.each(p)) {
+		for (Entry<Object, P> entry : players.entrySet()) {
+			if (!eachPlayer.each(entry.getValue())) {
 				return false;
 			}
 		}
@@ -48,22 +58,20 @@ public abstract class HouseRoomGameController<H extends House<R, P>, R extends R
 	@Override
 	public P getPlayer(R room, ICheckCondition<P> condition) {
 		Map<Object, P> players = room.getPlayers();
-		P p = null;
-		for (Object key : players.keySet()) {
-			p = players.get(key);
-			if (condition.check(p)) {
-				return p;
+		for (Entry<Object, P> entry : players.entrySet()) {
+			if (condition.check(entry.getValue())) {
+				return entry.getValue();
 			}
 		}
-		return p;
+		return null;
 	}
 	
 	@Override
 	public List<P> getPlayerList(R room) {
 		Map<Object, P> players = room.getPlayers();
 		List<P> pList = new ArrayList<>(players.size());
-		for (Object key : players.keySet()) {
-			pList.add(players.get(key));
+		for (Entry<Object, P> entry : players.entrySet()) {
+			pList.add(entry.getValue());
 		}
 		return pList;
 	}
@@ -72,44 +80,36 @@ public abstract class HouseRoomGameController<H extends House<R, P>, R extends R
 	public List<P> getPlayers(R room, ICheckCondition<P> condition) {
 		Map<Object, P> players = room.getPlayers();
 		List<P> pList = new ArrayList<>(players.size());
-		P p = null;
-		for (Object key : players.keySet()) {
-			p = players.get(key);
-			if (condition.check(p)) {
-				pList.add(p);
+		for (Entry<Object, P> entry : players.entrySet()) {
+			if (condition.check(entry.getValue())) {
+				pList.add(entry.getValue());
 			}
 		}
 		return pList;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public P getRandomPlayer(R room) {
-		Map<Object, P> players = room.getPlayers();
-		Object[] keys = players.keySet().toArray();
-		ThreadLocalRandom random = ThreadLocalRandom.current();
-		P p = players.get(random.nextInt(keys.length));
-		return p;
+		if (room.getPlayerNum() <= 0) {
+			return null;
+		}
+		return ((Entry<Object, P>)room.getPlayers().entrySet().toArray()[ThreadLocalRandom.current().nextInt(room.getPlayerNum())]).getValue();
 	}
 
+	
 	@Override
 	public P getRandomPlayer(R room, ICheckCondition<P> condition) {
 		Map<Object, P> players = room.getPlayers();
 		List<P> plist = new ArrayList<>(players.size());
-		for (Object key : players.keySet()) {
-			P p = players.get(key);
-			if (condition.check(players.get(key))) {
-				plist.add(p);
+		for (Entry<Object, P> entry : players.entrySet()) {
+			if (condition.check(entry.getValue())) {
+				plist.add(entry.getValue());
 			}
 		}
-		ThreadLocalRandom random = ThreadLocalRandom.current();
-		P p = plist.get(random.nextInt(plist.size()));
-		return p;
+		return plist.get(ThreadLocalRandom.current().nextInt(plist.size()));
 	}
 
-	/**
-	 * 获取指定条件下，下一个玩家 wmc
-	 * 2019-02-20 15:30:50
-	 */
 	@Override
 	public P getNextPlayer(R room, P curplayer, ICheckCondition<P> condition) {
 
@@ -170,10 +170,18 @@ public abstract class HouseRoomGameController<H extends House<R, P>, R extends R
 			getGGServer().send(player.getPlayerId(), actionId, message);
 		});
 	}
+	
+	@Override
+	public void bcToAllPlayer(R room, String actionId, Object message, ICheckCondition<P> condition) {
+		eachPlayer(room, (player) -> {
+			if (condition.check(player)) {
+				getGGServer().send(player.getPlayerId(), actionId, message);				
+			}
+		});
+	}
 
 	@Override
 	public Map<Object, P> getPlayers(R room) {
-
 		return room.getPlayers();
 	}
 
