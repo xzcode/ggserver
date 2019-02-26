@@ -34,6 +34,17 @@ public class RobotManager<P extends Player> {
 	}
 	
 	/**
+	 * 返还机器人
+	 * 
+	 * @param robotPlayer
+	 * @author zai
+	 * 2019-02-25 15:54:20
+	 */
+	public void returnRobot(P robotPlayer) {
+		this.addRobot(robotPlayer);
+	}
+	
+	/**
 	 * 批量添加机器人
 	 * 
 	 * @param robotPlayers

@@ -39,8 +39,9 @@ public abstract class HouseRoomGameController<H extends House<R, P>, R extends R
 	public void iteratePlayer(R room, PlayerIteration<P> iteration) {
 		Map<Object, P> players = room.getPlayers();
 		Iterator<Entry<Object, P>> it = players.entrySet().iterator();
-		if (it.hasNext()) {
-			iteration.it(it.next().getValue(), it.next(), it);			
+		while (it.hasNext()) {
+			Entry<Object, P> next = it.next();
+			iteration.it(next.getValue(), next, it);			
 		}
 	}
 
