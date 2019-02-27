@@ -108,7 +108,11 @@ public abstract class HouseRoomGameController<H extends House<R, P>, R extends R
 				plist.add(entry.getValue());
 			}
 		}
-		return plist.get(ThreadLocalRandom.current().nextInt(plist.size()));
+		if (players.size() > 1) {
+			return plist.get(ThreadLocalRandom.current().nextInt(plist.size()));
+		}
+		return plist.get(0);
+		
 	}
 
 	@Override

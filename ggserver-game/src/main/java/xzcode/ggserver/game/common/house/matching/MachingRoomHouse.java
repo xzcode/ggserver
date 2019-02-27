@@ -49,8 +49,12 @@ public abstract class MachingRoomHouse<R extends Room<P>, P extends Player> exte
 	 * 2019-01-24 11:11:28
 	 */
 	public void addMachingRoomHolder(MachingRoomHolder<R, P> roomHolder) {
-		roomHolder.setMatched(false);
-		this.machingRoomHolders.put(roomHolder.getRoom().getRoomNo(), roomHolder);
+		synchronized (roomHolder) {
+			if (!this.machingRoomHolders.containsKey(roomHolder.getRoom().getRoomNo())) {
+				roomHolder.setMatched(false);			
+				this.machingRoomHolders.putIfAbsent(roomHolder.getRoom().getRoomNo(), roomHolder);			
+			}
+		}
 	}
 	
 	public ConcurrentHashMap<Object, MachingRoomHolder<R, P>> getMachingPlayerHolders() {
