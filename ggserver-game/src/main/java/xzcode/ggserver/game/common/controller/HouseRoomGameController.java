@@ -29,16 +29,14 @@ public abstract class HouseRoomGameController<H extends House<R, P>, R extends R
 
 	@Override
 	public void eachPlayer(R room, ForEachPlayer<P> eachPlayer) {
-		Map<Object, P> players = room.getPlayers();
-		for (Entry<Object, P> e : players.entrySet()) {
+		for (Entry<Object, P> e : room.getPlayers().entrySet()) {
 			eachPlayer.each(e.getValue());
 		}
 	}
 	
 	@Override
 	public void iteratePlayer(R room, PlayerIteration<P> iteration) {
-		Map<Object, P> players = room.getPlayers();
-		Iterator<Entry<Object, P>> it = players.entrySet().iterator();
+		Iterator<Entry<Object, P>> it = room.getPlayers().entrySet().iterator();
 		while (it.hasNext()) {
 			Entry<Object, P> next = it.next();
 			iteration.it(next.getValue(), next, it);			
@@ -47,19 +45,33 @@ public abstract class HouseRoomGameController<H extends House<R, P>, R extends R
 
 	@Override
 	public boolean boolEachPlayer(R room, BoolForEachPlayer<P> eachPlayer) {
-		Map<Object, P> players = room.getPlayers();
-		for (Entry<Object, P> entry : players.entrySet()) {
+		for (Entry<Object, P> entry : room.getPlayers().entrySet()) {
 			if (!eachPlayer.each(entry.getValue())) {
 				return false;
 			}
 		}
 		return true;
 	}
+	
+	@Override
+	public int countPlayers(R room, ICheckCondition<P> condition) {
+		int i = 0;
+		for (Entry<Object, P> entry : room.getPlayers().entrySet()) {
+			if (condition.check(entry.getValue())) {
+				i++;
+			}
+		}
+		return i;
+	}
+	
+	@Override
+	public int countPlayers(R room) {
+		return room.getPlayers().size();
+	}
 
 	@Override
 	public P getPlayer(R room, ICheckCondition<P> condition) {
-		Map<Object, P> players = room.getPlayers();
-		for (Entry<Object, P> entry : players.entrySet()) {
+		for (Entry<Object, P> entry : room.getPlayers().entrySet()) {
 			if (condition.check(entry.getValue())) {
 				return entry.getValue();
 			}

@@ -168,6 +168,28 @@ public interface IRoomGameController<R, P extends Player> {
 	 */
 	void iteratePlayer(R room, PlayerIteration<P> iteration);
 
+	/**
+	 * 获取指定条件的玩家数量
+	 * 
+	 * @param room
+	 * @param condition
+	 * @return
+	 * @author zai
+	 * 2019-02-28 15:21:05
+	 */
+	int countPlayers(R room, ICheckCondition<P> condition);
+	
+	
+	/**
+	 * 获取玩家数量
+	 * 
+	 * @param room
+	 * @return
+	 * @author zai
+	 * 2019-02-28 15:22:16
+	 */
+	int countPlayers(R room);
+
 	
 
 	

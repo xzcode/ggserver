@@ -23,6 +23,13 @@ public class TimeoutHolder implements TimeoutRunnable{
 	 */
 	protected ScheduledFuture<?> timeoutFuture;
 	
+	
+	public static TimeoutHolder create(TimeoutAction timeoutAction) {
+		TimeoutHolder timeoutHolder = new TimeoutHolder();
+		timeoutHolder.onTimeout(timeoutAction);
+		return timeoutHolder;
+	}
+	
 	/**
 	 * 是否已运行过
 	 * @return
