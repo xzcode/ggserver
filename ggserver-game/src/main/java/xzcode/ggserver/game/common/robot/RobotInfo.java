@@ -28,8 +28,35 @@ public class RobotInfo {
 	protected String avatar;
 	
 	
-
+	/**
+	 * 状态
+	 */
+	protected int status = Status.IDLE;
 	
+	/**
+	 * 使用超时
+	 */
+	protected Long timeoutMillisec;
+	
+	/**
+	 * 状态常量
+	 * 
+	 * @author zai
+	 * 2019-03-06 11:48:43
+	 */
+	public static interface Status {
+		
+		/**
+		 * 空闲
+		 */
+		int IDLE = 0;
+		
+		/**
+		 * 使用中
+		 */
+		int BUSY = 1;
+		
+	}
 
 	public Object getRobotId() {
 		return robotId;
@@ -61,6 +88,23 @@ public class RobotInfo {
 
 	public void setAvatar(String avatar) {
 		this.avatar = avatar;
+	}
+
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
+
+	public Long getTimeoutMillisec() {
+		return timeoutMillisec;
+	}
+
+	public void setTimeoutMillisec(Long timeoutMillisec) {
+		this.timeoutMillisec = timeoutMillisec;
 	} 
 	
 	
