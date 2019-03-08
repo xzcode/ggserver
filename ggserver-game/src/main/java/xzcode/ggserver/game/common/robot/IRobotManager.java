@@ -64,4 +64,12 @@ public interface IRobotManager<R> {
 	 */
 	List<R> takeRandomRobot(int size);
 
+	/**
+	 * 修正机器人数据
+	 * 
+	 * @author zai
+	 * 2019-03-07 15:34:40
+	 */
+	void correctRobots();
+
 }
