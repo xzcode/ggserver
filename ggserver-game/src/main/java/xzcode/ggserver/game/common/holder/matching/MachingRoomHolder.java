@@ -1,6 +1,7 @@
 package xzcode.ggserver.game.common.holder.matching;
 
 import xzcode.ggserver.game.common.holder.timeout.AutoFinishAbleTimeoutHolder;
+import xzcode.ggserver.game.common.holder.timeout.TimeoutHolder;
 import xzcode.ggserver.game.common.player.Player;
 import xzcode.ggserver.game.common.room.Room;
 
@@ -12,7 +13,7 @@ import xzcode.ggserver.game.common.room.Room;
  * @author zai
  * 2019-02-20 14:34:32
  */
-public class MachingRoomHolder<R extends Room<P>, P extends Player> extends AutoFinishAbleTimeoutHolder{
+public class MachingRoomHolder<R extends Room<P>, P extends Player> extends TimeoutHolder{
 	
 	
 	/**
@@ -30,11 +31,6 @@ public class MachingRoomHolder<R extends Room<P>, P extends Player> extends Auto
 	 */
 	private boolean canceled;
 	
-	/**
-	 * 是否已匹配超时
-	 */
-	private boolean timeout;
-	
 
 	public boolean isMatched() {
 		return matched;
@@ -47,14 +43,9 @@ public class MachingRoomHolder<R extends Room<P>, P extends Player> extends Auto
 	public boolean isCanceled() {
 		return canceled;
 	}
-	public boolean isTimeout() {
-		return timeout;
-	}
+	
 	public void setCanceled(boolean canceled) {
 		this.canceled = canceled;
-	}
-	public void setTimeout(boolean timeout) {
-		this.timeout = timeout;
 	}
 
 	public R getRoom() {
