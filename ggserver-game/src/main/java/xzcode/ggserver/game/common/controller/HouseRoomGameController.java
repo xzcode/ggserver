@@ -134,28 +134,30 @@ public abstract class HouseRoomGameController<H extends House<R, P>, R extends R
 		if (pList.size() == 0) {
 			return null;
 		}
-		int maxPlayerOrder = pList.size();// 当前玩家数量
-		P p = null;
-		boolean isMaxOrderPlayers = curplayer.getSeatNum() == maxPlayerOrder;// 用来作为基准查找下一个玩的本身是否是最后一个玩家
+		int maxPlayerOrder = room.getMaxPalyerNum();// 当前玩家数量
+		List<P>aimPlayerList = new ArrayList<>();
 		for (P ps : pList) {
-			if (condition.check(ps)) {
-
-				if (isMaxOrderPlayers) {
-					p = pList.get(0);
-					if (p == null) {
-						return null;
-					} else {
-						return p;
-					}
-				} else {
-
-					if (ps.getSeatNum() > curplayer.getSeatNum()) {
-						return ps;
-					}
-				}
+			if (condition.check(ps) && ps.getSeatNum() <= maxPlayerOrder&&ps.getSeatNum()>0) {
+				aimPlayerList.add(ps);
 			}
 		}
-		return null;
+		if (aimPlayerList.size()==0) {
+			return null;
+		}
+		aimPlayerList.sort((x,y)->
+		{
+			int r = -2;
+			if (x.getSeatNum() > curplayer.getSeatNum()) {
+				r = y.getSeatNum() < curplayer.getSeatNum() ? -1 : 0;
+			}else {
+				r = y.getSeatNum() < curplayer.getSeatNum() ? 0 : 1;
+			}
+			if (r==0) {
+				r = x.getSeatNum()-y.getSeatNum();
+			}
+			return r;
+		});
+		return aimPlayerList.get(0);
 	}
 	
 	@Override
