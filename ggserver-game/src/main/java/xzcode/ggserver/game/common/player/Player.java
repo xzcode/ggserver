@@ -44,6 +44,11 @@ public class Player {
 	 */
 	protected boolean online;
 	
+	/**
+	 * 是否机器人
+	 */
+	protected boolean robot;
+	
 	
 	
 	public Object getPlayerId() {
@@ -113,6 +118,16 @@ public class Player {
 
 	public void setOnline(boolean online) {
 		this.online = online;
+	}
+
+
+	public boolean isRobot() {
+		return robot;
+	}
+
+
+	public void setRobot(boolean robot) {
+		this.robot = robot;
 	}
 	
 	
