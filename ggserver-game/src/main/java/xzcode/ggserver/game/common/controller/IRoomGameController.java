@@ -116,7 +116,7 @@ public interface IRoomGameController<R, P extends Player> {
 	 * @param condition
 	 * @return
 	 */
-	P getNextPlayer(R room ,P curplayer ,ICheckCondition<P> condition );
+	P getNextPlayer(R room ,int seatNum ,ICheckCondition<P> condition );
 
 	/**
 	 * 根据条件获取玩家

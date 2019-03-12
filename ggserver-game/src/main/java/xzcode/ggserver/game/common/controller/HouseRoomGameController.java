@@ -128,7 +128,7 @@ public abstract class HouseRoomGameController<H extends House<R, P>, R extends R
 	}
 
 	@Override
-	public P getNextPlayer(R room, P curplayer, ICheckCondition<P> condition) {
+	public P getNextPlayer(R room, int seatNum, ICheckCondition<P> condition) {
 
 		List<P> pList = room.getOrderPlayerList();
 		if (pList.size() == 0) {
@@ -147,10 +147,10 @@ public abstract class HouseRoomGameController<H extends House<R, P>, R extends R
 		aimPlayerList.sort((x,y)->
 		{
 			int r = -2;
-			if (x.getSeatNum() > curplayer.getSeatNum()) {
-				r = y.getSeatNum() < curplayer.getSeatNum() ? -1 : 0;
+			if (x.getSeatNum() > seatNum) {
+				r = y.getSeatNum() < seatNum ? -1 : 0;
 			}else {
-				r = y.getSeatNum() < curplayer.getSeatNum() ? 0 : 1;
+				r = y.getSeatNum() < seatNum ? 0 : 1;
 			}
 			if (r==0) {
 				r = x.getSeatNum()-y.getSeatNum();
