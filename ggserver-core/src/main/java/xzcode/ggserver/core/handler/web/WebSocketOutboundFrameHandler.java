@@ -16,12 +16,8 @@ import io.netty.handler.codec.http.DefaultFullHttpResponse;
 import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
 import xzcode.ggserver.core.channel.DefaultChannelAttributeKeys;
 import xzcode.ggserver.core.config.GGServerConfig;
-import xzcode.ggserver.core.executor.GGServerTaskExecutor;
 import xzcode.ggserver.core.executor.task.RequestMessageTask;
-import xzcode.ggserver.core.handler.serializer.ISerializer;
 import xzcode.ggserver.core.message.send.SendModel;
-import xzcode.ggserver.core.session.GGSessionThreadLocalUtil;
-import xzcode.ggserver.core.session.imp.SocketSession;
 
 /**
  * websocket 消息发送处理器
@@ -71,20 +67,21 @@ public class WebSocketOutboundFrameHandler extends ChannelOutboundHandlerAdapter
 			}
 			
 			
-			byte[] tagBytes = sendModel.getSendTag().getBytes();
+			byte[] tagBytes = sendModel.getSendTag();
 			
 			ByteBuf out = null;
 			
 			//如果有消息体
 			if (sendModel.getMessage() != null) {
 				
-				byte[] bodyBytes = config.getSerializer().serialize(sendModel.getMessage());
+				byte[] bodyBytes = (byte[]) sendModel.getMessage();
 				
 				out = ctx.alloc().buffer(2 + tagBytes.length + bodyBytes.length);
 				
 				out.writeShort(tagBytes.length);
 				out.writeBytes(tagBytes);
 				out.writeBytes(bodyBytes);
+				
 			} else {
 			
 				//如果没消息体

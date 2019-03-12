@@ -41,7 +41,7 @@ public class GGServerTaskExecutor extends ScheduledThreadPoolExecutor implements
 		
 		//设置线程工厂
 		this.setThreadFactory((Runnable r) -> {
-			return new Thread(r,"Socket Server Task Thread - " + threadIndex.getAndIncrement());
+			return new Thread(r,"GGServer Task Thread - " + threadIndex.getAndIncrement());
 		});
 		
 		this.setKeepAliveTime(this.config.getReqTaskKeepAliveTime(), TimeUnit.MILLISECONDS);

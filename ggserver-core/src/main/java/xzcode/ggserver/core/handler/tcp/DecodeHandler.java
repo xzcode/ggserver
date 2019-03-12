@@ -104,7 +104,7 @@ public class DecodeHandler extends ByteToMessageDecoder {
 		IRequestMessageInvoker invoker = config.getRequestMessageManager().get(reqTag);
 		
 		if (invoker != null) {
-			config.getTaskExecutor().submit(new RequestMessageTask(reqTag, ctx.channel().attr(DefaultChannelAttributeKeys.SESSION).get(),config.getSerializer().deserialize(data, invoker.getRequestMessageClass()),config));
+			config.getTaskExecutor().submit(new RequestMessageTask(dataTag, null, ctx.channel().attr(DefaultChannelAttributeKeys.SESSION).get(),config));
 		}
 		
 		

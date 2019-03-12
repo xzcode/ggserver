@@ -42,9 +42,9 @@ public class DefaultSocketServerStarter implements IGGServerStarter {
     
     public IGGServerStarter run() {
     	
-        bossGroup = new NioEventLoopGroup(config.getBossThreadSize(),new EventLoopGroupThreadFactory("Netty Boss Group"));
+        bossGroup = new NioEventLoopGroup(config.getBossThreadSize(),new EventLoopGroupThreadFactory("Boss Group"));
         
-        workerGroup = new NioEventLoopGroup(config.getBossThreadSize(),new EventLoopGroupThreadFactory("Netty Worker Group"));
+        workerGroup = new NioEventLoopGroup(config.getBossThreadSize(),new EventLoopGroupThreadFactory("Worker Group"));
         
         try {
         	

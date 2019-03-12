@@ -55,7 +55,11 @@ public class SendMessageManager implements ISendMessage{
 			if (!config.getMessageFilterManager().doResponseFilters(userId, action, message)) {
 				return;
 			}
-			this.send(session.getChannel(),SendModel.create(action, message));
+			try {
+				this.send(session.getChannel(),SendModel.create(action.getBytes(), this.config.getSerializer().serialize(message)));
+			} catch (Exception e) {
+				LOGGER.error("Send message Error!", e);
+			}
 		}
 	}
 	
@@ -74,7 +78,7 @@ public class SendMessageManager implements ISendMessage{
 			if (!config.getMessageFilterManager().doResponseFilters(userId, action, null)) {
 				return;
 			}
-			this.send(session.getChannel(),SendModel.create(action, null));
+				this.send(session.getChannel(),SendModel.create(action.getBytes(), null));
 		}
 	}
 	
@@ -91,7 +95,7 @@ public class SendMessageManager implements ISendMessage{
 			if (!config.getMessageFilterManager().doResponseFilters(session.getRegisteredUserId(), action, null)) {
 				return;
 			}
-			this.send(session.getChannel(),SendModel.create(action, null));
+			this.send(session.getChannel(),SendModel.create(action.getBytes(), null));
 		}
 	}
 	
@@ -110,7 +114,11 @@ public class SendMessageManager implements ISendMessage{
 			if (!config.getMessageFilterManager().doResponseFilters(session.getRegisteredUserId(), action, message)) {
 				return;
 			}
-			this.send(session.getChannel(),SendModel.create(action, message));
+			try {
+				this.send(session.getChannel(),SendModel.create(action.getBytes(), this.config.getSerializer().serialize(message)));
+			} catch (Exception e) {
+				LOGGER.error("Send message Error!", e);
+			}
 		}
 	}
 }
