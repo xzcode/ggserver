@@ -1,9 +1,12 @@
 package xzcode.ggserver.core.message.receive;
 
+import java.nio.charset.Charset;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import xzcode.ggserver.core.config.GGServerConfig;
+import xzcode.ggserver.core.message.receive.invoker.IRequestMessageInvoker;
 import xzcode.ggserver.core.message.send.SendModel;
 import xzcode.ggserver.core.session.GGSession;
 import xzcode.ggserver.core.session.GGSessionThreadLocalUtil;
@@ -28,7 +31,7 @@ public class RequestMessageTask implements Runnable{
 	/**
 	 * socket消息体对象
 	 */
-	private Object message;
+	private byte[] message;
 	
 	/**
 	 * socket消息体对象
@@ -38,16 +41,16 @@ public class RequestMessageTask implements Runnable{
 	/**
 	 * 请求标识
 	 */
-	private String action;
+	private byte[] action;
 	
 	
 	public RequestMessageTask() {
+		
 	}
 	
 	
 
-	public RequestMessageTask(String action, GGSession session, Object message, GGServerConfig config) {
-		super();
+	public RequestMessageTask(byte[] action, byte[] message, GGSession session, GGServerConfig config) {
 		this.message = message;
 		this.session = session;
 		this.action = action;
@@ -62,15 +65,22 @@ public class RequestMessageTask implements Runnable{
 		GGSessionThreadLocalUtil.setSession(this.session);
 		try {
 			
+			String actionStr = new String(action, Charset.defaultCharset());
 			
-			if (!this.config.getMessageFilterManager().doRequestFilters(action, message)) {
+			IRequestMessageInvoker invoker = config.getMessageInvokerManager().get(actionStr);
+			Object msgObj = null;
+			if (message != null) {
+				msgObj = config.getSerializer().deserialize(message, invoker.getRequestMessageClass());
+			}
+			
+			if (!this.config.getMessageFilterManager().doRequestFilters(actionStr, msgObj)) {
 				GGSessionThreadLocalUtil.removeSession();
 				return;
 			}
 			
-			Object returnObj = config.getRequestMessageManager().invoke(action, this.message);
+			Object returnObj = config.getRequestMessageManager().invoke(actionStr, msgObj);
 			if (returnObj != null) {
-				config.getSendMessageManager().send(this.session.getChannel(), SendModel.create(config.getRequestMessageManager().getSendAction(action), returnObj));
+				config.getSendMessageManager().send(this.session.getChannel(), SendModel.create(config.getSerializer().serialize(config.getRequestMessageManager().getSendAction(actionStr)), config.getSerializer().serialize(returnObj)));
 			}
 		} catch (Exception e) {
 			LOGGER.error("Request Message Task ERROR!!", e);

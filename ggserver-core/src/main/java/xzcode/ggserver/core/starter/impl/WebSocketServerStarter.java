@@ -110,7 +110,7 @@ public class WebSocketServerStarter implements IGGServerStarter {
     
             f.channel().closeFuture().sync();
         }catch (Exception e) {
-        	throw new RuntimeException("Socket server start failed !! ", e);
+        	throw new RuntimeException("GGServer start failed !! ", e);
 		} finally {
             workerGroup.shutdownGracefully();
             bossGroup.shutdownGracefully();

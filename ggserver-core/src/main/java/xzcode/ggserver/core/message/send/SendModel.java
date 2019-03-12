@@ -1,41 +1,55 @@
 package xzcode.ggserver.core.message.send;
 
+/**
+ * 消息发送模型
+ * 
+ * @author zai
+ * 2019-03-12 19:20:01
+ */
 public class SendModel {
+	
 
 	/* 发送消息标识 */
-	private String action;
+	private byte[] action;
 
 	/* 消息体 */
-	private Object message;
+	private byte[] message;
 
 	/* io操作完成回调 */
 	Runnable callback;
 
-	public SendModel(String action, Object message) {
+	public SendModel(byte[] action, byte[] message) {
+		this.action = action;
+		this.message = message;
+	}
+	public SendModel(byte[] action, byte[] message, int sendType) {
 		this.action = action;
 		this.message = message;
 	}
 
-	public SendModel(String action, Object message, Runnable callback) {
+	public SendModel(byte[] action, byte[] message, Runnable callback) {
 		super();
 		this.action = action;
 		this.message = message;
 		this.callback = callback;
 	}
 
-	public static SendModel create(String action, Object message) {
+	public static SendModel create(byte[] action, byte[] message, int sendType) {
+		return new SendModel(action, message);
+	}
+	public static SendModel create(byte[] action, byte[] message) {
 		return new SendModel(action, message);
 	}
 
-	public static SendModel create(String action, Object message, Runnable callback) {
+	public static SendModel create(byte[] action, byte[] message, Runnable callback) {
 		return new SendModel(action, message, callback);
 	}
 
-	public String getSendTag() {
+	public byte[] getSendTag() {
 		return action;
 	}
 
-	public void setSendTag(String sendTag) {
+	public void setSendTag(byte[] sendTag) {
 		this.action = sendTag;
 	}
 
@@ -43,7 +57,7 @@ public class SendModel {
 		return message;
 	}
 
-	public void setMessage(Object message) {
+	public void setMessage(byte[] message) {
 		this.message = message;
 	}
 	

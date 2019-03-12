@@ -35,12 +35,11 @@ public class EncodeHandler extends MessageToByteEncoder<SendModel> {
 	@Override
 	protected void encode(ChannelHandlerContext ctx, SendModel sendModel, ByteBuf out) throws Exception {
 		
-		String sendTag = sendModel.getSendTag();
 		byte[] serialize = this.config.getSerializer().serialize(sendModel.getMessage());
 		
-		out.writeInt(4 + sendTag.length() + serialize.length);
+		out.writeInt(4 + sendModel.getSendTag().length + serialize.length);
 		
-		out.writeBytes(sendTag.getBytes());
+		out.writeBytes(sendModel.getSendTag());
 		
 		out.writeBytes(serialize);
 		

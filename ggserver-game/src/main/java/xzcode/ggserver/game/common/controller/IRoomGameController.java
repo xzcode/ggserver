@@ -191,6 +191,17 @@ public interface IRoomGameController<R, P extends Player> {
 	int countPlayers(R room);
 
 	
+	/**
+	 * 获取玩家客户端座位号号
+	 * 
+	 * @param maxPlayer 最大玩家数
+	 * @param selfSeatNum 当前玩家服务端座位号
+	 * @param targetSeatNum 目标玩家服务端座位号
+	 * @return
+	 * @author zai
+	 * 2019-03-12 18:58:35
+	 */
+	int getPlayerSeatType(int maxPlayer, int selfSeatNum, int targetSeatNum);
 
 	
 	
