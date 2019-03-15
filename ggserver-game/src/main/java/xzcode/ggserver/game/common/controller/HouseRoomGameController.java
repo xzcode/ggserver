@@ -214,4 +214,8 @@ public abstract class HouseRoomGameController<H extends House<R, P>, R extends R
 		return ((maxPlayer - selfSeatNum + targetSeatNum) % maxPlayer +1);
 	}
 
+	@Override
+	public int getPlayerSeatType(int maxPlayer, int selfSeatNum) {
+		return getPlayerSeatType(maxPlayer,selfSeatNum,selfSeatNum);
+	}
 }

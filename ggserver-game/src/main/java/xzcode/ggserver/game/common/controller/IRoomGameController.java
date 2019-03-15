@@ -202,7 +202,15 @@ public interface IRoomGameController<R, P extends Player> {
 	 * 2019-03-12 18:58:35
 	 */
 	int getPlayerSeatType(int maxPlayer, int selfSeatNum, int targetSeatNum);
-
-	
+	/**
+	 * 获取玩家客户端座位号 适合在自己发给自己 但是有转座位号的需求
+	 * 
+	 * @param maxPlayer
+	 * @param selfSeatNum
+	 * @return
+	 * @author Wmc
+	 * 2019-03-15 18:57:09
+	 */
+	int getPlayerSeatType(int maxPlayer, int selfSeatNum);
 	
 }
