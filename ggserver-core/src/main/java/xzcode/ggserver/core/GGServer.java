@@ -5,6 +5,7 @@ import java.util.concurrent.ScheduledFuture;
 
 import xzcode.ggserver.core.config.GGServerConfig;
 import xzcode.ggserver.core.event.EventRunnableInvoker;
+import xzcode.ggserver.core.event.GGEventTask;
 import xzcode.ggserver.core.event.IEventInvoker;
 import xzcode.ggserver.core.executor.task.TimeoutRunnable;
 import xzcode.ggserver.core.executor.timeout.ISetTimeoutExecution;
@@ -31,8 +32,6 @@ public class GGServer implements ISendMessage, ISetTimeoutExecution{
 		super();
 		this.serverConfig = serverConfig;
 	}
-
-
 	
 
 	/**
@@ -166,8 +165,6 @@ public class GGServer implements ISendMessage, ISetTimeoutExecution{
 		serverConfig.getEventInvokerManager().put(invoker);
 	}
 
-
-
 	@Override
 	public void send(Object userId, String action, Object message) {
 		this.serverConfig.getSendMessageManager().send(userId, action, message);;
@@ -195,6 +192,14 @@ public class GGServer implements ISendMessage, ISetTimeoutExecution{
 	public void send(String action, Object message) {
 		this.serverConfig.getSendMessageManager().send(action, message);
 		
+	}
+	
+	public void emitEvent(String eventTag, Object message) {
+		serverConfig.getTaskExecutor().submit(new GGEventTask(getSession(), eventTag, message, serverConfig));
+	}
+	
+	public void emitEvent(String eventTag) {
+		serverConfig.getTaskExecutor().submit(new GGEventTask(getSession(), eventTag, null, serverConfig));
 	}
 
 

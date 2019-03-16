@@ -32,6 +32,20 @@ public class EventMethodInvoker implements IEventInvoker {
 		}
 	}
 	
+
+	@Override
+	public void invoke(Object message) throws Exception {
+		Method method = null;
+		for (int i = 0; i < methods.size(); i++) {
+			method = methods.get(i);
+			if (message != null) {
+				method.invoke(componentObj);				
+			}else {
+				method.invoke(componentObj, message);
+			}
+		}
+	}
+	
 	public void setComponentClass(Class<?> componentClass) {
 		this.componentClass = componentClass;
 	}
@@ -66,6 +80,7 @@ public class EventMethodInvoker implements IEventInvoker {
 	public Object getComponentObj() {
 		return componentObj;
 	}
+
 	
 }
 

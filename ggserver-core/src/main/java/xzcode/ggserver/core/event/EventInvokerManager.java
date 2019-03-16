@@ -35,9 +35,16 @@ public class EventInvokerManager {
 	 * 2017-07-29
 	 */
 	public void invoke(String eventTag) throws Exception {
+		this.invoke(eventTag, null);
+	}
+	
+	public void invoke(String eventTag, Object message) throws Exception {
 		IEventInvoker invoker = map.get(eventTag);
 		if (invoker != null) {
-			invoker.invoke();
+			if (message != null) {
+				invoker.invoke(message);
+				
+			}
 		}
 	}
 	

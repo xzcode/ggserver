@@ -23,6 +23,13 @@ public class EventRunnableInvoker implements IEventInvoker {
 	}
 	
 
+	@Override
+	public void invoke(Object message) throws Exception {
+		// do nothing
+		
+	}
+	
+
 	public String getEventTag() {
 		return eventTag;
 	}
@@ -43,6 +50,8 @@ public class EventRunnableInvoker implements IEventInvoker {
 	public List<Runnable> getRunnables() {
 		return runnables;
 	}
+
+
 
 	
 }
