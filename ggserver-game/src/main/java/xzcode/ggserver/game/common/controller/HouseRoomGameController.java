@@ -6,8 +6,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ThreadLocalRandom;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import xzcode.ggserver.game.common.house.House;
 import xzcode.ggserver.game.common.interfaces.condition.ICheckCondition;
 import xzcode.ggserver.game.common.player.Player;
@@ -213,9 +215,21 @@ public abstract class HouseRoomGameController<H extends House<R, P>, R extends R
 	public int getPlayerSeatType(int maxPlayer, int selfSeatNum,int targetSeatNum) {
 		return ((maxPlayer - selfSeatNum + targetSeatNum) % maxPlayer +1);
 	}
+	
+	@Override
+	public int getPlayerSeatType(int selfSeatNum,int targetSeatNum) {
+		return getPlayerSeatType(getMaxPlayerNum(), selfSeatNum, targetSeatNum);
+	}
 
 	@Override
-	public int getPlayerSeatType(int maxPlayer, int selfSeatNum) {
+	public int getPlayerSelfSeatType(int maxPlayer, int selfSeatNum) {
 		return getPlayerSeatType(maxPlayer,selfSeatNum,selfSeatNum);
 	}
+	
+	@Override
+	public int getPlayerSelfSeatType(int selfSeatNum) {
+		return getPlayerSeatType(getMaxPlayerNum(), selfSeatNum,selfSeatNum);
+	}
+	
+	
 }
