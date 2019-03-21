@@ -43,7 +43,8 @@ public class EventInvokerManager {
 		if (invoker != null) {
 			if (message != null) {
 				invoker.invoke(message);
-				
+			}else {
+				invoker.invoke();
 			}
 		}
 	}

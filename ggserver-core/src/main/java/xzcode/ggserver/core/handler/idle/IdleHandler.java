@@ -70,7 +70,7 @@ public class IdleHandler extends ChannelInboundHandlerAdapter{
 							if (LOGGER.isDebugEnabled()) {
 								LOGGER.debug("...WRITER_IDLE...: channel:{}", ctx.channel());								
 							}
-							config.getTaskExecutor().submit(new GGEventTask(session, null, GGEvents.IdleState.WRITER_IDLE, config));
+							config.getTaskExecutor().submit(new GGEventTask(session, GGEvents.IdleState.WRITER_IDLE, null, config));
 						}
 					break;
 				case READER_IDLE:
@@ -78,7 +78,7 @@ public class IdleHandler extends ChannelInboundHandlerAdapter{
 							if (LOGGER.isDebugEnabled()) {
 								LOGGER.debug("...READER_IDLE...: channel:{}", ctx.channel());								
 							}
-							config.getTaskExecutor().submit(new GGEventTask(session, null, GGEvents.IdleState.READER_IDLE, config));
+							config.getTaskExecutor().submit(new GGEventTask(session, GGEvents.IdleState.READER_IDLE, null, config));
 						}
 					break;
 				case ALL_IDLE:
@@ -86,7 +86,7 @@ public class IdleHandler extends ChannelInboundHandlerAdapter{
 							if (LOGGER.isDebugEnabled()) {
 								LOGGER.debug("...ALL_IDLE...: channel:{}", ctx.channel());								
 							}
-							config.getTaskExecutor().submit(new GGEventTask(session, null, GGEvents.IdleState.ALL_IDLE, config));
+							config.getTaskExecutor().submit(new GGEventTask(session, GGEvents.IdleState.ALL_IDLE, null, config));
 						}
 					break;
 				default:

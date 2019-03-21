@@ -64,7 +64,7 @@ public class InboundCommonHandler extends ChannelInboundHandlerAdapter{
 		//添加到全局channelgroup绑定
 		//ChannelGroupsManager.getGlobalGroup().add(ctx.channel());
 		
-		config.getTaskExecutor().submit(new GGEventTask(session, null, GGEvents.ConnectionState.ACTIVE, config));
+		config.getTaskExecutor().submit(new GGEventTask(session, GGEvents.ConnectionState.ACTIVE, null, config));
 		
 		
 		//注册channel关闭事件
@@ -77,7 +77,7 @@ public class InboundCommonHandler extends ChannelInboundHandlerAdapter{
 			
 			//sezzion.inActive();
 			
-			config.getTaskExecutor().submit(new GGEventTask(sezzion, null, GGEvents.ConnectionState.CLOSE, config));
+			config.getTaskExecutor().submit(new GGEventTask(sezzion, GGEvents.ConnectionState.CLOSE, null, config));
 			
 			//移除全局channelgroup绑定
 			//ChannelGroupsManager.getGlobalGroup().remove(ctx.channel());
