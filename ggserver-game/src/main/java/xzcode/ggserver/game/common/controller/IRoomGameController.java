@@ -233,5 +233,14 @@ public interface IRoomGameController<R, P extends Player> {
 	 * 2019-03-18 18:10:01
 	 */
 	int getPlayerSelfSeatType(int selfSeatNum);
+
+	/**
+	 * 获取自己的客户端座位号
+	 * 
+	 * @return
+	 * @author zai
+	 * 2019-03-22 15:53:32
+	 */
+	int getPlayerSelfSeatType();
 	
 }
