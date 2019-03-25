@@ -146,8 +146,7 @@ public abstract class HouseRoomGameController<H extends House<R, P>, R extends R
 		if (aimPlayerList.size()==0) {
 			return null;
 		}
-		aimPlayerList.sort((x,y)->
-		{
+		aimPlayerList.sort((x,y)-> {
 			int r = -2;
 			if (x.getSeatNum() > seatNum) {
 				r = y.getSeatNum() < seatNum ? -1 : 0;
