@@ -234,5 +234,11 @@ public abstract class HouseRoomGameController<H extends House<R, P>, R extends R
 		return 1;
 	}
 	
+	@Override
+	public P getPlayerBySeatType(R room, int selfSeatNum, int targetSeatType) {
+		return getPlayer(room, player -> {
+			return getPlayerSeatType(selfSeatNum, player.getSeatNum()) == targetSeatType;
+		}); 
+	};
 	
 }
