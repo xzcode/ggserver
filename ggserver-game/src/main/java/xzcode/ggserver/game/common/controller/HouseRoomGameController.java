@@ -1,11 +1,13 @@
 package xzcode.ggserver.game.common.controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -128,37 +130,44 @@ public abstract class HouseRoomGameController<H extends House<R, P>, R extends R
 		return plist.get(0);
 		
 	}
+	
+	@Override
+	public List<P> getSortedInGamePlayerList(R room) {
+		List<P> inGamePlayers = getPlayers(room, player -> {
+			return player.isInGame();
+		});
+		Collections.sort(inGamePlayers, (x, y) -> x.getSeatNum() - y.getSeatNum());
+		return inGamePlayers;
+	}
 
 	@Override
-	public P getNextPlayer(R room, int seatNum, ICheckCondition<P> condition) {
+	public P getNextPlayer(R room, int startSeatNum, ICheckCondition<P> condition) {
 
-		List<P> pList = room.getOrderPlayerList();
+		//获取排序后的玩家
+		List<P> pList = getSortedInGamePlayerList(room);
+		//排除起始座位号
+		pList = pList.stream().filter(o -> o.getSeatNum() != startSeatNum && condition.check(o)).collect(Collectors.toList());
+		
 		if (pList.size() == 0) {
 			return null;
 		}
-		int maxPlayerOrder = room.getMaxPalyerNum();// 当前玩家数量
-		List<P>aimPlayerList = new ArrayList<>();
-		for (P ps : pList) {
-			if (condition.check(ps) && ps.getSeatNum() <= maxPlayerOrder&&ps.getSeatNum()>0) {
-				aimPlayerList.add(ps);
+		
+		for (P p : pList) {
+			if (p.getSeatNum() > startSeatNum) {
+				return p;
 			}
 		}
-		if (aimPlayerList.size()==0) {
-			return null;
+		
+		for (P p : pList) {
+			if (p.getSeatNum() < startSeatNum) {
+				return p;
+			}
 		}
-		aimPlayerList.sort((x,y)-> {
-			int r = -2;
-			if (x.getSeatNum() > seatNum) {
-				r = y.getSeatNum() < seatNum ? -1 : 0;
-			}else {
-				r = y.getSeatNum() < seatNum ? 0 : 1;
-			}
-			if (r==0) {
-				r = x.getSeatNum()-y.getSeatNum();
-			}
-			return r;
-		});
-		return aimPlayerList.get(0);
+		
+
+		return null;
+		
+		
 	}
 	
 	@Override
@@ -199,6 +208,7 @@ public abstract class HouseRoomGameController<H extends House<R, P>, R extends R
 			}
 		});
 	}
+	
 
 	@Override
 	public Map<Object, P> getPlayers(R room) {

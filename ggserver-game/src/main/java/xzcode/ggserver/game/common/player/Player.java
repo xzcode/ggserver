@@ -43,6 +43,10 @@ public class Player {
 	 * 是否在线
 	 */
 	protected boolean online;
+	/**
+	 * 是否参与游戏
+	 */
+	protected boolean inGame;
 	
 	/**
 	 * 是否机器人
@@ -132,7 +136,13 @@ public class Player {
 	
 	
 
+	public boolean isInGame() {
+		return inGame;
+	}
 	
+	public void setInGame(boolean inGame) {
+		this.inGame = inGame;
+	}
 
 	
 

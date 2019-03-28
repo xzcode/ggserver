@@ -101,7 +101,7 @@ public abstract class Room<P extends Player>{
 	public List<P> getOrderPlayerList() {
 		return players.entrySet().stream().map((entry) -> entry.getValue()).sorted((x, y) -> x.getSeatNum() - y.getSeatNum()).collect(Collectors.toList());
 	}
-
+	
 	/**
 	 * 添加玩家
 	 * 

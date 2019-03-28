@@ -254,5 +254,15 @@ public interface IRoomGameController<R, P extends Player> {
 	 * 2019-03-26 20:07:28
 	 */
 	P getPlayerBySeatType(R room, int selfSeatNum, int targetSeatType);
+
+	/**
+	 * 获取已排序的参与游戏的玩家
+	 * 
+	 * @param room
+	 * @return
+	 * @author zai
+	 * 2019-03-27 16:26:55
+	 */
+	List<P> getSortedInGamePlayerList(R room);
 	
 }
