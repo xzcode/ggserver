@@ -69,6 +69,11 @@ public class GGServerConfig {
 	private EventInvokerManager eventInvokerManager = new EventInvokerManager();
 	private UserSessonManager userSessonManager = new UserSessonManager();
 	
+	private NioEventLoopGroup bossGroup = new NioEventLoopGroup(getBossThreadSize(),new EventLoopGroupThreadFactory("Boss Group"));
+    
+	private NioEventLoopGroup workerGroup = new NioEventLoopGroup(getBossThreadSize(),new EventLoopGroupThreadFactory("Worker Group"));
+	
+	
 	private GGServerTaskExecutor taskExecutor = new GGServerTaskExecutor(this);
 	
 	
@@ -80,6 +85,56 @@ public class GGServerConfig {
 		
 	}
 	
+	
+	
+	public int getExecutorCorePoolSize() {
+		return executorCorePoolSize;
+	}
+
+	public void setExecutorCorePoolSize(int executorCorePoolSize) {
+		this.executorCorePoolSize = executorCorePoolSize;
+	}
+
+	public int getExecutorMaxPoolSize() {
+		return executorMaxPoolSize;
+	}
+
+	public void setExecutorMaxPoolSize(int executorMaxPoolSize) {
+		this.executorMaxPoolSize = executorMaxPoolSize;
+	}
+
+	public long getExecutorKeepAliveTime() {
+		return executorKeepAliveTime;
+	}
+
+	public void setExecutorKeepAliveTime(long executorKeepAliveTime) {
+		this.executorKeepAliveTime = executorKeepAliveTime;
+	}
+
+	public int getExecutorTaskQueueSize() {
+		return executorTaskQueueSize;
+	}
+
+	public void setExecutorTaskQueueSize(int executorTaskQueueSize) {
+		this.executorTaskQueueSize = executorTaskQueueSize;
+	}
+
+	public NioEventLoopGroup getBossGroup() {
+		return bossGroup;
+	}
+
+	public void setBossGroup(NioEventLoopGroup bossGroup) {
+		this.bossGroup = bossGroup;
+	}
+
+	public NioEventLoopGroup getWorkerGroup() {
+		return workerGroup;
+	}
+
+	public void setWorkerGroup(NioEventLoopGroup workerGroup) {
+		this.workerGroup = workerGroup;
+	}
+
 	public void setSerializer(ISerializer serializer) {
 		this.serializer = serializer;
 	}
@@ -128,12 +183,9 @@ public class GGServerConfig {
 	public void setWorkThreadSize(int workThreadSize) {
 		this.workThreadSize = workThreadSize;
 	}
-	
-	
 	public String[] getScanPackage() {
 		return scanPackage;
 	}
-	
 	public void setScanPackage(String...scanPackage) {
 		this.scanPackage = scanPackage;
 	}

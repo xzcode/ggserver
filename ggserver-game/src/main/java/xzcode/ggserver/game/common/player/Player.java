@@ -11,7 +11,7 @@ public class Player {
 	/**
 	 * 用户id
 	 */
-	protected Object playerId; 
+	protected Long playerId; 
 	
 	/**
 	 * 用户编号
@@ -55,12 +55,12 @@ public class Player {
 	
 	
 	
-	public Object getPlayerId() {
+	public Long getPlayerId() {
 		return playerId;
 	}
 
 
-	public void setPlayerId(Object playerId) {
+	public void setPlayerId(Long playerId) {
 		this.playerId = playerId;
 	}
 

@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import xzcode.ggserver.core.config.GGServerConfig;
 import xzcode.ggserver.core.executor.task.TimeoutInvokeTask;
 import xzcode.ggserver.core.executor.task.TimeoutRunnable;
-import xzcode.ggserver.core.executor.timeout.ISetTimeoutExecution;
+import xzcode.ggserver.core.executor.timeout.IGGServerExecution;
 
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -18,7 +18,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author zai
  * 2018-05-29
  */
-public class GGServerTaskExecutor extends ScheduledThreadPoolExecutor implements ISetTimeoutExecution{
+public class GGServerTaskExecutor extends ScheduledThreadPoolExecutor implements IGGServerExecution{
 	
 	private static final Logger logger = LoggerFactory.getLogger(GGServerTaskExecutor.class);
 	
@@ -63,6 +63,11 @@ public class GGServerTaskExecutor extends ScheduledThreadPoolExecutor implements
 		task.setFuture(future);
 		runnable.setTimeoutFuture(future);
 		return future;
+	}
+
+	@Override
+	public Future<?> submitTask(Runnable task) {
+		return submit(task);
 	}
 
 }

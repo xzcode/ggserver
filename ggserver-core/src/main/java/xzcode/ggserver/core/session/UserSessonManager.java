@@ -10,25 +10,29 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class UserSessonManager {
 	
-	private final ConcurrentHashMap<Object, GGSession> map = new ConcurrentHashMap<>();
+	private final ConcurrentHashMap<Object, GGSession> sessionMap = new ConcurrentHashMap<>();
 	
 	
 	public void put(Object userId, GGSession session) {
-		map.put(userId, session);
+		sessionMap.put(userId, session);
 	}
 	
 	public GGSession get(Object userId) {
 		if (userId != null) {
-			return map.get(userId);
+			return sessionMap.get(userId);
 		}
 		return null;
 	}
 	
 	public GGSession remove(Object userId) {
 		if (userId != null) {
-			return map.remove(userId);
+			return sessionMap.remove(userId);
 		}
 		return null;
+	}
+	
+	public ConcurrentHashMap<Object, GGSession> getSessionMap() {
+		return sessionMap;
 	}
 
 }

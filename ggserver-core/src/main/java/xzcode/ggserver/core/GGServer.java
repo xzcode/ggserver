@@ -1,6 +1,7 @@
 package xzcode.ggserver.core;
 
 import java.lang.reflect.ParameterizedType;
+import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledFuture;
 
 import xzcode.ggserver.core.config.GGServerConfig;
@@ -8,7 +9,7 @@ import xzcode.ggserver.core.event.EventRunnableInvoker;
 import xzcode.ggserver.core.event.GGEventTask;
 import xzcode.ggserver.core.event.IEventInvoker;
 import xzcode.ggserver.core.executor.task.TimeoutRunnable;
-import xzcode.ggserver.core.executor.timeout.ISetTimeoutExecution;
+import xzcode.ggserver.core.executor.timeout.IGGServerExecution;
 import xzcode.ggserver.core.message.receive.IOnMessageAction;
 import xzcode.ggserver.core.message.receive.invoker.OnMessagerInvoker;
 import xzcode.ggserver.core.message.send.ISendMessage;
@@ -21,7 +22,7 @@ import xzcode.ggserver.core.session.GGSessionThreadLocalUtil;
  * 
  * @author zai 2017-08-04
  */
-public class GGServer implements ISendMessage, ISetTimeoutExecution{
+public class GGServer implements ISendMessage, IGGServerExecution{
 	
 	private GGServerConfig serverConfig;
 	
@@ -32,7 +33,9 @@ public class GGServer implements ISendMessage, ISetTimeoutExecution{
 		super();
 		this.serverConfig = serverConfig;
 	}
-	
+	public GGServerConfig getServerConfig() {
+		return serverConfig;
+	}
 
 	/**
 	 * 获取当前会话session对象
@@ -201,17 +204,19 @@ public class GGServer implements ISendMessage, ISetTimeoutExecution{
 	public void emitEvent(String eventTag) {
 		serverConfig.getTaskExecutor().submit(new GGEventTask(getSession(), eventTag, null, serverConfig));
 	}
-
-
+	
 	@Override
 	public ScheduledFuture<?> setTimeout(Runnable runnable, long timeoutMilliSec) {
 		return this.serverConfig.getTaskExecutor().setTimeout(runnable, timeoutMilliSec);
 	}
 
-
 	@Override
 	public ScheduledFuture<?> setTimeout(TimeoutRunnable runnable, long timeoutMilliSec) {
 		return this.serverConfig.getTaskExecutor().setTimeout(runnable, timeoutMilliSec);
+	}
+	
+	public Future<?> submitTask(Runnable task) {
+		return this.serverConfig.getTaskExecutor().submit(task);
 	}
 
 }
