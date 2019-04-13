@@ -14,7 +14,7 @@ import xzcode.ggserver.game.common.room.Room;
  * @param <R>
  * @author zai 2019-01-22 19:02:38
  */
-public abstract class House< P extends Player<R, H>,R extends Room<P, R, H>, H> {
+public abstract class House< P extends Player, R extends Room<P, R, H>, H> {
 
 	private static final Logger logger = LoggerFactory.getLogger(House.class);
 
@@ -45,68 +45,6 @@ public abstract class House< P extends Player<R, H>,R extends Room<P, R, H>, H> 
 		return rooms.get(roomNo);
 	}
 
-	/**
-	 * 获取最大玩家数
-	 * 
-	 * @return
-	 * @author zai 2019-01-24 10:44:40
-	 */
-	/* public abstract int getMaxPlayerNum(); */
-
-	/**
-	 * 玩家集合
-	 */
-	/*
-	 * protected ConcurrentHashMap<Object, P> players = new
-	 * ConcurrentHashMap<>(getMaxPlayerNum());
-	 */
-
-	/**
-	 * 获取玩家
-	 * 
-	 * @param userId
-	 * @return
-	 * @author zai 2019-01-24 13:40:19
-	 */
-	/*
-	 * public P getPlayer(Object userId) { return players.get(userId); }
-	 */
-
-	/**
-	 * 玩家是否在大厅内
-	 * 
-	 * @param player
-	 * @return
-	 * @author zai 2019-01-24 15:02:53
-	 */
-	/*
-	 * public boolean playerInHouse(P player) { return
-	 * this.players.contains(player.getUserId()); }
-	 */
-	/**
-	 * 玩家进大厅
-	 * 
-	 * @param player
-	 * @return
-	 * @author zai 2019-01-24 13:48:41
-	 */
-	/*
-	 * public boolean enterHouse(P player) { //做人数限制 if (this.getMaxPlayerNum() >=
-	 * this.players.size()) { return false; } if (this.getMaxRoomNum() >
-	 * this.rooms.size()) { return false; } if (player == null) { return false; }
-	 * this.players.putIfAbsent(player.getUserId(), player); return true; }
-	 */
-
-	/**
-	 * 离开大厅
-	 * 
-	 * @param userId
-	 * @return
-	 * @author zai 2019-01-24 15:00:57
-	 */
-	/*
-	 * public P leaveHouse(Object userId) { return this.players.remove(userId); }
-	 */
 	/**
 	 * 移除房间
 	 * 

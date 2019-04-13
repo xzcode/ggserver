@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import xzcode.ggserver.game.common.player.Player;
+import xzcode.ggserver.game.common.player.RoomPlayer;
 import xzcode.ggserver.game.common.poker.PokerCard;
 
 /**
@@ -14,7 +14,7 @@ import xzcode.ggserver.game.common.poker.PokerCard;
  * @author zai
  * 2019-01-21 20:21:20
  */
-public abstract class PokerCardPlayer<C extends PokerCard, R, H> extends Player<R, H>{
+public abstract class PokerCardPlayer<C extends PokerCard, R, H> extends RoomPlayer<R, H>{
 	
 	/**
 	 * 手牌

@@ -15,7 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import xzcode.ggserver.game.common.house.House;
-import xzcode.ggserver.game.common.player.Player;
+import xzcode.ggserver.game.common.player.RoomPlayer;
 import xzcode.ggserver.game.common.room.MatchingRoom;
 
 /**
@@ -28,7 +28,7 @@ import xzcode.ggserver.game.common.room.MatchingRoom;
  */
 public class LoopMachingHouse
 <
-	P extends Player<R, H>,
+	P extends RoomPlayer<R, H>,
 	R extends MatchingRoom< P, R, H>, 
 	H extends House<P, R, H>
 > 
@@ -59,12 +59,7 @@ extends House<P, R, H>{
 	/**
 	 * 超时检查行为
 	 */
-	protected ILoopCheckTimeoutAction<R> checkTimeoutAction = new ILoopCheckTimeoutAction<R>() {
-		@Override
-		public boolean checkTimeout(R room) {
-			return room.getPlayerNum() == 1 && room.checkMatchingTimeout();
-		}
-	} ;
+	protected ILoopCheckTimeoutAction<R> checkTimeoutAction;
 
 	
 	private ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1, new ThreadFactory() {
@@ -176,24 +171,10 @@ extends House<P, R, H>{
 		return super.removeRoom(roomNo);
 	}
 
-	private R newRoomNewInstance() {
-		R room = null;
-		try {
-			room = rClass.newInstance();
-		} catch (Exception e) {
-			logger.error("create room failed!!", e);
-		}
-		return room;
-	}
-	
 	
 	public void addMatchingRoom(R room) {
 		this.matchingRooms.put(room.getRoomNo(), room);
 	}
-	
-	
-	
-	
 	
 	
 	private Class<?> getSuperClassGenericsClass(int index){

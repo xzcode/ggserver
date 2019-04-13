@@ -13,7 +13,7 @@ import xzcode.ggserver.game.common.room.Room;
  * @author zai
  * 2019-02-20 14:34:32
  */
-public class MachingRoomHolder<R extends Room<P, R, H>, P extends Player<R, H>, H> extends TimeoutHolder{
+public class MachingRoomHolder<R extends Room<P, R, H>, P extends Player, H> extends TimeoutHolder{
 	
 	
 	/**

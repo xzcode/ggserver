@@ -6,6 +6,7 @@ import java.util.Map;
 import xzcode.ggserver.game.common.house.House;
 import xzcode.ggserver.game.common.interfaces.condition.ICheckCondition;
 import xzcode.ggserver.game.common.player.Player;
+import xzcode.ggserver.game.common.player.RoomPlayer;
 import xzcode.ggserver.game.common.room.Room;
 
 /**
@@ -18,7 +19,7 @@ import xzcode.ggserver.game.common.room.Room;
  */
 public interface IRoomGameController
 <
-P extends Player<R, H>,
+P extends RoomPlayer<R, H>,
 R extends Room< P, R, H>, 
 H extends House<P, R, H>
 > 

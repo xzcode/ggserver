@@ -1,6 +1,5 @@
 package xzcode.ggserver.game.common.house.matching;
 
-import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.slf4j.Logger;
@@ -8,7 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import xzcode.ggserver.game.common.holder.matching.MachingRoomHolder;
 import xzcode.ggserver.game.common.house.House;
-import xzcode.ggserver.game.common.player.Player;
+import xzcode.ggserver.game.common.player.RoomPlayer;
 import xzcode.ggserver.game.common.room.Room;
 
 /**
@@ -19,7 +18,7 @@ import xzcode.ggserver.game.common.room.Room;
  * @author zai
  * 2019-02-20 14:33:01
  */
-public abstract class MachingRoomHouse<P extends Player<R, H>,R extends Room<P, R, H>,  H> extends House<P, R , H>{
+public abstract class MachingRoomHouse<P extends RoomPlayer<R, H>,R extends Room<P, R, H>,  H> extends House<P, R , H>{
 	
 	private static final Logger logger = LoggerFactory.getLogger(MachingRoomHouse.class);
 	
