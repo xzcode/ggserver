@@ -14,7 +14,16 @@ import xzcode.ggserver.core.GGServer;
  */
 public abstract class GGServerGameController{
 
-	private static final Logger logger = LoggerFactory.getLogger(GGServerGameController.class);
+	public static final Logger logger = LoggerFactory.getLogger(GGServerGameController.class);
+	
+	/**
+	 * GGServer对象
+	 */
+	protected GGServer gg;
+	
+	public GGServerGameController() {
+		this.gg = getGGServer();
+	}
 
 	/**
 	 * 获取GGServer对象

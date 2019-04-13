@@ -5,7 +5,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import xzcode.ggserver.game.common.interfaces.condition.ICheckCondition;
 import xzcode.ggserver.game.common.player.Player;
 import xzcode.ggserver.game.common.room.Room;
 
@@ -15,32 +14,25 @@ import xzcode.ggserver.game.common.room.Room;
  * @param <R>
  * @author zai 2019-01-22 19:02:38
  */
-public abstract class House<R extends Room<P>, P extends Player> {
+public abstract class House< P extends Player<R, H>,R extends Room<P, R, H>, H> {
 
 	private static final Logger logger = LoggerFactory.getLogger(House.class);
 
 	/**
 	 * 大厅id
 	 */
-	private Object houseId;
+	protected Object houseId;
 
 	/**
 	 * 游戏id
 	 */
-	private Object gameId;
+	protected Object gameId;
 
-	/**
-	 * 获取最大房间数
-	 * 
-	 * @return
-	 * @author zai 2019-01-22 19:02:16
-	 */
-	public abstract int getMaxRoomNum();
 
 	/**
 	 * 房间集合
 	 */
-	protected ConcurrentHashMap<String, R> rooms = new ConcurrentHashMap<>(getMaxRoomNum());
+	protected ConcurrentHashMap<String, R> rooms = new ConcurrentHashMap<>();
 
 	/**
 	 * 获取房间
@@ -133,8 +125,8 @@ public abstract class House<R extends Room<P>, P extends Player> {
 	 * @param room
 	 * @author zai 2018-12-27 13:57:46
 	 */
-	public void addRoom(String roomNo, R room) {
-		rooms.putIfAbsent(roomNo, room);
+	public R addRoom(String roomNo, R room) {
+		return rooms.putIfAbsent(roomNo, room);
 	}
 
 	/**

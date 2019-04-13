@@ -3,8 +3,10 @@ package xzcode.ggserver.game.common.controller;
 import java.util.List;
 import java.util.Map;
 
+import xzcode.ggserver.game.common.house.House;
 import xzcode.ggserver.game.common.interfaces.condition.ICheckCondition;
 import xzcode.ggserver.game.common.player.Player;
+import xzcode.ggserver.game.common.room.Room;
 
 /**
  * 房间游戏控制器接口
@@ -14,7 +16,13 @@ import xzcode.ggserver.game.common.player.Player;
  * @author zai
  * 2019-02-16 17:57:18
  */
-public interface IRoomGameController<R, P extends Player> {
+public interface IRoomGameController
+<
+P extends Player<R, H>,
+R extends Room< P, R, H>, 
+H extends House<P, R, H>
+> 
+{
 
 	/**
 	 * 获取所有玩家

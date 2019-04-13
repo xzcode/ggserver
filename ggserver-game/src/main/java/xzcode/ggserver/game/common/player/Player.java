@@ -6,7 +6,7 @@ package xzcode.ggserver.game.common.player;
  * @author zai
  * 2019-01-21 20:21:20
  */
-public class Player {
+public class Player<R, H> {
 	
 	/**
 	 * 用户id
@@ -53,7 +53,24 @@ public class Player {
 	 */
 	protected boolean robot;
 	
+	protected R room;
 	
+	protected H house;
+	
+	public R getRoom() {
+		return room;
+	}
+	public void setRoom(R room) {
+		this.room = room;
+	}
+	
+	public H getHouse() {
+		return house;
+	}
+	
+	public void setHouse(H house) {
+		this.house = house;
+	}
 	
 	public Long getPlayerId() {
 		return playerId;

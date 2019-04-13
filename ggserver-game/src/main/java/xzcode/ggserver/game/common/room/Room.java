@@ -13,7 +13,7 @@ import xzcode.ggserver.game.common.player.Player;
  * 
  * @author zai 2018-05-24
  */
-public abstract class Room<P extends Player>{	
+public abstract class Room<P extends Player<R, H>, R, H>{	
 	/**
 	 * 房间id
 	 */
@@ -23,6 +23,11 @@ public abstract class Room<P extends Player>{
 	 * 房间编号
 	 */
 	protected String roomNo;
+	
+	/**
+	 * 大厅
+	 */
+	protected H house;
 
 	/**
 	 * 房主id
@@ -142,6 +147,14 @@ public abstract class Room<P extends Player>{
 
 	public void setOwnerUserNo(String ownerUserNo) {
 		this.ownerUserNo = ownerUserNo;
+	}
+	
+	public H getHouse() {
+		return house;
+	}
+	
+	public void setHouse(H house) {
+		this.house = house;
 	}
 
 }

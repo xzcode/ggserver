@@ -22,11 +22,17 @@ import xzcode.ggserver.game.common.room.Room;
  * 
  * @author zai 2019-01-06 14:34:21
  */
-public abstract class HouseRoomGameController<H extends House<R, P>, R extends Room<P>, P extends Player> extends
+public abstract class HouseRoomGameController
+<
+P extends Player<R, H>,
+R extends Room< P, R, H>, 
+H extends House<P, R, H>
+> 
+extends
 		GGServerGameController 
 		implements 
 		IPlayerGameController<P>, 
-		IRoomGameController<R, P>, 
+		IRoomGameController<P, R, H>, 
 		IHouseGameController<H> {
 
 	private static final Logger logger = LoggerFactory.getLogger(HouseRoomGameController.class);

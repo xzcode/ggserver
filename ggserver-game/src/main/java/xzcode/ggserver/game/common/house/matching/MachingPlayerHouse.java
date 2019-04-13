@@ -18,7 +18,13 @@ import xzcode.ggserver.game.common.room.Room;
  * @author zai
  * 2019-01-22 19:02:38
  */
-public abstract class MachingPlayerHouse< R extends Room<P>, P extends Player> extends House<R, P>{
+public abstract class MachingPlayerHouse
+<
+P extends Player<R, H>,
+R extends Room< P, R, H>, 
+H extends House<P, R, H>
+> 
+extends House<P, R, H>{
 	
 	private static final Logger logger = LoggerFactory.getLogger(MachingPlayerHouse.class);
 	
