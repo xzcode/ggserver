@@ -1,4 +1,4 @@
-package xzcode.ggserver.game.common.house.matching;
+package xzcode.ggserver.game.common.house.matching.interfaces;
 
 /**
  * 超时检查行为

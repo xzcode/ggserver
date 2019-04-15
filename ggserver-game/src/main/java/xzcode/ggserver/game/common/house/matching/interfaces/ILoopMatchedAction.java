@@ -1,6 +1,7 @@
-package xzcode.ggserver.game.common.house.matching;
+package xzcode.ggserver.game.common.house.matching.interfaces;
 
 import xzcode.ggserver.game.common.house.House;
+import xzcode.ggserver.game.common.house.matching.LoopMachingHouse;
 import xzcode.ggserver.game.common.player.RoomPlayer;
 import xzcode.ggserver.game.common.room.MatchingRoom;
 

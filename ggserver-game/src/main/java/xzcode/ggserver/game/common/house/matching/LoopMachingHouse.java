@@ -1,20 +1,23 @@
 package xzcode.ggserver.game.common.house.matching;
 
-import java.lang.reflect.ParameterizedType;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import xzcode.ggserver.game.common.house.House;
+import xzcode.ggserver.game.common.house.listener.IRemoveRoomListener;
+import xzcode.ggserver.game.common.house.matching.interfaces.ILoopCheckRemoveAction;
+import xzcode.ggserver.game.common.house.matching.interfaces.ILoopCheckTimeoutAction;
+import xzcode.ggserver.game.common.house.matching.interfaces.ILoopMatchedAction;
+import xzcode.ggserver.game.common.house.matching.interfaces.ILoopMatchingTimeoutListener;
 import xzcode.ggserver.game.common.player.RoomPlayer;
 import xzcode.ggserver.game.common.room.MatchingRoom;
 
@@ -36,9 +39,6 @@ extends House<P, R, H>{
 	
 	private static final Logger logger = LoggerFactory.getLogger(LoopMachingHouse.class);
 	
-	private Class<P> pClass;
-	private Class<R> rClass;
-	private Class<H> hClass;
 	
 
 	/**
@@ -47,59 +47,62 @@ extends House<P, R, H>{
 	protected Map<String, R> matchingRooms = new ConcurrentHashMap<>(); 
 	
 	/**
+	 * 匹配容器集合
+	 */
+	protected Map<String, R> fullPlayerRooms = new ConcurrentHashMap<>(); 
+	
+	/**
 	 * 匹配超时时间(毫秒)
 	 */
 	protected long matchingTimeoutMillisec = 3 * 1000;
 	
 	/**
-	 * 超时行为
+	 * 超时监听器集合
 	 */
-	protected ILoopMatchingTimeoutAction<R> timeoutAction;
+	protected List<ILoopMatchingTimeoutListener<R, H>> timeoutListeners = new ArrayList<>();
+	
 	
 	/**
 	 * 超时检查行为
 	 */
 	protected ILoopCheckTimeoutAction<R> checkTimeoutAction;
+	
+	/**
+	 * 可移除房间检查行为
+	 */
+	protected ILoopCheckRemoveAction<R> checkRemoveAction;
 
 	
-	private ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1, new ThreadFactory() {
-		private AtomicInteger thIndex = new AtomicInteger(0);
-		@Override
-		public Thread newThread(Runnable r) {
-			return new Thread(r, LoopMachingHouse.class.getSimpleName() + "-" + getHouseId()+ "-" + thIndex.incrementAndGet());
-		}
-	});
 	
 	public LoopMachingHouse() {
 		init();
 	}
 	
 	
+	@SuppressWarnings("unchecked")
 	public void init() {
-		this.pClass = this.getPClass();
-		this.rClass = this.getRClass();
-		this.hClass = this.getHClass();
 		
-		executor.setMaximumPoolSize(2);
+		
+		//executor.setMaximumPoolSize(2);
 		
 		//满员游戏房间检查
 		executor.scheduleWithFixedDelay(() -> {
 			try {
-				Set<Entry<String, R>> es = rooms.entrySet();
+				Set<Entry<String, R>> es = fullPlayerRooms.entrySet();
 				R room = null; 
 				for (Entry<String, R> e : es) {
 					room = e.getValue();
 					if (!room.isFullPlayers()) {
 						matchingRooms.put(e.getKey(), e.getValue());
 					}else {
-						rooms.put(e.getKey(), e.getValue());
+						fullPlayerRooms.put(e.getKey(), e.getValue());
 						matchingRooms.remove(e.getKey());
 					}
 				}
 			} catch (Exception e) {
 				logger.error("loop room error!", e);
 			}
-		}, 500, 1, TimeUnit.MILLISECONDS);
+		}, 10 * 1000, 1, TimeUnit.MILLISECONDS);
 		
 		//匹配房间检查
 		executor.scheduleWithFixedDelay(() -> {
@@ -108,23 +111,32 @@ extends House<P, R, H>{
 				R room = null; 
 				for (Entry<String, R> e : es) {
 					room = e.getValue();
-					if (room.getPlayerNum() == 0) {
-						synchronized(room) {
-							if (room.getPlayerNum() == 0) {
-								this.removeRoom(room.getRoomNo());
+					if (checkRemoveAction != null) {
+						if (checkRemoveAction.checkRemove(room)) {
+							synchronized(room) {
+								if (checkRemoveAction.checkRemove(room)) {
+									this.removeMatchingRoom(room.getRoomNo());
+								}
+							}
+							continue;
+						}
+						
+					}
+					
+					//超时行为触发
+					if (this.checkTimeoutAction != null && this.checkTimeoutAction.checkTimeout(room)) {
+						if (timeoutListeners.size() > 0) {
+							for (ILoopMatchingTimeoutListener<R, H> listener : timeoutListeners) {
+								listener.onTimeout(room, (H) this);
 							}
 						}
-						continue;
-					}
-					if (this.timeoutAction != null && this.checkTimeoutAction != null && this.checkTimeoutAction.checkTimeout(room)) {
-						timeoutAction.runAction(room);
 					}
 					
 				}
 			} catch (Exception e) {
 				logger.error("loop matching error!", e);
 			}
-		}, 500, 1, TimeUnit.MILLISECONDS);
+		}, 10 * 1000, 1, TimeUnit.MILLISECONDS);
 	}
 	
 	/**
@@ -149,7 +161,9 @@ extends House<P, R, H>{
 						if (!room.isFullPlayers() && room.getPlayerNum() != 0) {
 							player.setRoom(room );
 							room.addPlayer(player);
-							matchedAction.onMatch(player, room, this);
+							if (matchedAction != null) {
+								matchedAction.onMatch(player, room, this);								
+							}
 							if (room.isFullPlayers()) {
 								rooms.put(e.getKey(), e.getValue());
 								matchingRooms.remove(e.getKey());
@@ -163,36 +177,68 @@ extends House<P, R, H>{
 		return room;
 	}
 	
+	/**
+	 * 匹配房间
+	 * 
+	 * @param player
+	 * @return
+	 * @author zai
+	 * 2019-04-15 11:23:59
+	 */
+	public R match(P player) {
+		return match(player, null);
+	}
+	
+	/**
+	 * 添加匹配超时监听器
+	 * 
+	 * @param listener
+	 * @author zai
+	 * 2019-04-15 11:43:48
+	 */
+	public void addMatchingTimeoutListener(ILoopMatchingTimeoutListener<R, H> listener) {
+		this.timeoutListeners.add(listener);
+	}
 	
 	
-	@Override
-	public R removeRoom(String roomNo) {
-		matchingRooms.remove(roomNo);
-		return super.removeRoom(roomNo);
+	/**
+	 * 移除匹配房间
+	 * 
+	 * @param roomNo
+	 * @return
+	 * @author zai
+	 * 2019-04-15 14:19:40
+	 */
+	@SuppressWarnings("unchecked")
+	public R removeMatchingRoom(String roomNo) {
+		R room = null;
+		room = matchingRooms.remove(roomNo);
+		if (room == null) {
+			room = fullPlayerRooms.remove(roomNo);
+		}else {
+			fullPlayerRooms.remove(roomNo);
+		}
+		if (room != null) {
+			for (IRemoveRoomListener<R, H> listener : reomveListeners) {
+				listener.onRemove(room, (H) this);
+			}
+		}
+		return room;
 	}
 
-	
+	/**
+	 * 添加匹配房间
+	 * 
+	 * @param room
+	 * @author zai
+	 * 2019-04-15 11:58:32
+	 */
 	public void addMatchingRoom(R room) {
 		this.matchingRooms.put(room.getRoomNo(), room);
 	}
 	
 	
-	private Class<?> getSuperClassGenericsClass(int index){
-		return (Class<?>) ((ParameterizedType)this.getClass().getGenericSuperclass()).getActualTypeArguments()[index];
-	}
 	
-	@SuppressWarnings("unchecked")
-	private Class<P> getPClass(){
-		return (Class<P>) getSuperClassGenericsClass(0);
-	}
-	@SuppressWarnings("unchecked")
-	private Class<R> getRClass(){
-		return (Class<R>) getSuperClassGenericsClass(1);
-	}
-	@SuppressWarnings("unchecked")
-	private Class<H> getHClass(){
-		return (Class<H>) getSuperClassGenericsClass(2);
-	}
 	
 	public void setMatchingTimeoutMillisec(long matchingTimeoutMillisec) {
 		this.matchingTimeoutMillisec = matchingTimeoutMillisec;
@@ -208,10 +254,12 @@ extends House<P, R, H>{
 	public ILoopCheckTimeoutAction<R> getCheckTimeoutAction() {
 		return checkTimeoutAction;
 	}
-	public void setTimeoutAction(ILoopMatchingTimeoutAction<R> timeoutAction) {
-		this.timeoutAction = timeoutAction;
+	
+	public void setCheckRemoveAction(ILoopCheckRemoveAction<R> checkRemoveAction) {
+		this.checkRemoveAction = checkRemoveAction;
 	}
-	public ILoopMatchingTimeoutAction<R> getTimeoutAction() {
-		return timeoutAction;
+	
+	public ILoopCheckRemoveAction<R> getCheckRemoveAction() {
+		return checkRemoveAction;
 	}
 }

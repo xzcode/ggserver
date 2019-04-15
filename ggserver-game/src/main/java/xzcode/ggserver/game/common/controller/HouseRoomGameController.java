@@ -1,5 +1,6 @@
 package xzcode.ggserver.game.common.controller;
 
+import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -36,6 +37,62 @@ extends
 		IHouseGameController<H> {
 
 	private static final Logger logger = LoggerFactory.getLogger(HouseRoomGameController.class);
+	
+	
+	protected Class<P> pClass;
+	protected Class<R> rClass;
+	protected Class<H> hClass;
+	
+	private Class<?> getSuperClassGenericsClass(int index){
+		return (Class<?>) ((ParameterizedType)this.getClass().getGenericSuperclass()).getActualTypeArguments()[index];
+	}
+	
+	@SuppressWarnings("unchecked")
+	private Class<P> getPClass(){
+		return (Class<P>) getSuperClassGenericsClass(0);
+	}
+	@SuppressWarnings("unchecked")
+	private Class<R> getRClass(){
+		return (Class<R>) getSuperClassGenericsClass(1);
+	}
+	@SuppressWarnings("unchecked")
+	private Class<H> getHClass(){
+		return (Class<H>) getSuperClassGenericsClass(2);
+	}
+	
+	protected R newR() {
+		R r = null;
+		try {
+			r = rClass.newInstance();
+		} catch (Exception e) {
+			logger.error("Instantiate R failed!!", e);
+		}
+		return r;
+	}
+	protected P newP() {
+		P p = null;
+		try {
+			p = pClass.newInstance();
+		} catch (Exception e) {
+			logger.error("Instantiate R failed!!", e);
+		}
+		return p;
+	}
+	protected H newH() {
+		H h = null;
+		try {
+			h = hClass.newInstance();
+		} catch (Exception e) {
+			logger.error("Instantiate R failed!!", e);
+		}
+		return h;
+	}
+	
+	public HouseRoomGameController() {
+		pClass = getPClass();
+		rClass = getRClass();
+		hClass = getHClass();
+	}
 
 	@Override
 	public void eachPlayer(R room, ForEachPlayer<P> eachPlayer) {
