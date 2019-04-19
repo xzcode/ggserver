@@ -13,9 +13,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import xzcode.ggserver.game.common.house.listener.IRemoveRoomListener;
-import xzcode.ggserver.game.common.house.matching.interfaces.ILoopMatchingTimeoutListener;
 import xzcode.ggserver.game.common.player.Player;
 import xzcode.ggserver.game.common.room.Room;
 
@@ -37,12 +35,12 @@ public abstract class House< P extends Player, R extends Room<P, R, H>, H> {
 	/**
 	 * 大厅id
 	 */
-	protected Object houseId;
+	protected Long houseId;
 
 	/**
 	 * 游戏id
 	 */
-	protected Object gameId;
+	protected Long gameId;
 
 
 	/**
@@ -173,20 +171,31 @@ public abstract class House< P extends Player, R extends Room<P, R, H>, H> {
 	public boolean contains(String roomNo) {
 		return rooms.contains(roomNo);
 	}
+	
+	/**
+	 * 获取所有房间数量
+	 * 
+	 * @return
+	 * @author zai
+	 * 2019-04-16 12:24:39
+	 */
+	public int getTotalRoomsNum() {
+		return rooms.size();
+	}
 
-	public Object getHouseId() {
+	public Long getHouseId() {
 		return houseId;
 	}
 
-	public void setHouseId(Object houseId) {
+	public void setHouseId(Long houseId) {
 		this.houseId = houseId;
 	}
 
-	public Object getGameId() {
+	public Long getGameId() {
 		return gameId;
 	}
 
-	public void setGameId(Object gameId) {
+	public void setGameId(Long gameId) {
 		this.gameId = gameId;
 	}
 }

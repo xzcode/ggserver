@@ -1,6 +1,5 @@
 package xzcode.ggserver.game.common.room;
 
-import xzcode.ggserver.game.common.player.Player;
 import xzcode.ggserver.game.common.player.RoomPlayer;
 
 /**

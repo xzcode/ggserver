@@ -39,7 +39,6 @@ extends House<P, R, H>{
 	
 	private static final Logger logger = LoggerFactory.getLogger(LoopMachingHouse.class);
 	
-	
 
 	/**
 	 * 匹配容器集合
@@ -83,7 +82,7 @@ extends House<P, R, H>{
 	public void init() {
 		
 		
-		//executor.setMaximumPoolSize(2);
+		executor.setMaximumPoolSize(3);
 		
 		//满员游戏房间检查
 		executor.scheduleWithFixedDelay(() -> {
@@ -120,18 +119,20 @@ extends House<P, R, H>{
 							}
 							continue;
 						}
-						
 					}
 					
 					//超时行为触发
-					if (this.checkTimeoutAction != null && this.checkTimeoutAction.checkTimeout(room)) {
-						if (timeoutListeners.size() > 0) {
-							for (ILoopMatchingTimeoutListener<R, H> listener : timeoutListeners) {
-								listener.onTimeout(room, (H) this);
+					if (this.checkTimeoutAction != null && timeoutListeners.size() > 0) {
+						if (this.checkTimeoutAction.checkTimeout(room)) {
+							synchronized(room) {
+								if (this.checkTimeoutAction.checkTimeout(room)) {
+									for (ILoopMatchingTimeoutListener<R, H> listener : timeoutListeners) {
+										listener.onTimeout(room, (H) this);
+									}
+								}
 							}
 						}
 					}
-					
 				}
 			} catch (Exception e) {
 				logger.error("loop matching error!", e);
@@ -168,13 +169,13 @@ extends House<P, R, H>{
 								rooms.put(e.getKey(), e.getValue());
 								matchingRooms.remove(e.getKey());
 							}
-							break;
+							return room;
 						}
 					}
 				}
 			}
 		}
-		return room;
+		return null;
 	}
 	
 	/**
@@ -197,7 +198,19 @@ extends House<P, R, H>{
 	 * 2019-04-15 11:43:48
 	 */
 	public void addMatchingTimeoutListener(ILoopMatchingTimeoutListener<R, H> listener) {
-		this.timeoutListeners.add(listener);
+		if (listener != null) {
+			this.timeoutListeners.add(listener);			
+		}
+	}
+	
+	/**
+	 * 清除所有匹配超时监听器
+	 * 
+	 * @author zai
+	 * 2019-04-18 13:58:36
+	 */
+	public void clearAllMatchingTimeoutListener() {
+		this.timeoutListeners.clear();
 	}
 	
 	
@@ -237,9 +250,36 @@ extends House<P, R, H>{
 		this.matchingRooms.put(room.getRoomNo(), room);
 	}
 	
+	/**
+	 * 获取参与匹配的房间
+	 * 
+	 * @param roomNo
+	 * @return
+	 * @author zai
+	 * 2019-04-17 18:55:32
+	 */
+	public R getMatchingRoom(String roomNo) {
+		R room = matchingRooms.get(roomNo);
+		if (room == null) {
+			fullPlayerRooms.get(roomNo);
+		}
+		return room;
+	}
 	
 	
+	@Override
+	public int getTotalRoomsNum() {
+		return super.getTotalRoomsNum() + this.matchingRooms.size() + this.fullPlayerRooms.size();
+	}
 	
+	public int getOpenRoomsNum() {
+		return super.getTotalRoomsNum();
+	}
+	public int getMatchingRoomsNum() {
+		return this.matchingRooms.size() + this.fullPlayerRooms.size();
+	}
+
+
 	public void setMatchingTimeoutMillisec(long matchingTimeoutMillisec) {
 		this.matchingTimeoutMillisec = matchingTimeoutMillisec;
 	}

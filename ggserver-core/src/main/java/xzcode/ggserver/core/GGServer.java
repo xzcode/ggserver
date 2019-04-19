@@ -4,6 +4,7 @@ import java.lang.reflect.ParameterizedType;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledFuture;
 
+import io.netty.channel.Channel;
 import xzcode.ggserver.core.config.GGServerConfig;
 import xzcode.ggserver.core.event.EventRunnableInvoker;
 import xzcode.ggserver.core.event.GGEventTask;
@@ -111,9 +112,35 @@ public class GGServer implements ISendMessage, IGGServerExecution{
 	 * @author zai 2017-08-19 01:12:07
 	 */
 	public void disconnect(Object userId) {
-		GGSession session = this.serverConfig.getUserSessonManager().get(userId);
+		disconnect(userId, 0);
+	}
+	/**
+	 * 延迟断开连接
+	 * 
+	 * @param userId
+	 * @param delayMs 延迟时间毫秒
+	 * @author zai
+	 * 2019-04-17 11:18:43
+	 */
+	public void disconnect(Object userId, long delayMs) {
+		
+		GGSession session = null;
+		if (userId == null) {
+			session = getSession();
+		}else {
+			session = this.serverConfig.getUserSessonManager().get(userId);			
+		}
 		if (session != null && session.getChannel() != null) {
-			session.getChannel().close();
+			Channel channel = session.getChannel();
+			if (channel != null) {
+				if (delayMs <= 0) {
+					channel.close();
+				}else {
+					setTimeout(() -> {
+						channel.close();
+					}, delayMs);
+				}
+			}
 		}
 	}
 
@@ -123,7 +150,16 @@ public class GGServer implements ISendMessage, IGGServerExecution{
 	 * @author zai 2017-09-21
 	 */
 	public void disconnect() {
-		getSession().getChannel().close();
+		disconnect(null, 0);
+	}
+	
+	/**
+	 * 延迟断开当前连接
+	 * 
+	 * @author zai 2017-09-21
+	 */
+	public void disconnect(long delayMs) {
+		disconnect(null, delayMs);
 	}
 	
 	/**

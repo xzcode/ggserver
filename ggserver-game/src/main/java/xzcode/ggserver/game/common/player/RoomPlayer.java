@@ -1,5 +1,7 @@
 package xzcode.ggserver.game.common.player;
 
+import xzcode.ggserver.game.common.holder.timeout.TimeoutHolder;
+
 /**
      玩家基类
  * 
@@ -21,6 +23,10 @@ public class RoomPlayer<R, H> extends Player{
 	 * 是否参与游戏
 	 */
 	protected boolean inGame;
+	/**
+	 * 是否参与游戏
+	 */
+	protected boolean ready;
 	
 	/**
 	 * 是否机器人
@@ -37,9 +43,18 @@ public class RoomPlayer<R, H> extends Player{
 	protected H house;
 	
 	/**
-	 * 所在大厅
+	 * 金币数
 	 */
 	protected Long coins;
+	/**
+	 * 抽佣金币数
+	 */
+	protected Long waterCoins = 0L;
+	
+	/**
+	 * 盈利金币数
+	 */
+	protected Long gainCoins = 0L;
 	
 	/**
 	 * 已玩局数
@@ -50,6 +65,9 @@ public class RoomPlayer<R, H> extends Player{
 	 * 可玩的最大局数
 	 */
 	private int maxPlayRounds = 0;
+	
+	
+	protected TimeoutHolder autoReadyHolder;
 	
 	public int getPlayedRounds() {
 		return playedRounds;
@@ -80,7 +98,22 @@ public class RoomPlayer<R, H> extends Player{
 		return playedRounds >= maxPlayRounds;
 	}
 	
-	
+	/*
+	 * 
+	 * 减去金币
+	 */
+	public void minusCoins(long minusCoins) {
+		this.coins -= minusCoins;
+		
+	}
+	/*
+	 * 
+	 * 增加金币
+	 */
+	public void incrCoins(long incrCoins) {
+		this.coins += incrCoins;
+		
+	}
 	
 	public R getRoom() {
 		return room;
@@ -127,6 +160,32 @@ public class RoomPlayer<R, H> extends Player{
 	public void setCoins(Long coins) {
 		this.coins = coins;
 	}
+	public Long getGainCoins() {
+		return gainCoins;
+	}
 	
+	public void setGainCoins(Long gainCoins) {
+		this.gainCoins = gainCoins;
+	}
+	public boolean isReady() {
+		return ready;
+	}
+	public void setReady(boolean ready) {
+		this.ready = ready;
+	}
+	
+	public TimeoutHolder getAutoReadyHolder() {
+		return autoReadyHolder;
+	}
+	
+	public void setAutoReadyHolder(TimeoutHolder autoReadyHolder) {
+		this.autoReadyHolder = autoReadyHolder;
+	}
+	public Long getWaterCoins() {
+		return waterCoins;
+	}
+	public void setWaterCoins(Long waterCoins) {
+		this.waterCoins = waterCoins;
+	}
 
 }
