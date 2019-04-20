@@ -61,7 +61,7 @@ public abstract class House< P extends Player, R extends Room<P, R, H>, H> {
 		private AtomicInteger thIndex = new AtomicInteger(0);
 		@Override
 		public Thread newThread(Runnable r) {
-			return new Thread(r, "house-" + houseId+ "-" + thIndex.incrementAndGet());
+			return new Thread(r, "house-" + getHouseId() + "-" + thIndex.incrementAndGet());
 		}
 	});
 	

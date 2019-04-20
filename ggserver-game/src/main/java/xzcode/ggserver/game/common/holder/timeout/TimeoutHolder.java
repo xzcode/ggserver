@@ -51,7 +51,10 @@ public class TimeoutHolder implements TimeoutRunnable{
 	 * 2019-02-23 14:37:34
 	 */
 	public boolean isTimeoutLessThan(long millisecs) {
-		return this.timeoutFuture.getDelay(TimeUnit.MILLISECONDS) <= millisecs && this.timeoutFuture.getDelay(TimeUnit.MILLISECONDS) > 0;
+		if (this.timeoutFuture != null) {
+			return this.timeoutFuture.getDelay(TimeUnit.MILLISECONDS) <= millisecs && this.timeoutFuture.getDelay(TimeUnit.MILLISECONDS) > 0;			
+		}
+		return true;
 	}
 	
 	/**

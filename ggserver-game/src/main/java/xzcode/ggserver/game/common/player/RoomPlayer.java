@@ -54,7 +54,7 @@ public class RoomPlayer<R, H> extends Player{
 	/**
 	 * 盈利金币数
 	 */
-	protected Long gainCoins = 0L;
+	protected Long gainCoins;
 	
 	/**
 	 * 已玩局数
@@ -66,8 +66,23 @@ public class RoomPlayer<R, H> extends Player{
 	 */
 	private int maxPlayRounds = 0;
 	
-	
+	/**
+	 * 自动准备超时容器
+	 */
 	protected TimeoutHolder autoReadyHolder;
+	
+	/**
+	 * 空闲超时容器
+	 */
+	protected TimeoutHolder idleTimeoutHolder;
+	
+	public TimeoutHolder getIdleTimeoutHolder() {
+		return idleTimeoutHolder;
+	}
+	
+	public void setIdleTimeoutHolder(TimeoutHolder idleTimeoutHolder) {
+		this.idleTimeoutHolder = idleTimeoutHolder;
+	}
 	
 	public int getPlayedRounds() {
 		return playedRounds;
@@ -187,5 +202,7 @@ public class RoomPlayer<R, H> extends Player{
 	public void setWaterCoins(Long waterCoins) {
 		this.waterCoins = waterCoins;
 	}
+	
+	
 
 }

@@ -18,7 +18,7 @@ import xzcode.ggserver.core.utils.json.GGServerJsonUtil;
  */
 public class SendMessageManager implements ISendMessage{
 	
-	private final static Logger LOGGER = LoggerFactory.getLogger(SendMessageManager.class);
+	private final static Logger logger = LoggerFactory.getLogger(SendMessageManager.class);
 	
 	private GGServerConfig config;
 	
@@ -32,8 +32,8 @@ public class SendMessageManager implements ISendMessage{
 		if (channel != null && channel.isActive()) {
 			channel.writeAndFlush(sendModel);			
 		}else {
-			if (LOGGER.isDebugEnabled()) {
-				LOGGER.debug("Channel is inactived! Message will not be send, SendModel:{}", GGServerJsonUtil.toJson(sendModel));
+			if (logger.isDebugEnabled()) {
+				logger.debug("Channel is inactived! Message will not be send, SendModel:{}", GGServerJsonUtil.toJson(sendModel));
 			}
 		}
 	}
@@ -49,18 +49,7 @@ public class SendMessageManager implements ISendMessage{
 	 */
 	@Override
 	public void send(Object userId, String action, Object message) {
-		
-		GGSession session = this.config.getUserSessonManager().get(userId);
-		if (session != null) {
-			if (!config.getMessageFilterManager().doResponseFilters(userId, action, message)) {
-				return;
-			}
-			try {
-				this.send(session.getChannel(),SendModel.create(action.getBytes(), this.config.getSerializer().serialize(message)));
-			} catch (Exception e) {
-				LOGGER.error("Send message Error!", e);
-			}
-		}
+		send(userId, action, message, 0);
 	}
 	
 	/**
@@ -73,13 +62,7 @@ public class SendMessageManager implements ISendMessage{
 	@Override
 	public void send(Object userId, String action) {
 		
-		GGSession session = this.config.getUserSessonManager().get(userId);
-		if (session != null) {
-			if (!config.getMessageFilterManager().doResponseFilters(userId, action, null)) {
-				return;
-			}
-				this.send(session.getChannel(),SendModel.create(action.getBytes(), null));
-		}
+		send(userId, action, null, 0);
 	}
 	
 	/**
@@ -109,16 +92,55 @@ public class SendMessageManager implements ISendMessage{
 	 */
 	@Override
 	public void send(String action, Object message) {
-		GGSession session = GGSessionThreadLocalUtil.getSession();
+		send(null, action, message, 0);
+	}
+
+	@Override
+	public void send(Object userId, String action, Object message, long delayMs) {
+		GGSession session = null;
+		if (userId != null) {
+			session = this.config.getUserSessonManager().get(userId);
+		}else {
+			session = GGSessionThreadLocalUtil.getSession();
+		}
 		if (session != null) {
-			if (!config.getMessageFilterManager().doResponseFilters(session.getRegisteredUserId(), action, message)) {
+			if (!config.getMessageFilterManager().doResponseFilters(userId, action, message)) {
 				return;
 			}
 			try {
-				this.send(session.getChannel(),SendModel.create(action.getBytes(), this.config.getSerializer().serialize(message)));
+				Channel channel = session.getChannel();
+				if (channel != null && channel.isActive()) {
+					byte[] actionIdData = action.getBytes();
+					byte[] messageData = message == null ? null : this.config.getSerializer().serialize(message);
+					
+					if (delayMs > 0) {
+						this.config.getTaskExecutor().setTimeout(() -> {
+							this.send(channel, SendModel.create(actionIdData, messageData));
+						}, delayMs);
+					}else {
+						this.send(channel, SendModel.create(actionIdData, messageData));
+					}
+				}
 			} catch (Exception e) {
-				LOGGER.error("Send message Error!", e);
+				logger.error("Send message Error!", e);
 			}
 		}
+	}
+
+	@Override
+	public void send(Object userId, String action, long delayMs) {
+		send(userId, action, null, delayMs);
+	}
+
+	@Override
+	public void send(String action, long delayMs) {
+		send(null, action, null, delayMs);
+		
+	}
+
+	@Override
+	public void send(String action, Object message, long delayMs) {
+		send(null, action, message, delayMs);
+		
 	}
 }

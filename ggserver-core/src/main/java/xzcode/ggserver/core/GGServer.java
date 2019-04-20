@@ -204,6 +204,30 @@ public class GGServer implements ISendMessage, IGGServerExecution{
 		serverConfig.getEventInvokerManager().put(invoker);
 	}
 
+	
+	
+	public void emitEvent(String eventTag, Object message) {
+		serverConfig.getTaskExecutor().submit(new GGEventTask(getSession(), eventTag, message, serverConfig));
+	}
+	
+	public void emitEvent(String eventTag) {
+		serverConfig.getTaskExecutor().submit(new GGEventTask(getSession(), eventTag, null, serverConfig));
+	}
+	
+	@Override
+	public ScheduledFuture<?> setTimeout(Runnable runnable, long timeoutMilliSec) {
+		return this.serverConfig.getTaskExecutor().setTimeout(runnable, timeoutMilliSec);
+	}
+
+	@Override
+	public ScheduledFuture<?> setTimeout(TimeoutRunnable runnable, long timeoutMilliSec) {
+		return this.serverConfig.getTaskExecutor().setTimeout(runnable, timeoutMilliSec);
+	}
+	
+	public Future<?> submitTask(Runnable task) {
+		return this.serverConfig.getTaskExecutor().submit(task);
+	}
+	
 	@Override
 	public void send(Object userId, String action, Object message) {
 		this.serverConfig.getSendMessageManager().send(userId, action, message);;
@@ -233,26 +257,25 @@ public class GGServer implements ISendMessage, IGGServerExecution{
 		
 	}
 	
-	public void emitEvent(String eventTag, Object message) {
-		serverConfig.getTaskExecutor().submit(new GGEventTask(getSession(), eventTag, message, serverConfig));
-	}
-	
-	public void emitEvent(String eventTag) {
-		serverConfig.getTaskExecutor().submit(new GGEventTask(getSession(), eventTag, null, serverConfig));
-	}
-	
 	@Override
-	public ScheduledFuture<?> setTimeout(Runnable runnable, long timeoutMilliSec) {
-		return this.serverConfig.getTaskExecutor().setTimeout(runnable, timeoutMilliSec);
+	public void send(Object userId, String action, Object message, long delayMs) {
+		this.serverConfig.getSendMessageManager().send(userId, action, message, delayMs);
+		
 	}
-
 	@Override
-	public ScheduledFuture<?> setTimeout(TimeoutRunnable runnable, long timeoutMilliSec) {
-		return this.serverConfig.getTaskExecutor().setTimeout(runnable, timeoutMilliSec);
+	public void send(Object userId, String action, long delayMs) {
+		this.serverConfig.getSendMessageManager().send(userId, action, delayMs);
+		
 	}
-	
-	public Future<?> submitTask(Runnable task) {
-		return this.serverConfig.getTaskExecutor().submit(task);
+	@Override
+	public void send(String action, long delayMs) {
+		this.serverConfig.getSendMessageManager().send(action, delayMs);
+		
+	}
+	@Override
+	public void send(String action, Object message, long delayMs) {
+		this.serverConfig.getSendMessageManager().send(action, message, delayMs);
+		
 	}
 
 }

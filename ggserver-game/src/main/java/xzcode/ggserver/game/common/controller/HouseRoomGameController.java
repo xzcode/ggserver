@@ -161,8 +161,12 @@ extends
 		Map<Object, P> players = room.getPlayers();
 		List<P> pList = new ArrayList<>(players.size());
 		for (Entry<Object, P> entry : players.entrySet()) {
-			if (condition.check(entry.getValue())) {
+			if (condition == null) {
 				pList.add(entry.getValue());
+			}else {
+				if (condition.check(entry.getValue())) {
+					pList.add(entry.getValue());
+				}				
 			}
 		}
 		return pList;
@@ -292,6 +296,10 @@ extends
 	public int getPlayerSeatType(int selfSeatNum,int targetSeatNum) {
 		return getPlayerSeatType(getMaxPlayerNum(), selfSeatNum, targetSeatNum);
 	}
+	@Override
+	public int getPlayerSeatType(P self, P target) {
+		return getPlayerSeatType(getMaxPlayerNum(), self.getSeatNum(), target.getSeatNum());
+	}
 
 	@Override
 	public int getPlayerSelfSeatType(int maxPlayer, int selfSeatNum) {
@@ -312,6 +320,10 @@ extends
 		return getPlayer(room, player -> {
 			return getPlayerSeatType(selfSeatNum, player.getSeatNum()) == targetSeatType;
 		}); 
+	};
+	@Override
+	public P getPlayerBySeatType(R room, P self, int targetSeatType) {
+		return getPlayerBySeatType(room, self.getSeatNum(), targetSeatType);
 	};
 	
 }

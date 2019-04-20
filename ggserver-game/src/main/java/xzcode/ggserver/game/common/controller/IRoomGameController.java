@@ -251,9 +251,20 @@ H extends House<P, R, H>
 	 * 2019-03-22 15:53:32
 	 */
 	int getPlayerSelfSeatType();
+	
+	/**
+	 * 获取玩家客户端座位号
+	 * 
+	 * @param self 
+	 * @param target
+	 * @return
+	 * @author zai
+	 * 2019-04-20 13:18:51
+	 */
+	int getPlayerSeatType(P self, P target);
 
 	/**
-	 * 根据客户端座位号
+	 * 根据客户端座位号获取玩家
 	 * 
 	 * @param room
 	 * @param selfSeatNum
@@ -263,6 +274,18 @@ H extends House<P, R, H>
 	 * 2019-03-26 20:07:28
 	 */
 	P getPlayerBySeatType(R room, int selfSeatNum, int targetSeatType);
+	
+	/**
+	 * 根据客户端座位号获取玩家
+	 * 
+	 * @param room
+	 * @param self
+	 * @param targetSeatType
+	 * @return
+	 * @author zai
+	 * 2019-04-20 13:23:15
+	 */
+	P getPlayerBySeatType(R room, P self, int targetSeatType);
 
 	/**
 	 * 获取已排序的参与游戏的玩家
@@ -273,5 +296,9 @@ H extends House<P, R, H>
 	 * 2019-03-27 16:26:55
 	 */
 	List<P> getSortedInGamePlayerList(R room);
+
+	
+
+	
 	
 }
