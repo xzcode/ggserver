@@ -94,15 +94,17 @@ public abstract class Room<P extends Player, R, H>{
 	 */
 	@SuppressWarnings("unchecked")
 	public P removePlayer(Object playerId) {
-		P player = players.remove(playerId);
 		synchronized (this) {
-			if (player != null && afterAddPlayerListeners.size() > 0) {
-				for (IAfterAddPlayerListener<R, P> listener : afterAddPlayerListeners) {
-					listener.onAdd((R) this, player);
+			P player = players.remove(playerId);
+			if (player != null ) {
+				if (player != null && afterAddPlayerListeners.size() > 0) {
+					for (IAfterRemovePlayerListener<R, P> listener : afterRemovePlayerListeners) {
+						listener.onRemove((R) this, player);
+					}
 				}
 			}
+			return player;
 		}
-		return player;
 	}
 	
 	/**
@@ -113,11 +115,13 @@ public abstract class Room<P extends Player, R, H>{
 	 */
 	@SuppressWarnings("unchecked")
 	public void addPlayer(P player) {
-		this.players.put(player.getPlayerId(), player);
 		synchronized (this) {
-			if (player != null && afterRemovePlayerListeners.size() > 0) {
-				for (IAfterRemovePlayerListener<R, P> listener : afterRemovePlayerListeners) {
-					listener.onRemove((R) this, player);
+			if (player != null) {
+				this.players.put(player.getPlayerId(), player);
+				if (afterRemovePlayerListeners.size() > 0) {
+					for (IAfterAddPlayerListener<R, P> listener : afterAddPlayerListeners) {
+						listener.onAdd((R) this, player);
+					}
 				}
 			}
 		}

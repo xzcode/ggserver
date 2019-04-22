@@ -121,7 +121,7 @@ public class TimeoutHolder implements TimeoutRunnable{
 	 * 2019-01-21 12:05:01
 	 */
 	public boolean cancelTask() {
-		if (this.timeoutFuture != null && !timeoutFuture.isDone()) {
+		if (this.timeoutFuture != null && !timeoutFuture.isDone() && !timeoutFuture.isCancelled()) {
 			return this.timeoutFuture.cancel(false);			
 		}
 		return true;
