@@ -3,6 +3,7 @@ package xzcode.ggserver.game.common.holder.timeout;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+import xzcode.ggserver.core.GGServer;
 import xzcode.ggserver.core.executor.task.TimeoutRunnable;
 import xzcode.ggserver.game.common.interfaces.timeout.TimeoutAction;
 
@@ -15,6 +16,7 @@ import xzcode.ggserver.game.common.interfaces.timeout.TimeoutAction;
 public class TimeoutHolder implements TimeoutRunnable{
 	
 	
+	
 	protected TimeoutAction timeoutAction;
 	
 	
@@ -24,10 +26,28 @@ public class TimeoutHolder implements TimeoutRunnable{
 	protected ScheduledFuture<?> timeoutFuture;
 	
 	
-	public static TimeoutHolder create(TimeoutAction timeoutAction) {
+	protected GGServer gg;
+	
+	protected long timeoutMs;
+	
+	
+	public static TimeoutHolder create(GGServer gg, TimeoutAction timeoutAction, long timeoutMs) {
 		TimeoutHolder timeoutHolder = new TimeoutHolder();
 		timeoutHolder.onTimeout(timeoutAction);
+		timeoutHolder.setGg(gg);
+		timeoutHolder.setTimeoutMs(timeoutMs);
 		return timeoutHolder;
+	}
+	
+	/**
+	 * 开始任务
+	 * 
+	 * @author zai
+	 * 2019-04-22 18:06:06
+	 */
+	public TimeoutHolder startTask() {
+		gg.setTimeout(this, timeoutMs);
+		return this;
 	}
 	
 	/**
@@ -77,13 +97,13 @@ public class TimeoutHolder implements TimeoutRunnable{
 	 * 2019-01-25 14:42:18
 	 */
 	public void initTimeout(ScheduledFuture<?> timeoutFuture) {
+		this.cancelTask();
 		this.timeoutFuture = timeoutFuture;
 	}
 
 
 	public TimeoutHolder(ScheduledFuture<?> timeoutFuture) {
-		super();
-		this.timeoutFuture = timeoutFuture;
+		initTimeout(timeoutFuture);
 	}
 
 
@@ -121,10 +141,12 @@ public class TimeoutHolder implements TimeoutRunnable{
 	 * 2019-01-21 12:05:01
 	 */
 	public boolean cancelTask() {
-		if (this.timeoutFuture != null && !timeoutFuture.isDone() && !timeoutFuture.isCancelled()) {
-			return this.timeoutFuture.cancel(false);			
+		if (this.timeoutFuture == null) {
+			return true;
 		}
-		return true;
+		ScheduledFuture<?> future = this.timeoutFuture;
+		this.timeoutFuture = null;
+		return future.cancel(false);			
 	}
 	
 	/**
@@ -143,6 +165,22 @@ public class TimeoutHolder implements TimeoutRunnable{
 	}
 	public void setTimeoutFuture(ScheduledFuture<?> timeoutFuture) {
 		this.timeoutFuture = timeoutFuture;
+	}
+	
+	public long getTimeoutMs() {
+		return timeoutMs;
+	}
+	
+	public void setTimeoutMs(long timeoutMs) {
+		this.timeoutMs = timeoutMs;
+	}
+	
+	public void setGg(GGServer gg) {
+		this.gg = gg;
+	}
+	
+	public GGServer getGg() {
+		return gg;
 	}
 	
 }

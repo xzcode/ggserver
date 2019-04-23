@@ -221,7 +221,8 @@ public class GGServer implements ISendMessage, IGGServerExecution{
 
 	@Override
 	public ScheduledFuture<?> setTimeout(TimeoutRunnable runnable, long timeoutMilliSec) {
-		return this.serverConfig.getTaskExecutor().setTimeout(runnable, timeoutMilliSec);
+		ScheduledFuture<?> future = this.serverConfig.getTaskExecutor().setTimeout(runnable, timeoutMilliSec);
+		return future;
 	}
 	
 	public Future<?> submitTask(Runnable task) {

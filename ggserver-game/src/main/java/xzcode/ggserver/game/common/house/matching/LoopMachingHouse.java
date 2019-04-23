@@ -91,11 +91,11 @@ extends House<P, R, H>{
 				R room = null; 
 				for (Entry<String, R> e : es) {
 					room = e.getValue();
-					if (!room.isFullPlayers()) {
-						matchingRooms.put(e.getKey(), e.getValue());
-					}else {
-						fullPlayerRooms.put(e.getKey(), e.getValue());
-						matchingRooms.remove(e.getKey());
+					synchronized (room) {
+						if (!room.isFullPlayers()) {
+							fullPlayerRooms.remove(e.getKey());
+							matchingRooms.put(e.getKey(), e.getValue());
+						}
 					}
 				}
 			} catch (Exception e) {
@@ -166,7 +166,7 @@ extends House<P, R, H>{
 								matchedAction.onMatch(player, room, this);								
 							}
 							if (room.isFullPlayers()) {
-								rooms.put(e.getKey(), e.getValue());
+								fullPlayerRooms.put(e.getKey(), e.getValue());
 								matchingRooms.remove(e.getKey());
 							}
 							return room;
@@ -224,6 +224,7 @@ extends House<P, R, H>{
 	 */
 	@SuppressWarnings("unchecked")
 	public R removeMatchingRoom(String roomNo) {
+		System.out.println("移除房间："+roomNo);
 		R room = null;
 		room = matchingRooms.remove(roomNo);
 		if (room == null) {
@@ -261,7 +262,7 @@ extends House<P, R, H>{
 	public R getMatchingRoom(String roomNo) {
 		R room = matchingRooms.get(roomNo);
 		if (room == null) {
-			fullPlayerRooms.get(roomNo);
+			room = fullPlayerRooms.get(roomNo);
 		}
 		return room;
 	}

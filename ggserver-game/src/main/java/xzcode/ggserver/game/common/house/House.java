@@ -168,7 +168,7 @@ public abstract class House< P extends Player, R extends Room<P, R, H>, H> {
 	 * @param roomNo
 	 * @author zai 2018-12-27 13:57:46
 	 */
-	public boolean contains(String roomNo) {
+	public boolean containsRoom(String roomNo) {
 		return rooms.contains(roomNo);
 	}
 	

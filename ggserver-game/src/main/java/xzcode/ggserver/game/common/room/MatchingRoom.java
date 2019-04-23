@@ -15,12 +15,23 @@ public abstract class MatchingRoom<P extends RoomPlayer<R, H>, R, H> extends Roo
 
 	protected long matchingTimeoutMillisec;
 	
+	protected long matchingTimeoutDelayMs;
+	
 	public boolean checkMatchingTimeout() {
 		return matchingTimeoutMillisec < System.currentTimeMillis();
 	}
 
-	public void refreshMatchingTimeout(long timeoutDelay) {
-		this.matchingTimeoutMillisec = System.currentTimeMillis() + timeoutDelay;
+	public void refreshMatchingTimeout() {
+		this.matchingTimeoutMillisec = System.currentTimeMillis() + matchingTimeoutDelayMs;
+	}
+	
+	public void setMatchingTimeoutDelayMs(long matchingTimeoutDelayMs) {
+		this.matchingTimeoutDelayMs = matchingTimeoutDelayMs;
+		refreshMatchingTimeout();
+	}
+	
+	public long getMatchingTimeoutDelayMs() {
+		return matchingTimeoutDelayMs;
 	}
 
 }
