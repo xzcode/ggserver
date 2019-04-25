@@ -21,6 +21,23 @@ public abstract class PokerCardPlayer<C extends PokerCard, R, H> extends RoomPla
 	 */
 	protected List<C> handcards = new ArrayList<>(maxHandcarNum());
 	
+	public void reset() {
+
+		this.handcards.clear();
+		this.ready = false;
+		this.inGame = false;
+		this.gainCoins = 0L;
+		this.waterCoins = 0L;
+		this.beforeCoins = this.coins;
+
+		if (this.idleTimeoutHolder != null) {
+			this.idleTimeoutHolder.cancelTask();
+		}
+		if (this.autoReadyHolder != null) {
+			this.autoReadyHolder.cancelTask();
+		}
+	}
+	
 	/**
 	 * 获取最大手牌数量
 	 * 

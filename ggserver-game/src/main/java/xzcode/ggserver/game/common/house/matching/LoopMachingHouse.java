@@ -224,7 +224,6 @@ extends House<P, R, H>{
 	 */
 	@SuppressWarnings("unchecked")
 	public R removeMatchingRoom(String roomNo) {
-		System.out.println("移除房间："+roomNo);
 		R room = null;
 		room = matchingRooms.remove(roomNo);
 		if (room == null) {

@@ -1,6 +1,7 @@
 package xzcode.ggserver.game.common.room;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -45,6 +46,11 @@ public abstract class Room<P extends Player, R, H>{
 	 * 房主编号
 	 */
 	protected String ownerUserNo;
+	
+	/**
+	 * 游戏开始时间
+	 */
+	protected Date gameStartDate;
 	
 	/**
 	 * 获取最大玩家数
@@ -221,6 +227,36 @@ public abstract class Room<P extends Player, R, H>{
 
 	public void setPlayers(Map<Object, P> players) {
 		this.players = players;
+	}
+
+
+	public Date getGameStartDate() {
+		return gameStartDate;
+	}
+
+
+	public void setGameStartDate(Date gameStartDate) {
+		this.gameStartDate = gameStartDate;
+	}
+
+
+	public List<IAfterAddPlayerListener<R, P>> getAfterAddPlayerListeners() {
+		return afterAddPlayerListeners;
+	}
+
+
+	public void setAfterAddPlayerListeners(List<IAfterAddPlayerListener<R, P>> afterAddPlayerListeners) {
+		this.afterAddPlayerListeners = afterAddPlayerListeners;
+	}
+
+
+	public List<IAfterRemovePlayerListener<R, P>> getAfterRemovePlayerListeners() {
+		return afterRemovePlayerListeners;
+	}
+
+
+	public void setAfterRemovePlayerListeners(List<IAfterRemovePlayerListener<R, P>> afterRemovePlayerListeners) {
+		this.afterRemovePlayerListeners = afterRemovePlayerListeners;
 	}
 	
 	

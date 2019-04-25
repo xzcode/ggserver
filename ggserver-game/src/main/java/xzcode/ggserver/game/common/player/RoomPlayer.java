@@ -1,7 +1,5 @@
 package xzcode.ggserver.game.common.player;
 
-import java.util.Date;
-
 import xzcode.ggserver.game.common.holder.timeout.TimeoutHolder;
 
 /**
@@ -45,9 +43,15 @@ public class RoomPlayer<R, H> extends Player{
 	protected H house;
 	
 	/**
-	 * 金币数
+	 * 当前金币数
 	 */
 	protected Long coins;
+	
+	/**
+	 * 游戏进行前金币数
+	 */
+	protected Long beforeCoins;
+	
 	/**
 	 * 抽佣金币数
 	 */
@@ -205,5 +209,11 @@ public class RoomPlayer<R, H> extends Player{
 		this.waterCoins = waterCoins;
 	}
 
-
+	public Long getBeforeCoins() {
+		return beforeCoins;
+	}
+	
+	public void setBeforeCoins(Long beforeCoins) {
+		this.beforeCoins = beforeCoins;
+	}
 }
