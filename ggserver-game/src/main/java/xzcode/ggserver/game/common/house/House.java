@@ -41,6 +41,8 @@ public abstract class House< P extends Player, R extends Room<P, R, H>, H> {
 	 * 游戏id
 	 */
 	protected Long gameId;
+	
+	protected ConcurrentHashMap<Long, P> players = new ConcurrentHashMap<>();
 
 
 	/**
@@ -182,6 +184,38 @@ public abstract class House< P extends Player, R extends Room<P, R, H>, H> {
 	public int getTotalRoomsNum() {
 		return rooms.size();
 	}
+	
+	/**
+	 * 添加玩家
+	 * 
+	 * @param player
+	 * @author zai
+	 * 2019-04-26 15:25:41
+	 */
+	public void addPlayer(P player) {
+		this.players.put(player.getPlayerId(), player);
+	}
+	
+	/**
+	 * 移除玩家
+	 * 
+	 * @param player
+	 * @author zai
+	 * 2019-04-26 15:25:47
+	 */
+	public void removePlayer(P player) {
+		this.players.remove(player.getPlayerId());
+	}
+	
+	/**
+	 * 获取玩家数
+	 * 
+	 * @author zai
+	 * 2019-04-26 15:30:31
+	 */
+	public int getPlayerNum() {
+		return this.players.size();
+	}
 
 	public Long getHouseId() {
 		return houseId;
@@ -198,4 +232,6 @@ public abstract class House< P extends Player, R extends Room<P, R, H>, H> {
 	public void setGameId(Long gameId) {
 		this.gameId = gameId;
 	}
+	
+	
 }
