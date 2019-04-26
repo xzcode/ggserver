@@ -2,6 +2,7 @@ package xzcode.ggserver.game.common.house;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Set;
 import java.util.Map.Entry;
@@ -171,7 +172,7 @@ public abstract class House< P extends Player, R extends Room<P, R, H>, H> {
 	 * @author zai 2018-12-27 13:57:46
 	 */
 	public boolean containsRoom(String roomNo) {
-		return rooms.contains(roomNo);
+		return rooms.containsKey(roomNo);
 	}
 	
 	/**
