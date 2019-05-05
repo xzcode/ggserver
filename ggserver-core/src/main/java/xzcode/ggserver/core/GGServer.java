@@ -31,7 +31,6 @@ public class GGServer implements ISendMessage, IGGServerExecution{
 
 
 	public GGServer(GGServerConfig serverConfig) {
-		super();
 		this.serverConfig = serverConfig;
 	}
 	public GGServerConfig getServerConfig() {
@@ -277,6 +276,14 @@ public class GGServer implements ISendMessage, IGGServerExecution{
 	public void send(String action, Object message, long delayMs) {
 		this.serverConfig.getSendMessageManager().send(action, message, delayMs);
 		
+	}
+	@Override
+	public void sendToAll(String action, Object message) {
+		this.serverConfig.getSendMessageManager().send(action, message);
+	}
+	@Override
+	public void sendToAll(String action) {
+		this.serverConfig.getSendMessageManager().sendToAll(action);
 	}
 
 }

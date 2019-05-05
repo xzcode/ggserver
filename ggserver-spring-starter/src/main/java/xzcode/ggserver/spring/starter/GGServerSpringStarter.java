@@ -41,7 +41,7 @@ public class GGServerSpringStarter implements ApplicationContextAware {
     	
     	IGGServerStarter starter = null;;
 
-        GGServerConfig config = gGServerConfig();
+        GGServerConfig config = ggServerConfig();
         
         config.setTaskExecutor(new GGServerTaskExecutor(config));
         
@@ -74,13 +74,13 @@ public class GGServerSpringStarter implements ApplicationContextAware {
     @Bean
     @ConfigurationProperties(prefix = GGServerSpringStarter.PROPERTIES_PREFIX)
     public GGServer ggServer() {
-        return new GGServer(gGServerConfig());
+        return new GGServer(ggServerConfig());
     }
     
     
     @Bean
     @ConfigurationProperties(prefix = GGServerSpringStarter.PROPERTIES_PREFIX)
-    public GGServerConfig gGServerConfig() {
+    public GGServerConfig ggServerConfig() {
     	return new GGServerConfig();
     }
 

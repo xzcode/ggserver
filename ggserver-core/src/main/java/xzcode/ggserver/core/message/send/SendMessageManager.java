@@ -1,5 +1,8 @@
 package xzcode.ggserver.core.message.send;
 
+import java.util.Map.Entry;
+import java.util.Set;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -7,6 +10,7 @@ import io.netty.channel.Channel;
 import xzcode.ggserver.core.config.GGServerConfig;
 import xzcode.ggserver.core.session.GGSession;
 import xzcode.ggserver.core.session.GGSessionThreadLocalUtil;
+import xzcode.ggserver.core.session.UserSessonManager;
 import xzcode.ggserver.core.utils.json.GGServerJsonUtil;
 
 /**
@@ -142,5 +146,31 @@ public class SendMessageManager implements ISendMessage{
 	public void send(String action, Object message, long delayMs) {
 		send(null, action, message, delayMs);
 		
+	}
+
+	@Override
+	public void sendToAll(String action, Object message) {
+		try {
+			UserSessonManager sessonManager = config.getUserSessonManager();
+			Set<Entry<Object, GGSession>> entrySet = sessonManager.getSessionMap().entrySet();
+			Channel channel = null;
+			byte[] actionIdData = action.getBytes();
+			byte[] messageData = message == null ? null : this.config.getSerializer().serialize(message);
+			for (Entry<Object, GGSession> entry : entrySet) {
+				channel = entry.getValue().getChannel();
+				if (channel.isActive()) {
+					channel.writeAndFlush(SendModel.create(actionIdData, messageData));
+				}
+				
+			}
+		} catch (Exception e) {
+			logger.error("GGServer sendToAll ERROR!");
+		}
+		
+	}
+
+	@Override
+	public void sendToAll(String action) {
+		sendToAll(action, null);
 	}
 }
