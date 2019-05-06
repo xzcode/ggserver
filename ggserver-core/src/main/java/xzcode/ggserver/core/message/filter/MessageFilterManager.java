@@ -1,5 +1,6 @@
 package xzcode.ggserver.core.message.filter;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -58,19 +59,24 @@ public class MessageFilterManager {
 	 * 2019-02-09 14:24:29
 	 */
 	public void add(MessageFilterModel filterModel) {
-		if (filterModel.getFilterClazz() == GGRequestFilter.class) {
-			requestFilters.add(filterModel);
-			if (requestFilters.size() > 1) {
-				sort(requestFilters);
+		Type[] types = filterModel.getFilterClazz().getGenericInterfaces();
+		
+		for (Type type : types) {
+			if (type == GGRequestFilter.class) {
+				requestFilters.add(filterModel);
+				if (requestFilters.size() > 1) {
+					sort(requestFilters);
+				}
+				requestFilters.trimToSize();
+			}else if (type == GGResponseFilter.class ) {
+				responseFilters.add(filterModel);
+				if (responseFilters.size() > 1) {
+					sort(responseFilters);
+				}
+				responseFilters.trimToSize();
 			}
-			requestFilters.trimToSize();
-		}else if (filterModel.getFilterClazz() == GGResponseFilter.class ) {
-			responseFilters.add(filterModel);
-			if (responseFilters.size() > 1) {
-				sort(responseFilters);
-			}
-			responseFilters.trimToSize();
 		}
+		
 	}
 	
 	public void sort(List<MessageFilterModel> list) {
