@@ -297,6 +297,16 @@ H extends House<P, R, H>
 	 */
 	List<P> getSortedInGamePlayerList(R room);
 
+	/**
+	 * 遍历每个已准备玩家
+	 * 
+	 * @param room
+	 * @param eachPlayer
+	 * @author zai
+	 * 2019-05-16 14:19:58
+	 */
+	void eachInGamePlayer(R room, ForEachPlayer<P> eachPlayer);
+
 	
 
 	

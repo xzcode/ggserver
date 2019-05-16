@@ -93,42 +93,63 @@ extends
 		rClass = getRClass();
 		hClass = getHClass();
 	}
+	
+	@Override
+	public void eachInGamePlayer(R room, ForEachPlayer<P> eachPlayer) {
+		synchronized (room) {
+			P player = null;
+			for (Entry<Object, P> e : room.getPlayers().entrySet()) {
+				player = e.getValue();
+				if (player.isInGame()) {
+					eachPlayer.each(e.getValue());				
+				}
+			}
+		}
+	}
 
 	@Override
 	public void eachPlayer(R room, ForEachPlayer<P> eachPlayer) {
-		for (Entry<Object, P> e : room.getPlayers().entrySet()) {
-			eachPlayer.each(e.getValue());
+		synchronized (room) {
+			for (Entry<Object, P> e : room.getPlayers().entrySet()) {
+				eachPlayer.each(e.getValue());
+			}
 		}
 	}
 	
 	@Override
 	public void iteratePlayer(R room, PlayerIteration<P> iteration) {
-		Iterator<Entry<Object, P>> it = room.getPlayers().entrySet().iterator();
-		while (it.hasNext()) {
-			Entry<Object, P> next = it.next();
-			iteration.it(next.getValue(), next, it);			
+		synchronized (room) {
+			Iterator<Entry<Object, P>> it = room.getPlayers().entrySet().iterator();
+			while (it.hasNext()) {
+				Entry<Object, P> next = it.next();
+				iteration.it(next.getValue(), next, it);			
+			}
 		}
 	}
 
 	@Override
 	public boolean boolEachPlayer(R room, BoolForEachPlayer<P> eachPlayer) {
-		for (Entry<Object, P> entry : room.getPlayers().entrySet()) {
-			if (!eachPlayer.each(entry.getValue())) {
-				return false;
+		synchronized (room) {
+			for (Entry<Object, P> entry : room.getPlayers().entrySet()) {
+				if (!eachPlayer.each(entry.getValue())) {
+					return false;
+				}
 			}
+			return true;
 		}
-		return true;
 	}
 	
 	@Override
 	public int countPlayers(R room, ICheckCondition<P> condition) {
-		int i = 0;
-		for (Entry<Object, P> entry : room.getPlayers().entrySet()) {
-			if (condition.check(entry.getValue())) {
-				i++;
+		synchronized (room) {
+			int i = 0;
+			for (Entry<Object, P> entry : room.getPlayers().entrySet()) {
+				if (condition.check(entry.getValue())) {
+					i++;
+				}
 			}
+			return i;
 		}
-		return i;
 	}
 	
 	@Override
@@ -138,38 +159,44 @@ extends
 
 	@Override
 	public P getPlayer(R room, ICheckCondition<P> condition) {
-		for (Entry<Object, P> entry : room.getPlayers().entrySet()) {
-			if (condition.check(entry.getValue())) {
-				return entry.getValue();
+		synchronized (room) {
+			for (Entry<Object, P> entry : room.getPlayers().entrySet()) {
+				if (condition.check(entry.getValue())) {
+					return entry.getValue();
+				}
 			}
+			return null;
 		}
-		return null;
 	}
 	
 	@Override
 	public List<P> getPlayerList(R room) {
-		Map<Object, P> players = room.getPlayers();
-		List<P> pList = new ArrayList<>(players.size());
-		for (Entry<Object, P> entry : players.entrySet()) {
-			pList.add(entry.getValue());
+		synchronized (room) {
+			Map<Object, P> players = room.getPlayers();
+			List<P> pList = new ArrayList<>(players.size());
+			for (Entry<Object, P> entry : players.entrySet()) {
+				pList.add(entry.getValue());
+			}
+			return pList;
 		}
-		return pList;
 	}
 	
 	@Override
 	public List<P> getPlayers(R room, ICheckCondition<P> condition) {
-		Map<Object, P> players = room.getPlayers();
-		List<P> pList = new ArrayList<>(players.size());
-		for (Entry<Object, P> entry : players.entrySet()) {
-			if (condition == null) {
-				pList.add(entry.getValue());
-			}else {
-				if (condition.check(entry.getValue())) {
+		synchronized (room) {
+			Map<Object, P> players = room.getPlayers();
+			List<P> pList = new ArrayList<>(players.size());
+			for (Entry<Object, P> entry : players.entrySet()) {
+				if (condition == null) {
 					pList.add(entry.getValue());
-				}				
+				}else {
+					if (condition.check(entry.getValue())) {
+						pList.add(entry.getValue());
+					}			
+				}
 			}
+			return pList;
 		}
-		return pList;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -184,61 +211,66 @@ extends
 	
 	@Override
 	public P getRandomPlayer(R room, ICheckCondition<P> condition) {
-		Map<Object, P> players = room.getPlayers();
-		List<P> plist = new ArrayList<>(players.size());
-		for (Entry<Object, P> entry : players.entrySet()) {
-			if (condition.check(entry.getValue())) {
-				plist.add(entry.getValue());
+		synchronized (room) {
+			Map<Object, P> players = room.getPlayers();
+			List<P> plist = new ArrayList<>(players.size());
+			for (Entry<Object, P> entry : players.entrySet()) {
+				if (condition.check(entry.getValue())) {
+					plist.add(entry.getValue());
+				}
 			}
+			if (players.size() > 1) {
+				return plist.get(ThreadLocalRandom.current().nextInt(plist.size()));
+			}
+			return plist.get(0);
 		}
-		if (players.size() > 1) {
-			return plist.get(ThreadLocalRandom.current().nextInt(plist.size()));
-		}
-		return plist.get(0);
 		
 	}
 	
 	@Override
 	public List<P> getSortedInGamePlayerList(R room) {
-		List<P> inGamePlayers = getPlayers(room, player -> {
-			return player.isInGame();
-		});
-		Collections.sort(inGamePlayers, (x, y) -> x.getSeatNum() - y.getSeatNum());
-		return inGamePlayers;
+		synchronized (room) {
+			List<P> inGamePlayers = getPlayers(room, player -> {
+				return player.isInGame();
+			});
+			Collections.sort(inGamePlayers, (x, y) -> x.getSeatNum() - y.getSeatNum());
+			return inGamePlayers;
+		}
 	}
 
 	@Override
 	public P getNextPlayer(R room, int startSeatNum, ICheckCondition<P> condition) {
-
-		//获取排序后的玩家
-		List<P> pList = getSortedInGamePlayerList(room);
-		//排除起始座位号
-		pList = pList.stream().filter(o -> o.getSeatNum() != startSeatNum && condition.check(o)).collect(Collectors.toList());
-		
-		if (pList.size() == 0) {
+		synchronized (room) {
+			//获取排序后的玩家
+			List<P> pList = getSortedInGamePlayerList(room);
+			//排除起始座位号
+			pList = pList.stream().filter(o -> o.getSeatNum() != startSeatNum && condition.check(o)).collect(Collectors.toList());
+			
+			if (pList.size() == 0) {
+				return null;
+			}
+			
+			for (P p : pList) {
+				if (p.getSeatNum() > startSeatNum) {
+					return p;
+				}
+			}
+			
+			for (P p : pList) {
+				if (p.getSeatNum() < startSeatNum) {
+					return p;
+				}
+			}
+			
+	
 			return null;
 		}
-		
-		for (P p : pList) {
-			if (p.getSeatNum() > startSeatNum) {
-				return p;
-			}
-		}
-		
-		for (P p : pList) {
-			if (p.getSeatNum() < startSeatNum) {
-				return p;
-			}
-		}
-		
-
-		return null;
-		
 		
 	}
 	
 	@Override
 	public int getSeatNum(R room) {
+		
 		int maxPlayerNum = getMaxPlayerNum();
 		List<Integer> nums = new ArrayList<>(maxPlayerNum);
 		for (int i = 1; i <= maxPlayerNum; i++) {
