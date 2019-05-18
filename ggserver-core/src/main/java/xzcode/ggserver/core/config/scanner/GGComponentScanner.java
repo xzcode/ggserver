@@ -10,6 +10,7 @@ import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ClassInfoList;
 import io.github.classgraph.ScanResult;
 import xzcode.ggserver.core.annotation.GGComponent;
+import xzcode.ggserver.core.annotation.GGController;
 import xzcode.ggserver.core.annotation.GGFilter;
 import xzcode.ggserver.core.annotation.GGOnEvent;
 import xzcode.ggserver.core.annotation.GGRequest;
@@ -61,6 +62,9 @@ public class GGComponentScanner {
 			Class<?> clazz = classInfo.loadClass();
 
 			try {
+				if (clazz == GGController.class) {
+					return;
+				}
 				Object clazzInstance = clazz.newInstance();
 				componentManager.put(clazz, clazzInstance);
 
@@ -86,6 +90,7 @@ public class GGComponentScanner {
 				}
 
 				Method[] methods = clazz.getMethods();
+				GGController ggController = clazz.getAnnotation(GGController.class);
 				for (Method mtd : methods) {
 
 					// 扫描socketrequest
@@ -96,7 +101,14 @@ public class GGComponentScanner {
 						methodInvoker.setMethod(mtd);
 						//methodInvoker.setComponentObj(clazzInstance);
 						methodInvoker.setComponentClass(clazz);
-						methodInvoker.setRequestTag(requestMessage.value());
+						String prefix = "";
+						if (ggController != null) {
+							prefix = ggController.actionIdPrefix();
+							if (prefix != null && prefix.isEmpty()) {
+								prefix = ggController.value();
+							}
+						}
+						methodInvoker.setRequestTag(prefix + requestMessage.value());
 						methodInvoker.setSendMessageClass(mtd.getReturnType());
 						Class<?>[] parameterTypes = mtd.getParameterTypes();
 						if (parameterTypes != null && parameterTypes.length > 0) {
