@@ -153,6 +153,21 @@ extends
 	}
 	
 	@Override
+	public int countInGamePlayers(R room, ICheckCondition<P> condition) {
+		synchronized (room) {
+			int i = 0;
+			P player = null;
+			for (Entry<Object, P> entry : room.getPlayers().entrySet()) {
+				player = entry.getValue();
+				if (player.isInGame() && condition.check(player)) {
+					i++;
+				}
+			}
+			return i;
+		}
+	}
+	
+	@Override
 	public int countPlayers(R room) {
 		return room.getPlayers().size();
 	}

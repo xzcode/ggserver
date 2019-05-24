@@ -24,6 +24,9 @@ public class TimeoutInvokeTask  implements Runnable {
 		try {
 			
 			timeoutRunnable.run();
+			if (timeoutRunnable instanceof TimeoutRunnable) {
+				((TimeoutRunnable) timeoutRunnable).setTimeoutFuture(null);
+			}
 		} catch (Exception e) {
 			logger.error("倒计时任务异常：",e);
 		}

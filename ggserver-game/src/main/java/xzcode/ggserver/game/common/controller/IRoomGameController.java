@@ -306,6 +306,17 @@ H extends House<P, R, H>
 	 * 2019-05-16 14:19:58
 	 */
 	void eachInGamePlayer(R room, ForEachPlayer<P> eachPlayer);
+	
+	/**
+	 * 获取指定条件的参与游戏的玩家数量
+	 * 
+	 * @param room
+	 * @param condition
+	 * @return
+	 * @author zai
+	 * 2019-05-21 15:54:04
+	 */
+	int countInGamePlayers(R room, ICheckCondition<P> condition);
 
 	
 
