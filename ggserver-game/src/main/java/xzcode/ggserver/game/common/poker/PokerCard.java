@@ -1,5 +1,6 @@
 package xzcode.ggserver.game.common.poker;
 
+import xzcode.ggserver.game.common.card.Card;
 import xzcode.ggserver.game.common.poker.constant.PokerCardType;
 
 /**

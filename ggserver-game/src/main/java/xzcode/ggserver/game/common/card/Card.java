@@ -1,4 +1,4 @@
-package xzcode.ggserver.game.common.poker;
+package xzcode.ggserver.game.common.card;
 
 /**
  * 牌基类
