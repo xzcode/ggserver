@@ -1,6 +1,6 @@
 package xzcode.ggserver.game.common.room;
 
-import xzcode.ggserver.game.common.player.RoomPlayer;
+import xzcode.ggserver.game.common.player.CoinsRoomPlayer;
 
 /**
  * 匹配房间
@@ -11,7 +11,7 @@ import xzcode.ggserver.game.common.player.RoomPlayer;
  * @author zai
  * 2019-04-13 14:10:16
  */
-public abstract class MatchingRoom<P extends RoomPlayer<R, H>, R, H> extends Room<P, R, H>{
+public abstract class MatchingRoom<P extends CoinsRoomPlayer<R, H>, R, H> extends Room<P, R, H>{
 
 	protected long matchingTimeoutMillisec;
 	

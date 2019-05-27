@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import xzcode.ggserver.game.common.holder.matching.MachingRoomHolder;
 import xzcode.ggserver.game.common.house.House;
-import xzcode.ggserver.game.common.player.RoomPlayer;
+import xzcode.ggserver.game.common.player.CoinsRoomPlayer;
 import xzcode.ggserver.game.common.room.Room;
 
 /**
@@ -18,7 +18,7 @@ import xzcode.ggserver.game.common.room.Room;
  * @author zai
  * 2019-02-20 14:33:01
  */
-public abstract class MachingRoomHouse<P extends RoomPlayer<R, H>,R extends Room<P, R, H>,  H> extends House<P, R , H>{
+public abstract class MachingRoomHouse<P extends CoinsRoomPlayer<R, H>,R extends Room<P, R, H>,  H> extends House<P, R , H>{
 	
 	private static final Logger logger = LoggerFactory.getLogger(MachingRoomHouse.class);
 	

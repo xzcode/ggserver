@@ -19,6 +19,11 @@ public abstract class PokerCard extends Card{
 	 * 花色值
 	 */
 	protected int cardTypeVal;
+	
+	/**
+	 * 游戏牌值
+	 */
+	protected int gameVal;
 
 
 	public PokerCardType getCardType() {
@@ -32,6 +37,14 @@ public abstract class PokerCard extends Card{
 	
 	public int getCardTypeVal() {
 		return cardTypeVal;
+	}
+	
+	public int getGameVal() {
+		return gameVal;
+	}
+	
+	public void setGameVal(int gameVal) {
+		this.gameVal = gameVal;
 	}
 
 }

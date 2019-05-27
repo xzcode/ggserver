@@ -18,7 +18,7 @@ import xzcode.ggserver.game.common.house.matching.interfaces.ILoopCheckRemoveAct
 import xzcode.ggserver.game.common.house.matching.interfaces.ILoopCheckTimeoutAction;
 import xzcode.ggserver.game.common.house.matching.interfaces.ILoopMatchedAction;
 import xzcode.ggserver.game.common.house.matching.interfaces.ILoopMatchingTimeoutListener;
-import xzcode.ggserver.game.common.player.RoomPlayer;
+import xzcode.ggserver.game.common.player.CoinsRoomPlayer;
 import xzcode.ggserver.game.common.room.MatchingRoom;
 
 /**
@@ -31,7 +31,7 @@ import xzcode.ggserver.game.common.room.MatchingRoom;
  */
 public class LoopMachingHouse
 <
-	P extends RoomPlayer<R, H>,
+	P extends CoinsRoomPlayer<R, H>,
 	R extends MatchingRoom< P, R, H>, 
 	H extends House<P, R, H>
 > 

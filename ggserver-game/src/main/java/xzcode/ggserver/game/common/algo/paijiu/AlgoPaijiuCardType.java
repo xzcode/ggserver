@@ -1,17 +1,17 @@
-package xzcode.ggserver.game.common.algorithms.paijiu;
+package xzcode.ggserver.game.common.algo.paijiu;
 
-public enum PaijiuPairType {
+public enum AlgoPaijiuCardType {
 	
 	NONE(100, "零点"),
-	DOT_ONE(101, "一点"),
-	DOT_TWO(102, "二点"),
-	DOT_THREE(103, "三点"),
-	DOT_FOUR(104, "四点"),
-	DOT_FIVE(105, "五点"),
-	DOT_SIX(106, "六点"),
-	DOT_SEVEN(107, "七点"),
-	DOT_EIGHT(108, "八点"),
-	DOT_NINE(109, "九点"),
+	DOT_1(101, "一点"),
+	DOT_2(102, "二点"),
+	DOT_3(103, "三点"),
+	DOT_4(104, "四点"),
+	DOT_5(105, "五点"),
+	DOT_6(106, "六点"),
+	DOT_7(107, "七点"),
+	DOT_8(108, "八点"),
+	DOT_9(109, "九点"),
 	DI_GAO_JIU(110, "地高九"),
 	TIAN_GAO_JIU(111, "天高九"),
 	DI_GANG(112, "地杠"),
@@ -43,7 +43,7 @@ public enum PaijiuPairType {
 	private String name;
 	
 		
-	private PaijiuPairType(int value, String name) {
+	private AlgoPaijiuCardType(int value, String name) {
 		this.value = value;
 		this.name = name;
 	}

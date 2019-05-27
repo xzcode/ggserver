@@ -2,7 +2,7 @@ package xzcode.ggserver.game.common.house.matching.interfaces;
 
 import xzcode.ggserver.game.common.house.House;
 import xzcode.ggserver.game.common.house.matching.LoopMachingHouse;
-import xzcode.ggserver.game.common.player.RoomPlayer;
+import xzcode.ggserver.game.common.player.CoinsRoomPlayer;
 import xzcode.ggserver.game.common.room.MatchingRoom;
 
 /**
@@ -14,7 +14,7 @@ import xzcode.ggserver.game.common.room.MatchingRoom;
  */
 public interface ILoopMatchedAction
 <
-P extends RoomPlayer<R, H>,
+P extends CoinsRoomPlayer<R, H>,
 R extends MatchingRoom< P, R, H>, 
 H extends House<P, R, H>
 > {

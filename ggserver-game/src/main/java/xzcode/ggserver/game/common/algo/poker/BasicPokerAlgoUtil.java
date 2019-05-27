@@ -1,4 +1,4 @@
-package xzcode.ggserver.game.common.poker.util;
+package xzcode.ggserver.game.common.algo.poker;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,7 +12,7 @@ import xzcode.ggserver.game.common.poker.constant.PokerCardType;
  * 
  * @author zai 2018-12-27 18:06:30
  */
-public class BasicPokerUtil {
+public class BasicPokerAlgoUtil {
 	
 	public static final int CARD_SPADE_START = 101;
 	public static final int CARD_SPADE_END = 113;
