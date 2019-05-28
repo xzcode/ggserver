@@ -1,7 +1,5 @@
 package xzcode.ggserver.game.common.algo.poker.ddz;
 
-import java.util.Arrays;
-
 import xzcode.ggserver.game.common.algo.poker.BasicPokerAlgoUtil;
 
 /**
@@ -22,7 +20,7 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 	 * @author zai
 	 * 2019-05-28 11:00:43
 	 */
-	public static boolean hasBomb(int[] handcards, int targetValue) {
+	public static boolean hasZhaDan(int[] handcards, int targetValue) {
 		int count = 0;
 		for (int i : handcards) {
 			if (i == targetValue) {
@@ -90,13 +88,13 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 	 */
 	public static boolean isCanChupai(int[] curHandcards, int[] chupai, int[] lastPlayerChupai) {
 		
-		//如果没有闯入上家出牌，则可出任意牌型
+		//如果没有传入上家出牌，则可出任意牌型
 		if (lastPlayerChupai == null) {
 			
 			//TODO 判断所出牌型是否合法
 			
 			
-			//如果只出一个牌，可以直接出
+			//如果只出单张牌，可以直接出牌
 			if (chupai.length == 1) {
 				return true;
 			}
@@ -116,10 +114,67 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 		
 		//判断手牌中是否存在出牌牌型
 		
-		
-		
-		
 		return false;
+	}
+	
+	/**
+	 * 检查牌型
+	 * 
+	 * @param cards
+	 * @return
+	 * @author zai
+	 * 2019-05-28 15:03:24
+	 */
+	public static AlgoDzzCardType checkCardType(int[] cards) {
+		
+		if (cards.length == 1) {
+			return AlgoDzzCardType.DAN_ZHANG;
+		}
+		
+		if (cards.length == 2) {
+			//判断王炸
+			if (isWangZha(cards)) {
+				return AlgoDzzCardType.WANG_ZHA;
+			}
+			if (cards[0] == cards[1]) {
+				return AlgoDzzCardType.DUI_ZI;
+			}
+			return AlgoDzzCardType.NONE;
+		}
+		
+		if (cards.length == 3) {
+			if (cards[0] == cards[1] && cards[0] == cards[2]) {
+				return AlgoDzzCardType.SAN_ZHANG;
+			}
+			return AlgoDzzCardType.NONE;
+		}
+		
+		if (cards.length == 4) {
+			
+			//判断炸弹
+			if (
+				cards[0] == cards[1] 
+				&& 
+				cards[0] == cards[2]
+				&& 
+				cards[0] == cards[3]
+				) {
+				return AlgoDzzCardType.ZHA_DAN;
+			}
+			
+			//判断三带一
+			
+			
+			
+			return AlgoDzzCardType.NONE;
+		}
+		return null;
+		
+		
+		
+		
+		
+		
 	}
 	
 	

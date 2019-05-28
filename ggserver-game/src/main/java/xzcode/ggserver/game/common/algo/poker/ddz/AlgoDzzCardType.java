@@ -8,19 +8,19 @@ package xzcode.ggserver.game.common.algo.poker.ddz;
  */
 public enum AlgoDzzCardType {
 	
-	NONE(100, "0点"),
-	DOT_1(101, "1点"),
-	DOT_2(102, "2点"),
-	DOT_3(103, "3点"),
-	DOT_4(104, "4点"),
-	DOT_5(105, "5点"),
-	DOT_6(106, "6点"),
-	DOT_7(107, "7点"),
-	DOT_8(108, "8点"),
-	DOT_9(109, "9点"),
-	SAN_GONG(113, "三公"),
-	BOMB(114, "炸弹"),
-	BAO_JIU(115, "爆玖"),
+	NONE(100, "单张"),
+	DAN_ZHANG(101, "单张"),
+	DUI_ZI(102, "对子"),
+	SAN_ZHANG(103, "三张"),
+	SAN_DAI_YI(104, "三带一"),
+	SAN_DAI_ER(105, "三带二"),
+	SI_DAI_ER(106, "四带二"),
+	DAN_SHUN_ZI(107, "单顺子"),
+	SHUANG_SHUN_ZI(108, "双顺子"),
+	SAN_SHUN_ZI(109, "三顺子"),
+	FEI_JI(110, "飞机"),
+	ZHA_DAN(111, "炸弹"),
+	WANG_ZHA(112, "王炸"),
 	;
 	
 	
