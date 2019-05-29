@@ -18,91 +18,121 @@ public class AlgoPaijiuUtil {
 	/**
 	 * 丁三
 	 */
-	public static int DING_SAN = 1003000;
+	public static int DING_SAN 			= 1003000;
 	
 	/**
 	 * 二四
 	 */
-	public static int ER_SI = 1004000;
+	public static int ER_SI 			= 1004000;
 	
 	/**
 	 * 杂5-1
 	 */
-	public static int ZA_WU_1 = 1005132;
+	public static int ZA_WU_1 			= 1005132;
 	
 	/**
 	 * 杂5-2
 	 */
-	public static int ZA_WU_2 = 1005214;
+	public static int ZA_WU_2 			= 1005214;
 	
 	/**
 	 * 杂7-1
 	 */
-	public static int ZA_QI_1 = 1007125;
+	public static int ZA_QI_1 			= 1007125;
 	/**
 	 * 杂7-2
 	 */
-	public static int ZA_QI_2 = 1007234;
+	public static int ZA_QI_2 			= 1007234;
 	/**
 	 * 杂8-1
 	 */
-	public static int ZA_BA_1 = 1008126;
+	public static int ZA_BA_1 			= 1008126;
 	/**
 	 * 杂8-2
 	 */
-	public static int ZA_BA_2 = 1008235;
+	public static int ZA_BA_2 			= 1008235;
 	/**
 	 * 杂9-1
 	 */
-	public static int ZA_JIU_1 = 1009145;
+	public static int ZA_JIU_1 			= 1009145;
 	/**
 	 * 杂9-2
 	 */
-	public static int ZA_JIU_2 = 1009236;
+	public static int ZA_JIU_2 			= 1009236;
 	/**
 	 * 霖零六
 	 */
-	public static int LING_LING_LIU = 1106000;
+	public static int LING_LING_LIU 	= 1106000;
 	/**
 	 * 高脚七
 	 */
-	public static int GAO_JIAO_QI = 1107000;
+	public static int GAO_JIAO_QI 		= 1107000;
 	/**
 	 * 红头十
 	 */
-	public static int HONG_TOU_SHI = 1110000;
+	public static int HONG_TOU_SHI 		= 1110000;
 	/**
 	 * 斧头
 	 */
-	public static int FU_TOU = 1111000;
+	public static int FU_TOU 			= 1111000;
 	/**
 	 * 板凳
 	 */
-	public static int BAN_DENG = 1202000;
+	public static int BAN_DENG 			= 1202000;
 	/**
 	 * 长三
 	 */
-	public static int CHANG_SAN = 1206000;
+	public static int CHANG_SAN 		= 1206000;
 	/**
 	 * 梅牌
 	 */
-	public static int MEI_PAI = 1310000;
+	public static int MEI_PAI 			= 1310000;
 	/**
 	 * 鹅牌
 	 */
-	public static int E_PAI = 1404000;
+	public static int E_PAI 			= 1404000;
 	/**
 	 * 人牌
 	 */
-	public static int REN_PAI = 1408000;
+	public static int REN_PAI 			= 1408000;
 	/**
 	 * 地牌
 	 */
-	public static int DI_PAI = 1502000;
+	public static int DI_PAI 			= 1502000;
 	/**
 	 * 天牌
 	 */
-	public static int TIAN_PAI = 1512000;
+	public static int TIAN_PAI 			= 1512000;
+	
+	/**
+	 * 
+	 */
+	public static int[] ALL_PAI_VALUES = {
+			DING_SAN,
+			ER_SI,
+			ZA_WU_1,
+			ZA_WU_2,
+			ZA_QI_1,
+			ZA_QI_2,
+			ZA_BA_1,
+			ZA_BA_2,
+			ZA_JIU_1,
+			ZA_JIU_2,
+			LING_LING_LIU,
+			GAO_JIAO_QI,
+			HONG_TOU_SHI,
+			FU_TOU,
+			BAN_DENG,
+			CHANG_SAN,
+			MEI_PAI,
+			E_PAI,
+			REN_PAI,
+			DI_PAI,
+			TIAN_PAI 
+	};
+	
+	
+	
 	
 	/**
 	 * 对牌牌型预设
