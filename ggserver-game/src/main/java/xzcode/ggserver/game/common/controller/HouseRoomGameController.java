@@ -3,6 +3,7 @@ package xzcode.ggserver.game.common.controller;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -195,6 +196,20 @@ extends
 			return pList;
 		}
 	}
+	@Override
+	public List<P> getInGamePlayerList(R room) {
+		synchronized (room) {
+			Map<Object, P> players = room.getPlayers();
+			List<P> pList = new ArrayList<>(players.size());
+			for (Entry<Object, P> entry : players.entrySet()) {
+				P player = entry.getValue();
+				if (player.isInGame()) {
+					pList.add(player);					
+				}
+			}
+			return pList;
+		}
+	}
 	
 	@Override
 	public List<P> getPlayers(R room, ICheckCondition<P> condition) {
@@ -249,6 +264,17 @@ extends
 				return player.isInGame();
 			});
 			Collections.sort(inGamePlayers, (x, y) -> x.getSeatNum() - y.getSeatNum());
+			return inGamePlayers;
+		}
+	}
+	
+	@Override
+	public List<P> getSortedInGamePlayerList(R room, Comparator<P> comparator) {
+		synchronized (room) {
+			List<P> inGamePlayers = getPlayers(room, player -> {
+				return player.isInGame();
+			});
+			Collections.sort(inGamePlayers, comparator);
 			return inGamePlayers;
 		}
 	}

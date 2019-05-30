@@ -129,9 +129,19 @@ public class BasicAlgoUtil {
 		return map;
 	}
 	
-	
+	/**
+	 * 获取目标值的与原始数组的顺序组合
+	 * 
+	 * @param arr 原始数字
+	 * @param target 目标值
+	 * @param comboLen 期望产生的组合长度
+	 * @return
+	 * @author zai
+	 * 2019-05-30 16:18:23
+	 */
 	public static List<int[]> getStraightCombo(int[] arr, int target, int comboLen) {
 		List<int[]> list = new ArrayList<>(arr.length);
+		int[] newArr = null;
 		for (int i = 0; i < arr.length; i++) {
 			
 		}
@@ -219,10 +229,10 @@ public class BasicAlgoUtil {
 		startMs = System.currentTimeMillis();
 		for (int[] arr : list) {
 			
-			getSameElemenets(arr, 3);
+			getStraightCombo(arr, 3, 1);
 		}
 		endMs = System.currentTimeMillis() - startMs;
-		System.out.println("getSameElemenets time:"+ endMs + " ms");
+		System.out.println("getStraightCombo time:"+ endMs + " ms");
 		
 		
 		

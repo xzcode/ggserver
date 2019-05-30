@@ -1,11 +1,11 @@
 package xzcode.ggserver.game.common.controller;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
 import xzcode.ggserver.game.common.house.House;
 import xzcode.ggserver.game.common.interfaces.condition.ICheckCondition;
-import xzcode.ggserver.game.common.player.Player;
 import xzcode.ggserver.game.common.player.CoinsRoomPlayer;
 import xzcode.ggserver.game.common.room.Room;
 
@@ -296,6 +296,17 @@ H extends House<P, R, H>
 	 * 2019-03-27 16:26:55
 	 */
 	List<P> getSortedInGamePlayerList(R room);
+	
+	/**
+	 * 获取已排序的参与游戏的玩家
+	 * 
+	 * @param room
+	 * @param comparator
+	 * @return
+	 * @author zai
+	 * 2019-05-30 12:17:29
+	 */
+	List<P> getSortedInGamePlayerList(R room, Comparator<P> comparator);
 
 	/**
 	 * 遍历每个已准备玩家
@@ -317,6 +328,18 @@ H extends House<P, R, H>
 	 * 2019-05-21 15:54:04
 	 */
 	int countInGamePlayers(R room, ICheckCondition<P> condition);
+	
+	/**
+	 * 获取参与游戏的玩家list
+	 * 
+	 * @param room
+	 * @return
+	 * @author zai
+	 * 2019-05-30 12:03:07
+	 */
+	List<P> getInGamePlayerList(R room);
+
+	
 
 	
 
