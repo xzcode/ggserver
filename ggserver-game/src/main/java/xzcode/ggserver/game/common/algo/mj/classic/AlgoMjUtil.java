@@ -406,15 +406,7 @@ public class AlgoMjUtil {
 	 * @author zai 2018-12-28 10:37:44
 	 */
 	public static void sort(List<? extends AlgoMj> list) {
-		Collections.sort(list, (mj1, mj2) -> {
-			if (mj1.getValue() > mj2.getValue()) {
-				return 1;
-			}
-			if (mj1.getValue() < mj2.getValue()) {
-				return -1;
-			}
-			return 0;
-		});
+		Collections.sort(list, (mj1, mj2) -> mj1.getValue() - mj2.getValue());
 	}
 
 	/**
@@ -424,15 +416,7 @@ public class AlgoMjUtil {
 	 * @author zai 2018-12-28 10:44:42
 	 */
 	public static void rSort(List<AlgoMj> list) {
-		Collections.sort(list, (mj1, mj2) -> {
-			if (mj1.getValue() > mj2.getValue()) {
-				return -1;
-			}
-			if (mj1.getValue() < mj2.getValue()) {
-				return 1;
-			}
-			return 0;
-		});
+		Collections.sort(list, (mj1, mj2) -> mj2.getValue() - mj1.getValue());
 	}
 	
 	/**
