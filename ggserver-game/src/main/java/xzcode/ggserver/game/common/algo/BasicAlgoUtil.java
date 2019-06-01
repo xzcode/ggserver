@@ -144,18 +144,91 @@ public class BasicAlgoUtil {
 	 * @author zai
 	 * 2019-05-30 16:18:23
 	 */
-	public static List<List<Integer>> getStraightCombo(int[] srcArr, int target, int comboLen) {
-		List<List<Integer>> list = new ArrayList<>(srcArr.length);
-		List<Integer> temp = null;
-		for (int i = 0; i < srcArr.length; i++) {
-			
+	public static List<int[]> getStraightCombo(int[] srcArr, int target, int comboLen) {
+		List<int[]> createStraightCombos = createStraightCombos(target, comboLen);
+		List<int[]> list = new ArrayList<>(createStraightCombos.size());
+		for (int i = 0; i < createStraightCombos.size(); i++) {
+			int[] arr = createStraightCombos.get(i);
+			boolean flag = false;
+			for (int j = 0; j < arr.length; j++) {
+				for (int k = 0; k < srcArr.length; k++) {
+					if (srcArr[k] == arr[j]) {
+						flag = true;
+						break;
+					}
+				}
+				if (!flag) {
+					break;
+				}
+			}
+			if (flag) {
+				list.add(arr);
+			}
 		}
 		return list;
 	}
 	
-	public static List<List<Integer>> getStraightCombo(int target, int comboLen) {
+	public static List<List<Integer>> createStraightComboList(int target, int comboLen) {
 		List<List<Integer>> list = new ArrayList<>(comboLen);
+		List<Integer> tmp = null;
+		int min = target - comboLen + 1;
+		for (int i = 0; i < comboLen; i++) {
+			tmp = new ArrayList<>(comboLen);
+			int len = target + i + 1;
+			for (int j = min + i; j < len; j++) {
+				tmp.add(j);
+			}
+			list.add(tmp);
+		}
 		return list;
+	}
+	
+	/**
+	 * 创建顺序组合集合
+	 * 
+	 * @param target
+	 * @param comboLen
+	 * @return
+	 * @author zai
+	 * 2019-06-01 23:33:50
+	 */
+	public static List<int[]> createStraightCombos(int target, int comboLen) {
+		List<int[]> list = new ArrayList<>(comboLen);
+		int[] tmp = null;
+		int min = target - comboLen + 1;
+		for (int i = 0; i < comboLen; i++) {
+			tmp = new int[comboLen];
+			for (int j = min + i, k = 0; k < comboLen; j++,k++) {
+				tmp[k] = j;
+			}
+			list.add(tmp);
+		}
+		return list;
+	}
+	
+	/**
+	 * 转为去重数组
+	 * 
+	 * @param list
+	 * @return
+	 * @author zai
+	 * 2019-06-02 00:07:43
+	 */
+	public static int[] toDistinctArr(List<int[]> list) {
+		int count = 0;
+		for (int[] iarr : list) {
+			count += iarr.length;
+		}
+		int[] arr = new int[count];
+		count = 0;
+		for (int[] iarr : list) {
+			for (int i : iarr) {
+				arr[count] = i;	
+				count++;
+			}
+		}
+		
+		return distinct(arr);
 	}
 	
 	
@@ -280,6 +353,16 @@ public class BasicAlgoUtil {
 		}
 		System.out.println();
 	}
+	public static String concatArr(int[] arr) {
+		StringBuilder sb = new StringBuilder(arr.length + arr.length - 1);
+		for (int i = 0; i < arr.length; i++) {
+			sb.append(arr[i]);
+			if (i < arr.length - 1) {
+				sb.append(" ,");
+			}
+		}
+		return sb.toString();
+	}
 	
     
     public static void main(String[] args) throws Exception {
@@ -349,13 +432,37 @@ public class BasicAlgoUtil {
 		System.out.println("getSameElemenets time:"+ endMs + " ms");
 		
 		
+		int[] srcArr = new int[]{2,2,3,5,6,8,1,4,9,1,1,3};
+		int target = 5;
+		int comboLen = 3;
+		
+		List<int[]> createStraightCombos = createStraightCombos(target, comboLen);
+		String cb3string = "";
+		for (int[] is : createStraightCombos) {
+			cb3string +="[" +concatArr(is) + "],";
+		}
+		System.out.println("createStraightCombos :"+ cb3string + "");
 		startMs = System.currentTimeMillis();
-		for (int[] arr : list) {
-			
-			getStraightCombo(arr, 3, 1);
+		for (int i = 0; i < len; i++) {
+			createStraightCombos(5, 4);			
 		}
 		endMs = System.currentTimeMillis() - startMs;
-		System.out.println("getStraightCombo time:"+ endMs + " ms");
+		System.out.println("createStraightCombos time:"+ endMs + "ms");
+		
+		
+		
+		List<int[]> getStraightCombo = getStraightCombo(srcArr,target, comboLen);
+		String getStraightComboStr = "";
+		for (int[] is : getStraightCombo) {
+			getStraightComboStr +="[" +concatArr(is) + "],";
+		}
+		System.out.println("getStraightCombo :"+ getStraightComboStr + "");
+		startMs = System.currentTimeMillis();
+		for (int i = 0; i < len; i++) {
+			getStraightCombo(srcArr,target, comboLen);			
+		}
+		endMs = System.currentTimeMillis() - startMs;
+		System.out.println("getStraightCombo time:"+ endMs + "ms");
 		
 		
 		
