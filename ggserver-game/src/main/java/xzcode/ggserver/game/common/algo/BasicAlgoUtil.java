@@ -184,6 +184,15 @@ public class BasicAlgoUtil {
         return j / k;
     }
     
+    /**
+     * 计算 C(n,m)个数
+     * 
+     * @param n
+     * @param m
+     * @return
+     * @author zai
+     * 2019-06-01 20:02:08
+     */
     public static long combination(long n, long m) {
         if (m > n)
             return 0; // 如果总数小于取出的数，直接返回0
@@ -200,25 +209,65 @@ public class BasicAlgoUtil {
         return j / k;
     }
     
-    
-    public static BigInteger combinationBig(int n, int m) {
+    /**
+     * 计算 C(n,m)个数(针对超大结果)
+     * 
+     * @param n 总数
+     * @param m 选取个数
+     * @return
+     * @author zai
+     * 2019-06-01 20:09:33
+     */
+    public static BigInteger combinationBig(long n, long m) {
         if (m > n) {
-        	return BIG_INTEGER_ZERO; // 如果总数小于取出的数，直接返回0        	
+        	return BIG_INTEGER_ZERO; 
         }
         
-        BigInteger mm = new BigInteger(String.valueOf(m));
-        BigInteger nn = new BigInteger(String.valueOf(n));
+        BigInteger mm = null;
+        BigInteger nn = null;
 
-        BigInteger k = BIG_INTEGER_ONE;
-        BigInteger j = BIG_INTEGER_ONE;
-        // 该种算法约掉了分母的(m-n)!,这样分子相乘的个数就是有n个了
-        for (int i = m; i >= 1; i--) {
-            k = k.multiply(mm);
-            j = j.multiply(nn);
-            mm = mm.subtract(BIG_INTEGER_ONE);
-            nn = nn.subtract(BIG_INTEGER_ONE);
+        long k = 1;
+        long j = 1;
+        
+        //是否大数值标识，false使用long类型计算以提高性能，true超大数值转换为biginteger
+        boolean isBig = false;
+        
+        BigInteger kb = null;
+        BigInteger jb = null;
+        
+        
+        for (long i = m; i >= 1; i--) {
+        	
+        	if (isBig) {
+        		kb = kb.multiply(mm);
+                jb = jb.multiply(nn);
+                
+                mm = mm.subtract(BIG_INTEGER_ONE);
+                nn = nn.subtract(BIG_INTEGER_ONE);
+			}else {
+				long tmp = j * n;
+				if (tmp < 0) {
+					//如果数值已溢出，转换为biginteger计算
+					isBig = true;
+					kb = new BigInteger(String.valueOf(k));
+					jb = new BigInteger(String.valueOf(j));
+							
+					mm = new BigInteger(String.valueOf(m));
+			        nn = new BigInteger(String.valueOf(n));
+			        i++;
+			        continue;
+				}
+				
+				k = k * m;
+	            j = tmp;
+	            m--;
+	            n--;
+			}
         }
-        return j.divide(k);
+        if (isBig) {
+        	return jb.divide(kb);			
+		}
+        return new BigInteger(String.valueOf(j/k));
     }
 
 	
@@ -311,24 +360,30 @@ public class BasicAlgoUtil {
 		
 		
 		startMs = System.currentTimeMillis();
-		for (int[] arr : list) {
-			combination(10, 2);
+		for (int i = 0; i < len; i++) {
+			combination(54, 13);
 		}
 		endMs = System.currentTimeMillis() - startMs;
 		System.out.println("combination :"+ endMs + " ms");
 		
 		
 		startMs = System.currentTimeMillis();
-		long ccclong = combination(13L, 3L);
+		for (int i = 0; i < len; i++) {
+			combination(32L, 13L);
+		}
 		endMs = System.currentTimeMillis() - startMs;
-		System.out.println("combination long :"+ ccclong + "");
+		System.out.println("combination long :"+ endMs + " ms");
 		
 		
 		startMs = System.currentTimeMillis();
-		BigInteger combinationBig = combinationBig(54, 13);
+		for (int i = 0; i < len; i++) {
+			combinationBig(32, 13);			
+		}
 		endMs = System.currentTimeMillis() - startMs;
-		System.out.println("combinationBig :"+ combinationBig + " ");
+		System.out.println("combinationBig :"+ endMs + " ms");
 		
+		
+		System.out.println();
 		System.out.println(combination(13, 5) * combination(8, 5) * 1);
 		
 		int[] aa = new int[] {2,3,5,4,1};
