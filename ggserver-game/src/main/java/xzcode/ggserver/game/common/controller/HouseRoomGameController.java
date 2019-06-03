@@ -278,7 +278,7 @@ extends
 			return inGamePlayers;
 		}
 	}
-
+	
 	@Override
 	public P getNextPlayer(R room, int startSeatNum, ICheckCondition<P> condition) {
 		synchronized (room) {

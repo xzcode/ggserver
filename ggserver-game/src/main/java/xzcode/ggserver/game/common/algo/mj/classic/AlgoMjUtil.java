@@ -3,10 +3,15 @@ package xzcode.ggserver.game.common.algo.mj.classic;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
+
+import xzcode.ggserver.game.common.algo.BasicAlgoUtil;
 
 
 /**
@@ -1087,6 +1092,44 @@ public class AlgoMjUtil {
 		return list.stream().map((mj) -> {
 			return 0;
 		}).collect(Collectors.toList());
+	}
+	
+	public static boolean isHu(List<Integer> srcList, int checkHu) {
+		List<Integer> list = new ArrayList<>(srcList.size() + 1);
+		list.addAll(srcList);
+		list.add(checkHu);
+		Collections.sort(list);
+		
+		
+		Map<Integer, List<Integer>> map = BasicAlgoUtil.getSameElemenets(list, null);
+		Set<Entry<Integer, List<Integer>>> entrySet = map.entrySet();
+		
+		Iterator<Entry<Integer, List<Integer>>> it = entrySet.iterator();
+		
+		while (it.hasNext()) {
+			List<Integer> nums = it.next().getValue();
+			if (nums.size() >= 3) {
+				it.remove();
+			}
+		}
+		
+		it = entrySet.iterator();
+		while (it.hasNext()) {
+			List<Integer> nums = it.next().getValue();
+		}
+		
+		
+		
+		int mapSize = map.size();
+		if (mapSize > 1) {
+			if (mapSize != 3) {
+				return false;				
+			}
+		}
+		
+		it = entrySet.iterator();
+		
+		return true;
 	}
 
 }

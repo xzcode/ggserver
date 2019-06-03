@@ -3,12 +3,13 @@ package xzcode.ggserver.game.common.algo;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -107,31 +108,76 @@ public class BasicAlgoUtil {
 	/**
 	 * 获取相同元素的集合
 	 * 
-	 * @param arr
+	 * @param srcList
 	 * @param minElementSize 指定最少元素个数，少于指定个数的元素将会忽略
 	 * @return
 	 * @author zai
 	 * 2019-05-28 19:02:50
 	 */
-	public static Map<Integer, List<Integer>> getSameElemenets(int[] arr, Integer minElementSize) {
-		Map<Integer, List<Integer>> map = new HashMap<>(arr.length);
-		List<Integer> list = null;
-		for (int i = 0; i < arr.length; i++) {
-			list = map.get(arr[i]);
-			if (list == null) {
-				list = new ArrayList<>();
+	public static Map<Integer, List<Integer>> getSameElemenets(List<Integer> srcList, Integer minElementSize) {
+		Map<Integer, List<Integer>> map = new LinkedHashMap<>(10);
+		List<Integer> tmp = null;
+		for (int i = 0; i < srcList.size(); i++) {
+			int value = srcList.get(i);
+			tmp = map.get(value);
+			if (tmp == null) {
+				tmp = new ArrayList<>(4);
+				map.put(value, tmp);
 			}
-			list.add(arr[i]);
+			tmp.add(value);
+			
 		}
 		if (minElementSize != null) {
-			 Iterator<Entry<Integer, List<Integer>>> it = map.entrySet().iterator();
-			 while (it.hasNext()) {
-				 if (it.next().getValue().size() < minElementSize) {
-					 it.remove();
-				 }
+			Iterator<Entry<Integer, List<Integer>>> it = map.entrySet().iterator();
+			while (it.hasNext()) {
+				List<Integer>  next = it.next().getValue();
+				if (next.size() < minElementSize) {
+					it.remove();
+				}
 			}
 		}
 		return map;
+	}
+	
+	
+	public static List<Integer> intArrToList(int[] srcArr) {
+		List<Integer> list = new ArrayList<>(srcArr.length);
+		for (int i : srcArr) {
+			list.add(i);
+		}
+		return list;
+	}
+	
+	/**
+	 * 移动位置
+	 * 
+	 * @param list
+	 * @param offset
+	 * @author zai
+	 * 2019-06-03 16:30:11
+	 * @param <T>
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> void shift(List<T> list, int offset) {
+		
+		Object[] array = list.toArray();
+		ArrayUtils.shift(array, offset);
+		list.clear();
+		for (Object object : array) {
+			list.add((T) object);
+		}
+	}
+	
+	/**
+	 * 移动位置
+	 * 
+	 * @param array
+	 * @param offset
+	 * @author zai
+	 * 2019-06-03 16:30:21
+	 */
+	public static void shift(int[] array, int offset) {
+		ArrayUtils.shift(array, offset);
 	}
 	
 	/**
@@ -149,15 +195,17 @@ public class BasicAlgoUtil {
 		List<int[]> list = new ArrayList<>(createStraightCombos.size());
 		for (int i = 0; i < createStraightCombos.size(); i++) {
 			int[] arr = createStraightCombos.get(i);
-			boolean flag = false;
+			boolean flag = true;
 			for (int j = 0; j < arr.length; j++) {
+				boolean flag2 = false;
 				for (int k = 0; k < srcArr.length; k++) {
 					if (srcArr[k] == arr[j]) {
-						flag = true;
+						flag2 = true;
 						break;
 					}
 				}
-				if (!flag) {
+				if (!flag2) {
+					flag = false;
 					break;
 				}
 			}
@@ -167,6 +215,7 @@ public class BasicAlgoUtil {
 		}
 		return list;
 	}
+	
 	
 	public static List<List<Integer>> createStraightComboList(int target, int comboLen) {
 		List<List<Integer>> list = new ArrayList<>(comboLen);
@@ -380,6 +429,15 @@ public class BasicAlgoUtil {
 		long startMs = 0;
 		long endMs = 0;
 		
+		
+		int[] srcArr = new int[]{1,1,1,3,4,5,6,7,8,9,9,9};
+		List<Integer> srcList = new ArrayList<>();
+		for (Integer i : srcArr) {
+			srcList.add(i);
+		}
+		int target = 5;
+		int comboLen = 3;
+		
 		startMs = System.currentTimeMillis();
 		for (int[] arr : list) {
 			Arrays.sort(arr);
@@ -424,17 +482,14 @@ public class BasicAlgoUtil {
 		
 		
 		startMs = System.currentTimeMillis();
-		for (int[] arr : list) {
-			
-			getSameElemenets(arr, null);
+		for (int i = 0; i < len; i++) {
+			getSameElemenets(srcList, 3);
 		}
 		endMs = System.currentTimeMillis() - startMs;
 		System.out.println("getSameElemenets time:"+ endMs + " ms");
 		
 		
-		int[] srcArr = new int[]{2,2,3,5,6,8,1,4,9,1,1,3};
-		int target = 5;
-		int comboLen = 3;
+		
 		
 		List<int[]> createStraightCombos = createStraightCombos(target, comboLen);
 		String cb3string = "";
@@ -488,6 +543,20 @@ public class BasicAlgoUtil {
 		}
 		endMs = System.currentTimeMillis() - startMs;
 		System.out.println("combinationBig :"+ endMs + " ms");
+		
+		startMs = System.currentTimeMillis();
+		for (int i = 0; i < len; i++) {
+			shift(srcList, 5);			
+		}
+		endMs = System.currentTimeMillis() - startMs;
+		System.out.println("shift :"+ endMs + " ms");
+		
+		startMs = System.currentTimeMillis();
+		for (int i = 0; i < len; i++) {
+			shift(srcArr, 5);
+		}
+		endMs = System.currentTimeMillis() - startMs;
+		System.out.println("shift int[] :"+ endMs + " ms");
 		
 		
 		System.out.println();
