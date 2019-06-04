@@ -33,6 +33,17 @@ H extends House<P, R, H>
 	 * @author zai 2019-02-10 14:18:49
 	 */
 	Map<Object, P> getPlayers(R room);
+	
+	/**
+	 * 获取参与游戏的玩家
+	 * 
+	 * @param room
+	 * @param condition
+	 * @return
+	 * @author zai
+	 * 2019-06-04 13:52:25
+	 */
+	List<P> getInGamePlayers(R room, ICheckCondition<P> condition);
 
 	/**
 	 * 根据id获取玩家
@@ -338,6 +349,8 @@ H extends House<P, R, H>
 	 * 2019-05-30 12:03:07
 	 */
 	List<P> getInGamePlayerList(R room);
+
+	
 
 	
 

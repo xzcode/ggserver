@@ -245,15 +245,6 @@ public class AlgoPaijiuUtil {
 		return (cards[0] + cards[1])  / 1000 % 10000;
 	}
 	
-	public static AlgoPaijiuCardType checkCardType(List<AlgoPaijiuCard> cards) {
-		int[] arr = new int[cards.size()];
-		for (int i = 0; i < arr.length; i++) {
-			arr[i] = cards.get(i).getValue();
-		}
-		return checkCardType(arr);
-	}
-	
-	
 	public static void main(String[] args) {
 		int[] cards = {TIAN_PAI , ZA_JIU_1};
 		System.out.println(checkCardType(cards ));

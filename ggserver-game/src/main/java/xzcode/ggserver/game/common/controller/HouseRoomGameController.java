@@ -228,6 +228,27 @@ extends
 			return pList;
 		}
 	}
+	
+	@Override
+	public List<P> getInGamePlayers(R room, ICheckCondition<P> condition) {
+		synchronized (room) {
+			Map<Object, P> players = room.getPlayers();
+			List<P> pList = new ArrayList<>(players.size());
+			for (Entry<Object, P> entry : players.entrySet()) {
+				P player = entry.getValue();
+				if (player.isInGame()) {
+					if (condition == null) {
+						pList.add(entry.getValue());
+					}else {
+						if (condition.check(entry.getValue())) {
+							pList.add(entry.getValue());
+						}			
+					}
+				}
+			}
+			return pList;
+		}
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override
