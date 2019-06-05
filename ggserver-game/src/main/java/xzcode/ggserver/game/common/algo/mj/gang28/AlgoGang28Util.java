@@ -12,25 +12,25 @@ import java.util.Map;
  */
 public class AlgoGang28Util {
 
-	private static final int TONG_1 = 110;
-	private static final int TONG_2 = 120;
-	private static final int TONG_3 = 130;
-	private static final int TONG_4 = 140;
-	private static final int TONG_5 = 150;
-	private static final int TONG_6 = 160;
-	private static final int TONG_7 = 170;
-	private static final int TONG_8 = 180;
-	private static final int TONG_9 = 190;
+	public static final int TONG_1 = 110;
+	public static final int TONG_2 = 120;
+	public static final int TONG_3 = 130;
+	public static final int TONG_4 = 140;
+	public static final int TONG_5 = 150;
+	public static final int TONG_6 = 160;
+	public static final int TONG_7 = 170;
+	public static final int TONG_8 = 180;
+	public static final int TONG_9 = 190;
 
 	/**
 	 * 白板
 	 */
-	private static final int BAI_BAN = 105;
+	public static final int BAI_BAN = 105;
 
 	/**
 	 * 所有值集合
 	 */
-	private static final List<Integer> ALL_VALUE_LIST = Arrays.asList(
+	public static final List<Integer> ALL_VALUE_LIST = Arrays.asList(
 			TONG_1, 
 			TONG_2, 
 			TONG_3, 
@@ -46,7 +46,7 @@ public class AlgoGang28Util {
 	/**
 	 * 牌型集合
 	 */
-	private static final Map<Integer, AlgoGang28CardType> CARD_TYPES = new HashMap<>();
+	public static final Map<Integer, AlgoGang28CardType> CARD_TYPES = new HashMap<>();
 	static {
 		
 		//初始化牌型集合

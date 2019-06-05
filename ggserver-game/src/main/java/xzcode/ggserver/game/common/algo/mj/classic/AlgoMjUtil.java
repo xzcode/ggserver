@@ -24,91 +24,76 @@ public class AlgoMjUtil {
 	/**
 	 * 万开始值
 	 */
-	private static final int WAN_START = 11;
+	public static final int WAN_VAL = 10;
+	
+
 	/**
-	 * 万结束值
+	 * 筒开始值
 	 */
-	private static final int WAN_END = 19;
+	public static final int TONG_VAL = 31;
 	
 	/**
 	 * 条开始值
 	 */
-	private static final int TIAO_START = 31;
-	/**
-	 * 条结束值
-	 */
-	private static final int TIAO_END = 39;
+	public static final int TIAO_VAL = 51;
 	
 	/**
-	 * 筒开始值
+	 *风开始值
 	 */
-	private static final int TONG_START = 51;
-	/**
-	 * 筒结束值
-	 */
-	private static final int TONG_END = 59;
+	public static final int FENG_VAL = 71;
 	
 	/**
 	 * 字开始值
 	 */
-	private static final int ZI_START = 71;
-	/**
-	 * 字结束值
-	 */
-	private static final int ZI_END = 74;
-	
-	/**
-	 * 箭开始值
-	 */
-	private static final int JIAN_START = 91;
-	/**
-	 * 箭结束值
-	 */
-	private static final int JIAN_END = 93;
+	public static final int ZI_VAL = 91;
 	
 	/**
 	 * 花牌开始值
 	 */
-	private static final int HUA_START = 111;
-	/**
-	 * 花牌结束值
-	 */
-	private static final int HUA_END = 118;
+	public static final int HUA_VAL = 111;
 
 	/**
 	 * 万牌麻将值(一到九万)
 	 */
-	private static final List<Integer> WAN_VALUE_LIST = Arrays.asList(11, 12, 13, 14, 15, 16, 17, 18, 19);
+	public static final List<Integer> WAN_VALUE_LIST = Arrays.asList(11, 12, 13, 14, 15, 16, 17, 18, 19);
+	
+	/**
+	 * 筒牌麻将值(一到九筒)
+	 */
+	public static final List<Integer> TONG_VALUE_LIST = Arrays.asList(31, 32, 33, 34, 35, 36, 37, 38, 39);
 
 	/**
 	 * 条牌麻将值(一到九条)
 	 */
-	private static final List<Integer> TIAO_VALUE_LIST = Arrays.asList(31, 32, 33, 34, 35, 36, 37, 38, 39);
+	public static final List<Integer> TIAO_VALUE_LIST = Arrays.asList(51, 52, 53, 54, 55, 56, 57, 58, 59);
 
 	/**
-	 * 筒牌麻将值(一到九筒)
+	 * 风牌麻将值(东南西北)
 	 */
-	private static final List<Integer> TONG_VALUE_LIST = Arrays.asList(51, 52, 53, 54, 55, 56, 57, 58, 59);
-
-	/**
-	 * 字牌麻将值(东南西北)
-	 */
-	private static final List<Integer> ZI_VALUE_LIST = Arrays.asList(71, 72, 73, 74);
+	public static final List<Integer> FENG_VALUE_LIST = Arrays.asList(71, 72, 73, 74);
 	
 	/**
-	 * 箭牌麻将值(中发白)
+	 * 字牌麻将值(中发白)
 	 */
-	private static final List<Integer> JIAN_VALUE_LIST = Arrays.asList(91, 92, 93);
+	public static final List<Integer> ZI_VALUE_LIST = Arrays.asList(91, 92, 93);
 
 	/**
 	 * 花牌麻将值(春夏秋冬 梅兰竹菊)
 	 */
-	private static final List<Integer> HUA_VALUE_LIST = Arrays.asList(111, 112, 113, 114, 115, 116, 117, 118);
+	public static final List<Integer> HUA_VALUE_LIST = Arrays.asList(111, 112, 113, 114, 115, 116, 117, 118);
 	
 	/**
 	 * 所有值 LIST集合
 	 */
-	private static final List<Integer> ALL_VALUE_LIST = createAllValueList();
+	public static final List<Integer> ALL_VALUE_LIST = createAllValueList(true, true);
+	
+	/**
+	 * 万筒条值 LIST集合
+	 */
+	public static final List<Integer> WAN_TONG_TIAO_VALUE_LIST = createAllValueList(false, false);
+	
+	
+	
 	
 	
 	/**
@@ -118,13 +103,17 @@ public class AlgoMjUtil {
 	 * @author zai
 	 * 2019-05-27 11:49:32
 	 */
-	private static List<Integer> createAllValueList() {
+	private static List<Integer> createAllValueList(boolean hasFeng, boolean hasZi) {
 		List<Integer> list = new ArrayList<>();
 		list.addAll(WAN_VALUE_LIST);
-		list.addAll(TIAO_VALUE_LIST);
 		list.addAll(TONG_VALUE_LIST);
-		list.addAll(ZI_VALUE_LIST);
-		list.addAll(JIAN_VALUE_LIST);
+		list.addAll(TIAO_VALUE_LIST);
+		if (hasFeng) {
+			list.addAll(FENG_VALUE_LIST);			
+		}
+		if (hasZi) {
+			list.addAll(ZI_VALUE_LIST);			
+		}
 		return list;
 	}
 	
@@ -147,7 +136,7 @@ public class AlgoMjUtil {
 	 * @author zai 2018-12-27 19:20:15
 	 */
 	public static boolean isWan(int value) {
-		return WAN_START < value && value <= WAN_END;
+		return value / WAN_VAL == WAN_VAL;
 	}
 
 	/**
@@ -159,7 +148,7 @@ public class AlgoMjUtil {
 	 */
 	public static boolean isTiao(int value) {
 
-		return TIAO_START <= value && value <= TIAO_END;
+		return value / TIAO_VAL == TIAO_VAL;
 	}
 
 	/**
@@ -170,9 +159,22 @@ public class AlgoMjUtil {
 	 * @author zai 2018-12-27 19:20:15
 	 */
 	public static boolean isTong(int value) {
-		return TONG_START <= value && value <= TONG_END;
+		return value / TONG_VAL == TONG_VAL;
 	}
 
+	
+
+	/**
+	 * 判断数值是否是风牌
+	 * 
+	 * @param value
+	 * @return
+	 * @author zai 2018-12-27 19:20:15
+	 */
+	public static boolean isFeng(int value) {
+		return value / FENG_VAL == FENG_VAL;
+	}
+	
 	/**
 	 * 判断数值是否是字
 	 * 
@@ -181,20 +183,10 @@ public class AlgoMjUtil {
 	 * @author zai 2018-12-27 19:20:15
 	 */
 	public static boolean isZi(int value) {
-		return ZI_START <= value && value <= ZI_END;
+		return value / ZI_VAL == ZI_VAL;
 	}
 	
 	
-	/**
-	 * 判断数值是否是箭
-	 * 
-	 * @param value
-	 * @return
-	 * @author zai 2018-12-27 19:20:15
-	 */
-	public static boolean isJian(int value) {
-		return JIAN_START <= value && value <= JIAN_END;
-	}
 
 	/**
 	 * 判断数值是否是花
@@ -204,7 +196,7 @@ public class AlgoMjUtil {
 	 * @author zai 2018-12-27 19:20:15
 	 */
 	public static boolean isHua(int value) {
-		return HUA_START <= value && value <= HUA_END;
+		return value / HUA_VAL == HUA_VAL;
 	}
 	
 	/**
@@ -225,11 +217,11 @@ public class AlgoMjUtil {
 		if (isTiao(value)) {
 			return AlgoMjType.TIAO;
 		}
+		if (isFeng(value)) {
+			return AlgoMjType.FENG;
+		}
 		if (isZi(value)) {
 			return AlgoMjType.ZI;
-		}
-		if (isJian(value)) {
-			return AlgoMjType.JIAN;
 		}
 		if (isHua(value)) {
 			return AlgoMjType.HUA;
@@ -250,8 +242,8 @@ public class AlgoMjUtil {
 			valueList.addAll(WAN_VALUE_LIST);
 			valueList.addAll(TIAO_VALUE_LIST);
 			valueList.addAll(TONG_VALUE_LIST);
+			valueList.addAll(FENG_VALUE_LIST);
 			valueList.addAll(ZI_VALUE_LIST);
-			valueList.addAll(JIAN_VALUE_LIST);
 		}
 		if (hasHuapai) {
 			valueList.addAll(HUA_VALUE_LIST);
@@ -381,7 +373,7 @@ public class AlgoMjUtil {
 	 */
 	public static boolean hasJian(List<AlgoMj> list) {
 		for (AlgoMj algoMj : list) {
-			if (isJian(algoMj.getValue())) {
+			if (isFeng(algoMj.getValue())) {
 				return true;
 			}
 		}
@@ -563,7 +555,7 @@ public class AlgoMjUtil {
 	 */
 	public static List<int[]> getChiGroup(List<AlgoMj> list, AlgoMj algoMj) {
 		int mjVal = algoMj.getValue();
-		if (isZi(mjVal) || isJian(mjVal)) {
+		if (isZi(mjVal) || isFeng(mjVal)) {
 			return null;
 		}
 		if (list.size() < 3) {
@@ -614,7 +606,7 @@ public class AlgoMjUtil {
 	 */
 	public static boolean isCanChi(List<AlgoMj> list, AlgoMj algoMj) {
 		int mjVal = algoMj.getValue();
-		if (isZi(mjVal) || isJian(mjVal)) {
+		if (isZi(mjVal) || isFeng(mjVal)) {
 			return false;
 		}
 		if (list.size() < 3) {

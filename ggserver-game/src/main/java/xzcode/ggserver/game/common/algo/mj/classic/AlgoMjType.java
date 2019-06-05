@@ -20,14 +20,14 @@ public interface AlgoMjType {
 	 */
 	int TONG = 3;
 	/**
-	 * 字
+	 * 风
 	 */
-	int ZI = 4;
+	int FENG = 4;
 	
 	/**
-	 * 箭
+	 * 字
 	 */
-	int JIAN = 5;
+	int ZI = 5;
 	
 	/**
 	 * 花
