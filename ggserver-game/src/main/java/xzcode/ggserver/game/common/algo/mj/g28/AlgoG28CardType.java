@@ -1,6 +1,6 @@
-package xzcode.ggserver.game.common.algo.mj.gang28;
+package xzcode.ggserver.game.common.algo.mj.g28;
 
-public enum AlgoGang28CardType {
+public enum AlgoG28CardType {
 	
 	NONE(1000, "鳖十"),
 	
@@ -52,7 +52,7 @@ public enum AlgoGang28CardType {
 	private String name;
 	
 		
-	private AlgoGang28CardType(int value, String name) {
+	private AlgoG28CardType(int value, String name) {
 		this.value = value;
 		this.name = name;
 	}

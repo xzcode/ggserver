@@ -1,6 +1,6 @@
 package xzcode.ggserver.game.common.algo.paijiu;
 
-public enum AlgoPaijiuCardType {
+public enum AlgoPjCardType {
 	
 	NONE(100, "零点"),
 	DOT_1(101, "一点"),
@@ -43,7 +43,7 @@ public enum AlgoPaijiuCardType {
 	private String name;
 	
 		
-	private AlgoPaijiuCardType(int value, String name) {
+	private AlgoPjCardType(int value, String name) {
 		this.value = value;
 		this.name = name;
 	}

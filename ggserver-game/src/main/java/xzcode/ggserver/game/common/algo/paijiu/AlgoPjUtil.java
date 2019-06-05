@@ -11,7 +11,7 @@ import java.util.Map;
  * @author zai
  * 2019-05-25 17:09:07
  */
-public class AlgoPaijiuUtil {
+public class AlgoPjUtil {
 	
 	
 			
@@ -137,51 +137,51 @@ public class AlgoPaijiuUtil {
 	/**
 	 * 对牌牌型预设
 	 */
-	public static final Map<Integer, AlgoPaijiuCardType> PAIR_TYPES = new HashMap<>();
+	public static final Map<Integer, AlgoPjCardType> PAIR_TYPES = new HashMap<>();
 	static {
-		PAIR_TYPES.put(DING_SAN + ER_SI, AlgoPaijiuCardType.SHUANG_ZHUN);
+		PAIR_TYPES.put(DING_SAN + ER_SI, AlgoPjCardType.SHUANG_ZHUN);
 		
-		PAIR_TYPES.put(2 * TIAN_PAI, AlgoPaijiuCardType.SHUANG_TIAN);
-		PAIR_TYPES.put(2 * DI_PAI, AlgoPaijiuCardType.SHUANG_DI);
-		PAIR_TYPES.put(2 * REN_PAI, AlgoPaijiuCardType.SHUANG_REN);
-		PAIR_TYPES.put(2 * E_PAI, AlgoPaijiuCardType.SHUANG_E);
-		
-		
-		PAIR_TYPES.put(2 * MEI_PAI, AlgoPaijiuCardType.SHUANG_MEI);
-		PAIR_TYPES.put(2 * CHANG_SAN, AlgoPaijiuCardType.SHUANG_CHANG_SAN);
-		PAIR_TYPES.put(2 * BAN_DENG, AlgoPaijiuCardType.SHUANG_BAN_DENG);
-		PAIR_TYPES.put(2 * FU_TOU, AlgoPaijiuCardType.SHUANG_FU_TOU);
-		PAIR_TYPES.put(2 * HONG_TOU_SHI, AlgoPaijiuCardType.SHUANG_HONG_TOU);
-		PAIR_TYPES.put(2 * GAO_JIAO_QI, AlgoPaijiuCardType.SHUANG_GAO_JIAO);
-		PAIR_TYPES.put(2 * LING_LING_LIU, AlgoPaijiuCardType.SHUANG_LING_LING);
+		PAIR_TYPES.put(2 * TIAN_PAI, AlgoPjCardType.SHUANG_TIAN);
+		PAIR_TYPES.put(2 * DI_PAI, AlgoPjCardType.SHUANG_DI);
+		PAIR_TYPES.put(2 * REN_PAI, AlgoPjCardType.SHUANG_REN);
+		PAIR_TYPES.put(2 * E_PAI, AlgoPjCardType.SHUANG_E);
 		
 		
-		PAIR_TYPES.put(ZA_JIU_1 + ZA_JIU_2, AlgoPaijiuCardType.ZA_JIU);
-		PAIR_TYPES.put(ZA_BA_1 + ZA_BA_2, AlgoPaijiuCardType.ZA_BA);
-		PAIR_TYPES.put(ZA_QI_1 + ZA_QI_2, AlgoPaijiuCardType.ZA_QI);
-		PAIR_TYPES.put(ZA_WU_1 + ZA_WU_2, AlgoPaijiuCardType.ZA_WU);
-		
-		PAIR_TYPES.put(ZA_JIU_1 + TIAN_PAI, AlgoPaijiuCardType.TIAN_WANG);
-		PAIR_TYPES.put(ZA_JIU_2 + TIAN_PAI, AlgoPaijiuCardType.TIAN_WANG);
-		
-		
-		PAIR_TYPES.put(ZA_JIU_1 + DI_PAI, AlgoPaijiuCardType.DI_WANG);
-		PAIR_TYPES.put(ZA_JIU_2 + DI_PAI, AlgoPaijiuCardType.DI_WANG);
+		PAIR_TYPES.put(2 * MEI_PAI, AlgoPjCardType.SHUANG_MEI);
+		PAIR_TYPES.put(2 * CHANG_SAN, AlgoPjCardType.SHUANG_CHANG_SAN);
+		PAIR_TYPES.put(2 * BAN_DENG, AlgoPjCardType.SHUANG_BAN_DENG);
+		PAIR_TYPES.put(2 * FU_TOU, AlgoPjCardType.SHUANG_FU_TOU);
+		PAIR_TYPES.put(2 * HONG_TOU_SHI, AlgoPjCardType.SHUANG_HONG_TOU);
+		PAIR_TYPES.put(2 * GAO_JIAO_QI, AlgoPjCardType.SHUANG_GAO_JIAO);
+		PAIR_TYPES.put(2 * LING_LING_LIU, AlgoPjCardType.SHUANG_LING_LING);
 		
 		
-		PAIR_TYPES.put(ZA_BA_1 + TIAN_PAI, AlgoPaijiuCardType.TIAN_GANG);
-		PAIR_TYPES.put(ZA_BA_2 + TIAN_PAI, AlgoPaijiuCardType.TIAN_GANG);
+		PAIR_TYPES.put(ZA_JIU_1 + ZA_JIU_2, AlgoPjCardType.ZA_JIU);
+		PAIR_TYPES.put(ZA_BA_1 + ZA_BA_2, AlgoPjCardType.ZA_BA);
+		PAIR_TYPES.put(ZA_QI_1 + ZA_QI_2, AlgoPjCardType.ZA_QI);
+		PAIR_TYPES.put(ZA_WU_1 + ZA_WU_2, AlgoPjCardType.ZA_WU);
+		
+		PAIR_TYPES.put(ZA_JIU_1 + TIAN_PAI, AlgoPjCardType.TIAN_WANG);
+		PAIR_TYPES.put(ZA_JIU_2 + TIAN_PAI, AlgoPjCardType.TIAN_WANG);
 		
 		
+		PAIR_TYPES.put(ZA_JIU_1 + DI_PAI, AlgoPjCardType.DI_WANG);
+		PAIR_TYPES.put(ZA_JIU_2 + DI_PAI, AlgoPjCardType.DI_WANG);
 		
-		PAIR_TYPES.put(ZA_BA_1 + DI_PAI, AlgoPaijiuCardType.DI_GANG);
-		PAIR_TYPES.put(ZA_BA_2 + DI_PAI, AlgoPaijiuCardType.DI_GANG);
+		
+		PAIR_TYPES.put(ZA_BA_1 + TIAN_PAI, AlgoPjCardType.TIAN_GANG);
+		PAIR_TYPES.put(ZA_BA_2 + TIAN_PAI, AlgoPjCardType.TIAN_GANG);
 		
 		
 		
-		PAIR_TYPES.put(ZA_QI_1 + TIAN_PAI, AlgoPaijiuCardType.TIAN_GAO_JIU);
+		PAIR_TYPES.put(ZA_BA_1 + DI_PAI, AlgoPjCardType.DI_GANG);
+		PAIR_TYPES.put(ZA_BA_2 + DI_PAI, AlgoPjCardType.DI_GANG);
 		
-		PAIR_TYPES.put(ZA_QI_2 + DI_PAI, AlgoPaijiuCardType.DI_GAO_JIU);
+		
+		
+		PAIR_TYPES.put(ZA_QI_1 + TIAN_PAI, AlgoPjCardType.TIAN_GAO_JIU);
+		
+		PAIR_TYPES.put(ZA_QI_2 + DI_PAI, AlgoPjCardType.DI_GAO_JIU);
 		
 	}
 	
@@ -194,10 +194,10 @@ public class AlgoPaijiuUtil {
 	 * @author zai
 	 * 2019-05-25 16:56:20
 	 */
-	public static AlgoPaijiuCardType checkCardType(int[] cards) {
+	public static AlgoPjCardType checkCardType(int[] cards) {
 		//从小到大排序
 		Arrays.sort(cards);
-		AlgoPaijiuCardType pairType = PAIR_TYPES.get(cards[0] + cards[1]);
+		AlgoPjCardType pairType = PAIR_TYPES.get(cards[0] + cards[1]);
 		//如果能组成对牌，返回对牌牌型
 		if (pairType != null) {
 			return pairType;
@@ -216,19 +216,19 @@ public class AlgoPaijiuUtil {
 	 * @author zai
 	 * 2019-05-25 18:07:07
 	 */
-	public static AlgoPaijiuCardType getPointCardType(int point) {
+	public static AlgoPjCardType getPointCardType(int point) {
 		switch (point) {
-		case 0: return AlgoPaijiuCardType.NONE;
-		case 1: return AlgoPaijiuCardType.DOT_1;
-		case 2: return AlgoPaijiuCardType.DOT_2;
-		case 3: return AlgoPaijiuCardType.DOT_3;
-		case 4: return AlgoPaijiuCardType.DOT_4;
-		case 5: return AlgoPaijiuCardType.DOT_5;
-		case 6: return AlgoPaijiuCardType.DOT_6;
-		case 7: return AlgoPaijiuCardType.DOT_7;
-		case 8: return AlgoPaijiuCardType.DOT_8;
-		case 9: return AlgoPaijiuCardType.DOT_9;
-		default: return AlgoPaijiuCardType.NONE;
+		case 0: return AlgoPjCardType.NONE;
+		case 1: return AlgoPjCardType.DOT_1;
+		case 2: return AlgoPjCardType.DOT_2;
+		case 3: return AlgoPjCardType.DOT_3;
+		case 4: return AlgoPjCardType.DOT_4;
+		case 5: return AlgoPjCardType.DOT_5;
+		case 6: return AlgoPjCardType.DOT_6;
+		case 7: return AlgoPjCardType.DOT_7;
+		case 8: return AlgoPjCardType.DOT_8;
+		case 9: return AlgoPjCardType.DOT_9;
+		default: return AlgoPjCardType.NONE;
 		}
 	}
 	
