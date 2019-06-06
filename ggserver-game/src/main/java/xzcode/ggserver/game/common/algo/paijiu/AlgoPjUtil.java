@@ -2,7 +2,6 @@ package xzcode.ggserver.game.common.algo.paijiu;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -245,9 +244,5 @@ public class AlgoPjUtil {
 		return (cards[0] + cards[1])  / 1000 % 10000;
 	}
 	
-	public static void main(String[] args) {
-		int[] cards = {TIAN_PAI , ZA_JIU_1};
-		System.out.println(checkCardType(cards ));
-	}
 	
 }
