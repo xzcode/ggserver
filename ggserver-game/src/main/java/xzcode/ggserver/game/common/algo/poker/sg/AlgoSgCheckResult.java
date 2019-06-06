@@ -14,19 +14,32 @@ public class AlgoSgCheckResult {
 	//点数
 	private Integer points;
 	
+	//倍数
+	private Integer cardTimes;
+	
 	
 	
 	
 
 	public AlgoSgCheckResult(AlgoSgCardType cardType) {
+		super();
 		this.cardType = cardType;
 	}
 
-	public AlgoSgCheckResult(AlgoSgCardType cardType, Integer points) {
+
+	public AlgoSgCheckResult(AlgoSgCardType cardType, Integer cardTimes) {
+		this.cardType = cardType;
+		this.cardTimes = cardTimes;
+	}
+
+
+	public AlgoSgCheckResult(AlgoSgCardType cardType, Integer points, Integer cardTimes) {
 		this.cardType = cardType;
 		this.points = points;
+		this.cardTimes = cardTimes;
 	}
-	
+
+
 
 
 	public AlgoSgCardType getCardType() {
@@ -43,6 +56,16 @@ public class AlgoSgCheckResult {
 
 	public Integer getPoints() {
 		return points;
+	}
+
+
+	public Integer getCardTimes() {
+		return cardTimes;
+	}
+
+
+	public void setCardTimes(Integer cardTimes) {
+		this.cardTimes = cardTimes;
 	}
 
 	

@@ -139,7 +139,7 @@ public class AlgoPjUtil {
 	 */
 	public static final Map<Integer, AlgoPjCardType> PAIR_TYPES = new HashMap<>();
 	static {
-		PAIR_TYPES.put(DING_SAN + ER_SI, AlgoPjCardType.SHUANG_ZHUN);
+		PAIR_TYPES.put(DING_SAN + ER_SI, AlgoPjCardType.ZHI_ZHUN);
 		
 		PAIR_TYPES.put(2 * TIAN_PAI, AlgoPjCardType.SHUANG_TIAN);
 		PAIR_TYPES.put(2 * DI_PAI, AlgoPjCardType.SHUANG_DI);

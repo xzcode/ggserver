@@ -33,7 +33,7 @@ public enum AlgoPjCardType {
 	SHUANG_REN(128, "双人"),
 	SHUANG_DI(129, "双地"),
 	SHUANG_TIAN(130, "双天"),
-	SHUANG_ZHUN(131, "双尊"),
+	ZHI_ZHUN(131, "至尊"),
 	
 	;
 	
