@@ -4,8 +4,8 @@
     <groupId>xzcode</groupId>
     <artifactId>ggserver</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    
   </parent>
+  
   <artifactId>ggserver-core</artifactId>
   <name>ggserver-core</name>
   <packaging>jar</packaging>

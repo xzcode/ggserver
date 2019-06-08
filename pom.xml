@@ -12,7 +12,7 @@
   
   <properties>
     <jdk.version>1.8</jdk.version>
-    <spring.boot.version>2.0.8.RELEASE</spring.boot.version>
+    <spring.boot.version>2.1.5.RELEASE</spring.boot.version>
     <netty.version>4.1.33.Final</netty.version>
   </properties>
   
@@ -95,20 +95,15 @@
 			    <artifactId>commons-lang3</artifactId>
 			    <version>3.9</version>
 			</dependency>
-						
-				        
-	        
 	    </dependencies>
 	</dependencyManagement>
 
     <dependencies>
-
 		<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-api</artifactId>
 				<version>1.7.25</version>
 			</dependency>
-
     </dependencies>
     
     <distributionManagement>
