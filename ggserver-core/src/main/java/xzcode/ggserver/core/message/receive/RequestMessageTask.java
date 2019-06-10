@@ -63,9 +63,9 @@ public class RequestMessageTask implements Runnable{
 	public void run() {
 		
 		GGSessionThreadLocalUtil.setSession(this.session);
+		String actionStr = new String(action, Charset.defaultCharset());
 		try {
 			
-			String actionStr = new String(action, Charset.defaultCharset());
 			
 			IRequestMessageInvoker invoker = config.getMessageInvokerManager().get(actionStr);
 			Object msgObj = null;
@@ -83,7 +83,7 @@ public class RequestMessageTask implements Runnable{
 				config.getSendMessageManager().send(this.session.getChannel(), SendModel.create(config.getSerializer().serialize(config.getRequestMessageManager().getSendAction(actionStr)), config.getSerializer().serialize(returnObj)));
 			}
 		} catch (Exception e) {
-			LOGGER.error("Request Message Task ERROR!!", e);
+			LOGGER.error("Request Message Task ERROR!! -- actionId: {}, error: {}", actionStr, e);
 		}
 		GGSessionThreadLocalUtil.removeSession();
 		

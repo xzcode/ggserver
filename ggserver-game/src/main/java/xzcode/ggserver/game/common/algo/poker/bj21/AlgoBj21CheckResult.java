@@ -9,7 +9,7 @@ package xzcode.ggserver.game.common.algo.poker.bj21;
 public class AlgoBj21CheckResult {
 	
 	//牌型
-	private AlgoBj21CardType algoBj21CardType;
+	private AlgoBj21CardType cardType;
 	
 	//点数
 	private Integer points;
@@ -21,24 +21,21 @@ public class AlgoBj21CheckResult {
 	
 
 	public AlgoBj21CheckResult(AlgoBj21CardType algoBj21CardType) {
-		this.algoBj21CardType = algoBj21CardType;
+		this.cardType = algoBj21CardType;
 	}
 
 	public AlgoBj21CheckResult(AlgoBj21CardType algoBj21CardType, Integer points) {
-		this.algoBj21CardType = algoBj21CardType;
+		this.cardType = algoBj21CardType;
 		this.points = points;
 	}
 	
 
 	public AlgoBj21CheckResult(AlgoBj21CardType algoBj21CardType, Integer points, Integer pointsA) {
-		this.algoBj21CardType = algoBj21CardType;
+		this.cardType = algoBj21CardType;
 		this.points = points;
 		this.pointsA = pointsA;
 	}
 
-	public AlgoBj21CardType getBj21CardType() {
-		return algoBj21CardType;
-	}
 
 	public Integer getPointsA() {
 		return pointsA;
@@ -46,11 +43,27 @@ public class AlgoBj21CheckResult {
 
 
 	public AlgoBj21CardType getBj21Type() {
-		return algoBj21CardType;
+		return cardType;
 	}
 
 	public Integer getPoints() {
 		return points;
+	}
+
+	public AlgoBj21CardType getCardType() {
+		return cardType;
+	}
+
+	public void setCardType(AlgoBj21CardType cardType) {
+		this.cardType = cardType;
+	}
+
+	public void setPoints(Integer points) {
+		this.points = points;
+	}
+
+	public void setPointsA(Integer pointsA) {
+		this.pointsA = pointsA;
 	}
 
 	

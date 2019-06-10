@@ -13,23 +13,23 @@ public class AlgoBj21Util extends BasicPokerAlgoUtil{
 	/**
 	 * 爆牌结果常量
 	 */
-	private static final AlgoBj21CheckResult EXPLODED_CHECK_RESULT = new AlgoBj21CheckResult(AlgoBj21CardType.EXPLODED);
+	private final AlgoBj21CheckResult EXPLODED_CHECK_RESULT = new AlgoBj21CheckResult(AlgoBj21CardType.EXPLODED);
 	
 	/**
 	 * 五小龙结果常量
 	 */
-	private static final AlgoBj21CheckResult FIVE_DRAGONS_CHECK_RESULT = new AlgoBj21CheckResult(AlgoBj21CardType.FIVE_DRAGONS);
+	private final AlgoBj21CheckResult FIVE_DRAGONS_CHECK_RESULT = new AlgoBj21CheckResult(AlgoBj21CardType.FIVE_DRAGONS);
 	
 	
 	/**
 	 * 黑杰克结果常量
 	 */
-	private static final AlgoBj21CheckResult BLACK_JACK_CHECK_RESULT = new AlgoBj21CheckResult(AlgoBj21CardType.BLACK_JACK);
+	private final AlgoBj21CheckResult BLACK_JACK_CHECK_RESULT = new AlgoBj21CheckResult(AlgoBj21CardType.BLACK_JACK);
 	
 	/**
 	 * 最大点数
 	 */
-	private static final int MAX_POINTS = 21;
+	private final int MAX_POINTS = 21;
 	
 	/**
 	 * 获取牌型
@@ -39,7 +39,7 @@ public class AlgoBj21Util extends BasicPokerAlgoUtil{
 	 * @author zai
 	 * 2019-05-25 16:56:20
 	 */
-	public static AlgoBj21CheckResult checkCardType(int[] cards) {
+	public AlgoBj21CheckResult checkCardType(int[] cards) {
 		
 		//是否爆牌
 		
@@ -83,7 +83,7 @@ public class AlgoBj21Util extends BasicPokerAlgoUtil{
 	 * @author zai
 	 * 2019-05-27 15:23:10
 	 */
-	public static boolean isFiveDragons(int[] cards) {
+	public boolean isFiveDragons(int[] cards) {
 		if (cards.length < 5) {
 			return false;
 		}
@@ -106,7 +106,7 @@ public class AlgoBj21Util extends BasicPokerAlgoUtil{
 	 * @author zai
 	 * 2019-05-27 15:04:05
 	 */
-	public static boolean isBlackJack(int[] cards) {
+	public boolean isBlackJack(int[] cards) {
 		if (cards.length > 2) {
 			return false;
 		}
@@ -124,7 +124,7 @@ public class AlgoBj21Util extends BasicPokerAlgoUtil{
 	 * @author zai
 	 * 2019-05-27 15:05:08
 	 */
-	public static boolean isExploded(int[] cards) {
+	public boolean isExploded(int[] cards) {
 		int points = 0;
 		for (int c : cards) {
 			int v = c % 100;
@@ -144,7 +144,7 @@ public class AlgoBj21Util extends BasicPokerAlgoUtil{
 	 * @author zai
 	 * 2019-05-27 15:45:25
 	 */
-	public static boolean isExploded(int points) {
+	public boolean isExploded(int points) {
 		return points > MAX_POINTS;
 	}
 	
@@ -158,7 +158,7 @@ public class AlgoBj21Util extends BasicPokerAlgoUtil{
 	 * @author zai
 	 * 2019-05-25 18:06:46
 	 */
-	public static int getPoints(int[] cards) {
+	public int getPoints(int[] cards) {
 		int points = 0;
 		for (int c : cards) {
 			int v = c % 100;
@@ -178,7 +178,7 @@ public class AlgoBj21Util extends BasicPokerAlgoUtil{
 	 * @author zai
 	 * 2019-05-27 15:39:33
 	 */
-	public static int getPointsA(int[] cards) {
+	public int getPointsA(int[] cards) {
 		int points = 0;
 		//是否已设置过A为11的标识
 		boolean aAs11 = false;
@@ -203,7 +203,7 @@ public class AlgoBj21Util extends BasicPokerAlgoUtil{
 	 * @author zai
 	 * 2019-05-27 15:43:37
 	 */
-	public static boolean hasA(int[] cards) {
+	public boolean hasA(int[] cards) {
 		for (int c : cards) {
 			if (c % 100 == 1) {
 				return true;
