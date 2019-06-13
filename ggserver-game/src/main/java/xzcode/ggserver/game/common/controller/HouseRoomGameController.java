@@ -141,6 +141,21 @@ extends
 	}
 	
 	@Override
+	public boolean boolEachInGamePlayer(R room, BoolForEachPlayer<P> eachPlayer) {
+		synchronized (room) {
+			for (Entry<Object, P> entry : room.getPlayers().entrySet()) {
+				if (!entry.getValue().isInGame()) {
+					continue;
+				}
+				if (!eachPlayer.each(entry.getValue())) {
+					return false;
+				}
+			}
+			return true;
+		}
+	}
+	
+	@Override
 	public int countPlayers(R room, ICheckCondition<P> condition) {
 		synchronized (room) {
 			int i = 0;

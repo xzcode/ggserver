@@ -85,6 +85,18 @@ H extends House<P, R, H>
 	 * 2019-02-11 10:56:05
 	 */
 	boolean boolEachPlayer(R room, BoolForEachPlayer<P> eachPlayer);
+	
+	
+	/**
+	 * 遍历所有参与游戏的玩家并返回布尔值
+	 * 
+	 * @param room
+	 * @param eachPlayer
+	 * @return
+	 * @author zai
+	 * 2019-06-13 11:34:19
+	 */
+	boolean boolEachInGamePlayer(R room, BoolForEachPlayer<P> eachPlayer);
 
 	/**
 	 * 广播给所有玩家
@@ -349,6 +361,7 @@ H extends House<P, R, H>
 	 * 2019-05-30 12:03:07
 	 */
 	List<P> getInGamePlayerList(R room);
+
 
 	
 

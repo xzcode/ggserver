@@ -240,8 +240,7 @@ public class AlgoPjUtil {
 	 * 2019-05-25 18:06:46
 	 */
 	public static int getPoints(int[] cards) {
-		//int points = (cards[0] + cards[1])  / 1000 % 1000 % 10;
-		return (cards[0] + cards[1])  / 1000 % 10000;
+		return (cards[0] + cards[1])  / 1000 % 10;
 	}
 	
 	
