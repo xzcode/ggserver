@@ -10,19 +10,19 @@ public enum PokerCardType {
 	/**
 	 * 黑桃
 	 */
-	SPADE(1,"黑桃"),
+	SPADE(4,"黑桃"),
 	/**
 	 * 红桃
 	 */
-	HEART(2,"红桃"),
+	HEART(3,"红桃"),
 	/**
 	 * 梅花
 	 */
-	CLUB(3,"梅花"),
+	CLUB(2,"梅花"),
 	/**
 	 * 方块
 	 */
-	DEMAND(4,"方块"),
+	DEMAND(1,"方块"),
 	/**
 	 * 小丑
 	 */

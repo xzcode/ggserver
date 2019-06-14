@@ -47,4 +47,8 @@ public abstract class PokerCard extends Card{
 		this.gameVal = gameVal;
 	}
 
+	public void setCardType(PokerCardType cardType) {
+		this.cardType = cardType;
+	}
+	
 }

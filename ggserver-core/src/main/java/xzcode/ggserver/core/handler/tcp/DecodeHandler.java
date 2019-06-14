@@ -54,6 +54,7 @@ public class DecodeHandler extends ByteToMessageDecoder {
 
 	
 	public DecodeHandler() {
+		
 	}
 	
 	public DecodeHandler(GGServerConfig config) {
@@ -95,7 +96,11 @@ public class DecodeHandler extends ByteToMessageDecoder {
 		String reqTag = new String(dataTag);
 		
 		//读取数据体 =  总包长 - 标识长度占用字节 - 标识体占用字节数
-		byte[] data = new byte[readableBytes - PACKAGE_LENGTH_BYTES - REQUEST_TAG_LENGTH_BYTES - reqTagSize];
+		int bodyLen = readableBytes - HEADER_BYTES - reqTagSize;
+		byte[] data = null;
+		if (bodyLen != 0) {
+			data = new byte[bodyLen];			
+		}
 		
 		//读取数据体部分byte数组
 		in.getBytes(0, data);
@@ -104,10 +109,12 @@ public class DecodeHandler extends ByteToMessageDecoder {
 		IRequestMessageInvoker invoker = config.getRequestMessageManager().get(reqTag);
 		
 		if (invoker != null) {
-			config.getTaskExecutor().submit(new RequestMessageTask(dataTag, null, ctx.channel().attr(DefaultChannelAttributeKeys.SESSION).get(),config));
+			config.getTaskExecutor().submit(new RequestMessageTask(dataTag, data, ctx.channel().attr(DefaultChannelAttributeKeys.SESSION).get(), config));
 		}
 		
-		
+		if(LOGGER.isDebugEnabled()){
+        	LOGGER.debug("\nReceived binary message  <----,\nchannel:{}\ntag:{}\nbytes-length:{}", ctx.channel(), dataTag, bodyLen);
+        }
 		
 	}
 

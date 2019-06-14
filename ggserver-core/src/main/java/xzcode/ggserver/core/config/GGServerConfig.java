@@ -62,6 +62,7 @@ public class GGServerConfig {
 	
 	private ISerializer serializer;
 	
+	
 	private GGComponentManager componentManager = new GGComponentManager();
 	private RequestMessageManager requestMessageManager = new RequestMessageManager();
 	private SendMessageManager sendMessageManager = new SendMessageManager(this);

@@ -1,15 +1,12 @@
 package xzcode.ggserver.core.handler;
 
 import java.util.concurrent.TimeUnit;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.timeout.IdleStateHandler;
 import xzcode.ggserver.core.config.GGServerConfig;
-import xzcode.ggserver.core.executor.GGServerTaskExecutor;
 import xzcode.ggserver.core.handler.common.InboundCommonHandler;
 import xzcode.ggserver.core.handler.common.OutboundCommonHandler;
 import xzcode.ggserver.core.handler.idle.IdleHandler;
@@ -32,14 +29,13 @@ public class SocketChannelInitializer extends ChannelInitializer<SocketChannel> 
 	
 	
 	public SocketChannelInitializer() {
+		
 	}
 	
 
 	public SocketChannelInitializer(GGServerConfig config) {
 		this.config = config;
 	}
-	
-	
 
 	@Override
 	protected void initChannel(SocketChannel ch) throws Exception {
@@ -48,8 +44,6 @@ public class SocketChannelInitializer extends ChannelInitializer<SocketChannel> 
 		
 		//Inbound 是顺序执行
    	 
-	   	 
-	   	 
 	   	if (config.getIdleCheckEnabled()) {
 	   		
 		   	 //空闲事件触发器
@@ -57,16 +51,13 @@ public class SocketChannelInitializer extends ChannelInitializer<SocketChannel> 
 		   	 
 		   	 //心跳包处理
 		   	 ch.pipeline().addLast(new IdleHandler(config));
-		   	 
 	   	}
-	   	
    	 
 	   	 //消息解码器
         ch.pipeline().addLast(new DecodeHandler(this.config));
         
         //inbound异常处理
         ch.pipeline().addLast(new InboundCommonHandler(this.config));
-        
         
         //Outbound 是反顺序执行
         

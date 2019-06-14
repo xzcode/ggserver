@@ -101,7 +101,7 @@ public class WebSocketOutboundFrameHandler extends ChannelOutboundHandlerAdapter
 					if (LOGGER.isInfoEnabled()) {
                     	LOGGER.info("Channel is not writable, change to sync mode! \nchannel:{}", channel);
                     }
-					channelFuture = channel.writeAndFlush(out).sync();
+					channelFuture = channel.writeAndFlush(new BinaryWebSocketFrame(out)).sync();
                     if (LOGGER.isInfoEnabled()) {
                     	LOGGER.info("Sync message sended. \nchannel:{}\nmessage:{}", channel, GSON.toJson(msg));
                     }

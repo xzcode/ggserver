@@ -1,9 +1,21 @@
 package xzcode.ggserver.core.handler.tcp;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import io.netty.buffer.ByteBuf;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.handler.codec.MessageToByteEncoder;
+import io.netty.channel.ChannelOutboundHandlerAdapter;
+import io.netty.channel.ChannelPromise;
+import xzcode.ggserver.core.channel.DefaultChannelAttributeKeys;
 import xzcode.ggserver.core.config.GGServerConfig;
+import xzcode.ggserver.core.executor.task.RequestMessageTask;
+import xzcode.ggserver.core.handler.web.WebSocketOutboundFrameHandler;
 import xzcode.ggserver.core.message.send.SendModel;
 
 /**
@@ -15,10 +27,16 @@ import xzcode.ggserver.core.message.send.SendModel;
  * +--------+--------+-------+------------+
  * 2018-12-07 13:38:22
  */
-public class EncodeHandler extends MessageToByteEncoder<SendModel> {
+public class EncodeHandler extends ChannelOutboundHandlerAdapter {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(WebSocketOutboundFrameHandler.class);
+	    
 
 	private GGServerConfig config;
+	
+	private static final Gson GSON = new GsonBuilder()
+    		.serializeNulls()
+    		.create();
 	
 	
 	public EncodeHandler() {
@@ -30,20 +48,90 @@ public class EncodeHandler extends MessageToByteEncoder<SendModel> {
 		this.config = config;
 	}
 
-
+	
 	
 	@Override
-	protected void encode(ChannelHandlerContext ctx, SendModel sendModel, ByteBuf out) throws Exception {
+	public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
 		
-		byte[] serialize = this.config.getSerializer().serialize(sendModel.getMessage());
+		Channel channel = ctx.channel();
+		if (!channel.isActive()) {
+    		if(LOGGER.isDebugEnabled()){
+        		LOGGER.debug("\nWrite channel:{} is inActive...", ctx.channel());        		
+        	}
+			return;
+		}
 		
-		out.writeInt(4 + sendModel.getSendTag().length + serialize.length);
+		SendModel sendModel = (SendModel) msg;
 		
-		out.writeBytes(sendModel.getSendTag());
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("\nSending message ---> \ntag:{}\nmessage:{}", sendModel.getSendTag(), GSON.toJson(sendModel));
+		}
 		
-		out.writeBytes(serialize);
+		
+		byte[] tagBytes = sendModel.getSendTag();
+		
+		ByteBuf out = null;
+		
+		//如果有消息体
+		if (sendModel.getMessage() != null) {
+			
+			byte[] bodyBytes = (byte[]) sendModel.getMessage();
+			
+			int packLen = 2 + tagBytes.length + bodyBytes.length;
+			
+			out = ctx.alloc().buffer(packLen);
+			
+			out.writeInt(packLen);
+			out.writeShort(tagBytes.length);
+			out.writeBytes(tagBytes);
+			out.writeBytes(bodyBytes);
+			
+		} else {
+		
+			//如果没消息体
+			
+			int packLen = 2 + tagBytes.length;
+			
+			out = ctx.alloc().buffer(packLen);
+			
+			out.writeInt(packLen);
+			out.writeShort(tagBytes.length);
+			out.writeBytes(tagBytes);
+			
+		}
+		
+		ChannelFuture channelFuture = null;
+		if(channel.isWritable()){
+			channelFuture =  ctx.writeAndFlush(out);
+		}else {
+			try {
+				if (LOGGER.isInfoEnabled()) {
+                	LOGGER.info("Channel is not writable, change to sync mode! \nchannel:{}", channel);
+                }
+				channelFuture = channel.writeAndFlush(out).sync();
+                if (LOGGER.isInfoEnabled()) {
+                	LOGGER.info("Sync message sended. \nchannel:{}\nmessage:{}", channel, GSON.toJson(msg));
+                }
+            } catch (InterruptedException e) {
+            	if (LOGGER.isInfoEnabled()) {
+            		LOGGER.info("write and flush msg exception. msg:[{}]", GSON.toJson(msg), e);
+            	}
+            }
+		}
+		//添加回调
+		if (channelFuture != null) {
+			channelFuture.addListener(future -> {
+				if (future.isSuccess()) {
+					if (sendModel.getCallback() != null) {
+						config.getTaskExecutor().submit(new RequestMessageTask(sendModel.getCallback(), channel.attr(DefaultChannelAttributeKeys.SESSION).get()));
+    				}
+				}
+			});
+		}
 		
 	}
+
+
 	
 
 }

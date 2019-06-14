@@ -6,25 +6,25 @@ import javax.net.ssl.SSLEngine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.netty.bootstrap.ServerBootstrap;
+import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelOption;
-import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.ssl.SslContext;
 import xzcode.ggserver.core.config.GGServerConfig;
 import xzcode.ggserver.core.config.scanner.GGComponentScanner;
-import xzcode.ggserver.core.handler.WebSocketChannelInitializer;
-import xzcode.ggserver.core.starter.IGGServerStarter;
+import xzcode.ggserver.core.handler.SocketChannelInitializer;
+import xzcode.ggserver.core.starter.IGGServerClient;
 
 /**
- * websocket 服务启动器
+ * socket 服务启动器
  *
  * @author zai
  * 2018-12-20 10:17:44
  */
-public class WebSocketServerStarter implements IGGServerStarter {
+public class SocketClientStarter implements IGGServerClient {
 	
 	private static final Logger logger = LoggerFactory.getLogger(WebSocketServerStarter.class);
 	
@@ -35,9 +35,9 @@ public class WebSocketServerStarter implements IGGServerStarter {
     public static SSLEngine sslEngine;
     
     
-    public WebSocketServerStarter(GGServerConfig config) {
+    public SocketClientStarter(GGServerConfig config) {
     	
-    	config.setServerType(GGServerConfig.ServerTypeConstants.WEBSOCKET);
+    	config.setServerType(GGServerConfig.ServerTypeConstants.SOCKET);
     	this.config = config;
     	
         GGComponentScanner.scan(
@@ -49,38 +49,35 @@ public class WebSocketServerStarter implements IGGServerStarter {
         		);
     }
     
-    public IGGServerStarter run() {
+    public IGGServerClient run() {
     	
         try {
         	
-            ServerBootstrap boot = new ServerBootstrap(); // (2)
+            Bootstrap boot = new Bootstrap(); // (2)
             
             //设置工作线程组
-            boot.group(config.getBossGroup(), config.getWorkerGroup());
             
             if (logger.isDebugEnabled()) {
             	boot.handler(new LoggingHandler(LogLevel.INFO));				
 			}else {
-				boot.handler(new LoggingHandler(LogLevel.WARN));	
+				boot.handler(new LoggingHandler(LogLevel.WARN));
 			}
             
-            
             //设置channel类型
-            boot.channel(NioServerSocketChannel.class); // (3)
+            boot.channel(NioSocketChannel.class); // (3)
             
             //设置消息处理器
-			boot.childHandler(new WebSocketChannelInitializer(config, sslCtx));
+			boot.handler(new SocketChannelInitializer(config));
             
-            boot.option(ChannelOption.SO_BACKLOG, 128);         // (5)
-            boot.childOption(ChannelOption.SO_KEEPALIVE, true); // (6)
+            boot.group(config.getWorkerGroup());
     
-            // 绑定端口并开始接受连接，此时线程将阻塞不会继续往下执行
-            ChannelFuture f = boot.bind(config.getPort()).sync(); // (7)
+            // 连接服务器
+            ChannelFuture f = boot.connect(config.getHost(), config.getPort()).sync(); // (7)
     
             f.channel().closeFuture().sync();
         }catch (Exception e) {
         	
-        	throw new RuntimeException("GGServer start failed !! ", e);
+        	throw new RuntimeException("GGServer Client start failed !! ", e);
         	
 		} finally {
 			
@@ -98,7 +95,7 @@ public class WebSocketServerStarter implements IGGServerStarter {
      * @author zai
      * 2017-07-27
      */
-    public IGGServerStarter shutdown() {
+    public IGGServerClient shutdown() {
     	if (config.getWorkerGroup() != null) {
     		config.getWorkerGroup().shutdownGracefully();			
 		}
@@ -114,5 +111,13 @@ public class WebSocketServerStarter implements IGGServerStarter {
     public GGServerConfig getConfig() {
 		return config;
 	}
-    
+    public static void main(String[] args) {
+    	GGServerConfig config = new GGServerConfig();
+    	config.setPort(9999);
+    	config.setHost("localhost");
+		SocketClientStarter client = new SocketClientStarter(config);
+		client.run();
+		config.getSendMessageManager().send("xxxxxxxxx");
+		
+	}
 }
