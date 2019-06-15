@@ -92,6 +92,7 @@ public class InboundCommonHandler extends ChannelInboundHandlerAdapter{
 			
 			//ChannelGroupsManager.getRegisteredGroup().remove(ctx.channel());
 		});
+		
 		super.channelActive(ctx);
 	}
 	

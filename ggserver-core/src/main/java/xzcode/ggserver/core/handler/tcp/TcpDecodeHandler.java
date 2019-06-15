@@ -23,9 +23,9 @@ import xzcode.ggserver.core.message.receive.invoker.IRequestMessageInvoker;
  * @author zai
  *
  */
-public class DecodeHandler extends ByteToMessageDecoder {
+public class TcpDecodeHandler extends ByteToMessageDecoder {
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(DecodeHandler.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(TcpDecodeHandler.class);
 
 	/**
 	 * 数据包长度标识 字节数
@@ -53,11 +53,11 @@ public class DecodeHandler extends ByteToMessageDecoder {
 	
 
 	
-	public DecodeHandler() {
+	public TcpDecodeHandler() {
 		
 	}
 	
-	public DecodeHandler(GGServerConfig config) {
+	public TcpDecodeHandler(GGServerConfig config) {
 		super();
 		this.config = config;
 	}
@@ -89,21 +89,26 @@ public class DecodeHandler extends ByteToMessageDecoder {
 			return;
 		}
 		
-		int reqTagSize = in.readInt();
+		int reqTagSize = in.readUnsignedShort();
 		
 		byte[] dataTag = new byte[reqTagSize];
 		
-		String reqTag = new String(dataTag);
+		
+		in.readBytes(dataTag);
+		
+		String reqTag = new String(dataTag, config.getCharset());
 		
 		//读取数据体 =  总包长 - 标识长度占用字节 - 标识体占用字节数
 		int bodyLen = readableBytes - HEADER_BYTES - reqTagSize;
 		byte[] data = null;
 		if (bodyLen != 0) {
+			
 			data = new byte[bodyLen];			
+			//读取数据体部分byte数组
+			in.getBytes(0, data);
+			
 		}
 		
-		//读取数据体部分byte数组
-		in.getBytes(0, data);
 		
 		//获取与请求标识关联的方法参数对象
 		IRequestMessageInvoker invoker = config.getRequestMessageManager().get(reqTag);

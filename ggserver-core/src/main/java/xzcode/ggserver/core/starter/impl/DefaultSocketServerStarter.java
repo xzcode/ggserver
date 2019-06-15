@@ -1,8 +1,6 @@
 package xzcode.ggserver.core.starter.impl;
 
 
-import javax.net.ssl.SSLEngine;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,9 +10,10 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
-import io.netty.handler.ssl.SslContext;
 import xzcode.ggserver.core.config.GGServerConfig;
 import xzcode.ggserver.core.config.scanner.GGComponentScanner;
+import xzcode.ggserver.core.constant.GGServerTypeConstants;
+import xzcode.ggserver.core.handler.MixedSocketChannelInitializer;
 import xzcode.ggserver.core.handler.SocketChannelInitializer;
 import xzcode.ggserver.core.handler.WebSocketChannelInitializer;
 import xzcode.ggserver.core.starter.IGGServerStarter;
@@ -31,14 +30,8 @@ public class DefaultSocketServerStarter implements IGGServerStarter {
 	
 	private GGServerConfig config;
 	
-    private SslContext sslCtx;
-
-    public static SSLEngine sslEngine;
-    
-    
     public DefaultSocketServerStarter(GGServerConfig config) {
     	
-    	config.setServerType(GGServerConfig.ServerTypeConstants.SOCKET);
     	this.config = config;
     	
         GGComponentScanner.scan(
@@ -69,15 +62,24 @@ public class DefaultSocketServerStarter implements IGGServerStarter {
             boot.channel(NioServerSocketChannel.class); // (3)
             
             //设置消息处理器
-			boot.childHandler(new SocketChannelInitializer(config));
+            if (config.getServerType().equals(GGServerTypeConstants.MIXED)) {
+            	boot.childHandler(new MixedSocketChannelInitializer(config));
+			}else if (config.getServerType().equals(GGServerTypeConstants.WEBSOCKET)) {
+				boot.childHandler(new WebSocketChannelInitializer(config));
+			}else if (config.getServerType().equals(GGServerTypeConstants.TCP)) {
+				boot.childHandler(new MixedSocketChannelInitializer(config));
+			}else {
+				throw new RuntimeException("GGServer ServerType Error!!");
+			}
+            
             
             boot.option(ChannelOption.SO_BACKLOG, 128);         // (5)
             boot.childOption(ChannelOption.SO_KEEPALIVE, true); // (6)
     
             // 绑定端口并开始接受连接，此时线程将阻塞不会继续往下执行
-            ChannelFuture f = boot.bind(config.getPort()).sync(); // (7)
+            ChannelFuture future = boot.bind(config.getPort()).sync(); // (7)
     
-            f.channel().closeFuture().sync();
+            future.channel().closeFuture().sync();
         }catch (Exception e) {
         	
         	throw new RuntimeException("GGServer start failed !! ", e);
@@ -99,8 +101,8 @@ public class DefaultSocketServerStarter implements IGGServerStarter {
      * 2017-07-27
      */
     public IGGServerStarter shutdown() {
-    	if (config.getWorkerGroup() != null) {
-    		config.getWorkerGroup().shutdownGracefully();			
+    	if (config.getBossGroup() != null) {
+    		config.getBossGroup().shutdownGracefully();			
 		}
     	if (config.getWorkerGroup() != null) {
     		config.getWorkerGroup().shutdownGracefully();			

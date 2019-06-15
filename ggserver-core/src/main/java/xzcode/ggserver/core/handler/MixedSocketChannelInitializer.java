@@ -14,26 +14,26 @@ import xzcode.ggserver.core.config.GGServerConfig;
 import xzcode.ggserver.core.handler.common.InboundCommonHandler;
 import xzcode.ggserver.core.handler.common.OutboundCommonHandler;
 import xzcode.ggserver.core.handler.idle.IdleHandler;
+import xzcode.ggserver.core.handler.tcp.TcpSocketSelectHandler;
 import xzcode.ggserver.core.handler.web.WebSocketInboundFrameHandler;
 import xzcode.ggserver.core.handler.web.WebSocketOutboundFrameHandler;
 
 /**
- * WebSocket channel 初始化处理器
- * 
+ * 混合tcp与websocket 初始化处理器
  * 
  * @author zai
- * 2017-08-02
+ * 2019-06-15 14:31:58
  */
-public class WebSocketChannelInitializer extends ChannelInitializer<SocketChannel> {
+public class MixedSocketChannelInitializer extends ChannelInitializer<SocketChannel> {
 	
-	private static final Logger logger = LoggerFactory.getLogger(WebSocketChannelInitializer.class);
+	private static final Logger logger = LoggerFactory.getLogger(MixedSocketChannelInitializer.class);
 	
 	private GGServerConfig config;
 	
-	public WebSocketChannelInitializer() {
+	public MixedSocketChannelInitializer() {
 	}
 	
-	public WebSocketChannelInitializer(GGServerConfig config) {
+	public MixedSocketChannelInitializer(GGServerConfig config) {
 		this.config = config;
 	}
 
@@ -51,19 +51,24 @@ public class WebSocketChannelInitializer extends ChannelInitializer<SocketChanne
 	   	}
 	   	
 	   	
+	   	ch.pipeline().addLast("TcpSocketSelectHandler", new TcpSocketSelectHandler(config));
+	   	
+	   	/*
+	   	
 	   	ch.pipeline().addLast("HttpServerCodec", new HttpServerCodec());
 	   	ch.pipeline().addLast("HttpObjectAggregator", new HttpObjectAggregator(config.getHttpMaxContentLength()));
 	   	ch.pipeline().addLast("WebSocketInboundFrameHandler", new WebSocketInboundFrameHandler(this.config));
+	   	*/
 	   	
 	   	
 	   	//inbound异常处理
-	   	ch.pipeline().addLast(new InboundCommonHandler(this.config));
-	   	
+	   	ch.pipeline().addLast("InboundCommonHandler", new InboundCommonHandler(this.config));
+	   	/*
         //Outbound 是反顺序执行
 	   	ch.pipeline().addLast("WebSocketOutboundFrameHandler",new WebSocketOutboundFrameHandler(this.config ));
-        
+        */
         //outbound异常处理
-        ch.pipeline().addLast(new OutboundCommonHandler());
+        ch.pipeline().addLast("OutboundCommonHandler", new OutboundCommonHandler());
         
         
 		

@@ -1,17 +1,14 @@
-package xzcode.ggserver.core.config;
+package xzcode.ggserver.client.config;
 
+import io.netty.channel.Channel;
 import io.netty.channel.nio.NioEventLoopGroup;
-import xzcode.ggserver.core.component.GGComponentManager;
-import xzcode.ggserver.core.constant.GGServerTypeConstants;
-import xzcode.ggserver.core.event.EventInvokerManager;
-import xzcode.ggserver.core.executor.GGServerTaskExecutor;
-import xzcode.ggserver.core.executor.factory.EventLoopGroupThreadFactory;
-import xzcode.ggserver.core.handler.serializer.ISerializer;
-import xzcode.ggserver.core.handler.serializer.factory.SerializerFactory;
-import xzcode.ggserver.core.message.filter.MessageFilterManager;
-import xzcode.ggserver.core.message.receive.RequestMessageManager;
-import xzcode.ggserver.core.message.send.SendMessageManager;
-import xzcode.ggserver.core.session.UserSessonManager;
+import xzcode.ggserver.client.event.EventInvokerManager;
+import xzcode.ggserver.client.executor.GGTaskExecutor;
+import xzcode.ggserver.client.executor.factory.EventLoopGroupThreadFactory;
+import xzcode.ggserver.client.handler.serializer.ISerializer;
+import xzcode.ggserver.client.handler.serializer.factory.SerializerFactory;
+import xzcode.ggserver.client.message.receive.OnMessageManager;
+import xzcode.ggserver.client.message.send.SendMessageManager;
 
 /**
  * socket 服务器配置类
@@ -19,7 +16,7 @@ import xzcode.ggserver.core.session.UserSessonManager;
  * @author zai
  * 2017-08-13 19:03:31
  */
-public class GGServerConfig {
+public class GGClientConfig {
 	
 	private boolean 	enabled = false;
 
@@ -27,16 +24,14 @@ public class GGServerConfig {
 
 	private String[] 	scanPackage;
 
-	private String 		host = "0.0.0.0";
+	private String 		host = "127.0.0.1";
 
 	private int 		port = 9999;
 
-	private int 		bossThreadSize = 0;
-	
 	private int 		workThreadSize = 0;
 
-	private int 		executorCorePoolSize = 10;
-	private int 		executorMaxPoolSize = 100;
+	private int 		executorCorePoolSize = 5;
+	private int 		executorMaxPoolSize = 5;
 	private long 		executorKeepAliveTime = 10000;
 	private int 		executorTaskQueueSize = 100;
 	
@@ -47,38 +42,35 @@ public class GGServerConfig {
 	private long 		allIdleTime = 5000;
 	
 	private int 		maxDataLength = 1024 * 1024 * 5;
-
-	private String 		serverType = GGServerTypeConstants.MIXED;
+	
+	private String 		charset = "utf-8";
 
 	private String 		serializerType = SerializerFactory.SerializerType.MESSAGE_PACK;
 
-	private String 		websocketPath = "/websocket";
+	private ISerializer serializer = SerializerFactory.geSerializer(serializerType);
 	
-	private String 		charset = "utf-8";
-	
-	private int 		httpMaxContentLength = 65536;
-	
-	private boolean		useSSL = false;
-	
-	private ISerializer serializer;
+	private Channel channel;
 	
 	
-	private GGComponentManager componentManager = new GGComponentManager();
-	private RequestMessageManager requestMessageManager = new RequestMessageManager();
+	
+	private OnMessageManager onMessageManager = new OnMessageManager();
 	private SendMessageManager sendMessageManager = new SendMessageManager(this);
-	private MessageFilterManager messageFilterManager = new MessageFilterManager();
 	private EventInvokerManager eventInvokerManager = new EventInvokerManager();
-	private UserSessonManager userSessonManager = new UserSessonManager();
 	
-	private NioEventLoopGroup bossGroup = new NioEventLoopGroup(getBossThreadSize(),new EventLoopGroupThreadFactory("Boss Group"));
+	
+	
     
-	private NioEventLoopGroup workerGroup = new NioEventLoopGroup(getWorkThreadSize(),new EventLoopGroupThreadFactory("Worker Group"));
+	private NioEventLoopGroup workerGroup = new NioEventLoopGroup(getWorkThreadSize(), new EventLoopGroupThreadFactory("Worker Group"));
 	
 	
-	private GGServerTaskExecutor taskExecutor = new GGServerTaskExecutor(this);
+	private GGTaskExecutor taskExecutor = new GGTaskExecutor(this);
 	
 	
 	
+	
+	public GGClientConfig() {
+	}
+
 	public int getExecutorCorePoolSize() {
 		return executorCorePoolSize;
 	}
@@ -109,14 +101,6 @@ public class GGServerConfig {
 
 	public void setExecutorTaskQueueSize(int executorTaskQueueSize) {
 		this.executorTaskQueueSize = executorTaskQueueSize;
-	}
-
-	public NioEventLoopGroup getBossGroup() {
-		return bossGroup;
-	}
-
-	public void setBossGroup(NioEventLoopGroup bossGroup) {
-		this.bossGroup = bossGroup;
 	}
 
 	public NioEventLoopGroup getWorkerGroup() {
@@ -163,12 +147,6 @@ public class GGServerConfig {
 	public void setPort(int port) {
 		this.port = port;
 	}
-	public int getBossThreadSize() {
-		return bossThreadSize;
-	}
-	public void setBossThreadSize(int bossThreadSize) {
-		this.bossThreadSize = bossThreadSize;
-	}
 	public int getWorkThreadSize() {
 		return workThreadSize;
 	}
@@ -208,66 +186,26 @@ public class GGServerConfig {
 	public void setIdleCheckEnabled(boolean idleCheckEnabled) {
 		this.idleCheckEnabled = idleCheckEnabled;
 	}
-	
-	
-	public String getServerType() {
-		return serverType;
-	}
-	
-	public void setServerType(String serverType) {
-		this.serverType = serverType;
-	}
-	
-	public String getWebsocketPath() {
-		return websocketPath;
-	}
-	
-	public void setWebsocketPath(String websocketPath) {
-		this.websocketPath = websocketPath;
-	}
-	
-	public int getHttpMaxContentLength() {
-		return httpMaxContentLength;
-	}
-	
-	public void setHttpMaxContentLength(int httpMaxContentLength) {
-		this.httpMaxContentLength = httpMaxContentLength;
-	}
-	
 	public String getSerializerType() {
 		return serializerType;
 	}
-	
 	public void setSerializerType(String serializerType) {
 		if (serializerType == null || serializerType == "") {
 			return;
 		}
 		this.serializerType = serializerType;
 	}
-
-	public GGComponentManager getComponentObjectManager() {
-		return componentManager;
+	public OnMessageManager getRequestMessageManager() {
+		return onMessageManager;
 	}
-	public void setComponentObjectMapper(GGComponentManager componentObjectMapper) {
-		this.componentManager = componentObjectMapper;
+	public void setRequestMessageManager(OnMessageManager onMessageManager) {
+		this.onMessageManager = onMessageManager;
 	}
-	public RequestMessageManager getRequestMessageManager() {
-		return requestMessageManager;
+	public OnMessageManager getMessageInvokerManager() {
+		return onMessageManager;
 	}
-	public void setRequestMessageManager(RequestMessageManager requestMessageManager) {
-		this.requestMessageManager = requestMessageManager;
-	}
-	public boolean isUseSSL() {
-		return useSSL;
-	}
-	public void setUseSSL(boolean useSSL) {
-		this.useSSL = useSSL;
-	}
-	public RequestMessageManager getMessageInvokerManager() {
-		return requestMessageManager;
-	}
-	public void setMessageInvokerManager(RequestMessageManager requestMessageManager) {
-		this.requestMessageManager = requestMessageManager;
+	public void setMessageInvokerManager(OnMessageManager onMessageManager) {
+		this.onMessageManager = onMessageManager;
 	}
 	public EventInvokerManager getEventInvokerManager() {
 		return eventInvokerManager;
@@ -275,21 +213,6 @@ public class GGServerConfig {
 	public void setEventInvokerManager(EventInvokerManager eventInvokerManager) {
 		this.eventInvokerManager = eventInvokerManager;
 	}
-	public UserSessonManager getUserSessonManager() {
-		return userSessonManager;
-	}
-	public void setUserSessonManager(UserSessonManager userSessonManager) {
-		this.userSessonManager = userSessonManager;
-	}
-	
-	public MessageFilterManager getMessageFilterManager() {
-		return messageFilterManager;
-	}
-	
-	public void setMessageFilterManager(MessageFilterManager messageFilterManager) {
-		this.messageFilterManager = messageFilterManager;
-	}
-	
 	
 	public int getMaxDataLength() {
 		return maxDataLength;
@@ -339,23 +262,25 @@ public class GGServerConfig {
 	}
 
 
-	public GGComponentManager getComponentManager() {
-		return componentManager;
-	}
-	
-	public void setComponentManager(GGComponentManager componentManager) {
-		this.componentManager = componentManager;
-	}
-	public GGServerTaskExecutor getTaskExecutor() {
+	public GGTaskExecutor getTaskExecutor() {
 		return taskExecutor;
 	}
-	public void setTaskExecutor(GGServerTaskExecutor taskExecutor) {
+	public void setTaskExecutor(GGTaskExecutor taskExecutor) {
 		this.taskExecutor = taskExecutor;
+	}
+
+	public Channel getChannel() {
+		return channel;
+	}
+
+	public void setChannel(Channel channel) {
+		this.channel = channel;
 	}
 	
 	public String getCharset() {
 		return charset;
 	}
+	
 	public void setCharset(String charset) {
 		this.charset = charset;
 	}

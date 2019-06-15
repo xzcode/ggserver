@@ -2,10 +2,8 @@ package xzcode.ggserver.core.message.send;
 
 import java.util.Map.Entry;
 import java.util.Set;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import io.netty.channel.Channel;
 import xzcode.ggserver.core.config.GGServerConfig;
 import xzcode.ggserver.core.session.GGSession;
@@ -114,7 +112,7 @@ public class SendMessageManager implements ISendMessage{
 			try {
 				Channel channel = session.getChannel();
 				if (channel != null && channel.isActive()) {
-					byte[] actionIdData = action.getBytes();
+					byte[] actionIdData = action.getBytes(config.getCharset());
 					byte[] messageData = message == null ? null : this.config.getSerializer().serialize(message);
 					
 					if (delayMs > 0) {

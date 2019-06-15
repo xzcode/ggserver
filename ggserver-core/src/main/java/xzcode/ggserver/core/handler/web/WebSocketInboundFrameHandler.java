@@ -62,7 +62,8 @@ public class WebSocketInboundFrameHandler extends SimpleChannelInboundHandler<Ob
     }
 
     private void handleHttpRequest(ChannelHandlerContext ctx, FullHttpRequest req) throws Exception {
-        if (!req.decoderResult().isSuccess()) {
+        
+    	if (!req.decoderResult().isSuccess()) {
             sendHttpResponse(ctx, req, new DefaultFullHttpResponse(HTTP_1_1, BAD_REQUEST));
             return;
         }
@@ -187,6 +188,6 @@ public class WebSocketInboundFrameHandler extends SimpleChannelInboundHandler<Ob
 
     private String getWebSocketLocation(FullHttpRequest req) {
         String location =  req.headers().get(HttpHeaderNames.HOST) + this.config.getWebsocketPath();
-        return "wss://" + location;
+        return "ws://" + location;
     }
 }
