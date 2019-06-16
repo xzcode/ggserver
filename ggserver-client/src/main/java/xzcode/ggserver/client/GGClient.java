@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import io.netty.channel.Channel;
 import xzcode.ggserver.client.config.GGClientConfig;
@@ -187,7 +188,8 @@ public class GGClient implements IGGTaskExecution{
 	}
 
 	public static void main(String[] args) {
-		for (int i = 0; i < 200; i++) {
+		AtomicInteger  count = new AtomicInteger(0);
+		for (int i = 0; i < 500; i++) {
 			new Thread(() -> {
 				GGClientConfig config = new GGClientConfig();
 				config.setHost("localhost");
@@ -208,6 +210,7 @@ public class GGClient implements IGGTaskExecution{
 					@Override
 					public void onMessage(Map<String, Object> data) {
 						System.out.println(data);
+						System.out.println(count.incrementAndGet());
 					}
 					
 				});

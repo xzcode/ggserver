@@ -30,27 +30,27 @@ public class AlgoMjUtil {
 	/**
 	 * 筒开始值
 	 */
-	public static final int TONG_VAL = 31;
+	public static final int TONG_VAL = 30;
 	
 	/**
 	 * 条开始值
 	 */
-	public static final int TIAO_VAL = 51;
+	public static final int TIAO_VAL = 50;
 	
 	/**
 	 *风开始值
 	 */
-	public static final int FENG_VAL = 71;
+	public static final int FENG_VAL = 70;
 	
 	/**
 	 * 字开始值
 	 */
-	public static final int ZI_VAL = 91;
+	public static final int ZI_VAL = 90;
 	
 	/**
 	 * 花牌开始值
 	 */
-	public static final int HUA_VAL = 111;
+	public static final int HUA_VAL = 110;
 
 	/**
 	 * 万牌麻将值(一到九万)

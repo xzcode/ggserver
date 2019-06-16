@@ -30,7 +30,7 @@ public class GGClientConfig {
 
 	private int 		workThreadSize = 0;
 
-	private int 		executorCorePoolSize = 5;
+	private int 		executorCorePoolSize = 2;
 	private int 		executorMaxPoolSize = 5;
 	private long 		executorKeepAliveTime = 10000;
 	private int 		executorTaskQueueSize = 100;
