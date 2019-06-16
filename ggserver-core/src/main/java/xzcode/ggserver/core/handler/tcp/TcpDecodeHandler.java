@@ -105,7 +105,7 @@ public class TcpDecodeHandler extends ByteToMessageDecoder {
 			
 			data = new byte[bodyLen];			
 			//读取数据体部分byte数组
-			in.getBytes(0, data);
+			in.readBytes(data);
 			
 		}
 		

@@ -63,8 +63,9 @@ public class RequestMessageTask implements Runnable{
 	public void run() {
 		
 		GGSessionThreadLocalUtil.setSession(this.session);
-		String actionStr = new String(action, Charset.defaultCharset());
+		String actionStr = null;
 		try {
+			actionStr = new String(action, config.getCharset());
 			
 			
 			IRequestMessageInvoker invoker = config.getMessageInvokerManager().get(actionStr);

@@ -52,6 +52,19 @@ public class InboundCommonHandler extends ChannelInboundHandlerAdapter{
 		super.channelActive(ctx);
 	}
 	
+	
+	
+	@Override
+	public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("Channel InActive:{}", ctx.channel());
+		}
+		config.getTaskExecutor().submit(new GGEventTask(GGClientEvents.ConnectionState.CLOSE, null, config));
+		super.channelInactive(ctx);
+	}
+
+
+
 	@Override
 	public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
 		if (LOGGER.isDebugEnabled()) {

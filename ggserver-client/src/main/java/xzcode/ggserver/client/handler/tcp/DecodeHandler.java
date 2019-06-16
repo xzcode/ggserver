@@ -88,9 +88,11 @@ public class DecodeHandler extends ByteToMessageDecoder {
 			return;
 		}
 		
-		int reqTagSize = in.readInt();
+		int reqTagSize = in.readUnsignedShort();
 		
 		byte[] dataTag = new byte[reqTagSize];
+		
+		in.readBytes(dataTag);
 		
 		String reqTag = new String(dataTag, config.getCharset());
 		
@@ -99,10 +101,9 @@ public class DecodeHandler extends ByteToMessageDecoder {
 		byte[] data = null;
 		if (bodyLen != 0) {
 			data = new byte[bodyLen];			
+			//读取数据体部分byte数组
+			in.readBytes(data);
 		}
-		
-		//读取数据体部分byte数组
-		in.getBytes(0, data);
 		
 		//获取与请求标识关联的方法参数对象
 		IOnMessageInvoker invoker = config.getRequestMessageManager().get(reqTag);

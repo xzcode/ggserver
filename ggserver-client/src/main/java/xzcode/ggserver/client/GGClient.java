@@ -187,27 +187,33 @@ public class GGClient implements IGGTaskExecution{
 	}
 
 	public static void main(String[] args) {
-		GGClientConfig config = new GGClientConfig();
-		config.setHost("localhost");
-		config.setPort(9999);
-		config.setAutoRun(true);
-		GGClient client = new GGClient(config);
-		client.onEvent(GGClientEvents.ConnectionState.SUCCESS, () -> {
-			System.out.println("connect success!");
-			HashMap<String, Object> data = new HashMap<>();
-			data.put("token", "ec456828-faf1-450e-9c20-ed73e85f1050");
-			client.send("login.req", data);
-		});
-		client.on("login.resp", new IOnMessageAction<Map<String, Object>>(){
-
-			@Override
-			public void onMessage(Map<String, Object> data) {
-				System.out.println(data);
-				
-			}
-			
-		});
-		client.connect();
+		for (int i = 0; i < 200; i++) {
+			new Thread(() -> {
+				GGClientConfig config = new GGClientConfig();
+				config.setHost("localhost");
+				config.setPort(9999);
+				config.setAutoRun(true);
+				GGClient client = new GGClient(config);
+				client.onEvent(GGClientEvents.ConnectionState.SUCCESS, () -> {
+					System.out.println("connect success!");
+					HashMap<String, Object> data = new HashMap<>();
+					data.put("token", "ec456828-faf1-450e-9c20-ed73e85f1050");
+					client.send("login.req", data);
+				});
+				client.onEvent(GGClientEvents.ConnectionState.CLOSE, () -> {
+					config.getTaskExecutor().shutdown();
+				});
+				client.on("login.resp", new IOnMessageAction<Map<String, Object>>(){
+		
+					@Override
+					public void onMessage(Map<String, Object> data) {
+						System.out.println(data);
+					}
+					
+				});
+				client.connect();
+			}).start();;
+		}
 		
 	}
 	
