@@ -1,5 +1,7 @@
 package xzcode.ggserver.client.message.send;
 
+import java.util.concurrent.TimeUnit;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import io.netty.channel.Channel;
@@ -69,9 +71,9 @@ public class SendMessageManager{
 				byte[] messageData = message == null ? null : this.config.getSerializer().serialize(message);
 				
 				if (delayMs > 0) {
-					this.config.getTaskExecutor().setTimeout(() -> {
+					config.getWorkerGroup().scheduleAtFixedRate(() -> {
 						this.send(SendModel.create(actionIdData, messageData));
-					}, delayMs);
+					}, 0, delayMs, TimeUnit.MILLISECONDS);
 				}else {
 					this.send(SendModel.create(actionIdData, messageData));
 				}

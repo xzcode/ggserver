@@ -109,7 +109,7 @@ public class DecodeHandler extends ByteToMessageDecoder {
 		IOnMessageInvoker invoker = config.getRequestMessageManager().get(reqTag);
 		
 		if (invoker != null) {
-			config.getTaskExecutor().submit(new OnMessageTask(dataTag, data, config));
+			config.getWorkerGroup().submit(new OnMessageTask(dataTag, data, config));
 		}
 		
 		if(LOGGER.isDebugEnabled()){

@@ -46,21 +46,16 @@ public class GGServerTaskExecutor extends ScheduledThreadPoolExecutor implements
 		
 		this.setKeepAliveTime(this.config.getReqTaskKeepAliveTime(), TimeUnit.MILLISECONDS);
 		
-		
 	}
 	
 	@Override
 	public ScheduledFuture<?> setTimeout(Runnable runnable, long timeoutMilliSec) {
-		TimeoutInvokeTask task = new TimeoutInvokeTask(runnable);
-		ScheduledFuture<?> future = this.scheduleWithFixedDelay(task, timeoutMilliSec, timeoutMilliSec , TimeUnit.MILLISECONDS);
-		task.setFuture(future);
+		ScheduledFuture<?> future = this.schedule(runnable, timeoutMilliSec , TimeUnit.MILLISECONDS);
 		return future;
 	}
 	@Override
 	public ScheduledFuture<?> setTimeout(TimeoutRunnable runnable, long timeoutMilliSec) {
-		TimeoutInvokeTask task = new TimeoutInvokeTask(runnable);
-		ScheduledFuture<?> future = this.scheduleWithFixedDelay(task, timeoutMilliSec, timeoutMilliSec , TimeUnit.MILLISECONDS);
-		task.setFuture(future);
+		ScheduledFuture<?> future = this.schedule(runnable, timeoutMilliSec , TimeUnit.MILLISECONDS);
 		runnable.setTimeoutFuture(future);
 		return future;
 	}

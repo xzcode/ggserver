@@ -1,11 +1,17 @@
 package xzcode.ggserver.client;
 
 import java.lang.reflect.ParameterizedType;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import io.netty.channel.Channel;
 import xzcode.ggserver.client.config.GGClientConfig;
@@ -13,6 +19,7 @@ import xzcode.ggserver.client.event.EventRunnableInvoker;
 import xzcode.ggserver.client.event.GGClientEvents;
 import xzcode.ggserver.client.event.GGEventTask;
 import xzcode.ggserver.client.event.IEventInvoker;
+import xzcode.ggserver.client.executor.GGTaskExecutor;
 import xzcode.ggserver.client.executor.task.TimeoutRunnable;
 import xzcode.ggserver.client.executor.timeout.IGGTaskExecution;
 import xzcode.ggserver.client.message.receive.IOnMessageAction;
@@ -142,26 +149,26 @@ public class GGClient implements IGGTaskExecution{
 	
 	
 	public void emitEvent(String eventTag, Object message) {
-		config.getTaskExecutor().submit(new GGEventTask(eventTag, message, config));
+		config.getWorkerGroup().submit(new GGEventTask(eventTag, message, config));
 	}
 	
 	public void emitEvent(String eventTag) {
-		config.getTaskExecutor().submit(new GGEventTask(eventTag, null, config));
+		config.getWorkerGroup().submit(new GGEventTask(eventTag, null, config));
 	}
 	
 	@Override
 	public ScheduledFuture<?> setTimeout(Runnable runnable, long timeoutMilliSec) {
-		return this.config.getTaskExecutor().setTimeout(runnable, timeoutMilliSec);
+		return config.getWorkerGroup().schedule(runnable, timeoutMilliSec, TimeUnit.MILLISECONDS);
 	}
 
 	@Override
 	public ScheduledFuture<?> setTimeout(TimeoutRunnable runnable, long timeoutMilliSec) {
-		ScheduledFuture<?> future = this.config.getTaskExecutor().setTimeout(runnable, timeoutMilliSec);
+		ScheduledFuture<?> future = config.getWorkerGroup().schedule(runnable, timeoutMilliSec, TimeUnit.MILLISECONDS);
 		return future;
 	}
 	
 	public Future<?> submitTask(Runnable task) {
-		return this.config.getTaskExecutor().submit(task);
+		return config.getWorkerGroup().submit(task);
 	}
 	
 	public void sendBytes(byte[] bytes) {
@@ -188,11 +195,14 @@ public class GGClient implements IGGTaskExecution{
 	}
 
 	public static void main(String[] args) {
+		Logger logger = LoggerFactory.getLogger(GGClient.class);
 		AtomicInteger  count = new AtomicInteger(0);
-		for (int i = 0; i < 500; i++) {
-			new Thread(() -> {
+		int times = 3000;
+		List<Thread> list = new ArrayList<>(times);
+		for (int i = 0; i < times; i++) {
+			list.add(new Thread(() -> {
 				GGClientConfig config = new GGClientConfig();
-				config.setHost("localhost");
+				config.setHost("192.168.8.219");
 				config.setPort(9999);
 				config.setAutoRun(true);
 				GGClient client = new GGClient(config);
@@ -203,20 +213,25 @@ public class GGClient implements IGGTaskExecution{
 					client.send("login.req", data);
 				});
 				client.onEvent(GGClientEvents.ConnectionState.CLOSE, () -> {
-					config.getTaskExecutor().shutdown();
+					System.out.println("close");
 				});
 				client.on("login.resp", new IOnMessageAction<Map<String, Object>>(){
 		
 					@Override
 					public void onMessage(Map<String, Object> data) {
-						System.out.println(data);
-						System.out.println(count.incrementAndGet());
+						logger.debug("onMessage",data);
 					}
 					
 				});
 				client.connect();
-			}).start();;
+			}));
 		}
+		
+		for (Thread thread : list) {
+			thread.start();
+		}
+		
+		
 		
 	}
 	

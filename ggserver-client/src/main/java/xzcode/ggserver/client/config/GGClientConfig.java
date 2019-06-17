@@ -28,10 +28,10 @@ public class GGClientConfig {
 
 	private int 		port = 9999;
 
-	private int 		workThreadSize = 0;
+	private int 		workThreadSize = 1;
 
-	private int 		executorCorePoolSize = 2;
-	private int 		executorMaxPoolSize = 5;
+	private int 		executorCorePoolSize = 1;
+	private int 		executorMaxPoolSize = 1;
 	private long 		executorKeepAliveTime = 10000;
 	private int 		executorTaskQueueSize = 100;
 	
@@ -61,10 +61,6 @@ public class GGClientConfig {
 	
     
 	private NioEventLoopGroup workerGroup = new NioEventLoopGroup(getWorkThreadSize(), new EventLoopGroupThreadFactory("Worker Group"));
-	
-	
-	private GGTaskExecutor taskExecutor = new GGTaskExecutor(this);
-	
 	
 	
 	
@@ -259,14 +255,6 @@ public class GGClientConfig {
 
 	public void setReqTaskTaskQueueSize(int reqTaskTaskQueueSize) {
 		this.executorTaskQueueSize = reqTaskTaskQueueSize;
-	}
-
-
-	public GGTaskExecutor getTaskExecutor() {
-		return taskExecutor;
-	}
-	public void setTaskExecutor(GGTaskExecutor taskExecutor) {
-		this.taskExecutor = taskExecutor;
 	}
 
 	public Channel getChannel() {

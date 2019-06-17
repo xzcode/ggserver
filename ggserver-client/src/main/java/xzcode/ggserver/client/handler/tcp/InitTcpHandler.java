@@ -74,7 +74,7 @@ public class InitTcpHandler extends ByteToMessageDecoder {
 		String tag = new String(bytes);
 		if (tag.equals(GGServerTypeConstants.TCP)) {
 			
-	        config.getTaskExecutor().submit(new GGEventTask(GGClientEvents.ConnectionState.SUCCESS, null, config));
+			config.getWorkerGroup().submit(new GGEventTask(GGClientEvents.ConnectionState.SUCCESS, null, config));
 		}
 		ctx.pipeline().remove("InitTcpHandler");
 		

@@ -47,7 +47,7 @@ public class InboundCommonHandler extends ChannelInboundHandlerAdapter{
 		//添加到全局channelgroup绑定
 		//ChannelGroupsManager.getGlobalGroup().add(ctx.channel());
 		
-		config.getTaskExecutor().submit(new GGEventTask(GGClientEvents.ConnectionState.ACTIVE, null, config));
+		config.getWorkerGroup().submit(new GGEventTask(GGClientEvents.ConnectionState.ACTIVE, null, config));
 		
 		super.channelActive(ctx);
 	}
@@ -59,7 +59,7 @@ public class InboundCommonHandler extends ChannelInboundHandlerAdapter{
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Channel InActive:{}", ctx.channel());
 		}
-		config.getTaskExecutor().submit(new GGEventTask(GGClientEvents.ConnectionState.CLOSE, null, config));
+		config.getWorkerGroup().submit(new GGEventTask(GGClientEvents.ConnectionState.CLOSE, null, config));
 		super.channelInactive(ctx);
 	}
 
