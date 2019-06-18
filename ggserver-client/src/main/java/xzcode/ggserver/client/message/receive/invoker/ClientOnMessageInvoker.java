@@ -1,32 +1,32 @@
 package xzcode.ggserver.client.message.receive.invoker;
 
-import xzcode.ggserver.client.message.receive.IOnMessageAction;
+import xzcode.ggserver.client.message.receive.IClientOnMessageAction;
 
 /**
- * 请求消息调用模型
+ * 消息调用模型
  * 
  * @author zai
  * 2019-01-01 22:11:15
  * @param <T>
  */
-public class OnMessagerInvoker<T> implements IOnMessageInvoker{
+public class ClientOnMessageInvoker<T> implements IClientOnMessageInvoker{
 	
 	
 	/**
 	 * 请求标识
 	 */
-	private String requestTag;
+	private String messageTag;
 	
 	/**
 	 * 接收消息的class类型
 	 */
-	private Class<?> requestMessageClass;
+	private Class<?> messageClass;
 	
 	
 	/**
 	 * 消息调用对象
 	 */
-	private IOnMessageAction<T> onMessage;
+	private IClientOnMessageAction<T> onMessage;
 
 
 	@Override
@@ -37,31 +37,31 @@ public class OnMessagerInvoker<T> implements IOnMessageInvoker{
 
 
 	public String getReceiveAction() {
-		return requestTag;
+		return messageTag;
 	}
 
 
 	public void setRequestTag(String requestTag) {
-		this.requestTag = requestTag;
+		this.messageTag = requestTag;
 	}
 
 
-	public Class<?> getRequestMessageClass() {
-		return requestMessageClass;
+	public Class<?> getMessageClass() {
+		return messageClass;
 	}
 
 
-	public void setRequestMessageClass(Class<?> requestMessageClass) {
-		this.requestMessageClass = requestMessageClass;
+	public void setRequestMessageClass(Class<?> messageClass) {
+		this.messageClass = messageClass;
 	}
 
 
-	public IOnMessageAction<?> getOnMessage() {
+	public IClientOnMessageAction<?> getOnMessage() {
 		return onMessage;
 	}
 
 
-	public void setOnMessage(IOnMessageAction<T> onMessage) {
+	public void setOnMessage(IClientOnMessageAction<T> onMessage) {
 		this.onMessage = onMessage;
 	}
 

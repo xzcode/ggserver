@@ -14,7 +14,7 @@ public enum AlgoG28CardType {
 	DOT_3_HALF(1035, "三点半"),
 	
 	DOT_4(1040, "四点"),
-	DOT_4_HALF(1005, "四点半"),
+	DOT_4_HALF(1045, "四点半"),
 	
 	DOT_5(1050, "五点"),
 	DOT_5_HALF(1055, "五点半"),
@@ -41,7 +41,7 @@ public enum AlgoG28CardType {
 	BAO_6(1260, "六宝"),
 	BAO_7(1270, "七宝"),
 	BAO_8(1280, "八宝"),
-	BAO_9(1280, "九宝"),
+	BAO_9(1290, "九宝"),
 	
 	TIAN_WANG(1310, "天王"),
 	

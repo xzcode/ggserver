@@ -15,15 +15,15 @@ import xzcode.ggserver.client.utils.json.GGJsonUtil;
  * @author zai
  * 2019-02-09 14:30:13
  */
-public class SendMessageManager{
+public class ClientSendMessageManager{
 	
-	private final static Logger logger = LoggerFactory.getLogger(SendMessageManager.class);
+	private final static Logger logger = LoggerFactory.getLogger(ClientSendMessageManager.class);
 	
 	private GGClientConfig config;
 	
 	
 	
-	public SendMessageManager(GGClientConfig config) {
+	public ClientSendMessageManager(GGClientConfig config) {
 		super();
 		this.config = config;
 	}
@@ -39,13 +39,13 @@ public class SendMessageManager{
 		}
 	}
 
-	public void send(SendModel sendModel) {
+	public void send(ClientSendModel clientSendModel) {
 		Channel channel = config.getChannel();
 		if (channel != null && channel.isActive()) {
-			channel.writeAndFlush(sendModel);			
+			channel.writeAndFlush(clientSendModel);			
 		}else {
 			if (logger.isDebugEnabled()) {
-				logger.debug("Channel is inactived! Message will not be send, SendModel:{}", GGJsonUtil.toJson(sendModel));
+				logger.debug("Channel is inactived! Message will not be send, SendModel:{}", GGJsonUtil.toJson(clientSendModel));
 			}
 		}
 	}
@@ -72,10 +72,10 @@ public class SendMessageManager{
 				
 				if (delayMs > 0) {
 					config.getWorkerGroup().scheduleAtFixedRate(() -> {
-						this.send(SendModel.create(actionIdData, messageData));
+						this.send(ClientSendModel.create(actionIdData, messageData));
 					}, 0, delayMs, TimeUnit.MILLISECONDS);
 				}else {
-					this.send(SendModel.create(actionIdData, messageData));
+					this.send(ClientSendModel.create(actionIdData, messageData));
 				}
 			}
 		} catch (Exception e) {

@@ -7,7 +7,7 @@ package xzcode.ggserver.client.message.receive;
  * @author zai
  * 2019-01-01 22:09:24
  */
-public interface IOnMessageAction<T> {
+public interface IClientOnMessageAction<T> {
 
 	void onMessage(T data);
 	

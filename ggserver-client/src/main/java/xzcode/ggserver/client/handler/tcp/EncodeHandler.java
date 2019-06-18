@@ -12,7 +12,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelOutboundHandlerAdapter;
 import io.netty.channel.ChannelPromise;
 import xzcode.ggserver.client.config.GGClientConfig;
-import xzcode.ggserver.client.message.send.SendModel;
+import xzcode.ggserver.client.message.send.ClientSendModel;
 
 /**
  * 
@@ -86,19 +86,19 @@ public class EncodeHandler extends ChannelOutboundHandlerAdapter {
 			out = ctx.alloc().buffer(bytes.length);
 			
 			out.writeBytes(bytes);
-		}else if (msg instanceof SendModel) {
-			SendModel sendModel = (SendModel) msg;
+		}else if (msg instanceof ClientSendModel) {
+			ClientSendModel clientSendModel = (ClientSendModel) msg;
 			
 			if (LOGGER.isDebugEnabled()) {
-				LOGGER.debug("\nSending message ---> \ntag:{}\nmessage:{}", sendModel.getSendTag(), GSON.toJson(sendModel));
+				LOGGER.debug("\nSending message ---> \ntag:{}\nmessage:{}", clientSendModel.getSendTag(), GSON.toJson(clientSendModel));
 			}
 			
-			byte[] tagBytes = sendModel.getSendTag();
+			byte[] tagBytes = clientSendModel.getSendTag();
 			
 			//如果有消息体
-			if (sendModel.getMessage() != null) {
+			if (clientSendModel.getMessage() != null) {
 				
-				byte[] bodyBytes = (byte[]) sendModel.getMessage();
+				byte[] bodyBytes = (byte[]) clientSendModel.getMessage();
 				
 				int packLen = REQUEST_TAG_LENGTH_BYTES + tagBytes.length + bodyBytes.length;
 				

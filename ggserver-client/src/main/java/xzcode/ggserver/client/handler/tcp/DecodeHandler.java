@@ -9,8 +9,8 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
 import xzcode.ggserver.client.config.GGClientConfig;
-import xzcode.ggserver.client.message.receive.OnMessageTask;
-import xzcode.ggserver.client.message.receive.invoker.IOnMessageInvoker;
+import xzcode.ggserver.client.message.receive.ClientOnMessageTask;
+import xzcode.ggserver.client.message.receive.invoker.IClientOnMessageInvoker;
 
 /**
  * TCP自定协议解析
@@ -106,10 +106,10 @@ public class DecodeHandler extends ByteToMessageDecoder {
 		}
 		
 		//获取与请求标识关联的方法参数对象
-		IOnMessageInvoker invoker = config.getRequestMessageManager().get(reqTag);
+		IClientOnMessageInvoker invoker = config.getRequestMessageManager().get(reqTag);
 		
 		if (invoker != null) {
-			config.getWorkerGroup().submit(new OnMessageTask(dataTag, data, config));
+			config.getWorkerGroup().submit(new ClientOnMessageTask(dataTag, data, config));
 		}
 		
 		if(LOGGER.isDebugEnabled()){

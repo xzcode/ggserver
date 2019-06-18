@@ -7,7 +7,7 @@ package xzcode.ggserver.client.message.send;
  * @author zai
  * 2019-02-09 14:50:27
  */
-public interface ISendMessage {
+public interface IClientSendMessage {
 	
 	void send(Object userId, String action, Object message, long delayMs);
 	void send(Object userId, String action, Object message);

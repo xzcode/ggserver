@@ -6,7 +6,7 @@ package xzcode.ggserver.client.message.receive.invoker;
  * @author zai
  * 2019-01-01 22:30:41
  */
-public interface IOnMessageInvoker {
+public interface IClientOnMessageInvoker {
 	
 	/**
 	 * 执行调用
@@ -22,7 +22,7 @@ public interface IOnMessageInvoker {
 	
 	public String getReceiveAction();
 	
-	public Class<?> getRequestMessageClass();
+	public Class<?> getMessageClass();
 	
 	public String getSendAction();
 

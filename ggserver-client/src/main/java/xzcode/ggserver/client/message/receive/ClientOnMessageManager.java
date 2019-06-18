@@ -5,7 +5,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import xzcode.ggserver.client.message.receive.invoker.IOnMessageInvoker;
+import xzcode.ggserver.client.message.receive.invoker.IClientOnMessageInvoker;
 
 
 /**
@@ -14,11 +14,11 @@ import xzcode.ggserver.client.message.receive.invoker.IOnMessageInvoker;
  * @author zai
  * 2019-01-01 23:25:21
  */
-public class OnMessageManager {
+public class ClientOnMessageManager {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(OnMessageManager.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ClientOnMessageManager.class);
 
-	private final Map<String, IOnMessageInvoker> map = new HashMap<>();
+	private final Map<String, IClientOnMessageInvoker> map = new HashMap<>();
 
 
 	/**
@@ -31,7 +31,7 @@ public class OnMessageManager {
 	 * 2017-07-29
 	 */
 	public Object invoke(String requestTag, Object message) throws Exception {
-		IOnMessageInvoker invoker = map.get(requestTag);
+		IClientOnMessageInvoker invoker = map.get(requestTag);
 		if (invoker != null) {
 			return invoker.invoke(requestTag, message);
 		}
@@ -46,11 +46,11 @@ public class OnMessageManager {
 	 * @author zai
 	 * 2017-07-29
 	 */
-	public void put(String requestTag, IOnMessageInvoker onMessageInvoker) {
+	public void put(String requestTag, IClientOnMessageInvoker clientOnMessageInvoker) {
 		if (map.containsKey(requestTag)) {
 			throw new RuntimeException("requestTag '"+requestTag+"' is already mapped!");
 		}
-		map.put(requestTag, onMessageInvoker);
+		map.put(requestTag, clientOnMessageInvoker);
 	}
 
 	/**
@@ -73,7 +73,7 @@ public class OnMessageManager {
 	 * @author zai
 	 * 2017-08-02
 	 */
-	public IOnMessageInvoker get(String requestTag){
+	public IClientOnMessageInvoker get(String requestTag){
 		return map.get(requestTag);
 	}
 

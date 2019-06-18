@@ -6,8 +6,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import xzcode.ggserver.client.config.GGClientConfig;
-import xzcode.ggserver.client.message.receive.invoker.IOnMessageInvoker;
-import xzcode.ggserver.client.message.send.SendModel;
+import xzcode.ggserver.client.message.receive.invoker.IClientOnMessageInvoker;
+import xzcode.ggserver.client.message.send.ClientSendModel;
 
 /**
  * 请求消息任务
@@ -16,9 +16,9 @@ import xzcode.ggserver.client.message.send.SendModel;
  * @author zai
  * 2019-02-09 14:26:10
  */
-public class OnMessageTask implements Runnable{
+public class ClientOnMessageTask implements Runnable{
 	
-	private final static Logger LOGGER = LoggerFactory.getLogger(OnMessageTask.class);
+	private final static Logger LOGGER = LoggerFactory.getLogger(ClientOnMessageTask.class);
 	
 	/**
 	 * 配置
@@ -37,11 +37,11 @@ public class OnMessageTask implements Runnable{
 	private byte[] action;
 	
 	
-	public OnMessageTask() {
+	public ClientOnMessageTask() {
 		
 	}
 
-	public OnMessageTask(byte[] action, byte[] message, GGClientConfig config) {
+	public ClientOnMessageTask(byte[] action, byte[] message, GGClientConfig config) {
 		this.message = message;
 		this.action = action;
 		this.config = config;
@@ -54,15 +54,15 @@ public class OnMessageTask implements Runnable{
 		try {
 			
 			
-			IOnMessageInvoker invoker = config.getMessageInvokerManager().get(actionStr);
+			IClientOnMessageInvoker invoker = config.getMessageInvokerManager().get(actionStr);
 			Object msgObj = null;
 			if (message != null) {
-				msgObj = config.getSerializer().deserialize(message, invoker.getRequestMessageClass());
+				msgObj = config.getSerializer().deserialize(message, invoker.getMessageClass());
 			}
 			
 			Object returnObj = config.getRequestMessageManager().invoke(actionStr, msgObj);
 			if (returnObj != null) {
-				config.getSendMessageManager().send(SendModel.create(config.getSerializer().serialize(config.getRequestMessageManager().getSendAction(actionStr)), config.getSerializer().serialize(returnObj)));
+				config.getSendMessageManager().send(ClientSendModel.create(config.getSerializer().serialize(config.getRequestMessageManager().getSendAction(actionStr)), config.getSerializer().serialize(returnObj)));
 			}
 		} catch (Exception e) {
 			LOGGER.error("Request Message Task ERROR!! -- actionId: {}, error: {}", actionStr, e);

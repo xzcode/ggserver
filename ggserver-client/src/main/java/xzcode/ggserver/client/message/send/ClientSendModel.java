@@ -6,7 +6,7 @@ package xzcode.ggserver.client.message.send;
  * @author zai
  * 2019-03-12 19:20:01
  */
-public class SendModel {
+public class ClientSendModel {
 	
 
 	/* 发送消息标识 */
@@ -18,31 +18,31 @@ public class SendModel {
 	/* io操作完成回调 */
 	private Runnable callback;
 
-	public SendModel(byte[] action, byte[] message) {
+	public ClientSendModel(byte[] action, byte[] message) {
 		this.action = action;
 		this.message = message;
 	}
-	public SendModel(byte[] action, byte[] message, int sendType) {
+	public ClientSendModel(byte[] action, byte[] message, int sendType) {
 		this.action = action;
 		this.message = message;
 	}
 
-	public SendModel(byte[] action, byte[] message, Runnable callback) {
+	public ClientSendModel(byte[] action, byte[] message, Runnable callback) {
 		super();
 		this.action = action;
 		this.message = message;
 		this.callback = callback;
 	}
 
-	public static SendModel create(byte[] action, byte[] message, int sendType) {
-		return new SendModel(action, message);
+	public static ClientSendModel create(byte[] action, byte[] message, int sendType) {
+		return new ClientSendModel(action, message);
 	}
-	public static SendModel create(byte[] action, byte[] message) {
-		return new SendModel(action, message);
+	public static ClientSendModel create(byte[] action, byte[] message) {
+		return new ClientSendModel(action, message);
 	}
 
-	public static SendModel create(byte[] action, byte[] message, Runnable callback) {
-		return new SendModel(action, message, callback);
+	public static ClientSendModel create(byte[] action, byte[] message, Runnable callback) {
+		return new ClientSendModel(action, message, callback);
 	}
 
 	public byte[] getSendTag() {

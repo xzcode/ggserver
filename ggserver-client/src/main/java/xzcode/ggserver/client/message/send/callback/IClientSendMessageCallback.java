@@ -9,7 +9,7 @@ import java.util.concurrent.Callable;
  * 2018-12-29 13:51:37
  */
 @FunctionalInterface
-public interface ISendMessageCallback extends Callable<Object>{
+public interface IClientSendMessageCallback extends Callable<Object>{
 	
 	
 }

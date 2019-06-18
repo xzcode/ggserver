@@ -3,12 +3,11 @@ package xzcode.ggserver.client.config;
 import io.netty.channel.Channel;
 import io.netty.channel.nio.NioEventLoopGroup;
 import xzcode.ggserver.client.event.EventInvokerManager;
-import xzcode.ggserver.client.executor.GGTaskExecutor;
 import xzcode.ggserver.client.executor.factory.EventLoopGroupThreadFactory;
 import xzcode.ggserver.client.handler.serializer.ISerializer;
 import xzcode.ggserver.client.handler.serializer.factory.SerializerFactory;
-import xzcode.ggserver.client.message.receive.OnMessageManager;
-import xzcode.ggserver.client.message.send.SendMessageManager;
+import xzcode.ggserver.client.message.receive.ClientOnMessageManager;
+import xzcode.ggserver.client.message.send.ClientSendMessageManager;
 
 /**
  * socket 服务器配置类
@@ -53,15 +52,12 @@ public class GGClientConfig {
 	
 	
 	
-	private OnMessageManager onMessageManager = new OnMessageManager();
-	private SendMessageManager sendMessageManager = new SendMessageManager(this);
+	private ClientOnMessageManager clientOnMessageManager = new ClientOnMessageManager();
+	private ClientSendMessageManager clientSendMessageManager = new ClientSendMessageManager(this);
 	private EventInvokerManager eventInvokerManager = new EventInvokerManager();
 	
-	
-	
     
-	private NioEventLoopGroup workerGroup = new NioEventLoopGroup(getWorkThreadSize(), new EventLoopGroupThreadFactory("Worker Group"));
-	
+	private NioEventLoopGroup workerGroup;
 	
 	
 	public GGClientConfig() {
@@ -100,6 +96,11 @@ public class GGClientConfig {
 	}
 
 	public NioEventLoopGroup getWorkerGroup() {
+		if (workerGroup == null) {
+			synchronized (workerGroup) {
+				workerGroup = new NioEventLoopGroup(getWorkThreadSize(), new EventLoopGroupThreadFactory("Worker Group"));
+			}
+		}
 		return workerGroup;
 	}
 
@@ -191,17 +192,17 @@ public class GGClientConfig {
 		}
 		this.serializerType = serializerType;
 	}
-	public OnMessageManager getRequestMessageManager() {
-		return onMessageManager;
+	public ClientOnMessageManager getRequestMessageManager() {
+		return clientOnMessageManager;
 	}
-	public void setRequestMessageManager(OnMessageManager onMessageManager) {
-		this.onMessageManager = onMessageManager;
+	public void setRequestMessageManager(ClientOnMessageManager clientOnMessageManager) {
+		this.clientOnMessageManager = clientOnMessageManager;
 	}
-	public OnMessageManager getMessageInvokerManager() {
-		return onMessageManager;
+	public ClientOnMessageManager getMessageInvokerManager() {
+		return clientOnMessageManager;
 	}
-	public void setMessageInvokerManager(OnMessageManager onMessageManager) {
-		this.onMessageManager = onMessageManager;
+	public void setMessageInvokerManager(ClientOnMessageManager clientOnMessageManager) {
+		this.clientOnMessageManager = clientOnMessageManager;
 	}
 	public EventInvokerManager getEventInvokerManager() {
 		return eventInvokerManager;
@@ -217,12 +218,12 @@ public class GGClientConfig {
 	public void setMaxDataLength(int maxDataLength) {
 		this.maxDataLength = maxDataLength;
 	}
-	public SendMessageManager getSendMessageManager() {
-		return sendMessageManager;
+	public ClientSendMessageManager getSendMessageManager() {
+		return clientSendMessageManager;
 	}
 	
-	public void setSendMessageManager(SendMessageManager sendMessageManager) {
-		this.sendMessageManager = sendMessageManager;
+	public void setSendMessageManager(ClientSendMessageManager clientSendMessageManager) {
+		this.clientSendMessageManager = clientSendMessageManager;
 	}
 
 	public int getReqTaskCorePoolSize() {

@@ -22,8 +22,8 @@ import xzcode.ggserver.client.event.IEventInvoker;
 import xzcode.ggserver.client.executor.GGTaskExecutor;
 import xzcode.ggserver.client.executor.task.TimeoutRunnable;
 import xzcode.ggserver.client.executor.timeout.IGGTaskExecution;
-import xzcode.ggserver.client.message.receive.IOnMessageAction;
-import xzcode.ggserver.client.message.receive.invoker.OnMessagerInvoker;
+import xzcode.ggserver.client.message.receive.IClientOnMessageAction;
+import xzcode.ggserver.client.message.receive.invoker.ClientOnMessageInvoker;
 import xzcode.ggserver.client.starter.impl.SocketClientStarter;
 
 /**
@@ -106,12 +106,12 @@ public class GGClient implements IGGTaskExecution{
 	 * 2019-01-02 09:41:59
 	 * @param <T>
 	 */
-	public <T> void on(String requestTag, IOnMessageAction<T> socketOnMessage) {
+	public <T> void on(String messageTag, IClientOnMessageAction<T> socketOnMessage) {
 		
 		
-		OnMessagerInvoker<T> invoker = new OnMessagerInvoker<>();
+		ClientOnMessageInvoker<T> invoker = new ClientOnMessageInvoker<>();
 		invoker.setOnMessage(socketOnMessage);
-		invoker.setRequestTag(requestTag);
+		invoker.setRequestTag(messageTag);
 		String typeName = ((ParameterizedType)socketOnMessage.getClass().getGenericInterfaces()[0]).getActualTypeArguments()[0].getTypeName();
 		Class<?> msgClass = null;
 		if (typeName.startsWith("java.util.Map")) {
@@ -123,7 +123,7 @@ public class GGClient implements IGGTaskExecution{
 		
 		invoker.setRequestMessageClass(msgClass);
 		
-		config.getMessageInvokerManager().put(requestTag, invoker);
+		config.getMessageInvokerManager().put(messageTag, invoker);
 	}
 	
 	/**
@@ -193,7 +193,7 @@ public class GGClient implements IGGTaskExecution{
 		this.config.getSendMessageManager().send(action, message, delayMs);
 		
 	}
-
+/*
 	public static void main(String[] args) {
 		Logger logger = LoggerFactory.getLogger(GGClient.class);
 		AtomicInteger  count = new AtomicInteger(0);
@@ -231,8 +231,6 @@ public class GGClient implements IGGTaskExecution{
 			thread.start();
 		}
 		
-		
-		
 	}
-	
+	*/
 }
