@@ -39,6 +39,9 @@ public class MessagePackSerializer implements ISerializer {
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T deserialize(byte[] bytes, Class<T> t) throws Exception {
+			if (t == null) {
+				return null;
+			}
 			if (t == String.class) {
 				MessageUnpacker unpacker = new MessagePack.UnpackerConfig()
 			            .withStringDecoderBufferSize(1024) // If your data contains many large strings (the default is 8k)
@@ -47,7 +50,8 @@ public class MessagePackSerializer implements ISerializer {
             	unpacker.close();
             	return (T) string;
 			}
-		  return objectMapper.readValue(bytes, t);
+				
+			return objectMapper.readValue(bytes, t);
 	}
 
 }

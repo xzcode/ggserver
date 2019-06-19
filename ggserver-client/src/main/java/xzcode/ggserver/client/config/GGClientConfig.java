@@ -96,8 +96,8 @@ public class GGClientConfig {
 	}
 
 	public NioEventLoopGroup getWorkerGroup() {
-		if (workerGroup == null) {
-			synchronized (workerGroup) {
+		if (workerGroup == null || workerGroup.isTerminated()) {
+			synchronized (this) {
 				workerGroup = new NioEventLoopGroup(getWorkThreadSize(), new EventLoopGroupThreadFactory("Worker Group"));
 			}
 		}

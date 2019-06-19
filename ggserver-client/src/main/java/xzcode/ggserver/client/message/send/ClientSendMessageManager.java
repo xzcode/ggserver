@@ -67,6 +67,7 @@ public class ClientSendMessageManager{
 		try {
 			Channel channel = config.getChannel();
 			if (channel != null && channel.isActive()) {
+				
 				byte[] actionIdData = action.getBytes(config.getCharset());
 				byte[] messageData = message == null ? null : this.config.getSerializer().serialize(message);
 				

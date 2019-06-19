@@ -36,13 +36,13 @@ public class ClientOnMessageInvoker<T> implements IClientOnMessageInvoker{
 	}
 
 
-	public String getReceiveAction() {
+	public String getMessageTag() {
 		return messageTag;
 	}
 
 
-	public void setRequestTag(String requestTag) {
-		this.messageTag = requestTag;
+	public void setMessageTag(String messageTag) {
+		this.messageTag = messageTag;
 	}
 
 
@@ -51,7 +51,7 @@ public class ClientOnMessageInvoker<T> implements IClientOnMessageInvoker{
 	}
 
 
-	public void setRequestMessageClass(Class<?> messageClass) {
+	public void setMessageClass(Class<?> messageClass) {
 		this.messageClass = messageClass;
 	}
 

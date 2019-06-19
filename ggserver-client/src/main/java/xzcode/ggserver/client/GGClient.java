@@ -111,7 +111,7 @@ public class GGClient implements IGGTaskExecution{
 		
 		ClientOnMessageInvoker<T> invoker = new ClientOnMessageInvoker<>();
 		invoker.setOnMessage(socketOnMessage);
-		invoker.setRequestTag(messageTag);
+		invoker.setMessageTag(messageTag);
 		String typeName = ((ParameterizedType)socketOnMessage.getClass().getGenericInterfaces()[0]).getActualTypeArguments()[0].getTypeName();
 		Class<?> msgClass = null;
 		if (typeName.startsWith("java.util.Map")) {
@@ -121,7 +121,7 @@ public class GGClient implements IGGTaskExecution{
 		}
 		//获取泛型类型参数
 		
-		invoker.setRequestMessageClass(msgClass);
+		invoker.setMessageClass(msgClass);
 		
 		config.getMessageInvokerManager().put(messageTag, invoker);
 	}

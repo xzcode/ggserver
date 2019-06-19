@@ -62,6 +62,9 @@ public class SocketClientStarter {
             		channel.writeAndFlush(GGServerTypeConstants.TCP.getBytes());
 				}
             });
+            if (logger.isInfoEnabled()) {
+            	logger.info("GGServer Client start success!");
+            }
             channel.closeFuture().sync();
         }catch (Exception e) {
         	

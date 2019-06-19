@@ -92,7 +92,7 @@ public class DecodeHandler extends ByteToMessageDecoder {
 		
 		byte[] dataTag = new byte[reqTagSize];
 		
-		in.readBytes(dataTag);
+		in.readBytes(dataTag);	
 		
 		String reqTag = new String(dataTag, config.getCharset());
 		
@@ -112,8 +112,8 @@ public class DecodeHandler extends ByteToMessageDecoder {
 			config.getWorkerGroup().submit(new ClientOnMessageTask(dataTag, data, config));
 		}
 		
-		if(LOGGER.isDebugEnabled()){
-        	LOGGER.debug("\nReceived binary message  <----,\nchannel:{}\ntag:{}\nbytes-length:{}", ctx.channel(), dataTag, bodyLen);
+		if(LOGGER.isInfoEnabled()){
+        	LOGGER.info("\nReceived binary message  <----,\nchannel:{}\ntag:{}\nbytes-length:{}", ctx.channel(), reqTag, bodyLen);
         }
 		
 	}

@@ -20,7 +20,7 @@ public interface IClientOnMessageInvoker {
 	 */
 	public Object invoke(String action, Object message) throws Exception;
 	
-	public String getReceiveAction();
+	public String getMessageTag();
 	
 	public Class<?> getMessageClass();
 	

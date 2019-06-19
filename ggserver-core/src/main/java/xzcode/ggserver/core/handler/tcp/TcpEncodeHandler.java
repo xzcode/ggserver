@@ -86,7 +86,9 @@ public class TcpEncodeHandler extends ChannelOutboundHandlerAdapter {
 				out.writeShort(tagBytes.length);
 				out.writeBytes(tagBytes);
 				out.writeBytes(bodyBytes);
-				
+				if (LOGGER.isInfoEnabled()) {
+                	LOGGER.info("message sended. \nchannel:{}\ntag:{}\nmessage-length:{}", channel, new String(tagBytes, config.getCharset()), bodyBytes.length);
+                }
 			} else {
 			
 				//如果没消息体
@@ -98,6 +100,10 @@ public class TcpEncodeHandler extends ChannelOutboundHandlerAdapter {
 				out.writeInt(packLen);
 				out.writeShort(tagBytes.length);
 				out.writeBytes(tagBytes);
+				
+				if (LOGGER.isInfoEnabled()) {
+                	LOGGER.info("message sended. \nchannel:{}\ntag:{}\nmessage-length:{}", channel, new String(tagBytes, config.getCharset()), 0);
+                }
 				
 			}
 			ChannelFuture channelFuture = null;

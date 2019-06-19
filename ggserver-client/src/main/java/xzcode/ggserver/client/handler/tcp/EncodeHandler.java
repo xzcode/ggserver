@@ -89,8 +89,8 @@ public class EncodeHandler extends ChannelOutboundHandlerAdapter {
 		}else if (msg instanceof ClientSendModel) {
 			ClientSendModel clientSendModel = (ClientSendModel) msg;
 			
-			if (LOGGER.isDebugEnabled()) {
-				LOGGER.debug("\nSending message ---> \ntag:{}\nmessage:{}", clientSendModel.getSendTag(), GSON.toJson(clientSendModel));
+			if (LOGGER.isInfoEnabled()) {
+				LOGGER.info("\nSending message ---> \ntag:{}", new String(clientSendModel.getSendTag(), config.getCharset()));
 			}
 			
 			byte[] tagBytes = clientSendModel.getSendTag();
