@@ -20,86 +20,86 @@ public class AlgoPjUtil {
 	/**
 	 * 二四
 	 */
-	public static int ER_SI 			= 1004000;
+	public static int ER_SI 			= 1006000;
 	
 	/**
 	 * 杂5-1
 	 */
-	public static int ZA_WU_1 			= 1005132;
+	public static int ZA_WU_1 			= 1105132;
 	
 	/**
 	 * 杂5-2
 	 */
-	public static int ZA_WU_2 			= 1005214;
+	public static int ZA_WU_2 			= 1105214;
 	
 	/**
 	 * 杂7-1
 	 */
-	public static int ZA_QI_1 			= 1007125;
+	public static int ZA_QI_1 			= 1107125;
 	/**
 	 * 杂7-2
 	 */
-	public static int ZA_QI_2 			= 1007234;
+	public static int ZA_QI_2 			= 1107234;
 	/**
 	 * 杂8-1
 	 */
-	public static int ZA_BA_1 			= 1008126;
+	public static int ZA_BA_1 			= 1108126;
 	/**
 	 * 杂8-2
 	 */
-	public static int ZA_BA_2 			= 1008235;
+	public static int ZA_BA_2 			= 1108235;
 	/**
 	 * 杂9-1
 	 */
-	public static int ZA_JIU_1 			= 1009145;
+	public static int ZA_JIU_1 			= 1109145;
 	/**
 	 * 杂9-2
 	 */
-	public static int ZA_JIU_2 			= 1009236;
+	public static int ZA_JIU_2 			= 1109236;
 	/**
 	 * 霖零六
 	 */
-	public static int LING_LING_LIU 	= 1106000;
+	public static int LING_LING_LIU 	= 1206000;
 	/**
 	 * 高脚七
 	 */
-	public static int GAO_JIAO_QI 		= 1107000;
+	public static int GAO_JIAO_QI 		= 1207000;
 	/**
 	 * 红头十
 	 */
-	public static int HONG_TOU_SHI 		= 1110000;
+	public static int HONG_TOU_SHI 		= 1210000;
 	/**
 	 * 斧头
 	 */
-	public static int FU_TOU 			= 1111000;
+	public static int FU_TOU 			= 1211000;
 	/**
 	 * 板凳
 	 */
-	public static int BAN_DENG 			= 1202000;
+	public static int BAN_DENG 			= 1304000;
 	/**
 	 * 长三
 	 */
-	public static int CHANG_SAN 		= 1206000;
+	public static int CHANG_SAN 		= 1306000;
 	/**
 	 * 梅牌
 	 */
-	public static int MEI_PAI 			= 1310000;
+	public static int MEI_PAI 			= 1410000;
 	/**
 	 * 鹅牌
 	 */
-	public static int E_PAI 			= 1404000;
+	public static int E_PAI 			= 1504000;
 	/**
 	 * 人牌
 	 */
-	public static int REN_PAI 			= 1408000;
+	public static int REN_PAI 			= 1508000;
 	/**
 	 * 地牌
 	 */
-	public static int DI_PAI 			= 1502000;
+	public static int DI_PAI 			= 1602000;
 	/**
 	 * 天牌
 	 */
-	public static int TIAN_PAI 			= 1512000;
+	public static int TIAN_PAI 			= 1712000;
 	
 	/**
 	 * 
@@ -173,6 +173,7 @@ public class AlgoPjUtil {
 		
 		PAIR_TYPES.put(ZA_BA_1 + "" + DI_PAI, AlgoPjCardType.DI_GANG);
 		PAIR_TYPES.put(ZA_BA_2 + "" + DI_PAI, AlgoPjCardType.DI_GANG);
+		PAIR_TYPES.put(REN_PAI + "" + DI_PAI, AlgoPjCardType.DI_GANG);
 		
 		
 		
@@ -227,6 +228,35 @@ public class AlgoPjUtil {
 		case 9: return AlgoPjCardType.DOT_9;
 		default: return AlgoPjCardType.NONE;
 		}
+	}
+	
+	/**
+	 * 对比单牌大小
+	 * 
+	 * @param card1 第一个牌牌值
+	 * @param card2 第二个牌牌值
+	 * @return 第一个牌大，返回1；第二个牌大，返回2；否则一样大，返回0
+	 * @author zai
+	 * 2019-06-20 10:12:19
+	 */
+	public static int compareSingleCard(int card1, int card2) {
+		
+		if (card1 == DING_SAN && card2 == ER_SI) {
+			return 0;
+		}
+		
+		if (card2 == DING_SAN && card1 == ER_SI) {
+			return 0;
+		}
+		
+		if (card1 > card2) {
+			return 1;
+		}else if (card2 > card1) {
+			return -1;
+		}else {
+			return 0;
+		}
+		
 	}
 	
 	/**

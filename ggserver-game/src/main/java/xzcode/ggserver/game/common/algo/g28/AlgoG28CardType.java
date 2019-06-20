@@ -1,4 +1,4 @@
-package xzcode.ggserver.game.common.algo.mj.g28;
+package xzcode.ggserver.game.common.algo.g28;
 
 public enum AlgoG28CardType {
 	

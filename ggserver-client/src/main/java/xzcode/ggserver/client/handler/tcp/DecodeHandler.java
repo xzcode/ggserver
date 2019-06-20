@@ -50,8 +50,6 @@ public class DecodeHandler extends ByteToMessageDecoder {
 	private GGClientConfig config;
 	
 	
-
-	
 	public DecodeHandler() {
 		
 	}
@@ -91,13 +89,13 @@ public class DecodeHandler extends ByteToMessageDecoder {
 		int reqTagSize = in.readUnsignedShort();
 		
 		byte[] dataTag = new byte[reqTagSize];
-		
-		in.readBytes(dataTag);	
+		 
+		in.readBytes(dataTag);
 		
 		String reqTag = new String(dataTag, config.getCharset());
 		
 		//读取数据体 =  总包长 - 标识长度占用字节 - 标识体占用字节数
-		int bodyLen = readableBytes - HEADER_BYTES - reqTagSize;
+		int bodyLen = packLen - REQUEST_TAG_LENGTH_BYTES - reqTagSize;
 		byte[] data = null;
 		if (bodyLen != 0) {
 			data = new byte[bodyLen];			

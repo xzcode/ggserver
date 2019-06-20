@@ -84,12 +84,13 @@ public class TcpDecodeHandler extends ByteToMessageDecoder {
 		
 		//readableBytes = in.readableBytes();
 		
-		if (readableBytes - PACKAGE_LENGTH_BYTES < packLen) {
+		int reqTagSize = in.readUnsignedShort();
+		
+		
+		if (readableBytes - HEADER_BYTES - reqTagSize < packLen) {
 			in.resetReaderIndex();
 			return;
 		}
-		
-		int reqTagSize = in.readUnsignedShort();
 		
 		byte[] dataTag = new byte[reqTagSize];
 		
@@ -99,7 +100,7 @@ public class TcpDecodeHandler extends ByteToMessageDecoder {
 		String reqTag = new String(dataTag, config.getCharset());
 		
 		//读取数据体 =  总包长 - 标识长度占用字节 - 标识体占用字节数
-		int bodyLen = readableBytes - HEADER_BYTES - reqTagSize;
+		int bodyLen = packLen - REQUEST_TAG_LENGTH_BYTES - reqTagSize;
 		byte[] data = null;
 		if (bodyLen != 0) {
 			

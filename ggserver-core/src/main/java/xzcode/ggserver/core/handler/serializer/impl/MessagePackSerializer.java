@@ -39,6 +39,9 @@ public class MessagePackSerializer implements ISerializer {
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T deserialize(byte[] bytes, Class<T> t) throws Exception {
+			if (bytes == null) {
+				return null;
+			}
 			if (t == null) {
 				return null;
 			}
