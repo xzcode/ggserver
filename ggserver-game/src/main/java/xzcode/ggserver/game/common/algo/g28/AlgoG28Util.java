@@ -93,7 +93,7 @@ public class AlgoG28Util {
 		
 		CARD_TYPES.put(TONG_8 * 1000 + TONG_1, AlgoG28CardType.DOT_9);
 		CARD_TYPES.put(TONG_7 * 1000 + TONG_2, AlgoG28CardType.DOT_9);
-		CARD_TYPES.put(TONG_6 * 1000 + TONG_4, AlgoG28CardType.DOT_9);
+		CARD_TYPES.put(TONG_6 * 1000 + TONG_3, AlgoG28CardType.DOT_9);
 		CARD_TYPES.put(TONG_5 * 1000 + TONG_4, AlgoG28CardType.DOT_9);
 		
 		CARD_TYPES.put(TONG_1 * 1000 + BAI_BAN, AlgoG28CardType.DOT_1_HALF);

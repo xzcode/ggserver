@@ -2,10 +2,9 @@ package xzcode.ggserver.game.common.house;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadFactory;
@@ -14,6 +13,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import nonapi.io.github.classgraph.concurrency.SimpleThreadFactory;
 import xzcode.ggserver.game.common.house.listener.IRemoveRoomListener;
 import xzcode.ggserver.game.common.player.Player;
 import xzcode.ggserver.game.common.room.Room;
@@ -60,16 +61,19 @@ public abstract class House< P extends Player, R extends Room<P, R, H>, H> {
 	/**
 	 * 大厅线程任务执行器
 	 */
-	protected ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1, new ThreadFactory() {
-		private AtomicInteger thIndex = new AtomicInteger(0);
-		@Override
-		public Thread newThread(Runnable r) {
-			return new Thread(r, "house-" + getHouseId() + "-" + thIndex.incrementAndGet());
-		}
-	});
+	protected static final ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(10, new SimpleThreadFactory("game-house-", false));
 	
 	
+	public House(Long houseId) {
+		this.houseId = houseId;
+		init();
+	}
+
 	public House() {
+		init();
+	}
+	
+	private void init() {
 		this.pClass = this.getPClass();
 		this.rClass = this.getRClass();
 		this.hClass = this.getHClass();

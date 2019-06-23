@@ -1,10 +1,12 @@
 package xzcode.ggserver.core.config;
 
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+
 import io.netty.channel.nio.NioEventLoopGroup;
+import nonapi.io.github.classgraph.concurrency.SimpleThreadFactory;
 import xzcode.ggserver.core.component.GGComponentManager;
 import xzcode.ggserver.core.constant.GGServerTypeConstants;
 import xzcode.ggserver.core.event.EventInvokerManager;
-import xzcode.ggserver.core.executor.GGServerTaskExecutor;
 import xzcode.ggserver.core.executor.factory.EventLoopGroupThreadFactory;
 import xzcode.ggserver.core.handler.serializer.ISerializer;
 import xzcode.ggserver.core.handler.serializer.factory.SerializerFactory;
@@ -63,21 +65,35 @@ public class GGServerConfig {
 	private ISerializer serializer;
 	
 	
-	private GGComponentManager componentManager = new GGComponentManager();
-	private RequestMessageManager requestMessageManager = new RequestMessageManager();
-	private SendMessageManager sendMessageManager = new SendMessageManager(this);
-	private MessageFilterManager messageFilterManager = new MessageFilterManager();
-	private EventInvokerManager eventInvokerManager = new EventInvokerManager();
-	private UserSessonManager userSessonManager = new UserSessonManager();
+	private GGComponentManager 	componentManager;
+	private RequestMessageManager requestMessageManager;
+	private SendMessageManager sendMessageManager;
+	private MessageFilterManager messageFilterManager;
+	private EventInvokerManager eventInvokerManager;
+	private UserSessonManager userSessonManager;
 	
-	private NioEventLoopGroup bossGroup = new NioEventLoopGroup(getBossThreadSize(),new EventLoopGroupThreadFactory("Boss Group"));
+	private NioEventLoopGroup bossGroup;
     
-	private NioEventLoopGroup workerGroup = new NioEventLoopGroup(getWorkThreadSize(),new EventLoopGroupThreadFactory("Worker Group"));
+	private NioEventLoopGroup workerGroup;
 	
 	
-	private GGServerTaskExecutor taskExecutor = new GGServerTaskExecutor(this);
+	private ScheduledThreadPoolExecutor taskExecutor;
 	
-	
+	public void init() {
+		componentManager = new GGComponentManager();
+		requestMessageManager = new RequestMessageManager();
+		sendMessageManager = new SendMessageManager(this);
+		messageFilterManager = new MessageFilterManager();
+		eventInvokerManager = new EventInvokerManager();
+		userSessonManager = new UserSessonManager();
+		
+		bossGroup = new NioEventLoopGroup(getBossThreadSize(),new EventLoopGroupThreadFactory("netty-boss"));
+	    
+		workerGroup = new NioEventLoopGroup(getWorkThreadSize(),new EventLoopGroupThreadFactory("netty-worker"));
+		taskExecutor = new ScheduledThreadPoolExecutor(this.executorCorePoolSize, new SimpleThreadFactory("GGServer-Task-", false));
+		taskExecutor.setMaximumPoolSize(this.executorMaxPoolSize);
+		taskExecutor.prestartAllCoreThreads();
+	}
 	
 	public int getExecutorCorePoolSize() {
 		return executorCorePoolSize;
@@ -346,10 +362,10 @@ public class GGServerConfig {
 	public void setComponentManager(GGComponentManager componentManager) {
 		this.componentManager = componentManager;
 	}
-	public GGServerTaskExecutor getTaskExecutor() {
+	public ScheduledThreadPoolExecutor getTaskExecutor() {
 		return taskExecutor;
 	}
-	public void setTaskExecutor(GGServerTaskExecutor taskExecutor) {
+	public void setTaskExecutor(ScheduledThreadPoolExecutor taskExecutor) {
 		this.taskExecutor = taskExecutor;
 	}
 	

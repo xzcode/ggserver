@@ -70,6 +70,7 @@ extends House<P, R, H>{
 	 * 可移除房间检查行为
 	 */
 	protected ILoopCheckRemoveAction<R> checkRemoveAction;
+	
 
 	
 	
@@ -81,8 +82,6 @@ extends House<P, R, H>{
 	@SuppressWarnings("unchecked")
 	public void init() {
 		
-		
-		executor.setMaximumPoolSize(3);
 		
 		//满员游戏房间检查
 		executor.scheduleWithFixedDelay(() -> {
@@ -101,7 +100,7 @@ extends House<P, R, H>{
 			} catch (Exception e) {
 				logger.error("loop room error!", e);
 			}
-		}, 10 * 1000, 1, TimeUnit.MILLISECONDS);
+		}, 10 * 1000, 10, TimeUnit.MILLISECONDS);
 		
 		//匹配房间检查
 		executor.scheduleWithFixedDelay(() -> {
@@ -137,7 +136,7 @@ extends House<P, R, H>{
 			} catch (Exception e) {
 				logger.error("loop matching error!", e);
 			}
-		}, 10 * 1000, 1, TimeUnit.MILLISECONDS);
+		}, 10 * 1000, 10, TimeUnit.MILLISECONDS);
 	}
 	
 	/**
@@ -302,4 +301,6 @@ extends House<P, R, H>{
 	public ILoopCheckRemoveAction<R> getCheckRemoveAction() {
 		return checkRemoveAction;
 	}
+
+
 }

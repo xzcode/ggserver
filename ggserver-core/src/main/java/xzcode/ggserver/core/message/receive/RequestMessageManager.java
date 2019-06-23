@@ -2,6 +2,7 @@ package xzcode.ggserver.core.message.receive;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +22,7 @@ public class RequestMessageManager {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(RequestMessageManager.class);
 
-	private final Map<String, IRequestMessageInvoker> map = new HashMap<>();
+	private final Map<String, IRequestMessageInvoker> map = new ConcurrentHashMap<>();
 
 	/**
 	 * 更新方法调用者的组件对象
@@ -43,19 +44,19 @@ public class RequestMessageManager {
 
 	/**
 	 * 调用被缓存的方法
-	 * @param requestTag
+	 * @param action
 	 * @param message
 	 * @throws Exception
 	 *
 	 * @author zai
 	 * 2017-07-29
 	 */
-	public Object invoke(String requestTag, Object message) throws Exception {
-		IRequestMessageInvoker invoker = map.get(requestTag);
+	public Object invoke(String action, Object message) throws Exception {
+		IRequestMessageInvoker invoker = map.get(action);
 		if (invoker != null) {
-			return invoker.invoke(requestTag, message);
+			return invoker.invoke(action, message);
 		}
-		LOGGER.warn("No method mapped with tag: {} ", requestTag);
+		LOGGER.warn("No method mapped with tag: {} ", action);
 		return null;
 	}
 

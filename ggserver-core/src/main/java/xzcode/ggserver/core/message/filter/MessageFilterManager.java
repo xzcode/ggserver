@@ -2,9 +2,7 @@ package xzcode.ggserver.core.message.filter;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,7 +46,6 @@ public class MessageFilterManager {
 				filterModel.setResponseFilter((GGResponseFilter) object);	
 			}
 		}
-		
 	}
 	
 	/**

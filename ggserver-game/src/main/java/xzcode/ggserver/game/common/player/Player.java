@@ -14,6 +14,11 @@ public class Player {
 	protected Long playerId; 
 	
 	/**
+	 * 用户类型
+	 */
+	protected Integer userType; 
+	
+	/**
 	 * 用户编号
 	 */
 	protected String playerNo; 
@@ -32,8 +37,6 @@ public class Player {
 	 * 是否在线
 	 */
 	protected boolean online;
-	
-	
 	
 	
 	public Long getPlayerId() {
@@ -85,6 +88,14 @@ public class Player {
 	}
 
 
-	
+	public Integer getUserType() {
+		return userType;
+	}
+
+
+	public void setUserType(Integer userType) {
+		this.userType = userType;
+	}
+
 
 }

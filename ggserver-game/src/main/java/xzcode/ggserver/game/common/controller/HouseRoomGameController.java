@@ -75,7 +75,7 @@ extends
 		try {
 			p = pClass.newInstance();
 		} catch (Exception e) {
-			logger.error("Instantiate R failed!!", e);
+			logger.error("Instantiate P failed!!", e);
 		}
 		return p;
 	}
@@ -83,8 +83,9 @@ extends
 		H h = null;
 		try {
 			h = hClass.newInstance();
+			
 		} catch (Exception e) {
-			logger.error("Instantiate R failed!!", e);
+			logger.error("Instantiate H failed!!", e);
 		}
 		return h;
 	}
