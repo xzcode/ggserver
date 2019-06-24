@@ -1,7 +1,11 @@
 package xzcode.ggserver.core;
 
 import java.lang.reflect.ParameterizedType;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
@@ -11,10 +15,12 @@ import xzcode.ggserver.core.config.GGServerConfig;
 import xzcode.ggserver.core.event.EventRunnableInvoker;
 import xzcode.ggserver.core.event.GGEventTask;
 import xzcode.ggserver.core.event.IEventInvoker;
-import xzcode.ggserver.core.executor.task.RequestMessageTask;
 import xzcode.ggserver.core.executor.task.TimeoutRunnable;
 import xzcode.ggserver.core.executor.timeout.IGGServerExecution;
+import xzcode.ggserver.core.handler.serializer.impl.JsonSerializer;
+import xzcode.ggserver.core.handler.serializer.impl.MessagePackSerializer;
 import xzcode.ggserver.core.message.receive.IOnMessageAction;
+import xzcode.ggserver.core.message.receive.RedirectMessageTask;
 import xzcode.ggserver.core.message.receive.invoker.OnMessagerInvoker;
 import xzcode.ggserver.core.message.send.ISendMessage;
 import xzcode.ggserver.core.session.GGSession;
@@ -208,25 +214,40 @@ public class GGServer implements ISendMessage, IGGServerExecution{
 		invoker.addRunnable(runnable);
 		config.getEventInvokerManager().put(invoker);
 	}
-
 	
-	
-	
-	
+	/**
+	 * 发送自定义事件
+	 * 
+	 * @param eventTag
+	 * @param message
+	 * @author zai
+	 * 2019-06-23 18:15:48
+	 */
 	public void emitEvent(String eventTag, Object message) {
 		config.getTaskExecutor().submit(new GGEventTask(getSession(), eventTag, message, config));
 	}
 	
-	
+	/**
+	 * 发送自定义事件
+	 * 
+	 * @param eventTag
+	 * @author zai
+	 * 2019-06-23 18:16:17
+	 */
 	public void emitEvent(String eventTag) {
 		config.getTaskExecutor().submit(new GGEventTask(getSession(), eventTag, null, config));
 	}
 	
-	
-	@Override
+	/**
+	 * 重定向消息
+	 * 
+	 * @param action
+	 * @param message
+	 * @author zai
+	 * 2019-06-23 18:15:41
+	 */
 	public void redirect(String action, Object message) {
-		this.config.getTaskExecutor().submit(new RequestMessageTask(calback, session));
-		
+		this.config.getTaskExecutor().submit(new RedirectMessageTask(action, message, GGSessionThreadLocalUtil.getSession(), config));
 	}
 	
 	@Override
@@ -301,6 +322,134 @@ public class GGServer implements ISendMessage, IGGServerExecution{
 	@Override
 	public void sendToAll(String action) {
 		this.config.getSendMessageManager().sendToAll(action);
+	}
+	
+	
+	public static void main(String[] args) throws Exception{
+		int datasize = 100;
+		MessagePackSerializer messagePackSerializer = new MessagePackSerializer();
+		JsonSerializer jsonSerializer = new JsonSerializer();
+		int times = 10 * 10000;
+		ArrayList<SerTestModel> list = new ArrayList<>();
+		for (int i = 0; i < times; i++) {
+			ArrayList<Integer> handcards = new ArrayList<>();
+			handcards.add(123);
+			handcards.add(234);
+			handcards.add(345);
+			handcards.add(456);
+			handcards.add(567);
+			list.add(new SerTestModel("name"+i, i, i, handcards , UUID.randomUUID().toString(), 100000+i+1 + "", System.currentTimeMillis(), "is ok haha " + i, i % 2 == 0));
+		}
+		
+		long starttime = 0;
+		long endtime = 0;
+		
+		messagePackSerializer.serialize(list.get(0));
+		jsonSerializer.serialize(list.get(0));
+		
+		
+		
+		starttime = System.currentTimeMillis();
+		for (SerTestModel data : list) {
+			//messagePackSerializer.serialize(data);	
+			messagePackSerializer.deserialize(jsonSerializer.serialize(data), SerTestModel.class);		
+		}
+		endtime = System.currentTimeMillis() - starttime;
+		
+		System.out.println(endtime);
+		
+		starttime = System.currentTimeMillis();
+		for (SerTestModel data : list) {
+			jsonSerializer.deserialize(jsonSerializer.serialize(data), SerTestModel.class);			
+		}
+		endtime = System.currentTimeMillis() - starttime;
+		
+		System.out.println(endtime);
+	}
+	
+	
+	public static class SerTestModel {
+		private String name;
+		private Integer age;
+		private Integer seatType;
+		private ArrayList<Integer> handcards;
+		private String roundNo;
+		private String roomNo;
+		private Long time;
+		private String message;
+		private boolean success;
+		
+		public SerTestModel() {}
+		
+		public SerTestModel(String name, int age, Integer seatType, ArrayList<Integer> handcards, String roundNo,
+				String roomNo, long time, String message, boolean success) {
+			super();
+			this.name = name;
+			this.age = age;
+			this.seatType = seatType;
+			this.handcards = handcards;
+			this.roundNo = roundNo;
+			this.roomNo = roomNo;
+			this.time = time;
+			this.message = message;
+			this.success = success;
+		}
+		public String getName() {
+			return name;
+		}
+		public void setName(String name) {
+			this.name = name;
+		}
+		public int getAge() {
+			return age;
+		}
+		public void setAge(int age) {
+			this.age = age;
+		}
+		public Integer getSeatType() {
+			return seatType;
+		}
+		public void setSeatType(Integer seatType) {
+			this.seatType = seatType;
+		}
+		public ArrayList<Integer> getHandcards() {
+			return handcards;
+		}
+		public void setHandcards(ArrayList<Integer> handcards) {
+			this.handcards = handcards;
+		}
+		public String getRoundNo() {
+			return roundNo;
+		}
+		public void setRoundNo(String roundNo) {
+			this.roundNo = roundNo;
+		}
+		public String getRoomNo() {
+			return roomNo;
+		}
+		public void setRoomNo(String roomNo) {
+			this.roomNo = roomNo;
+		}
+		public long getTime() {
+			return time;
+		}
+		public void setTime(long time) {
+			this.time = time;
+		}
+		public String getMessage() {
+			return message;
+		}
+		public void setMessage(String message) {
+			this.message = message;
+		}
+		public boolean isSuccess() {
+			return success;
+		}
+		public void setSuccess(boolean success) {
+			this.success = success;
+		}
+		
+		
 	}
 
 }

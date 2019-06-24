@@ -6,7 +6,7 @@ package xzcode.ggserver.core.message.receive.invoker;
  * @author zai
  * 2019-01-01 22:30:41
  */
-public interface IRequestMessageInvoker {
+public interface IOnMessageInvoker {
 	
 	/**
 	 * 执行调用
@@ -18,12 +18,10 @@ public interface IRequestMessageInvoker {
 	 * @author zai
 	 * 2019-01-01 22:32:22
 	 */
-	public Object invoke(String action, Object message) throws Exception;
+	public void invoke(String action, Object message) throws Exception;
 	
-	public String getReceiveAction();
+	public String getAction();
 	
-	public Class<?> getRequestMessageClass();
-	
-	public String getSendAction();
+	public Class<?> getMessageClass();
 
 }

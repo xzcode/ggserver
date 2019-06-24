@@ -14,7 +14,7 @@ import io.netty.channel.ChannelOutboundHandlerAdapter;
 import io.netty.channel.ChannelPromise;
 import xzcode.ggserver.core.channel.DefaultChannelAttributeKeys;
 import xzcode.ggserver.core.config.GGServerConfig;
-import xzcode.ggserver.core.executor.task.RequestMessageTask;
+import xzcode.ggserver.core.executor.task.ExectionTask;
 import xzcode.ggserver.core.message.send.SendModel;
 
 /**
@@ -126,13 +126,13 @@ public class TcpEncodeHandler extends ChannelOutboundHandlerAdapter {
 			}
 			//添加回调
 			if (channelFuture != null) {
-				channelFuture.addListener(future -> {
-					if (future.isSuccess()) {
-						if (sendModel.getCallback() != null) {
-							config.getTaskExecutor().submit(new RequestMessageTask(sendModel.getCallback(), channel.attr(DefaultChannelAttributeKeys.SESSION).get()));
+				if (sendModel.getCallback() != null) {
+					channelFuture.addListener(future -> {
+						if (future.isSuccess()) {
+								config.getTaskExecutor().submit(new ExectionTask(sendModel.getCallback(), channel.attr(DefaultChannelAttributeKeys.SESSION).get()));
 	    				}
-					}
-				});
+					});
+				}
 			}
 		}else if (msg instanceof byte[]) {
 			byte[] bytes = (byte[]) msg;

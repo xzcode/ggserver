@@ -11,7 +11,7 @@ import io.netty.handler.codec.ByteToMessageDecoder;
 import xzcode.ggserver.core.channel.DefaultChannelAttributeKeys;
 import xzcode.ggserver.core.config.GGServerConfig;
 import xzcode.ggserver.core.message.receive.RequestMessageTask;
-import xzcode.ggserver.core.message.receive.invoker.IRequestMessageInvoker;
+import xzcode.ggserver.core.message.receive.invoker.IOnMessageInvoker;
 
 /**
  * TCP自定协议解析
@@ -112,7 +112,7 @@ public class TcpDecodeHandler extends ByteToMessageDecoder {
 		
 		
 		//获取与请求标识关联的方法参数对象
-		IRequestMessageInvoker invoker = config.getRequestMessageManager().get(reqTag);
+		IOnMessageInvoker invoker = config.getRequestMessageManager().get(reqTag);
 		
 		if (invoker != null) {
 			config.getTaskExecutor().submit(new RequestMessageTask(dataTag, data, ctx.channel().attr(DefaultChannelAttributeKeys.SESSION).get(), config));

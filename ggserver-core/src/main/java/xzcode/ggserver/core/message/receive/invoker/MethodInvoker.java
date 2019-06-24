@@ -8,7 +8,7 @@ import java.lang.reflect.Method;
  * @author zai
  * 2019-01-01 22:11:15
  */
-public class MethodInvoker implements IRequestMessageInvoker{
+public class MethodInvoker implements IOnMessageInvoker{
 	
 	/**
 	 * 调用类型
@@ -24,16 +24,6 @@ public class MethodInvoker implements IRequestMessageInvoker{
 	 * 接收消息的class类型
 	 */
 	private Class<?> requestMessageClass;
-	
-	/**
-	 * 发送标识
-	 */
-	private String sendTag;
-	
-	/**
-	 * 发送消息的class类型
-	 */
-	private Class<?> sendMessageClass;
 	
 	/**
 	 * 方法对象
@@ -53,21 +43,23 @@ public class MethodInvoker implements IRequestMessageInvoker{
 	
 
 	@Override
-	public Object invoke(String requestTag, Object message) throws Exception {
+	public void invoke(String requestTag, Object message) throws Exception {
 		//如果消息体为空
 		if (message == null) {
 			if (method.getParameterCount() > 0) {
-				return method.invoke(componentObj, message);
+				method.invoke(componentObj, message);
+				return;
 			}
-			return method.invoke(componentObj);
+			method.invoke(componentObj);
+			return;
 		}
 		//如果消息体不为空
-		return method.invoke(componentObj, message);
+		method.invoke(componentObj, message);
 	}
 	
 	
 
-	public String getReceiveAction() {
+	public String getAction() {
 		return requestTag;
 	}
 
@@ -75,13 +67,6 @@ public class MethodInvoker implements IRequestMessageInvoker{
 		this.requestTag = requestTag;
 	}
 
-	public String getSendAction() {
-		return sendTag;
-	}
-
-	public void setSendTag(String sendTag) {
-		this.sendTag = sendTag;
-	}
 	
 	public Method getMethod() {
 		return method;
@@ -91,20 +76,12 @@ public class MethodInvoker implements IRequestMessageInvoker{
 		this.method = method;
 	}
 
-	public Class<?> getRequestMessageClass() {
+	public Class<?> getMessageClass() {
 		return requestMessageClass;
 	}
 
 	public void setRequestMessageClass(Class<?> requestMessageClass) {
 		this.requestMessageClass = requestMessageClass;
-	}
-
-	public Class<?> getSendMessageClass() {
-		return sendMessageClass;
-	}
-
-	public void setSendMessageClass(Class<?> sendMessageClass) {
-		this.sendMessageClass = sendMessageClass;
 	}
 	public int getType() {
 		return type;

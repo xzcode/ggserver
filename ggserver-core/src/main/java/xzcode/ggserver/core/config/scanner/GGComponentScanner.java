@@ -9,17 +9,14 @@ import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ClassInfoList;
 import io.github.classgraph.ScanResult;
+import xzcode.ggserver.core.annotation.GGAction;
 import xzcode.ggserver.core.annotation.GGComponent;
 import xzcode.ggserver.core.annotation.GGController;
 import xzcode.ggserver.core.annotation.GGFilter;
 import xzcode.ggserver.core.annotation.GGOnEvent;
-import xzcode.ggserver.core.annotation.GGRequest;
-import xzcode.ggserver.core.annotation.GGResponse;
 import xzcode.ggserver.core.component.GGComponentManager;
 import xzcode.ggserver.core.event.EventInvokerManager;
 import xzcode.ggserver.core.event.EventMethodInvoker;
-import xzcode.ggserver.core.message.filter.GGRequestFilter;
-import xzcode.ggserver.core.message.filter.GGResponseFilter;
 import xzcode.ggserver.core.message.filter.MessageFilterManager;
 import xzcode.ggserver.core.message.filter.MessageFilterModel;
 import xzcode.ggserver.core.message.receive.RequestMessageManager;
@@ -94,7 +91,7 @@ public class GGComponentScanner {
 				for (Method mtd : methods) {
 
 					// 扫描socketrequest
-					GGRequest requestMessage = mtd.getAnnotation(GGRequest.class);
+					GGAction requestMessage = mtd.getAnnotation(GGAction.class);
 					if (requestMessage != null) {
 
 						MethodInvoker methodInvoker = new MethodInvoker();
@@ -109,16 +106,12 @@ public class GGComponentScanner {
 							}
 						}
 						methodInvoker.setRequestTag(prefix + requestMessage.value());
-						methodInvoker.setSendMessageClass(mtd.getReturnType());
+						
 						Class<?>[] parameterTypes = mtd.getParameterTypes();
 						if (parameterTypes != null && parameterTypes.length > 0) {
 							methodInvoker.setRequestMessageClass(parameterTypes[0]);
 						}
 
-						GGResponse sendMessage = mtd.getAnnotation(GGResponse.class);
-						if (sendMessage != null) {
-							methodInvoker.setSendTag(sendMessage.value());
-						}
 						requestMessageManager.put(requestMessage.value(), methodInvoker);
 					}
 

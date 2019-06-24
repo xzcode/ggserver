@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 
 import xzcode.ggserver.core.session.GGSession;
 import xzcode.ggserver.core.session.GGSessionThreadLocalUtil;
-import xzcode.ggserver.core.session.imp.SocketSession;
 
 /**
  * socket执行任务
@@ -13,25 +12,21 @@ import xzcode.ggserver.core.session.imp.SocketSession;
  * 
  * @author zai 2017-07-30 20:17:18
  */
-public class RequestMessageTask implements Runnable{
+public class ExectionTask implements Runnable{
 	
-	private final static Logger LOGGER = LoggerFactory.getLogger(RequestMessageTask.class);
+	private final static Logger LOGGER = LoggerFactory.getLogger(ExectionTask.class);
 	
-	
-	/**
-	 * socket消息体对象
-	 */
 	private GGSession session;
 	
 	private Runnable calback;
 	
 	
-	public RequestMessageTask() {
+	public ExectionTask() {
 	}
 	
 	
 
-	public RequestMessageTask(Runnable calback,GGSession session) {
+	public ExectionTask(Runnable calback, GGSession session) {
 		super();
 		this.calback = calback;
 		this.session = session;

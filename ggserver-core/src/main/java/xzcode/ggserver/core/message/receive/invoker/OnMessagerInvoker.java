@@ -9,7 +9,7 @@ import xzcode.ggserver.core.message.receive.IOnMessageAction;
  * 2019-01-01 22:11:15
  * @param <T>
  */
-public class OnMessagerInvoker<T> implements IRequestMessageInvoker{
+public class OnMessagerInvoker<T> implements IOnMessageInvoker{
 	
 	
 	/**
@@ -29,14 +29,14 @@ public class OnMessagerInvoker<T> implements IRequestMessageInvoker{
 	private IOnMessageAction<T> onMessage;
 
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public Object invoke(String requestTag, Object message) throws Exception {
+	public void invoke(String requestTag, Object message) throws Exception {
 		onMessage.onMessage((T) message);
-		return null;
 	}
 
 
-	public String getReceiveAction() {
+	public String getAction() {
 		return requestTag;
 	}
 
@@ -46,7 +46,7 @@ public class OnMessagerInvoker<T> implements IRequestMessageInvoker{
 	}
 
 
-	public Class<?> getRequestMessageClass() {
+	public Class<?> getMessageClass() {
 		return requestMessageClass;
 	}
 
@@ -64,14 +64,5 @@ public class OnMessagerInvoker<T> implements IRequestMessageInvoker{
 	public void setOnMessage(IOnMessageAction<T> onMessage) {
 		this.onMessage = onMessage;
 	}
-
-
-	@Override
-	public String getSendAction() {
-		return null;
-	}
-	
-	
-	
 
 }

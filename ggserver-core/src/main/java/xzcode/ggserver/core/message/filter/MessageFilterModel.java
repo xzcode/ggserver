@@ -22,12 +22,9 @@ public class MessageFilterModel {
 
 
 	public MessageFilterModel() {
-		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public MessageFilterModel(int order, Class<?> filterClazz) {
-		super();
 		this.order = order;
 		this.filterClazz = filterClazz;
 	}
