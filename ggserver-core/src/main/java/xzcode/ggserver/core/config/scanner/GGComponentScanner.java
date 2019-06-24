@@ -69,13 +69,6 @@ public class GGComponentScanner {
 				if (filter != null) {
 					MessageFilterModel messageFilterModel = new MessageFilterModel();
 					messageFilterModel.setFilterClazz(clazz);
-					/*
-					if (clazzInstance instanceof GGRequestFilter) {
-						messageFilterModel.setFilterClazz(GGRequestFilter.class);
-					}else if (clazzInstance instanceof GGResponseFilter) {
-						messageFilterModel.setFilterClazz(GGResponseFilter.class);
-					}
-					*/
 					int value = filter.value();
 					int order = filter.order();
 					messageFilterModel.setOrder(value);
@@ -88,9 +81,16 @@ public class GGComponentScanner {
 
 				Method[] methods = clazz.getMethods();
 				GGController ggController = clazz.getAnnotation(GGController.class);
+				String prefix = "";
+				if (ggController != null) {
+					prefix = ggController.actionIdPrefix();
+					if (prefix != null && prefix.isEmpty()) {
+						prefix = ggController.value();
+					}
+				}
 				for (Method mtd : methods) {
 
-					// 扫描socketrequest
+					// 扫描GGAction
 					GGAction requestMessage = mtd.getAnnotation(GGAction.class);
 					if (requestMessage != null) {
 
@@ -98,24 +98,24 @@ public class GGComponentScanner {
 						methodInvoker.setMethod(mtd);
 						//methodInvoker.setComponentObj(clazzInstance);
 						methodInvoker.setComponentClass(clazz);
-						String prefix = "";
-						if (ggController != null) {
-							prefix = ggController.actionIdPrefix();
-							if (prefix != null && prefix.isEmpty()) {
-								prefix = ggController.value();
-							}
+						
+						String action = prefix + requestMessage.value();
+						
+						methodInvoker.setAction(action);
+						
+						if (LOGGER.isInfoEnabled()) {
+							LOGGER.info("GGServer Mapped Message Action: {}", action);
 						}
-						methodInvoker.setRequestTag(prefix + requestMessage.value());
 						
 						Class<?>[] parameterTypes = mtd.getParameterTypes();
 						if (parameterTypes != null && parameterTypes.length > 0) {
 							methodInvoker.setRequestMessageClass(parameterTypes[0]);
 						}
 
-						requestMessageManager.put(requestMessage.value(), methodInvoker);
+						requestMessageManager.put(action, methodInvoker);
 					}
 
-					// 扫描 socketevent
+					// 扫描 GGOnEvent
 					GGOnEvent gGOnEvent = mtd.getAnnotation(GGOnEvent.class);
 					if (gGOnEvent != null) {
 

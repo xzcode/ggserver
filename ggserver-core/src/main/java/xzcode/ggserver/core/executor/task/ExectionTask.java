@@ -20,6 +20,8 @@ public class ExectionTask implements Runnable{
 	
 	private Runnable calback;
 	
+	private Object syncObjc;
+	
 	
 	public ExectionTask() {
 	}
@@ -27,7 +29,12 @@ public class ExectionTask implements Runnable{
 	
 
 	public ExectionTask(Runnable calback, GGSession session) {
-		super();
+		this.calback = calback;
+		this.session = session;
+	}
+	
+	public ExectionTask(Object syncObjc, Runnable calback, GGSession session) {
+		this.syncObjc = syncObjc;
 		this.calback = calback;
 		this.session = session;
 	}
@@ -39,7 +46,14 @@ public class ExectionTask implements Runnable{
 		
 		GGSessionThreadLocalUtil.setSession(this.session);
 		try {
-			calback.run();
+			if (this.syncObjc != null) {
+				synchronized (syncObjc) {
+					calback.run();					
+				}
+			}else {
+				calback.run();
+			}
+			
 		} catch (Exception e) {
 			LOGGER.error("Request Message Task ERROR!!", e);
 		}

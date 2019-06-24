@@ -64,8 +64,13 @@ public class RequestMessageTask implements Runnable{
 		GGSessionThreadLocalUtil.setSession(this.session);
 		String actionStr = null;
 		try {
-			actionStr = new String(action, config.getCharset());
 			
+			if (!this.config.getMessageFilterManager().doPreDeserializeFilters(action, message)) {
+				GGSessionThreadLocalUtil.removeSession();
+				return;
+			}
+			
+			actionStr = new String(action, config.getCharset());
 			
 			IOnMessageInvoker invoker = config.getMessageInvokerManager().get(actionStr);
 			Object msgObj = null;

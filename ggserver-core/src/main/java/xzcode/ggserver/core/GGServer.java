@@ -1,11 +1,7 @@
 package xzcode.ggserver.core;
 
 import java.lang.reflect.ParameterizedType;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
@@ -15,10 +11,9 @@ import xzcode.ggserver.core.config.GGServerConfig;
 import xzcode.ggserver.core.event.EventRunnableInvoker;
 import xzcode.ggserver.core.event.GGEventTask;
 import xzcode.ggserver.core.event.IEventInvoker;
+import xzcode.ggserver.core.executor.task.SyncTask;
 import xzcode.ggserver.core.executor.task.TimeoutRunnable;
 import xzcode.ggserver.core.executor.timeout.IGGServerExecution;
-import xzcode.ggserver.core.handler.serializer.impl.JsonSerializer;
-import xzcode.ggserver.core.handler.serializer.impl.MessagePackSerializer;
 import xzcode.ggserver.core.message.receive.IOnMessageAction;
 import xzcode.ggserver.core.message.receive.RedirectMessageTask;
 import xzcode.ggserver.core.message.receive.invoker.OnMessagerInvoker;
@@ -142,7 +137,7 @@ public class GGServer implements ISendMessage, IGGServerExecution{
 				if (delayMs <= 0) {
 					channel.close();
 				}else {
-					setTimeout(() -> {
+					schedule(() -> {
 						channel.close();
 					}, delayMs);
 				}
@@ -246,23 +241,70 @@ public class GGServer implements ISendMessage, IGGServerExecution{
 	 * @author zai
 	 * 2019-06-23 18:15:41
 	 */
-	public void redirect(String action, Object message) {
+	public void redirect(byte[] action, byte[] message) {
+		this.config.getTaskExecutor().submit(new RedirectMessageTask(action, message, GGSessionThreadLocalUtil.getSession(), config));
+	}
+	/**
+	 * 重定向消息
+	 * 
+	 * @param action
+	 * @param message
+	 * @author zai
+	 * 2019-06-23 18:15:41
+	 */
+	public void redirect(String action, byte[] message) {
 		this.config.getTaskExecutor().submit(new RedirectMessageTask(action, message, GGSessionThreadLocalUtil.getSession(), config));
 	}
 	
 	@Override
-	public ScheduledFuture<?> setTimeout(Runnable runnable, long timeoutMilliSec) {
-		return this.config.getTaskExecutor().schedule(runnable, timeoutMilliSec, TimeUnit.MILLISECONDS);
+	public ScheduledFuture<?> schedule(Runnable runnable, long delayMs) {
+		return this.config.getTaskExecutor().schedule(runnable, delayMs, TimeUnit.MILLISECONDS);
+	}
+	
+	@Override
+	public ScheduledFuture<?> schedule(long delayMs, Runnable runnable) {
+		return this.config.getTaskExecutor().schedule(runnable, delayMs, TimeUnit.MILLISECONDS);
+	}
+	
+	@Override
+	public ScheduledFuture<?> schedule(Object syncObj, Runnable runnable, long delayMs) {
+		return this.config.getTaskExecutor().schedule(new SyncTask(syncObj, runnable), delayMs, TimeUnit.MILLISECONDS);
+	}
+	
+	@Override
+	public ScheduledFuture<?> schedule(Object syncObj, long delayMs, Runnable runnable) {
+		return this.config.getTaskExecutor().schedule(new SyncTask(syncObj, runnable), delayMs, TimeUnit.MILLISECONDS);
 	}
 
 	@Override
-	public ScheduledFuture<?> setTimeout(TimeoutRunnable runnable, long timeoutMilliSec) {
-		ScheduledFuture<?> future = this.config.getTaskExecutor().schedule(runnable, timeoutMilliSec, TimeUnit.MILLISECONDS);
+	public ScheduledFuture<?> schedule(TimeoutRunnable runnable, long delayMs) {
+		ScheduledFuture<?> future = this.config.getTaskExecutor().schedule(runnable, delayMs, TimeUnit.MILLISECONDS);
 		runnable.setTimeoutFuture(future);
 		return future;
 	}
 	
-	public Future<?> submitTask(Runnable task) {
+	@Override
+	public ScheduledFuture<?> schedule(long delayMs, TimeoutRunnable runnable) {
+		ScheduledFuture<?> future = this.config.getTaskExecutor().schedule(runnable, delayMs, TimeUnit.MILLISECONDS);
+		runnable.setTimeoutFuture(future);
+		return future;
+	}
+	
+	@Override
+	public ScheduledFuture<?> schedule(Object syncObj, TimeoutRunnable runnable, long delayMs) {
+		ScheduledFuture<?> future = this.config.getTaskExecutor().schedule(new SyncTask(syncObj, runnable), delayMs, TimeUnit.MILLISECONDS);
+		runnable.setTimeoutFuture(future);
+		return future;
+	}
+	
+	@Override
+	public ScheduledFuture<?> schedule(Object syncObj, long delayMs, TimeoutRunnable runnable) {
+		ScheduledFuture<?> future = this.config.getTaskExecutor().schedule(new SyncTask(syncObj, runnable), delayMs, TimeUnit.MILLISECONDS);
+		runnable.setTimeoutFuture(future);
+		return future;
+	}
+	
+	public Future<?> asyncTask(Runnable task) {
 		return this.config.getTaskExecutor().submit(task);
 	}
 	
@@ -322,134 +364,6 @@ public class GGServer implements ISendMessage, IGGServerExecution{
 	@Override
 	public void sendToAll(String action) {
 		this.config.getSendMessageManager().sendToAll(action);
-	}
-	
-	
-	public static void main(String[] args) throws Exception{
-		int datasize = 100;
-		MessagePackSerializer messagePackSerializer = new MessagePackSerializer();
-		JsonSerializer jsonSerializer = new JsonSerializer();
-		int times = 10 * 10000;
-		ArrayList<SerTestModel> list = new ArrayList<>();
-		for (int i = 0; i < times; i++) {
-			ArrayList<Integer> handcards = new ArrayList<>();
-			handcards.add(123);
-			handcards.add(234);
-			handcards.add(345);
-			handcards.add(456);
-			handcards.add(567);
-			list.add(new SerTestModel("name"+i, i, i, handcards , UUID.randomUUID().toString(), 100000+i+1 + "", System.currentTimeMillis(), "is ok haha " + i, i % 2 == 0));
-		}
-		
-		long starttime = 0;
-		long endtime = 0;
-		
-		messagePackSerializer.serialize(list.get(0));
-		jsonSerializer.serialize(list.get(0));
-		
-		
-		
-		starttime = System.currentTimeMillis();
-		for (SerTestModel data : list) {
-			//messagePackSerializer.serialize(data);	
-			messagePackSerializer.deserialize(jsonSerializer.serialize(data), SerTestModel.class);		
-		}
-		endtime = System.currentTimeMillis() - starttime;
-		
-		System.out.println(endtime);
-		
-		starttime = System.currentTimeMillis();
-		for (SerTestModel data : list) {
-			jsonSerializer.deserialize(jsonSerializer.serialize(data), SerTestModel.class);			
-		}
-		endtime = System.currentTimeMillis() - starttime;
-		
-		System.out.println(endtime);
-	}
-	
-	
-	public static class SerTestModel {
-		private String name;
-		private Integer age;
-		private Integer seatType;
-		private ArrayList<Integer> handcards;
-		private String roundNo;
-		private String roomNo;
-		private Long time;
-		private String message;
-		private boolean success;
-		
-		public SerTestModel() {}
-		
-		public SerTestModel(String name, int age, Integer seatType, ArrayList<Integer> handcards, String roundNo,
-				String roomNo, long time, String message, boolean success) {
-			super();
-			this.name = name;
-			this.age = age;
-			this.seatType = seatType;
-			this.handcards = handcards;
-			this.roundNo = roundNo;
-			this.roomNo = roomNo;
-			this.time = time;
-			this.message = message;
-			this.success = success;
-		}
-		public String getName() {
-			return name;
-		}
-		public void setName(String name) {
-			this.name = name;
-		}
-		public int getAge() {
-			return age;
-		}
-		public void setAge(int age) {
-			this.age = age;
-		}
-		public Integer getSeatType() {
-			return seatType;
-		}
-		public void setSeatType(Integer seatType) {
-			this.seatType = seatType;
-		}
-		public ArrayList<Integer> getHandcards() {
-			return handcards;
-		}
-		public void setHandcards(ArrayList<Integer> handcards) {
-			this.handcards = handcards;
-		}
-		public String getRoundNo() {
-			return roundNo;
-		}
-		public void setRoundNo(String roundNo) {
-			this.roundNo = roundNo;
-		}
-		public String getRoomNo() {
-			return roomNo;
-		}
-		public void setRoomNo(String roomNo) {
-			this.roomNo = roomNo;
-		}
-		public long getTime() {
-			return time;
-		}
-		public void setTime(long time) {
-			this.time = time;
-		}
-		public String getMessage() {
-			return message;
-		}
-		public void setMessage(String message) {
-			this.message = message;
-		}
-		public boolean isSuccess() {
-			return success;
-		}
-		public void setSuccess(boolean success) {
-			this.success = success;
-		}
-		
-		
 	}
 
 }

@@ -12,7 +12,7 @@ import xzcode.ggserver.core.GGServer;
  * @author zai
  * 2019-02-10 14:10:53
  */
-public abstract class GGServerGameController{
+public abstract class GGServerGameController implements IGGServerGameController{
 
 	public static final Logger logger = LoggerFactory.getLogger(GGServerGameController.class);
 	
@@ -24,13 +24,5 @@ public abstract class GGServerGameController{
 	public GGServerGameController() {
 		this.gg = getGGServer();
 	}
-
-	/**
-	 * 获取GGServer对象
-	 * 
-	 * @return
-	 * @author zai 2019-01-22 18:06:30
-	 */
-	public abstract GGServer getGGServer();
 
 }

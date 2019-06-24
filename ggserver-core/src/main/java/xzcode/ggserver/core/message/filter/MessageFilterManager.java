@@ -24,6 +24,11 @@ public class MessageFilterManager {
 	private final ArrayList<MessageFilterModel> requestFilters = new ArrayList<>(1);
 	
 	/**
+	 * 重定向过滤器
+	 */
+	private final ArrayList<MessageFilterModel> preDeserializeFilters = new ArrayList<>(1);
+	
+	/**
 	 * 响应过滤器
 	 */
 	private final ArrayList<MessageFilterModel> responseFilters = new ArrayList<>(1);
@@ -38,10 +43,19 @@ public class MessageFilterManager {
 	 */
 	public void updateComponentObject(GGComponentManager componentObjectMapper) {
 		
-		for (MessageFilterModel filterModel : requestFilters) {
+		updateComponentObject(componentObjectMapper, requestFilters);
+		updateComponentObject(componentObjectMapper, preDeserializeFilters);
+		updateComponentObject(componentObjectMapper, responseFilters);
+	}
+	
+	private void updateComponentObject(GGComponentManager componentObjectMapper, ArrayList<MessageFilterModel> filters) {
+		
+		for (MessageFilterModel filterModel : filters) {
 			Object object = componentObjectMapper.getComponentObject(filterModel.getFilterClazz());
 			if (object instanceof GGRequestFilter ) {
 				filterModel.setRequestFilter((GGRequestFilter) object);				
+			}else if (object instanceof GGPreDeserializeFilter ) {
+				filterModel.setPreDeserializeFilter((GGPreDeserializeFilter) object);	
 			}else if (object instanceof GGResponseFilter ) {
 				filterModel.setResponseFilter((GGResponseFilter) object);	
 			}
@@ -65,6 +79,12 @@ public class MessageFilterManager {
 					sort(requestFilters);
 				}
 				requestFilters.trimToSize();
+			}else if (type == GGPreDeserializeFilter.class ) {
+				preDeserializeFilters.add(filterModel);
+				if (responseFilters.size() > 1) {
+					sort(responseFilters);
+				}
+				responseFilters.trimToSize();
 			}else if (type == GGResponseFilter.class ) {
 				responseFilters.add(filterModel);
 				if (responseFilters.size() > 1) {
@@ -77,12 +97,7 @@ public class MessageFilterManager {
 	}
 	
 	public void sort(List<MessageFilterModel> list) {
-		list.sort((o1,o2) -> {
-			if (o1.getOrder() > o2.getOrder()) {
-				return 1;
-			}
-			return -1;
-		});
+		list.sort((o1,o2) -> o1.getOrder() - o2.getOrder());
 	}
 	
 	/**
@@ -100,7 +115,22 @@ public class MessageFilterManager {
 			filter = filterModel.getRequestFilter();
 			if (!filter.doFilter(action, message)) {
 				if (LOGGER.isDebugEnabled()) {
-					LOGGER.debug("Message filtered by {}, requestTag:{} .", filter.getClass().getName(),action);					
+					LOGGER.debug("Message filtered by {}, action:{} .", filter.getClass().getName(),action);					
+				}
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	
+	public boolean doPreDeserializeFilters(byte[] action, byte[] message) throws Exception{
+		GGPreDeserializeFilter filter = null;
+		for (MessageFilterModel filterModel : preDeserializeFilters) {
+			filter = filterModel.getPreDeserializeFilter();
+			if (!filter.doFilter(action, message)) {
+				if (LOGGER.isDebugEnabled()) {
+					LOGGER.debug("Message filtered by {}, action:{} .", filter.getClass().getName(),action);					
 				}
 				return false;
 			}
@@ -123,7 +153,7 @@ public class MessageFilterManager {
 			filter = filterModel.getResponseFilter();
 			if (!filter.doFilter(userId, action, message)) {
 				if (LOGGER.isDebugEnabled()) {
-					LOGGER.debug("Message filtered by {}, requestTag:{} .", filter.getClass().getName(),action);					
+					LOGGER.debug("Message filtered by {}, action:{} .", filter.getClass().getName(),action);					
 				}
 				return false;
 			}

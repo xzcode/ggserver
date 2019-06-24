@@ -14,8 +14,20 @@ public class MessageFilterModel {
 	
 	private Class<?> filterClazz;
 	
+	/**
+	 * 请求过滤器
+	 */
 	private GGRequestFilter requestFilter;
 	
+	/**
+	 * 预反序列化过滤器
+	 */
+	private GGPreDeserializeFilter preDeserializeFilter;
+	
+	
+	/**
+	 * 响应过滤器
+	 */
 	private GGResponseFilter responseFilter;
 	
 	
@@ -60,5 +72,17 @@ public class MessageFilterModel {
 	public void setResponseFilter(GGResponseFilter responseFilter) {
 		this.responseFilter = responseFilter;
 	}
+
+	public GGPreDeserializeFilter getPreDeserializeFilter() {
+		return preDeserializeFilter;
+	}
+
+	public void setPreDeserializeFilter(GGPreDeserializeFilter preDeserializeFilter) {
+		this.preDeserializeFilter = preDeserializeFilter;
+	}
+
+	
+	
+	
 
 }

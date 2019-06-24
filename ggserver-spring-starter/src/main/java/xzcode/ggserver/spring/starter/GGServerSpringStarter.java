@@ -94,7 +94,7 @@ public class GGServerSpringStarter implements ApplicationContextAware {
             //动态注册bean.
             defaultListableBeanFactory.registerBeanDefinition(beanName, beanDefinitionBuilder.getBeanDefinition());
             Object bean = applicationContext.getBean(beanName);
-            LOGGER.info("Socket server bean defind:{}", bean);
+            LOGGER.info("GGServer bean defind:{}", bean);
             map.put(key, bean);
             
         }

@@ -54,22 +54,23 @@ public class RequestMessageManager {
 		IOnMessageInvoker invoker = map.get(action);
 		if (invoker != null) {
 			invoker.invoke(action, message);
+			return;
 		}
-		LOGGER.warn("No method mapped with tag: {} ", action);
+		LOGGER.warn("No such action: {} ", action);
 	}
 
 	/**
 	 * 添加缓存方法
-	 * @param requestTag
+	 * @param action
 	 *
 	 * @author zai
 	 * 2017-07-29
 	 */
-	public void put(String requestTag, IOnMessageInvoker onMessageInvoker) {
-		if (map.containsKey(requestTag)) {
-			throw new RuntimeException("requestTag '"+requestTag+"' is already mapped!");
+	public void put(String action, IOnMessageInvoker onMessageInvoker) {
+		if (map.containsKey(action)) {
+			throw new RuntimeException("action '"+action+"' is already mapped!");
 		}
-		map.put(requestTag, onMessageInvoker);
+		map.put(action, onMessageInvoker);
 	}
 
 

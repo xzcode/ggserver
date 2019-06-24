@@ -18,7 +18,7 @@ public class MethodInvoker implements IOnMessageInvoker{
 	/**
 	 * 请求标识
 	 */
-	private String requestTag;
+	private String action;
 	
 	/**
 	 * 接收消息的class类型
@@ -60,13 +60,12 @@ public class MethodInvoker implements IOnMessageInvoker{
 	
 
 	public String getAction() {
-		return requestTag;
+		return action;
 	}
 
-	public void setRequestTag(String requestTag) {
-		this.requestTag = requestTag;
+	public void setAction(String action) {
+		this.action = action;
 	}
-
 	
 	public Method getMethod() {
 		return method;

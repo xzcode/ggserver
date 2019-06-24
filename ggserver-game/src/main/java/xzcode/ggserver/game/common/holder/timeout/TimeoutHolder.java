@@ -46,7 +46,7 @@ public class TimeoutHolder implements TimeoutRunnable{
 	 * 2019-04-22 18:06:06
 	 */
 	public TimeoutHolder startTask() {
-		gg.setTimeout(this, timeoutMs);
+		gg.schedule(this, timeoutMs);
 		return this;
 	}
 	

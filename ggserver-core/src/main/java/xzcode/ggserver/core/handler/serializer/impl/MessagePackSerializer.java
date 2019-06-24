@@ -1,13 +1,13 @@
 package xzcode.ggserver.core.handler.serializer.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import xzcode.ggserver.core.handler.serializer.ISerializer;
-
 import org.msgpack.core.MessageBufferPacker;
 import org.msgpack.core.MessagePack;
 import org.msgpack.core.MessageUnpacker;
 import org.msgpack.jackson.dataformat.MessagePackFactory;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import xzcode.ggserver.core.handler.serializer.ISerializer;
 
 /**
  * 基于MessagePack序列化库的实现
@@ -53,8 +53,8 @@ public class MessagePackSerializer implements ISerializer {
             	unpacker.close();
             	return (T) string;
 			}
-				
 			return objectMapper.readValue(bytes, t);
 	}
+	
 
 }
