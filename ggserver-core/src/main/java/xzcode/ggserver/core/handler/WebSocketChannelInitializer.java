@@ -50,7 +50,6 @@ public class WebSocketChannelInitializer extends ChannelInitializer<SocketChanne
 		   	 
 	   	}
 	   	
-	   	
 	   	ch.pipeline().addLast("HttpServerCodec", new HttpServerCodec());
 	   	ch.pipeline().addLast("HttpObjectAggregator", new HttpObjectAggregator(config.getHttpMaxContentLength()));
 	   	ch.pipeline().addLast("WebSocketInboundFrameHandler", new WebSocketInboundFrameHandler(this.config));

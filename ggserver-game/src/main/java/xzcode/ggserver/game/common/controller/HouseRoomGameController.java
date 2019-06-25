@@ -44,7 +44,7 @@ extends
 	protected Class<R> rClass;
 	protected Class<H> hClass;
 	
-	private Class<?> getSuperClassGenericsClass(int index){
+	protected Class<?> getSuperClassGenericsClass(int index){
 		return (Class<?>) ((ParameterizedType)this.getClass().getGenericSuperclass()).getActualTypeArguments()[index];
 	}
 	

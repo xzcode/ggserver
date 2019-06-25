@@ -242,7 +242,7 @@ public class GGServer implements ISendMessage, IGGServerExecution{
 	 * 2019-06-23 18:15:41
 	 */
 	public void redirect(byte[] action, byte[] message) {
-		this.config.getTaskExecutor().submit(new RedirectMessageTask(action, message, GGSessionThreadLocalUtil.getSession(), config));
+		new RedirectMessageTask(action, message, GGSessionThreadLocalUtil.getSession(), config).run();
 	}
 	/**
 	 * 重定向消息
@@ -253,7 +253,7 @@ public class GGServer implements ISendMessage, IGGServerExecution{
 	 * 2019-06-23 18:15:41
 	 */
 	public void redirect(String action, byte[] message) {
-		this.config.getTaskExecutor().submit(new RedirectMessageTask(action, message, GGSessionThreadLocalUtil.getSession(), config));
+		new RedirectMessageTask(action, message, GGSessionThreadLocalUtil.getSession(), config).run();
 	}
 	
 	@Override
