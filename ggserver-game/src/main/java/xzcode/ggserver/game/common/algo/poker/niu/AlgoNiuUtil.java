@@ -1,4 +1,4 @@
-package xzcode.ggserver.game.common.algo.poker.bj21;
+package xzcode.ggserver.game.common.algo.poker.niu;
 
 import xzcode.ggserver.game.common.algo.poker.BasicPokerAlgoUtil;
 
@@ -8,23 +8,23 @@ import xzcode.ggserver.game.common.algo.poker.BasicPokerAlgoUtil;
  * @author zai
  * 2019-05-25 17:09:07
  */
-public class AlgoBj21Util extends BasicPokerAlgoUtil{
+public class AlgoNiuUtil extends BasicPokerAlgoUtil{
 	
 	/**
 	 * 爆牌结果常量
 	 */
-	private final AlgoBj21CheckResult EXPLODED_CHECK_RESULT = new AlgoBj21CheckResult(AlgoBj21CardType.EXPLODED);
+	private final AlgoNiuCheckResult EXPLODED_CHECK_RESULT = new AlgoNiuCheckResult(AlgoNiuCardType.EXPLODED);
 	
 	/**
 	 * 五小龙结果常量
 	 */
-	private final AlgoBj21CheckResult FIVE_DRAGONS_CHECK_RESULT = new AlgoBj21CheckResult(AlgoBj21CardType.FIVE_DRAGONS);
+	private final AlgoNiuCheckResult FIVE_DRAGONS_CHECK_RESULT = new AlgoNiuCheckResult(AlgoNiuCardType.FIVE_DRAGONS);
 	
 	
 	/**
 	 * 黑杰克结果常量
 	 */
-	private final AlgoBj21CheckResult BLACK_JACK_CHECK_RESULT = new AlgoBj21CheckResult(AlgoBj21CardType.BLACK_JACK);
+	private final AlgoNiuCheckResult BLACK_JACK_CHECK_RESULT = new AlgoNiuCheckResult(AlgoNiuCardType.BLACK_JACK);
 	
 	/**
 	 * 最大点数
@@ -39,7 +39,7 @@ public class AlgoBj21Util extends BasicPokerAlgoUtil{
 	 * @author zai
 	 * 2019-05-25 16:56:20
 	 */
-	public AlgoBj21CheckResult checkCardType(int[] cards) {
+	public AlgoNiuCheckResult checkCardType(int[] cards) {
 		
 		//是否爆牌
 		
@@ -68,11 +68,11 @@ public class AlgoBj21Util extends BasicPokerAlgoUtil{
 			int pointsA = getPointsA11(cards);
 			//如果没爆牌，返回两个点数
 			if (!isExploded(pointsA)) {
-				return new AlgoBj21CheckResult(AlgoBj21CardType.DOT, points, pointsA);
+				return new AlgoNiuCheckResult(AlgoNiuCardType.DOT, points, pointsA);
 			}
 		}
 		
-		return new AlgoBj21CheckResult(AlgoBj21CardType.DOT, points);
+		return new AlgoNiuCheckResult(AlgoNiuCardType.DOT, points);
 	}
 	
 	/**
