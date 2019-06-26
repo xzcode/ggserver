@@ -371,6 +371,12 @@ extends
 	};
 
 	@Override
+	public void bcToAllPlayer(R room, String actionId) {
+		eachPlayer(room, (player) -> {
+			getGGServer().send(player.getPlayerId(), actionId, null);
+		});
+	}
+	@Override
 	public void bcToAllPlayer(R room, String actionId, Object message) {
 		eachPlayer(room, (player) -> {
 			getGGServer().send(player.getPlayerId(), actionId, message);

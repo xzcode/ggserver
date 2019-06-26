@@ -362,6 +362,17 @@ H extends House<P, R, H>
 	 */
 	List<P> getInGamePlayerList(R room);
 
+	
+	/**
+	 * 广播给所有玩家
+	 * 
+	 * @param room
+	 * @param actionId
+	 * @author zai
+	 * 2019-06-26 11:06:07
+	 */
+	void bcToAllPlayer(R room, String actionId);
+
 
 	
 
