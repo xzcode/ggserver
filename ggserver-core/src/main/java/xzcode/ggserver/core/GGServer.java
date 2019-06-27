@@ -267,13 +267,13 @@ public class GGServer implements ISendMessage, IGGServerExecution{
 	}
 	
 	@Override
-	public ScheduledFuture<?> schedule(Object syncObj, Runnable runnable, long delayMs) {
-		return this.config.getTaskExecutor().schedule(new SyncTask(syncObj, runnable), delayMs, TimeUnit.MILLISECONDS);
+	public ScheduledFuture<?> schedule(Object syncLock, Runnable runnable, long delayMs) {
+		return this.config.getTaskExecutor().schedule(new SyncTask(syncLock, runnable), delayMs, TimeUnit.MILLISECONDS);
 	}
 	
 	@Override
-	public ScheduledFuture<?> schedule(Object syncObj, long delayMs, Runnable runnable) {
-		return this.config.getTaskExecutor().schedule(new SyncTask(syncObj, runnable), delayMs, TimeUnit.MILLISECONDS);
+	public ScheduledFuture<?> schedule(Object syncLock, long delayMs, Runnable runnable) {
+		return this.config.getTaskExecutor().schedule(new SyncTask(syncLock, runnable), delayMs, TimeUnit.MILLISECONDS);
 	}
 
 	@Override
@@ -291,15 +291,15 @@ public class GGServer implements ISendMessage, IGGServerExecution{
 	}
 	
 	@Override
-	public ScheduledFuture<?> schedule(Object syncObj, TimeoutRunnable runnable, long delayMs) {
-		ScheduledFuture<?> future = this.config.getTaskExecutor().schedule(new SyncTask(syncObj, runnable), delayMs, TimeUnit.MILLISECONDS);
+	public ScheduledFuture<?> schedule(Object syncLock, TimeoutRunnable runnable, long delayMs) {
+		ScheduledFuture<?> future = this.config.getTaskExecutor().schedule(new SyncTask(syncLock, runnable), delayMs, TimeUnit.MILLISECONDS);
 		runnable.setTimeoutFuture(future);
 		return future;
 	}
 	
 	@Override
-	public ScheduledFuture<?> schedule(Object syncObj, long delayMs, TimeoutRunnable runnable) {
-		ScheduledFuture<?> future = this.config.getTaskExecutor().schedule(new SyncTask(syncObj, runnable), delayMs, TimeUnit.MILLISECONDS);
+	public ScheduledFuture<?> schedule(Object syncLock, long delayMs, TimeoutRunnable runnable) {
+		ScheduledFuture<?> future = this.config.getTaskExecutor().schedule(new SyncTask(syncLock, runnable), delayMs, TimeUnit.MILLISECONDS);
 		runnable.setTimeoutFuture(future);
 		return future;
 	}

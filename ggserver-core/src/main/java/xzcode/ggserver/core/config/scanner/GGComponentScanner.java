@@ -52,11 +52,12 @@ public class GGComponentScanner {
 		.whitelistPackages(packageName)
 		.scan();
 		
+		Class<?> clazz = null;
 		ClassInfoList classInfoList = scanResult.getClassesWithAnnotation(GGComponent.class.getName());
 		for (ClassInfo classInfo : classInfoList) {
 
 			
-			Class<?> clazz = classInfo.loadClass();
+			clazz = classInfo.loadClass();
 
 			try {
 				if (clazz == GGController.class) {
@@ -133,7 +134,7 @@ public class GGComponentScanner {
 
 				}
 			} catch (Exception e) {
-				throw new RuntimeException(e);
+				throw new RuntimeException(clazz.getName(), e);
 			}
 		}
 	}

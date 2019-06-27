@@ -25,13 +25,35 @@ public class TimeoutHolder implements TimeoutRunnable{
 	 */
 	protected ScheduledFuture<?> timeoutFuture;
 	
+	/**
+	 * 同步锁
+	 */
+	protected Object syncLock;	
 	
+	/**
+	 * ggserver对象
+	 */
 	protected GGServer gg;
 	
 	protected long timeoutMs;
 	
 	
 	public static TimeoutHolder create(GGServer gg, TimeoutAction timeoutAction, long timeoutMs) {
+		TimeoutHolder timeoutHolder = new TimeoutHolder();
+		timeoutHolder.onTimeout(timeoutAction);
+		timeoutHolder.setGg(gg);
+		timeoutHolder.setTimeoutMs(timeoutMs);
+		return timeoutHolder;
+	}
+	public static TimeoutHolder create(GGServer gg, long timeoutMs, Object syncLock, TimeoutAction timeoutAction) {
+		TimeoutHolder timeoutHolder = new TimeoutHolder();
+		timeoutHolder.onTimeout(timeoutAction);
+		timeoutHolder.setGg(gg);
+		timeoutHolder.setTimeoutMs(timeoutMs);
+		timeoutHolder.setSyncLock(syncLock);
+		return timeoutHolder;
+	}
+	public static TimeoutHolder create(GGServer gg, long timeoutMs, TimeoutAction timeoutAction) {
 		TimeoutHolder timeoutHolder = new TimeoutHolder();
 		timeoutHolder.onTimeout(timeoutAction);
 		timeoutHolder.setGg(gg);
@@ -46,6 +68,10 @@ public class TimeoutHolder implements TimeoutRunnable{
 	 * 2019-04-22 18:06:06
 	 */
 	public TimeoutHolder startTask() {
+		if (this.syncLock != null) {
+			gg.schedule(this.syncLock, this, timeoutMs);
+			return this;
+		}
 		gg.schedule(this, timeoutMs);
 		return this;
 	}
@@ -185,5 +211,16 @@ public class TimeoutHolder implements TimeoutRunnable{
 	public GGServer getGg() {
 		return gg;
 	}
+	public Object getSyncLock() {
+		return syncLock;
+	}
+	public void setSyncLock(Object syncLock) {
+		this.syncLock = syncLock;
+	}
+	public void setTimeoutAction(TimeoutAction timeoutAction) {
+		this.timeoutAction = timeoutAction;
+	}
+	
+	
 	
 }

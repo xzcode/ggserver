@@ -3,9 +3,6 @@ package xzcode.ggserver.core.executor.task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import xzcode.ggserver.core.session.GGSession;
-import xzcode.ggserver.core.session.GGSessionThreadLocalUtil;
-
 /**
  * 同步执行器
  * 
@@ -18,15 +15,15 @@ public class SyncTask implements Runnable{
 	
 	private Runnable runnable;
 	
-	private Object syncObjc;
+	private Object syncLock;
 	
 	
 	public SyncTask() {
 	}
 	
 	
-	public SyncTask(Object syncObjc, Runnable runnable) {
-		this.syncObjc = syncObjc;
+	public SyncTask(Object syncLock, Runnable runnable) {
+		this.syncLock = syncLock;
 		this.runnable = runnable;
 	}
 
@@ -34,8 +31,8 @@ public class SyncTask implements Runnable{
 	public void run() {
 		
 		try {
-			if (this.syncObjc != null) {
-				synchronized (syncObjc) {
+			if (this.syncLock != null) {
+				synchronized (syncLock) {
 					runnable.run();					
 				}
 			}else {

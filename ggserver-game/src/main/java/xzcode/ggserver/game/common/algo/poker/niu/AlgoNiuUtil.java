@@ -10,21 +10,6 @@ import xzcode.ggserver.game.common.algo.poker.BasicPokerAlgoUtil;
  */
 public class AlgoNiuUtil extends BasicPokerAlgoUtil{
 	
-	/**
-	 * 爆牌结果常量
-	 */
-	private final AlgoNiuCheckResult EXPLODED_CHECK_RESULT = new AlgoNiuCheckResult(AlgoNiuCardType.EXPLODED);
-	
-	/**
-	 * 五小龙结果常量
-	 */
-	private final AlgoNiuCheckResult FIVE_DRAGONS_CHECK_RESULT = new AlgoNiuCheckResult(AlgoNiuCardType.FIVE_DRAGONS);
-	
-	
-	/**
-	 * 黑杰克结果常量
-	 */
-	private final AlgoNiuCheckResult BLACK_JACK_CHECK_RESULT = new AlgoNiuCheckResult(AlgoNiuCardType.BLACK_JACK);
 	
 	/**
 	 * 最大点数
@@ -76,26 +61,15 @@ public class AlgoNiuUtil extends BasicPokerAlgoUtil{
 	}
 	
 	/**
-	 * 是否五小龙
+	 * 是否五小牛
 	 * 
 	 * @param cards
 	 * @return
 	 * @author zai
 	 * 2019-05-27 15:23:10
 	 */
-	public boolean isFiveDragons(int[] cards) {
-		if (cards.length < 5) {
-			return false;
-		}
-		int points = 0;
-		for (int c : cards) {
-			int v = c % 100;
-			if (v > 10) {
-				v = 10;
-			}
-			points += v;
-		}
-		return points <= MAX_POINTS;
+	public boolean isFiveNiu(int[] cards) {
+		return true;
 	}
 	
 	/**
