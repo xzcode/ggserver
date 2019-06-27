@@ -18,6 +18,12 @@ public class Player {
 	 */
 	protected String playerNo; 
 	
+	
+	/**
+	 * 用户类型
+	 */
+	protected int userType; 
+	
 	/**
 	 * 用户昵称
 	 */
@@ -82,6 +88,16 @@ public class Player {
 
 	public void setOnline(boolean online) {
 		this.online = online;
+	}
+
+
+	public int getUserType() {
+		return userType;
+	}
+
+
+	public void setUserType(int userType) {
+		this.userType = userType;
 	}
 
 
