@@ -1,7 +1,7 @@
 package xzcode.ggserver.game.common.algo.poker.niu;
 
 /**
- * 21点牌型结果
+ * 牌型结果
  * 
  * @author zai
  * 2019-05-27 14:39:39
@@ -12,7 +12,17 @@ public class AlgoNiuCheckResult {
 	private int cardType;
 	
 	//点数
-	private Integer points;
+	private int points;
+	
+
+	public AlgoNiuCheckResult(int cardType) {
+		this.cardType = cardType;
+	}
+
+	public AlgoNiuCheckResult(int cardType, int points) {
+		this.cardType = cardType;
+		this.points = points;
+	}
 
 	public int getCardType() {
 		return cardType;
@@ -22,7 +32,7 @@ public class AlgoNiuCheckResult {
 		this.cardType = cardType;
 	}
 
-	public Integer getPoints() {
+	public int getPoints() {
 		return points;
 	}
 

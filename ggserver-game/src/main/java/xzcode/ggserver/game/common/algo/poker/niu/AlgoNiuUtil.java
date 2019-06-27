@@ -26,38 +26,9 @@ public class AlgoNiuUtil extends BasicPokerAlgoUtil{
 	 */
 	public AlgoNiuCheckResult checkCardType(int[] cards) {
 		
-		//是否爆牌
 		
-		if (isExploded(cards)) {
-			return EXPLODED_CHECK_RESULT;
-		}
 		
-		//是否黑杰克
-		
-		if (isBlackJack(cards)) {
-			return BLACK_JACK_CHECK_RESULT;
-		}
-		
-		//是否五小龙
-		
-		if (isFiveDragons(cards)) {
-			return FIVE_DRAGONS_CHECK_RESULT;
-		}
-		
-		//获取点数
-		int points = getPointsA1(cards);
-		
-		//如果存在A
-		if (hasA(cards)) {
-			//获取A为11时候点数
-			int pointsA = getPointsA11(cards);
-			//如果没爆牌，返回两个点数
-			if (!isExploded(pointsA)) {
-				return new AlgoNiuCheckResult(AlgoNiuCardType.DOT, points, pointsA);
-			}
-		}
-		
-		return new AlgoNiuCheckResult(AlgoNiuCardType.DOT, points);
+		return null;
 	}
 	
 	/**
