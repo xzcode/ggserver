@@ -125,7 +125,7 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 	 * @author zai
 	 * 2019-05-28 15:03:24
 	 */
-	public static AlgoDzzCardType checkCardType(int[] cards) {
+	public static int checkCardType(int[] cards) {
 		
 		if (cards.length == 1) {
 			return AlgoDzzCardType.DAN_ZHANG;
@@ -163,12 +163,46 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 			}
 			
 			//判断三带一
-			
-			
-			
+			if (
+				cards[0] == cards[1] 
+				&& 
+				cards[0] == cards[2]
+				&& 
+				cards[0] != cards[3]
+				) {
+				return AlgoDzzCardType.SAN_DAI_YI;
+			}
 			return AlgoDzzCardType.NONE;
 		}
-		return null;
+		
+		if (cards.length == 5) {
+			
+			//判断顺子
+			if (
+				cards[0] == cards[1] 
+				&& 
+				cards[0] == cards[2]
+				&& 
+				cards[0] == cards[3]
+				) {
+				return AlgoDzzCardType.ZHA_DAN;
+			}
+			
+			//判断同花
+			if (
+				cards[0] == cards[1] 
+				&& 
+				cards[0] == cards[2]
+				&& 
+				cards[0] != cards[3]
+				) {
+				return AlgoDzzCardType.SAN_DAI_YI;
+			}
+			return AlgoDzzCardType.NONE;
+		}
+		
+		
+		return AlgoDzzCardType.NONE;
 		
 		
 		

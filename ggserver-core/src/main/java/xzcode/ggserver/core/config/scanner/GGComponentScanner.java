@@ -1,6 +1,10 @@
 package xzcode.ggserver.core.config.scanner;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -79,8 +83,17 @@ public class GGComponentScanner {
 					filterManager.add(messageFilterModel);
 
 				}
-
-				Method[] methods = clazz.getMethods();
+				Set<Method> methods = new HashSet<>();
+				Method[] mtds = clazz.getMethods();
+				for (Method mtd : mtds) {
+					methods.add(mtd);
+				}
+				
+				mtds = clazz.getDeclaredMethods();
+				for (Method mtd : mtds) {
+					methods.add(mtd);
+				}
+				
 				GGController ggController = clazz.getAnnotation(GGController.class);
 				String prefix = "";
 				if (ggController != null) {

@@ -43,23 +43,6 @@ public class AlgoNiuUtil extends BasicPokerAlgoUtil{
 		return true;
 	}
 	
-	/**
-	 * 是否黑杰克
-	 * 
-	 * @param cards
-	 * @return
-	 * @author zai
-	 * 2019-05-27 15:04:05
-	 */
-	public boolean isBlackJack(int[] cards) {
-		if (cards.length > 2) {
-			return false;
-		}
-		int val1 = cards[0] % 100;
-		int val2 = cards[1] % 100;
-		
-		return (val1 == 1 && val2 >= 10) || (val2 == 1 && val1 >= 10);
-	}
 	
 	/**
 	 * 是否爆牌

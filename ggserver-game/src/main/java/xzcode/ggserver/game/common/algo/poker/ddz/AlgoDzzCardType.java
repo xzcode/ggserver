@@ -1,65 +1,50 @@
 package xzcode.ggserver.game.common.algo.poker.ddz;
 
 /**
- * 三公牌型
+ * 斗地主牌型
  * 
  * @author zai
  * 2019-05-27 18:36:23
  */
-public enum AlgoDzzCardType {
+public interface AlgoDzzCardType {
 	
-	NONE(100, "单张"),
-	DAN_ZHANG(101, "单张"),
-	DUI_ZI(102, "对子"),
-	SAN_ZHANG(103, "三张"),
-	SAN_DAI_YI(104, "三带一"),
-	SAN_DAI_ER(105, "三带二"),
-	SI_DAI_ER(106, "四带二"),
-	DAN_SHUN_ZI(107, "单顺子"),
-	SHUANG_SHUN_ZI(108, "双顺子"),
-	SAN_SHUN_ZI(109, "三顺子"),
-	FEI_JI(110, "飞机"),
-	ZHA_DAN(111, "炸弹"),
-	WANG_ZHA(112, "王炸"),
-	;
+	/**无牌型*/
+	int NONE = 100;
+
+	/**单张*/
+	int DAN_ZHANG = 101;
 	
+	/**对子*/
+	int DUI_ZI = 102;
 	
-	private int value;
+	/**三张*/
+	int SAN_ZHANG = 103; 
 	
-	private String name;
+	/**三带一*/
+	int SAN_DAI_YI = 104;
 	
-		
-	private AlgoDzzCardType(int value, String name) {
-		this.value = value;
-		this.name = name;
-	}
-
-
-
-	public int getValue() {
-		return value;
-	}
-
-
-
-	public void setValue(int value) {
-		this.value = value;
-	}
-
-
-
-	public String getName() {
-		return name;
-	}
-
-
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-
-
+	/**三带二*/
+	int SAN_DAI_ER = 105;
 	
+	/**四带二*/
+	int SI_DAI_ER = 106; 
+	
+	/**单顺子*/
+	int DAN_SHUN_ZI = 107;
+	
+	/**双顺子*/
+	int SHUANG_SHUN_ZI = 108; 
+	
+	/**三顺子*/
+	int SAN_SHUN_ZI = 109; 
+	
+	/**飞机*/
+	int FEI_JI = 110; 
+	
+	/**炸弹*/
+	int ZHA_DAN = 111; 
+	
+	/**王炸*/
+	int WANG_ZHA = 112; 
 	
 }

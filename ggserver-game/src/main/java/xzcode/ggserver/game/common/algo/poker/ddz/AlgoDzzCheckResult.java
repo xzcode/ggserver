@@ -9,36 +9,29 @@ package xzcode.ggserver.game.common.algo.poker.ddz;
 public class AlgoDzzCheckResult {
 	
 	//牌型
-	private AlgoDzzCardType algoDzzCardType;
+	private int cardType;
 	
 	//点数
 	private Integer points;
 	
-	
-	
-	
 
-	public AlgoDzzCheckResult(AlgoDzzCardType algoDzzCardType) {
-		this.algoDzzCardType = algoDzzCardType;
+	public int getCardType() {
+		return cardType;
 	}
 
-	public AlgoDzzCheckResult(AlgoDzzCardType algoDzzCardType, Integer points) {
-		this.algoDzzCardType = algoDzzCardType;
-		this.points = points;
-	}
-	
-
-	public AlgoDzzCardType getBj21CardType() {
-		return algoDzzCardType;
-	}
-
-	public AlgoDzzCardType getBj21Type() {
-		return algoDzzCardType;
+	public void setCardType(int cardType) {
+		this.cardType = cardType;
 	}
 
 	public Integer getPoints() {
 		return points;
 	}
+
+	public void setPoints(Integer points) {
+		this.points = points;
+	}
+	
+	
 
 	
 }
