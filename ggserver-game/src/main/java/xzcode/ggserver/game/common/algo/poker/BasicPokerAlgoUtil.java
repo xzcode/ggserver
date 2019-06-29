@@ -175,6 +175,22 @@ public class BasicPokerAlgoUtil extends BasicAlgoUtil{
 	}
 	
 	/**
+	 * 去除花色(百位)
+	 * 
+	 * @param cards
+	 * @return
+	 * @author zai
+	 * 2019-06-29 10:50:52
+	 */
+	public int[] removeSuits(int[] cards) {
+		int[] ncards = new int[cards.length];
+		for (int i = 0; i < cards.length; i++) {
+			ncards[i] = cards[i] % 100;
+		}
+		return ncards;
+	}
+	
+	/**
 	 * 
 	 * 判断是否顺子(必须先进行升序排序，A = 1，无 大小王)
 	 * 
@@ -184,21 +200,15 @@ public class BasicPokerAlgoUtil extends BasicAlgoUtil{
 	 * 2019-06-28 10:59:28
 	 */
 	public boolean isStraight(int[] cards) {
-		int lastVal = -1;
-		for (int i : cards) {
-			int iVal = i % 100;
-			if (lastVal == -1) {
-				lastVal = iVal;
-			} else {
-				if (lastVal + 1 == iVal) {
-					lastVal = iVal;
-				}else {
-					return false;
-				}
+		for (int i = 1; i < cards.length; i++) {
+			if (cards[i] % 100 != cards[i - 1] % 100 + 1) {
+				return false;
 			}
 		}
 		return true;
 	}
+	
+	
 	
 	/**
 	 * 是否顺子（必须先进行升序排序，）
@@ -388,6 +398,22 @@ public class BasicPokerAlgoUtil extends BasicAlgoUtil{
 		}
 		return count;
 	}
+	
+	/**
+	 * 转换成list
+	 * 
+	 * @param cards
+	 * @return
+	 * @author zai
+	 * 2019-06-29 17:21:59
+	 */
+	public List<Integer> tranferToValues(int[] cards) {
+		List<Integer> list = new ArrayList<>(cards.length);
+		for (int i = 0; i < cards.length; i++) {
+			list.add(cards[i]);
+		}
+		return list;
+	}
 
 	public static void main(String[] args) {
 		BasicPokerAlgoUtil util = new BasicPokerAlgoUtil();
@@ -412,17 +438,19 @@ public class BasicPokerAlgoUtil extends BasicAlgoUtil{
 		int[] testArr1 = new int[] {101, 102 ,101, 101};
 		
 		//预热
-		boolean straight = util.isStraight(new int[] {101,105,106,102,109});
+		boolean straight = util.isStraight(new int[] {101,102,103,104,105});
 		boolean straightA = util.isStraight(new int[] {101,102,103,104,105}, true);
 		boolean flush = util.isFlush(new int[] {101,105,106,102,209});
 		boolean containsValue = util.containsValue(new int[] {101,105,106,102,209}, 209);
 		boolean hasFlush = util.hasFlush(new int[] {106,101,101,102,103}, 3);
+		boolean isFullHouse = util.isFullHouse(new int[] {102,102,106,106,106});
 		
 		System.out.println("straight: " + straight);
 		System.out.println("straightA: " + straightA);
 		System.out.println("flush: " + flush);
 		System.out.println("containsValue: " + containsValue);
 		System.out.println("hasFlush: " + hasFlush);
+		System.out.println("isFullHouse: " + isFullHouse);
 		
 		//计算时间
 		startTime = System.currentTimeMillis();

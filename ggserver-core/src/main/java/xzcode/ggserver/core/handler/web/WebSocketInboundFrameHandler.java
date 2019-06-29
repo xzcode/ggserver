@@ -22,12 +22,14 @@ import io.netty.handler.codec.http.HttpUtil;
 import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.CloseWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketFrame;
+import io.netty.handler.codec.http.websocketx.WebSocketHandshakeException;
 import io.netty.handler.codec.http.websocketx.WebSocketServerHandshaker;
 import io.netty.handler.codec.http.websocketx.WebSocketServerHandshakerFactory;
 import io.netty.util.CharsetUtil;
 import xzcode.ggserver.core.channel.DefaultChannelAttributeKeys;
 import xzcode.ggserver.core.config.GGServerConfig;
 import xzcode.ggserver.core.message.receive.RequestMessageTask;
+
 
 public class WebSocketInboundFrameHandler extends SimpleChannelInboundHandler<Object> {
 	
@@ -43,13 +45,14 @@ public class WebSocketInboundFrameHandler extends SimpleChannelInboundHandler<Ob
     
 
     public WebSocketInboundFrameHandler(GGServerConfig config) {
-		super();
 		this.config = config;
 	}
 
 	@Override
     public void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
         if (msg instanceof FullHttpRequest) {
+        	String uri = ((FullHttpRequest) msg).uri();
+        	System.out.println(uri);
             handleHttpRequest(ctx, (FullHttpRequest) msg);
         } else if (msg instanceof WebSocketFrame) {
             handleWebSocketFrame(ctx, (WebSocketFrame) msg);
@@ -100,7 +103,12 @@ public class WebSocketInboundFrameHandler extends SimpleChannelInboundHandler<Ob
         if (handshaker == null) {
             WebSocketServerHandshakerFactory.sendUnsupportedVersionResponse(ctx.channel());
         } else {
-            handshaker.handshake(ctx.channel(), req);
+        	try {
+        		handshaker.handshake(ctx.channel(), req);				
+			} catch (WebSocketHandshakeException e) {
+				LOGGER.error(e.getMessage());
+				ctx.channel().close();
+			}
         }
     }
 
