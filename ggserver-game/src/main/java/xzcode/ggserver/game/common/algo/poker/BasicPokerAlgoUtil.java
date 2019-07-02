@@ -58,6 +58,19 @@ public class BasicPokerAlgoUtil extends BasicAlgoUtil{
 	 * 2019-06-28 16:30:18
 	 */
 	public static List<PokerCard> newShuffledPokerCardList(boolean withJokers, int cardNums) {
+		return newShuffledPokerCardList(withJokers, cardNums, null);
+	}
+	
+	/**
+	 * 获取已洗好的扑克牌集合
+	 * 
+	 * @param withJokers 是否包含大小王
+	 * @param cardNums 获取牌数量
+	 * @return
+	 * @author zai
+	 * 2019-06-28 16:30:18
+	 */
+	public static List<PokerCard> newShuffledPokerCardList(boolean withJokers, int cardNums, int[] exculde) {
 		List<Integer> vals;
 		if (withJokers) {
 			vals = new ArrayList<>(CARD_VAL_LIST.size());
@@ -70,9 +83,40 @@ public class BasicPokerAlgoUtil extends BasicAlgoUtil{
 		
 		List<PokerCard> cards = new ArrayList<>(cardNums);
 		for (int i = 0; i < cardNums; i++) {
-			cards.add(new PokerCard(vals.get(i)));
+			int cardVal = vals.get(i);
+			boolean flag = true;
+			if (exculde != null) {
+				for (int ex : exculde) {
+					if (ex == cardVal) {
+						flag = false;
+						i--;
+						break;
+					}
+				}
+			}
+			if (flag) {
+				cards.add(new PokerCard(cardVal));				
+			}
 		}
 		return cards;
+	}
+	
+	/**
+	 * 随机获取一张牌
+	 * 
+	 * @param withJokers
+	 * @return
+	 * @author zai
+	 * 2019-07-01 14:13:33
+	 */
+	public static PokerCard randomOneCard(boolean withJokers) {
+		PokerCard pokerCard = new PokerCard();
+		if (withJokers) {
+			pokerCard.setValue(CARD_VAL_LIST.get(ThreadLocalRandom.current().nextInt(CARD_VAL_LIST.size())));
+		}else {
+			pokerCard.setValue(CARD_VAL_LIST_NO_JOKERS.get(ThreadLocalRandom.current().nextInt(CARD_VAL_LIST.size())));
+		}
+		return pokerCard;
 	}
 	
 	/**

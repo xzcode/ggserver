@@ -17,7 +17,6 @@ import xzcode.ggserver.game.common.algo.poker.BasicPokerAlgoUtil;
  */
 public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 	
-	
 	/**
 	 * 是否有炸弹
 	 * 
@@ -136,83 +135,79 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 		
 		int[] cardvals = removeSuits(cards);
 		sort(cardvals);
+		int length = cards.length;
 		
-		switch (cards.length) {
-		case 1:
+		if (length == 1) {
 			return AlgoDzzCardType.DAN_ZHANG;
-			
-		case 2:
-			//判断王炸
-			if (isWangZha(cardvals)) {
-				return AlgoDzzCardType.WANG_ZHA;
-			}
-			//判断对子
-			if (isDuiZi(cards)) {
-				return AlgoDzzCardType.DUI_ZI;
-			}
-		case 3:
-			//判断三张
-			if (isSanZhang(cardvals)) {
-				return AlgoDzzCardType.SAN_ZHANG;
-			}
-		case 4:
-			//判断炸弹
-			if (cardvals[0] == cardvals[3]) {
-				return AlgoDzzCardType.ZHA_DAN;
-			}
-			
-			//判断三带一
-			if (isSanDaiYi(cardvals)) {
-				return AlgoDzzCardType.SAN_DAI_YI;
-			}
-		case 5:
-			//判断三带二
-			if (isSanDaiEr(cardvals)) {
-				return AlgoDzzCardType.SAN_DAI_ER;
-			}
-		case 6:
-			//判断四带二(四带二张单牌)
-			if (isSiDaiErDan(cardvals)) {
-				return AlgoDzzCardType.SI_DAI_ER_DAN;
-			}
-		case 8:
-			//判断四带二(四张带两对)
-			if (isSiDaiErShuang(cardvals)) {
-				return AlgoDzzCardType.SI_DAI_ER_SHUANG;
-			}
-			
-		default:
-			
-			//判断单顺子
-			if (isStraightSingle(cardvals)) {
-				return AlgoDzzCardType.DAN_SHUN_ZI;
-			}
-			
-			//判断双顺子(连对)
-			if (isStraightPairs(cardvals)) {
-				return AlgoDzzCardType.SHUANG_SHUN_ZI;
-			}
-			
-			//判断三顺子
-			if (isStraightThreeCards(cardvals)) {
-				return AlgoDzzCardType.SAN_SHUN_ZI;
-			}
-			
-			//判断飞机(三顺带单张)
-			if (isFeiJiDan(cardvals)) {
-				return AlgoDzzCardType.FEI_JI_31;
-			}
-			
-			//判断飞机(三顺带对子)
-			if (isFeiJiShuang(cardvals)) {
-				return AlgoDzzCardType.FEI_JI_32;
-			}
-			
-			
-			return AlgoDzzCardType.NONE;
 		}
+		
+		//判断王炸
+		if (isWangZha(cards)) {
+			return AlgoDzzCardType.WANG_ZHA;
+		}
+		
+		//判断对子
+		if (isDuiZi(cardvals)) {
+			return AlgoDzzCardType.DUI_ZI;
+		}
+		
+		//判断三张
+		if (isSanZhang(cardvals)) {
+			return AlgoDzzCardType.SAN_ZHANG;
+		}
+		
+		//判断炸弹
+		if (isZhaDan(cardvals)) {
+			return AlgoDzzCardType.ZHA_DAN;
+		}
+		
+		//判断三带一
+		if (isSanDaiYi(cardvals)) {
+			return AlgoDzzCardType.SAN_DAI_YI;
+		}
+		
+		//判断三带二
+		if (isSanDaiEr(cardvals)) {
+			return AlgoDzzCardType.SAN_DAI_ER;
+		}
+		
+		//判断四带二(四带二张单牌)
+		if (isSiDaiErDan(cardvals)) {
+			return AlgoDzzCardType.SI_DAI_ER_DAN;
+		}
+		
+		//判断四带二(四张带两对)
+		if (isSiDaiErShuang(cardvals)) {
+			return AlgoDzzCardType.SI_DAI_ER_SHUANG;
+		}
+		
+		//判断单顺子
+		if (isStraightSingle(cardvals)) {
+			return AlgoDzzCardType.DAN_SHUN_ZI;
+		}
+		
+		//判断双顺子(连对)
+		if (isStraightPairs(cardvals)) {
+			return AlgoDzzCardType.SHUANG_SHUN_ZI;
+		}
+		
+		//判断三顺子
+		if (isStraightThreeCards(cardvals)) {
+			return AlgoDzzCardType.SAN_SHUN_ZI;
+		}
+		
+		//判断飞机(三顺带单张)
+		if (isFeiJiDan(cardvals)) {
+			return AlgoDzzCardType.FEI_JI_31;
+		}
+		
+		//判断飞机(三顺带对子)
+		if (isFeiJiShuang(cardvals)) {
+			return AlgoDzzCardType.FEI_JI_32;
+		}
+		
+		return AlgoDzzCardType.NONE;
 	}
-	
 	
 	/**
 	 * 是否对子
@@ -229,7 +224,6 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 		return cardvals[0] == cardvals[1];
 	}
 	
-	
 	/**
 	 * 是否三张
 	 * 
@@ -243,6 +237,21 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 			return false;
 		}
 		return cardvals[0] == cardvals[2];
+	}
+	
+	/**
+	 * 是否炸弹
+	 * 
+	 * @param cardvals
+	 * @return
+	 * @author zai
+	 * 2019-07-02 11:17:43
+	 */
+	public boolean isZhaDan(int[] cardvals) {
+		if (cardvals.length != 3) {
+			return false;
+		}
+		return cardvals[0] == cardvals[3];
 	}
 	
 	
@@ -320,7 +329,6 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 				cardvals[4] == cardvals[5]
 				&& 
 				cardvals[6] == cardvals[7]
-				
 			) 
 			|| 
 			(
@@ -504,20 +512,22 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 		long startTime = 0;
 		long useTime = 0;
 		
-		int[] testArr1 = new int[] {9,11,11,11,13,13,13,12,12,12,8,8};
+		int[] testArr1 = new int[] {319,201};
 		for (int i = 0; i < testTimes; i++) {
-			/*testList.add(new int[] {
-					random.nextInt(101, 114),
-					random.nextInt(201, 214),
-					random.nextInt(301, 314),
-					random.nextInt(401, 414),
-					random.nextInt(501, 514),
-					random.nextInt(501, 514),
-					random.nextInt(501, 514),
-					random.nextInt(501, 514),
-					random.nextInt(501, 514),
-					random.nextInt(501, 514),
-					});		*/	
+			/*
+			testList.add(new int[] {
+				random.nextInt(101, 114),
+				random.nextInt(201, 214),
+				random.nextInt(301, 314),
+				random.nextInt(401, 414),
+				random.nextInt(501, 514),
+				random.nextInt(501, 514),
+				random.nextInt(501, 514),
+				random.nextInt(501, 514),
+				random.nextInt(501, 514),
+				random.nextInt(501, 514),
+			});		
+			*/	
 			testList.add(testArr1);
 		}
 		

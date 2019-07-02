@@ -52,7 +52,6 @@ public class WebSocketInboundFrameHandler extends SimpleChannelInboundHandler<Ob
     public void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
         if (msg instanceof FullHttpRequest) {
         	String uri = ((FullHttpRequest) msg).uri();
-        	System.out.println(uri);
             handleHttpRequest(ctx, (FullHttpRequest) msg);
         } else if (msg instanceof WebSocketFrame) {
             handleWebSocketFrame(ctx, (WebSocketFrame) msg);
