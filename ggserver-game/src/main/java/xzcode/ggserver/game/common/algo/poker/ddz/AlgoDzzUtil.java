@@ -17,70 +17,24 @@ import xzcode.ggserver.game.common.algo.poker.BasicPokerAlgoUtil;
  */
 public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 	
-	/**
-	 * 是否有炸弹
-	 * 
-	 * @param handcards 手牌牌值
-	 * @param targetValue 目标值
-	 * @return
-	 * @author zai
-	 * 2019-05-28 11:00:43
-	 */
-	public boolean hasZhaDan(int[] handcards, int targetValue) {
-		int count = 0;
-		for (int i : handcards) {
-			if (i == targetValue) {
-				count++;
-				if (count == 4) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
 	
 	/**
-	 * 是否有王炸
-	 * 
-	 * @param handcards 手牌
-	 * @return
-	 * @author zai
-	 * 2019-05-28 11:04:39
-	 */
-	public boolean hasWangZha(int[] handcards) {
-		boolean dawang = false;
-		boolean xiaowang = false;
-		for (int i : handcards) {
-			if (i == 501) {
-				xiaowang = true;
-			}
-			if (i == 502) {
-				dawang = true;
-			}
-			
-			if (dawang && xiaowang) {
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	/**
-	 * 是否王炸
+	 * 斗地主排序（升序）
 	 * 
 	 * @param cards
-	 * @return
 	 * @author zai
-	 * 2019-05-28 11:28:23
+	 * 2019-07-02 11:54:05
 	 */
-	public boolean isWangZha(int[] cards) {
-		if (cards.length != 2) {
-			return false;
-		}
-		return cards[0] == 501 || cards[0] == 502 || cards[1] == 501 || cards[1] == 502;
+	public void ddzSort(int[] cards) {
+		List<Integer> list = new ArrayList<>(cards.length);
+		
+		list.sort((o1, o2) -> {
+			if (o1 == 502) {
+				return 1;
+			}
+			return 0;
+		});
 	}
-	
-	
 	
 	/**
 	 * 是否可出牌
@@ -209,6 +163,70 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 		return AlgoDzzCardType.NONE;
 	}
 	
+	
+	/**
+	 * 是否有炸弹
+	 * 
+	 * @param handcards 手牌牌值
+	 * @param targetValue 目标值
+	 * @return
+	 * @author zai
+	 * 2019-05-28 11:00:43
+	 */
+	public boolean hasZhaDan(int[] handcards, int targetValue) {
+		int count = 0;
+		for (int i : handcards) {
+			if (i == targetValue) {
+				count++;
+				if (count == 4) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * 是否有王炸
+	 * 
+	 * @param handcards 手牌
+	 * @return
+	 * @author zai
+	 * 2019-05-28 11:04:39
+	 */
+	public boolean hasWangZha(int[] handcards) {
+		boolean dawang = false;
+		boolean xiaowang = false;
+		for (int i : handcards) {
+			if (i == 501) {
+				xiaowang = true;
+			}
+			if (i == 502) {
+				dawang = true;
+			}
+			
+			if (dawang && xiaowang) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * 是否王炸
+	 * 
+	 * @param cards
+	 * @return
+	 * @author zai
+	 * 2019-05-28 11:28:23
+	 */
+	public boolean isWangZha(int[] cards) {
+		if (cards.length != 2) {
+			return false;
+		}
+		return cards[0] == 501 || cards[0] == 502 || cards[1] == 501 || cards[1] == 502;
+	}
+	
 	/**
 	 * 是否对子
 	 * 
@@ -223,6 +241,9 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 		}
 		return cardvals[0] == cardvals[1];
 	}
+	
+	
+	
 	
 	/**
 	 * 是否三张
