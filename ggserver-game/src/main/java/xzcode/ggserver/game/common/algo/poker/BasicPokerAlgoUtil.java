@@ -26,15 +26,18 @@ public class BasicPokerAlgoUtil extends BasicAlgoUtil{
 			502 //大王
 		);
 	
-	public static final List<Integer> CARD_VAL_LIST_NO_JOKERS = getCardValListNoJokers();
 	
-	public static List<Integer> getCardValListNoJokers() {
-		List<Integer> list = new ArrayList<>();
-		list.addAll(CARD_VAL_LIST);
-		list.remove((Integer)501);
-		list.remove((Integer)502);
-		return list;
+	/**
+	 * 获取牌值集合
+	 * 
+	 * @return
+	 * @author zai
+	 * 2019-07-02 15:46:11
+	 */
+	public static List<Integer> getCardValList() {
+		return CARD_VAL_LIST;
 	}
+	
 	
 	/**
 	 * 获取新洗好的牌数值组合
@@ -42,8 +45,8 @@ public class BasicPokerAlgoUtil extends BasicAlgoUtil{
 	 * @return
 	 * @author zai 2018-12-27 18:10:22
 	 */
-	public static List<Integer> newShuffledValList() {
-		List<Integer> cards = new ArrayList<>(CARD_VAL_LIST.size());
+	public List<Integer> newShuffledValList() {
+		List<Integer> cards = new ArrayList<>(getCardValList().size());
 		Collections.shuffle(cards);
 		return cards;
 	}
@@ -57,7 +60,7 @@ public class BasicPokerAlgoUtil extends BasicAlgoUtil{
 	 * @author zai
 	 * 2019-06-28 16:30:18
 	 */
-	public static List<PokerCard> newShuffledPokerCardList(boolean withJokers, int cardNums) {
+	public List<PokerCard> newShuffledPokerCardList(boolean withJokers, int cardNums) {
 		return newShuffledPokerCardList(withJokers, cardNums, null);
 	}
 	
@@ -70,14 +73,18 @@ public class BasicPokerAlgoUtil extends BasicAlgoUtil{
 	 * @author zai
 	 * 2019-06-28 16:30:18
 	 */
-	public static List<PokerCard> newShuffledPokerCardList(boolean withJokers, int cardNums, int[] exculde) {
+	public List<PokerCard> newShuffledPokerCardList(boolean withJokers, int cardNums, int[] exculde) {
 		List<Integer> vals;
+		List<Integer> cardValList = getCardValList();
 		if (withJokers) {
-			vals = new ArrayList<>(CARD_VAL_LIST.size());
-			vals.addAll(CARD_VAL_LIST);
+			vals = new ArrayList<>(cardValList.size());
+			vals.addAll(cardValList);
 		}else {
-			vals = new ArrayList<>(CARD_VAL_LIST_NO_JOKERS.size());
-			vals.addAll(CARD_VAL_LIST_NO_JOKERS);
+			int noJokerSize = cardValList.size() - 2;
+			vals = new ArrayList<>(noJokerSize);
+			for (int i = 0; i < noJokerSize; i++) {
+				vals.add(cardValList.get(i));
+			}
 		}
 		Collections.shuffle(vals);
 		
@@ -109,12 +116,13 @@ public class BasicPokerAlgoUtil extends BasicAlgoUtil{
 	 * @author zai
 	 * 2019-07-01 14:13:33
 	 */
-	public static PokerCard randomOneCard(boolean withJokers) {
+	public PokerCard randomOneCard(boolean withJokers) {
 		PokerCard pokerCard = new PokerCard();
+		List<Integer> cardValList = getCardValList();
 		if (withJokers) {
-			pokerCard.setValue(CARD_VAL_LIST.get(ThreadLocalRandom.current().nextInt(CARD_VAL_LIST.size())));
+			pokerCard.setValue(cardValList.get(ThreadLocalRandom.current().nextInt(cardValList.size())));
 		}else {
-			pokerCard.setValue(CARD_VAL_LIST_NO_JOKERS.get(ThreadLocalRandom.current().nextInt(CARD_VAL_LIST.size())));
+			pokerCard.setValue(cardValList.get(ThreadLocalRandom.current().nextInt(cardValList.size() - 2)));
 		}
 		return pokerCard;
 	}
@@ -127,7 +135,7 @@ public class BasicPokerAlgoUtil extends BasicAlgoUtil{
 	 * @author zai
 	 * 2019-01-22 11:17:03
 	 */
-	public static boolean isSpade(int value) {
+	public boolean isSpade(int value) {
 		return PokerSuitType.isSpade(value);
 	}
 	
@@ -139,7 +147,7 @@ public class BasicPokerAlgoUtil extends BasicAlgoUtil{
 	 * @author zai
 	 * 2019-01-22 11:17:09
 	 */
-	public static boolean isHeat(int value) {
+	public boolean isHeat(int value) {
 		return PokerSuitType.isHeat(value);
 	}
 	
@@ -151,7 +159,7 @@ public class BasicPokerAlgoUtil extends BasicAlgoUtil{
 	 * @author zai
 	 * 2019-01-22 11:17:17
 	 */
-	public static boolean isClub(int value) {
+	public boolean isClub(int value) {
 		return PokerSuitType.isClub(value);
 	}
 	
@@ -163,7 +171,7 @@ public class BasicPokerAlgoUtil extends BasicAlgoUtil{
 	 * @author zai
 	 * 2019-01-22 11:17:42
 	 */
-	public static boolean isDemand(int value) {
+	public boolean isDemand(int value) {
 		return PokerSuitType.isDemand(value);
 	}
 	
@@ -175,7 +183,7 @@ public class BasicPokerAlgoUtil extends BasicAlgoUtil{
 	 * @author zai
 	 * 2019-01-22 11:18:02
 	 */
-	public static boolean isJoker(int value) {
+	public boolean isJoker(int value) {
 		return PokerSuitType.isJoker(value);
 	}
 	
@@ -187,7 +195,7 @@ public class BasicPokerAlgoUtil extends BasicAlgoUtil{
 	 * @author zai
 	 * 2019-01-24 19:06:41
 	 */
-	public static int getPokerSuitTypeValue(int value) {
+	public int getPokerSuitTypeValue(int value) {
 		return value % 100;
 	}
 	
@@ -199,7 +207,7 @@ public class BasicPokerAlgoUtil extends BasicAlgoUtil{
 	 * @author zai
 	 * 2019-01-24 19:10:08
 	 */
-	public static int getPokerCardType(int value) {
+	public int getPokerCardType(int value) {
 		if (isSpade(value)) {
 			return PokerSuitType.SPADE;
 		}
@@ -418,7 +426,7 @@ public class BasicPokerAlgoUtil extends BasicAlgoUtil{
 	 */
 	public boolean containsJokers(int[] cards) {
 		for (int i : cards) {
-			if (i == 501 || i == 502) {
+			if (isJoker(i)) {
 				return true;
 			}
 		}
@@ -436,7 +444,7 @@ public class BasicPokerAlgoUtil extends BasicAlgoUtil{
 	public int hasJokersNum(int[] cards) {
 		int count = 0;
 		for (int i : cards) {
-			if (i == 501 || i == 502) {
+			if (isJoker(i)) {
 				count++;
 			}
 		}

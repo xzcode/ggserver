@@ -1,6 +1,8 @@
 package xzcode.ggserver.game.common.algo.poker.ddz;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,31 +11,62 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import xzcode.ggserver.game.common.algo.poker.BasicPokerAlgoUtil;
 
+
+
+
 /**
- * 三公算法工具类
+ * 斗地主算法工具类
  * 
  * @author zai
  * 2019-05-25 17:09:07
  */
 public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 	
+	/**
+	 * 小王牌值
+	 */
+	public static int DA_WANG = 531;
 	
 	/**
-	 * 斗地主排序（升序）
-	 * 
-	 * @param cards
-	 * @author zai
-	 * 2019-07-02 11:54:05
+	 * 大王牌值
 	 */
-	public void ddzSort(int[] cards) {
-		List<Integer> list = new ArrayList<>(cards.length);
-		
-		list.sort((o1, o2) -> {
-			if (o1 == 502) {
-				return 1;
-			}
-			return 0;
-		});
+	public static int XIAO_WANG = 532;
+	
+	public static final List<Integer> CARD_VAL_LIST = Arrays.asList(
+			103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 222,		//方块1 到 K
+			203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 222,		//梅花1 到 K
+			303, 304, 305, 306, 307, 308, 309, 310, 311, 312, 313, 314, 322,		//红桃1 到 K
+			403, 404, 405, 406, 407, 408, 409, 410, 411, 412, 413, 414, 422,		//黑桃1 到 K
+			531, //小王
+			532 //大王
+		);
+	
+	public static List<Integer> getCardValList() {
+		return CARD_VAL_LIST;
+	}
+	
+	/**
+	 * 是否A
+	 * 
+	 * @param value
+	 * @return
+	 * @author zai
+	 * 2019-07-02 14:20:17
+	 */
+	public boolean isAce(int value) {
+		return value == 114 || value == 214 || value == 314 || value == 414;
+	}
+	
+	/**
+	 * 是否2
+	 * 
+	 * @param value
+	 * @return
+	 * @author zai
+	 * 2019-07-02 14:20:24
+	 */
+	public boolean isTwo(int value) {
+		return value == 122 || value == 222 || value == 322 || value == 422;
 	}
 	
 	/**
@@ -87,80 +120,171 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 	 */
 	public int checkCardType(int[] cards) {
 		
-		int[] cardvals = removeSuits(cards);
-		sort(cardvals);
-		int length = cards.length;
-		
-		if (length == 1) {
-			return AlgoDzzCardType.DAN_ZHANG;
-		}
-		
 		//判断王炸
 		if (isWangZha(cards)) {
 			return AlgoDzzCardType.WANG_ZHA;
 		}
 		
+		//是否单张
+		if (isDanZhang(cards)) {
+			return AlgoDzzCardType.DAN_ZHANG;
+		}
+		
 		//判断对子
-		if (isDuiZi(cardvals)) {
+		if (isDuiZi(cards)) {
 			return AlgoDzzCardType.DUI_ZI;
 		}
 		
+		//***进行排序
+		sort(cards);
+		
 		//判断三张
-		if (isSanZhang(cardvals)) {
+		if (isSanZhang(cards)) {
 			return AlgoDzzCardType.SAN_ZHANG;
 		}
 		
 		//判断炸弹
-		if (isZhaDan(cardvals)) {
+		if (isZhaDan(cards)) {
 			return AlgoDzzCardType.ZHA_DAN;
 		}
 		
 		//判断三带一
-		if (isSanDaiYi(cardvals)) {
+		if (isSanDaiYi(cards)) {
 			return AlgoDzzCardType.SAN_DAI_YI;
 		}
 		
 		//判断三带二
-		if (isSanDaiEr(cardvals)) {
+		if (isSanDaiEr(cards)) {
 			return AlgoDzzCardType.SAN_DAI_ER;
 		}
 		
 		//判断四带二(四带二张单牌)
-		if (isSiDaiErDan(cardvals)) {
+		if (isSiDaiErDan(cards)) {
 			return AlgoDzzCardType.SI_DAI_ER_DAN;
 		}
 		
 		//判断四带二(四张带两对)
-		if (isSiDaiErShuang(cardvals)) {
+		if (isSiDaiErShuang(cards)) {
 			return AlgoDzzCardType.SI_DAI_ER_SHUANG;
 		}
 		
 		//判断单顺子
-		if (isStraightSingle(cardvals)) {
+		if (isStraightSingle(cards)) {
 			return AlgoDzzCardType.DAN_SHUN_ZI;
 		}
 		
 		//判断双顺子(连对)
-		if (isStraightPairs(cardvals)) {
+		if (isStraightPairs(cards)) {
 			return AlgoDzzCardType.SHUANG_SHUN_ZI;
 		}
 		
 		//判断三顺子
-		if (isStraightThreeCards(cardvals)) {
+		if (isStraightThreeCards(cards)) {
 			return AlgoDzzCardType.SAN_SHUN_ZI;
 		}
 		
 		//判断飞机(三顺带单张)
-		if (isFeiJiDan(cardvals)) {
+		if (isFeiJiDan(cards)) {
 			return AlgoDzzCardType.FEI_JI_31;
 		}
 		
 		//判断飞机(三顺带对子)
-		if (isFeiJiShuang(cardvals)) {
+		if (isFeiJiShuang(cards)) {
 			return AlgoDzzCardType.FEI_JI_32;
 		}
 		
 		return AlgoDzzCardType.NONE;
+	}
+	
+	/**
+	 * 获取跟牌选项
+	 * 
+	 * @param cards
+	 * @return
+	 * @author zai
+	 * 2019-07-02 16:16:45
+	 */
+	public List<int[]> checkFollowOptions(int[] cards, int[] followCards) {
+		/*
+		//判断王炸
+		if (isWangZha(followCards)) {
+			return null;
+		}
+				
+		
+		//判断单张
+		if (isDanZhang(followCards)) {
+			return checkFollowDanZhang(followCards, followCards[0]);
+		}
+		
+		
+		
+		//判断对子
+		if (isDuiZi(followCards)) {
+			return AlgoDzzCardType.DUI_ZI;
+		}
+		
+		//***进行排序
+		sort(followCardvals);
+		
+		//判断三张
+		if (isSanZhang(followCardvals)) {
+			return AlgoDzzCardType.SAN_ZHANG;
+		}
+		
+		//判断炸弹
+		if (isZhaDan(followCardvals)) {
+			return AlgoDzzCardType.ZHA_DAN;
+		}
+		
+		//判断三带一
+		if (isSanDaiYi(followCardvals)) {
+			return AlgoDzzCardType.SAN_DAI_YI;
+		}
+		
+		//判断三带二
+		if (isSanDaiEr(followCardvals)) {
+			return AlgoDzzCardType.SAN_DAI_ER;
+		}
+		
+		//判断四带二(四带二张单牌)
+		if (isSiDaiErDan(followCardvals)) {
+			return AlgoDzzCardType.SI_DAI_ER_DAN;
+		}
+		
+		//判断四带二(四张带两对)
+		if (isSiDaiErShuang(followCardvals)) {
+			return AlgoDzzCardType.SI_DAI_ER_SHUANG;
+		}
+		
+		//判断单顺子
+		if (isStraightSingle(followCardvals)) {
+			return AlgoDzzCardType.DAN_SHUN_ZI;
+		}
+		
+		//判断双顺子(连对)
+		if (isStraightPairs(followCardvals)) {
+			return AlgoDzzCardType.SHUANG_SHUN_ZI;
+		}
+		
+		//判断三顺子
+		if (isStraightThreeCards(followCardvals)) {
+			return AlgoDzzCardType.SAN_SHUN_ZI;
+		}
+		
+		//判断飞机(三顺带单张)
+		if (isFeiJiDan(followCardvals)) {
+			return AlgoDzzCardType.FEI_JI_31;
+		}
+		
+		//判断飞机(三顺带对子)
+		if (isFeiJiShuang(followCardvals)) {
+			return AlgoDzzCardType.FEI_JI_32;
+		}
+		
+		return AlgoDzzCardType.NONE;
+		*/
+		return null;
 	}
 	
 	
@@ -198,10 +322,10 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 		boolean dawang = false;
 		boolean xiaowang = false;
 		for (int i : handcards) {
-			if (i == 501) {
+			if (i == XIAO_WANG) {
 				xiaowang = true;
 			}
-			if (i == 502) {
+			if (i == DA_WANG) {
 				dawang = true;
 			}
 			
@@ -224,8 +348,45 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 		if (cards.length != 2) {
 			return false;
 		}
-		return cards[0] == 501 || cards[0] == 502 || cards[1] == 501 || cards[1] == 502;
+		return cards[0] == XIAO_WANG || cards[0] == DA_WANG || cards[1] == XIAO_WANG || cards[1] == DA_WANG;
 	}
+	
+	/**
+	 * 是否单张
+	 * 
+	 * @param cardvals
+	 * @return
+	 * @author zai
+	 * 2019-07-02 16:23:38
+	 */
+	public boolean isDanZhang(int[] cardvals) {
+		return cardvals.length == 1;
+	}
+	
+	/**
+	 * 获取单张跟牌选项
+	 * 
+	 * @param cards 手牌牌值集合
+	 * @param followCardVal 跟牌牌值集合
+	 * @return
+	 * @author zai
+	 * 2019-07-02 16:26:48
+	 */
+	public List<int[]> checkFollowDanZhang(int[] cards, int followCardVal) {
+		int[] dcards = distinct(cards);
+		List<int[]> list = null;
+		int followCalcVal = followCardVal % 100;
+		for (int i = 0; i < dcards.length; i++) {
+			if (dcards[i] % 100 > followCalcVal) {
+				if (list == null) {
+					list = new ArrayList<>(5);
+				}
+				list.add(new int[] {cards[i]});
+			}
+		}
+		return list;
+	}
+	
 	
 	/**
 	 * 是否对子
@@ -235,14 +396,42 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 	 * @author zai
 	 * 2019-06-29 10:45:57
 	 */
-	public boolean isDuiZi(int[] cardvals) {
-		if (cardvals.length != 2) {
+	public boolean isDuiZi(int[] cards) {
+		if (cards.length != 2) {
 			return false;
 		}
+		//获取去除花色的值
+		int[] cardvals = removeSuits(cards);
 		return cardvals[0] == cardvals[1];
 	}
 	
-	
+	/**
+	 * 获取对子跟牌
+	 * 
+	 * @param cards
+	 * @param followCardVal
+	 * @return
+	 * @author zai
+	 * 2019-07-02 16:41:54
+	 */
+	public List<int[]> checkFollowDuiZi(int[] cards, int[] followCards) {
+		int[] cardvals = removeSuits(cards);
+		sort(cardvals);
+		int followVal = followCards[0] % 100;
+		List<int[]> list = null;
+		for (int i = 0; i < cardvals.length; i++) {
+			if (cardvals[i] > followVal) {
+				if (cardvals[i] == cardvals[i + 1]) {
+					if (list == null) {
+						list = new ArrayList<>(5);
+					}
+					list.add(new int[] {cards[i], cards[i + 1]});
+					i++;
+				}
+			}
+		}
+		return list;
+	}
 	
 	
 	/**
@@ -253,11 +442,44 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 	 * @author zai
 	 * 2019-06-29 10:45:57
 	 */
-	public boolean isSanZhang(int[] cardvals) {
-		if (cardvals.length != 3) {
+	public boolean isSanZhang(int[] cards) {
+		if (cards.length != 3) {
 			return false;
 		}
+		//获取去除花色的值
+		int[] cardvals = removeSuits(cards);
 		return cardvals[0] == cardvals[2];
+	}
+	
+	/**
+	 * 获取三张跟牌
+	 * 
+	 * @param cards
+	 * @param followCards
+	 * @return
+	 * @author zai
+	 * 2019-07-02 17:58:40
+	 */
+	public List<int[]> checkFollowSanZhang(int[] cards, int[] followCards) {
+		List<int[]> list = null;
+		if (cards.length < followCards.length) {
+			return list;
+		}
+		int[] cardvals = removeSuits(cards);
+		sort(cardvals);
+		int followVal = followCards[0] % 100;
+		for (int i = 0; i < cardvals.length; i++) {
+			if (cardvals[i] > followVal) {
+				if (cardvals[i] == cardvals[i + 2]) {
+					if (list == null) {
+						list = new ArrayList<>(6);
+					}
+					list.add(new int[] {cards[i], cards[i + 2]});
+					i+=2;;
+				}
+			}
+		}
+		return list;
 	}
 	
 	/**
@@ -268,11 +490,45 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 	 * @author zai
 	 * 2019-07-02 11:17:43
 	 */
-	public boolean isZhaDan(int[] cardvals) {
-		if (cardvals.length != 3) {
+	public boolean isZhaDan(int[] cards) {
+		if (cards.length != 4) {
 			return false;
 		}
+		//获取去除花色的值
+		int[] cardvals = removeSuits(cards);
+		sort(cardvals);
 		return cardvals[0] == cardvals[3];
+	}
+	
+	/**
+	 * 获取炸弹跟牌
+	 * 
+	 * @param cards
+	 * @param followCards
+	 * @return
+	 * @author zai
+	 * 2019-07-02 17:58:40
+	 */
+	public List<int[]> checkFollowZhaDan(int[] cards, int[] followCards) {
+		List<int[]> list = null;
+		if (cards.length < followCards.length) {
+			return list;
+		}
+		int[] cardvals = removeSuits(cards);
+		sort(cardvals);
+		int followVal = followCards[0] % 100;
+		for (int i = 0; i < cardvals.length; i++) {
+			if (cardvals[i] > followVal) {
+				if (cardvals[i] == cardvals[i + 3]) {
+					if (list == null) {
+						list = new ArrayList<>(6);
+					}
+					list.add(new int[] {cards[i], cards[i + 3]});
+					i+=3;;
+				}
+			}
+		}
+		return list;
 	}
 	
 	
@@ -284,13 +540,61 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 	 * @author zai
 	 * 2019-06-29 10:45:57
 	 */
-	public boolean isSanDaiYi(int[] cardvals) {
-		if (cardvals.length != 4) {
+	public boolean isSanDaiYi(int[] cards) {
+		if (cards.length != 4) {
 			return false;
 		}
+		//获取去除花色的值
+		int[] cardvals = removeSuits(cards);
+		sort(cardvals);
 		return cardvals[0] == cardvals[2] 
 				&& 
 			   cardvals[0] != cardvals[3];
+	}
+	
+	/**
+	 * 获取三带一跟牌
+	 * 
+	 * @param cards
+	 * @param followCards
+	 * @return
+	 * @author zai
+	 * 2019-07-02 17:58:40
+	 */
+	public List<int[]> checkFollowSanDaiYi(int[] cards, int[] followCards) {
+		List<int[]> list = null;
+		if (cards.length < followCards.length) {
+			return list;
+		}
+		int[] cardvals = removeSuits(cards);
+		sort(cardvals);
+		int followVal = followCards[0] % 100;
+		List<Integer> followShunZiOpts = getShunZiOptions(followCards, 3);
+		List<Integer> shunZiOptions = getShunZiOptions(cardvals, 3);
+		for (Integer opt : shunZiOptions) {
+			for (Integer fopt : followShunZiOpts) {
+				if (opt.intValue() > fopt) {
+					
+				}
+			}
+		}
+		
+		
+		return list;
+	}
+	
+	public List<Integer> getShunZiOptions(int[] sordedCardvals, int shunziSize) {
+		List<Integer> list = null;
+		for (int i = 0; i < sordedCardvals.length; i++) {
+			if (sordedCardvals[i] == sordedCardvals[i + shunziSize - 1]) {
+				if (list == null) {
+					list = new ArrayList<>(3);
+				}
+				list.add(sordedCardvals[i]);
+				i += shunziSize - 1;
+			}
+		}
+		return list;
 	}
 	
 	/**
@@ -301,10 +605,13 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 	 * @author zai
 	 * 2019-06-29 10:45:57
 	 */
-	public boolean isSanDaiEr(int[] cardvals) {
-		if (cardvals.length != 5) {
+	public boolean isSanDaiEr(int[] cards) {
+		if (cards.length != 5) {
 			return false;
 		}
+		//获取去除花色的值
+		int[] cardvals = removeSuits(cards);
+		sort(cardvals);
 		return cardvals[0] == cardvals[2] 
 				&& 
 			   cardvals[0] != cardvals[3]
@@ -321,10 +628,13 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 	 * @author zai
 	 * 2019-06-29 10:45:57
 	 */
-	public boolean isSiDaiErDan(int[] cardvals) {
-		if (cardvals.length != 6) {
+	public boolean isSiDaiErDan(int[] cards) {
+		if (cards.length != 6) {
 			return false;
 		}
+		//获取去除花色的值
+		int[] cardvals = removeSuits(cards);
+		sort(cardvals);
 		return 
 				(cardvals[0] == cardvals[3]) 
 				|| 
@@ -339,10 +649,13 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 	 * @author zai
 	 * 2019-06-29 10:44:11
 	 */
-	public boolean isSiDaiErShuang(int[] cardvals) {
-		if (cardvals.length != 8) {
+	public boolean isSiDaiErShuang(int[] cards) {
+		if (cards.length != 8) {
 			return false;
 		}
+		//获取去除花色的值
+		int[] cardvals = removeSuits(cards);
+		sort(cardvals);
 		return 
 			(
 				cardvals[0] == cardvals[3] 
@@ -370,8 +683,8 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 	 * @author zai
 	 * 2019-06-29 16:39:03
 	 */
-	public boolean isStraightSingle(int[] cardvals) {
-		return isStraightSingle(cardvals, true);
+	public boolean isStraightSingle(int[] cards) {
+		return isStraightSingle(cards, true);
 	}
 	
 	/**
@@ -383,10 +696,13 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 	 * @author zai
 	 * 2019-06-29 17:48:53
 	 */
-	public boolean isStraightSingle(int[] cardvals, boolean checkLen) {
-		if (checkLen && cardvals.length < 5) {
+	public boolean isStraightSingle(int[] cards, boolean checkLen) {
+		if (checkLen && cards.length < 5) {
 			return false;
 		}
+		//获取去除花色的值
+		int[] cardvals = removeSuits(cards);
+		sort(cardvals);
 		for (int i = 1; i < cardvals.length; i++) {
 			if (cardvals[i] != cardvals[i - 1] + 1) {
 				return false;
@@ -403,10 +719,13 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 	 * @author zai
 	 * 2019-06-29 11:17:54
 	 */
-	public boolean isStraightPairs(int[] cardvals) {
-		if (cardvals.length < 6) {
+	public boolean isStraightPairs(int[] cards) {
+		if (cards.length < 6) {
 			return false;
 		}
+		//获取去除花色的值
+		int[] cardvals = removeSuits(cards);
+		sort(cardvals);
 		for (int i = 2; i < cardvals.length - 2; i += 2) {
 			if (
 				cardvals[i] != cardvals[i + 1]
@@ -429,10 +748,13 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 	 * @author zai
 	 * 2019-06-29 11:17:54
 	 */
-	public boolean isStraightThreeCards(int[] cardvals) {
-		if (cardvals.length < 6) {
+	public boolean isStraightThreeCards(int[] cards) {
+		if (cards.length < 6) {
 			return false;
 		}
+		//获取去除花色的值
+		int[] cardvals = removeSuits(cards);
+		sort(cardvals);
 		int len = cardvals.length - 3;
 		for (int i = 3; i < len; i+=3) {
 			if (
@@ -456,7 +778,10 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 	 * @author zai
 	 * 2019-06-29 11:17:54
 	 */
-	public boolean isFeiJiDan(int[] cardvals) {
+	public boolean isFeiJiDan(int[] cards) {
+		//获取去除花色的值
+		int[] cardvals = removeSuits(cards);
+		sort(cardvals);
 		int len = cardvals.length;
 		if (len < 7 || len % 4 != 0) {
 			return false;
@@ -493,7 +818,10 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 	 * @author zai
 	 * 2019-06-29 11:17:54
 	 */
-	public boolean isFeiJiShuang(int[] cardvals) {
+	public boolean isFeiJiShuang(int[] cards) {
+		//获取去除花色的值
+		int[] cardvals = removeSuits(cards);
+		sort(cardvals);
 		int len = cardvals.length;
 		if (len < 8 || len % 5 != 0) {
 			return false;
