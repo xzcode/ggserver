@@ -37,7 +37,7 @@ public class RedirectMessageTask implements Runnable{
 	/**
 	 * socket消息体对象
 	 */
-	private byte[] message;
+	private Object message;
 	
 	/**
 	 * session
@@ -62,18 +62,29 @@ public class RedirectMessageTask implements Runnable{
 		this.action = action;
 		this.config = config;
 	}
+	
 	public RedirectMessageTask(String actionStr, byte[] message, GGSession session, GGServerConfig config) {
 		this.message = message;
 		this.session = session;
 		this.actionStr = actionStr;
 		this.config = config;
 	}
-	public RedirectMessageTask(String actionStr, byte[] message, GGSession session, Object syncObj, GGServerConfig config) {
+	
+	public RedirectMessageTask(String actionStr, byte[] message, GGSession session, Object syncLock, GGServerConfig config) {
 		this.message = message;
 		this.session = session;
 		this.actionStr = actionStr;
 		this.config = config;
-		this.syncObj = syncObj;
+		this.syncObj = syncLock;
+	}
+	
+
+	public RedirectMessageTask(String actionStr, Object message, GGSession session, Object syncLock, GGServerConfig config) {
+		this.message = message;
+		this.session = session;
+		this.actionStr = actionStr;
+		this.config = config;
+		this.syncObj = syncLock;
 	}
 
 	@Override
@@ -86,9 +97,9 @@ public class RedirectMessageTask implements Runnable{
 			}
 			
 			IOnMessageInvoker invoker = config.getMessageInvokerManager().get(actionStr);
-			Object msgObj = null;
-			if (message != null) {
-				msgObj = config.getSerializer().deserialize(message, invoker.getMessageClass());
+			Object msgObj = message;
+			if (message != null && message instanceof byte[]) {
+				msgObj = config.getSerializer().deserialize((byte[])message, invoker.getMessageClass());
 			}
 			
 			if (!this.config.getMessageFilterManager().doRequestFilters(actionStr, msgObj)) {
@@ -102,7 +113,6 @@ public class RedirectMessageTask implements Runnable{
 				}
 			}else {
 				config.getRequestMessageManager().invoke(actionStr, msgObj);				
-				
 			}
 			
 		} catch (Exception e) {

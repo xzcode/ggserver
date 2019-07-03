@@ -21,12 +21,12 @@ public class AlgoSgUtil extends BasicPokerAlgoUtil{
 	public  AlgoSgCheckResult checkCardType(int[] cards) {
 		
 		AlgoSgCheckResult result;
-		AlgoSgCardType pointCardType;
+		int pointCardType;
 		
 		//是否爆玖
 		if (isBaoJiu(cards)) {
 			pointCardType = AlgoSgCardType.BAO_JIU;
-			result = new AlgoSgCheckResult(AlgoSgCardType.BAO_JIU);
+			result = new AlgoSgCheckResult(pointCardType);
 		}
 		
 		//是否炸弹
@@ -56,7 +56,7 @@ public class AlgoSgUtil extends BasicPokerAlgoUtil{
 	 * @author zai
 	 * 2019-06-06 14:27:41
 	 */
-	public  AlgoSgCardType getPointCardType(int points) {
+	public  int getPointCardType(int points) {
 		switch (points) {
 		case 0: return AlgoSgCardType.NONE;
 		case 1: return AlgoSgCardType.DOT_1;

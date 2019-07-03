@@ -9,7 +9,7 @@ package xzcode.ggserver.game.common.algo.poker.sg;
 public class AlgoSgCheckResult {
 	
 	//牌型
-	private AlgoSgCardType cardType;
+	private int cardType;
 	
 	//点数
 	private Integer points;
@@ -21,52 +21,56 @@ public class AlgoSgCheckResult {
 	
 	
 
-	public AlgoSgCheckResult(AlgoSgCardType cardType) {
+	public AlgoSgCheckResult(int cardType) {
 		super();
 		this.cardType = cardType;
 	}
+	
+	
 
-
-	public AlgoSgCheckResult(AlgoSgCardType cardType, Integer cardTimes) {
+	public AlgoSgCheckResult(int cardType, Integer points) {
+		super();
 		this.cardType = cardType;
-		this.cardTimes = cardTimes;
+		this.points = points;
 	}
 
 
-	public AlgoSgCheckResult(AlgoSgCardType cardType, Integer points, Integer cardTimes) {
+
+	public AlgoSgCheckResult(int cardType, Integer points, Integer cardTimes) {
+		super();
 		this.cardType = cardType;
 		this.points = points;
 		this.cardTimes = cardTimes;
 	}
 
-
-
-
-	public AlgoSgCardType getCardType() {
+	public int getCardType() {
 		return cardType;
 	}
 
-	public void setCardType(AlgoSgCardType cardType) {
+	public void setCardType(int cardType) {
 		this.cardType = cardType;
-	}
-
-	public void setPoints(Integer points) {
-		this.points = points;
 	}
 
 	public Integer getPoints() {
 		return points;
 	}
 
+	public void setPoints(Integer points) {
+		this.points = points;
+	}
 
 	public Integer getCardTimes() {
 		return cardTimes;
 	}
 
-
 	public void setCardTimes(Integer cardTimes) {
 		this.cardTimes = cardTimes;
 	}
+	
+	
+	
+	
 
+	
 	
 }

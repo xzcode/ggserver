@@ -256,6 +256,7 @@ public class GGServer implements ISendMessage, IGGServerExecution{
 		new RedirectMessageTask(action, message, GGSessionThreadLocalUtil.getSession(), config).run();
 	}
 	
+	@Deprecated
 	@Override
 	public ScheduledFuture<?> schedule(Runnable runnable, long delayMs) {
 		return this.config.getTaskExecutor().schedule(runnable, delayMs, TimeUnit.MILLISECONDS);
@@ -266,6 +267,7 @@ public class GGServer implements ISendMessage, IGGServerExecution{
 		return this.config.getTaskExecutor().schedule(runnable, delayMs, TimeUnit.MILLISECONDS);
 	}
 	
+	@Deprecated
 	@Override
 	public ScheduledFuture<?> schedule(Object syncLock, Runnable runnable, long delayMs) {
 		return this.config.getTaskExecutor().schedule(new SyncTask(syncLock, runnable), delayMs, TimeUnit.MILLISECONDS);
@@ -275,7 +277,8 @@ public class GGServer implements ISendMessage, IGGServerExecution{
 	public ScheduledFuture<?> schedule(Object syncLock, long delayMs, Runnable runnable) {
 		return this.config.getTaskExecutor().schedule(new SyncTask(syncLock, runnable), delayMs, TimeUnit.MILLISECONDS);
 	}
-
+	
+	@Deprecated
 	@Override
 	public ScheduledFuture<?> schedule(TimeoutRunnable runnable, long delayMs) {
 		ScheduledFuture<?> future = this.config.getTaskExecutor().schedule(runnable, delayMs, TimeUnit.MILLISECONDS);
@@ -290,6 +293,7 @@ public class GGServer implements ISendMessage, IGGServerExecution{
 		return future;
 	}
 	
+	@Deprecated
 	@Override
 	public ScheduledFuture<?> schedule(Object syncLock, TimeoutRunnable runnable, long delayMs) {
 		ScheduledFuture<?> future = this.config.getTaskExecutor().schedule(new SyncTask(syncLock, runnable), delayMs, TimeUnit.MILLISECONDS);

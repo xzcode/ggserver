@@ -32,7 +32,7 @@ public class SyncTask implements Runnable{
 		
 		try {
 			if (this.syncLock != null) {
-				synchronized (syncLock) {
+				synchronized (this.syncLock) {
 					runnable.run();					
 				}
 			}else {

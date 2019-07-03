@@ -96,7 +96,7 @@ public class BasicPokerAlgoUtil extends BasicAlgoUtil{
 				for (int ex : exculde) {
 					if (ex == cardVal) {
 						flag = false;
-						i--;
+						cardNums++;
 						break;
 					}
 				}

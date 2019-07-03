@@ -205,84 +205,78 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 	 * 2019-07-02 16:16:45
 	 */
 	public List<int[]> checkFollowOptions(int[] cards, int[] followCards) {
-		/*
+		
 		//判断王炸
 		if (isWangZha(followCards)) {
 			return null;
 		}
-				
+		
+		List<int[]> opts = null;
 		
 		//判断单张
 		if (isDanZhang(followCards)) {
-			return checkFollowDanZhang(followCards, followCards[0]);
+			opts = checkFollowDanZhang(followCards, followCards[0]);
 		}
-		
-		
 		
 		//判断对子
 		if (isDuiZi(followCards)) {
-			return AlgoDzzCardType.DUI_ZI;
+			opts =  checkFollowDuiZi(cards, followCards);
 		}
 		
-		//***进行排序
-		sort(followCardvals);
-		
 		//判断三张
-		if (isSanZhang(followCardvals)) {
-			return AlgoDzzCardType.SAN_ZHANG;
+		if (isSanZhang(followCards)) {
+			opts =  checkFollowDuiZi(cards, followCards);
 		}
 		
 		//判断炸弹
-		if (isZhaDan(followCardvals)) {
-			return AlgoDzzCardType.ZHA_DAN;
+		if (isZhaDan(followCards)) {
+			opts =  checkFollowZhaDan(cards, followCards);
 		}
 		
 		//判断三带一
-		if (isSanDaiYi(followCardvals)) {
-			return AlgoDzzCardType.SAN_DAI_YI;
+		if (isSanDaiYi(followCards)) {
+			opts =  checkFollowSanDaiYi(cards, followCards);
 		}
-		
+		/*
 		//判断三带二
-		if (isSanDaiEr(followCardvals)) {
-			return AlgoDzzCardType.SAN_DAI_ER;
+		if (isSanDaiEr(followCards)) {
+			opts =  AlgoDzzCardType.SAN_DAI_ER;
 		}
 		
 		//判断四带二(四带二张单牌)
-		if (isSiDaiErDan(followCardvals)) {
-			return AlgoDzzCardType.SI_DAI_ER_DAN;
+		if (isSiDaiErDan(followCards)) {
+			opts =  AlgoDzzCardType.SI_DAI_ER_DAN;
 		}
 		
 		//判断四带二(四张带两对)
-		if (isSiDaiErShuang(followCardvals)) {
-			return AlgoDzzCardType.SI_DAI_ER_SHUANG;
+		if (isSiDaiErShuang(followCards)) {
+			opts =  AlgoDzzCardType.SI_DAI_ER_SHUANG;
 		}
 		
 		//判断单顺子
-		if (isStraightSingle(followCardvals)) {
-			return AlgoDzzCardType.DAN_SHUN_ZI;
+		if (isStraightSingle(followCards)) {
+			opts =  AlgoDzzCardType.DAN_SHUN_ZI;
 		}
 		
 		//判断双顺子(连对)
-		if (isStraightPairs(followCardvals)) {
-			return AlgoDzzCardType.SHUANG_SHUN_ZI;
+		if (isStraightPairs(followCards)) {
+			opts =  AlgoDzzCardType.SHUANG_SHUN_ZI;
 		}
 		
 		//判断三顺子
-		if (isStraightThreeCards(followCardvals)) {
-			return AlgoDzzCardType.SAN_SHUN_ZI;
+		if (isStraightThreeCards(followCards)) {
+			opts =  AlgoDzzCardType.SAN_SHUN_ZI;
 		}
 		
 		//判断飞机(三顺带单张)
-		if (isFeiJiDan(followCardvals)) {
-			return AlgoDzzCardType.FEI_JI_31;
+		if (isFeiJiDan(followCards)) {
+			opts =  AlgoDzzCardType.FEI_JI_31;
 		}
 		
 		//判断飞机(三顺带对子)
-		if (isFeiJiShuang(followCardvals)) {
-			return AlgoDzzCardType.FEI_JI_32;
+		if (isFeiJiShuang(followCards)) {
+			opts =  AlgoDzzCardType.FEI_JI_32;
 		}
-		
-		return AlgoDzzCardType.NONE;
 		*/
 		return null;
 	}
@@ -319,8 +313,10 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 	 * 2019-05-28 11:04:39
 	 */
 	public boolean hasWangZha(int[] handcards) {
+		
 		boolean dawang = false;
 		boolean xiaowang = false;
+		
 		for (int i : handcards) {
 			if (i == XIAO_WANG) {
 				xiaowang = true;
@@ -333,6 +329,7 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 				return true;
 			}
 		}
+		
 		return false;
 	}
 	
@@ -566,31 +563,67 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 		if (cards.length < followCards.length) {
 			return list;
 		}
-		int[] cardvals = removeSuits(cards);
-		sort(cardvals);
-		int followVal = followCards[0] % 100;
+		//获取跟牌三张
 		List<Integer> followShunZiOpts = getShunZiOptions(followCards, 3);
-		List<Integer> shunZiOptions = getShunZiOptions(cardvals, 3);
-		for (Integer opt : shunZiOptions) {
-			for (Integer fopt : followShunZiOpts) {
-				if (opt.intValue() > fopt) {
-					
+		//获取手牌三张集合
+		List<Integer> shunZiOptions = getShunZiOptions(cards, 3);
+		
+		if (shunZiOptions != null) {
+			
+			List<Integer> opts = null;
+			
+			//对比牌值大小
+			for (Integer opt : shunZiOptions) {
+				for (Integer fopt : followShunZiOpts) {
+					if (opt > fopt) {
+						if (opts == null) {
+							opts = new ArrayList<>(2);
+						}
+						opts.add(opt);
+					}
 				}
 			}
-		}
+			if (opts.size() > 0) {
+				for (Integer opt : opts) {
+					for (int i = 0; i < cards.length; i++) {
+						int card = cards[i];
+						if (card % 100 != opt) {
+							if (list == null) {
+								list = new ArrayList<>(3);
+							}
+							int[] arr = new int[4];
+							int k = 0;
+							for (int j = 0; j < 3; j++) {
+								for (; k < cards.length; k++) {
+									if (cards[k] % 100 == opt) {
+										arr[j] = cards[k];
+										k++;
+										break;
+									}
+								}
+							}
+							arr[3] = card;
+							list.add(arr);
+						}
+					}
+				}
+			}
 		
+		}
 		
 		return list;
 	}
 	
-	public List<Integer> getShunZiOptions(int[] sordedCardvals, int shunziSize) {
+	public List<Integer> getShunZiOptions(int[] cards, int shunziSize) {
 		List<Integer> list = null;
-		for (int i = 0; i < sordedCardvals.length; i++) {
-			if (sordedCardvals[i] == sordedCardvals[i + shunziSize - 1]) {
+		int[] ncards = removeSuits(cards);
+		sort(ncards);
+		for (int i = 0; i < ncards.length - shunziSize; i++) {
+			if (ncards[i] == ncards[i + shunziSize - 1]) {
 				if (list == null) {
 					list = new ArrayList<>(3);
 				}
-				list.add(sordedCardvals[i]);
+				list.add(ncards[i]);
 				i += shunziSize - 1;
 			}
 		}
@@ -617,6 +650,77 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 			   cardvals[0] != cardvals[3]
 				&& 
 			   cardvals[0] != cardvals[4];
+	}
+	
+	
+	/**
+	 * 获取三带二跟牌
+	 * 
+	 * @param cards
+	 * @param followCards
+	 * @return
+	 * @author zai
+	 * 2019-07-02 17:58:40
+	 */
+	public List<int[]> checkFollowSanDaiEr(int[] cards, int[] followCards) {
+		List<int[]> list = null;
+		if (cards.length < followCards.length) {
+			return list;
+		}
+		//获取跟牌三张
+		List<Integer> followShunZiOpts = getShunZiOptions(followCards, 3);
+		//获取手牌三张集合
+		List<Integer> shunZiOptions = getShunZiOptions(cards, 3);
+		
+		if (shunZiOptions != null) {
+			
+			List<Integer> opts = null;
+			
+			//对比牌值大小
+			for (Integer opt : shunZiOptions) {
+				for (Integer fopt : followShunZiOpts) {
+					if (opt > fopt) {
+						if (opts == null) {
+							opts = new ArrayList<>(2);
+						}
+						opts.add(opt);
+					}
+				}
+			}
+			if (opts.size() > 0) {
+				for (Integer opt : opts) {
+					for (int i = 0; i < cards.length; i++) {
+						int card = cards[i];
+						if (card % 100 != opt) {
+							if (cards[i] % 100 == cards[i + 1] % 100) {
+							
+								if (list == null) {
+									list = new ArrayList<>(3);
+								}
+								int[] arr = new int[4];
+								int k = 0;
+								for (int j = 0; j < 3; j++) {
+									for (; k < cards.length; k++) {
+										if (cards[k] % 100 == opt) {
+											arr[j] = cards[k];
+											k++;
+											break;
+										}
+									}
+								}
+								arr[3] = card;
+								list.add(arr);
+							
+							}
+							
+						}
+					}
+				}
+			}
+		
+		}
+		
+		return list;
 	}
 	
 	
@@ -861,7 +965,8 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 		long startTime = 0;
 		long useTime = 0;
 		
-		int[] testArr1 = new int[] {319,201};
+		int[] cards = new int[] {105,205,305,108, 201,306};
+		int[] followCards = new int[] {103,203,303,405};
 		for (int i = 0; i < testTimes; i++) {
 			/*
 			testList.add(new int[] {
@@ -877,14 +982,16 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 				random.nextInt(501, 514),
 			});		
 			*/	
-			testList.add(testArr1);
+			testList.add(cards);
 		}
 		
 		
 		//预热
-		int cardType = util.checkCardType(testArr1);
+		int cardType = util.checkCardType(cards);
+		List<int[]> checkFollowSanDaiYi = util.checkFollowSanDaiYi(cards,followCards);
 		
 		System.out.println("checkCardType: " + cardType);
+		System.out.println("checkFollowSanDaiYi: " + checkFollowSanDaiYi);
 		
 		//计算时间
 		startTime = System.currentTimeMillis();
@@ -893,6 +1000,14 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 		}
 		useTime = System.currentTimeMillis() - startTime;
 		System.out.println("checkCardType : " + useTime + " ms");
+		
+		//计算时间
+		startTime = System.currentTimeMillis();
+		for (int[] is : testList) {
+			util.checkFollowSanDaiYi(cards,followCards);
+		}
+		useTime = System.currentTimeMillis() - startTime;
+		System.out.println("checkFollowSanDaiYi : " + useTime + " ms");
 		
 		
 	}
