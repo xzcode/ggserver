@@ -4,13 +4,15 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import xzcode.ggserver.game.common.algo.BasicAlgoUtil;
+
 /**
  * 牌九算法工具类
  * 
  * @author zai
  * 2019-05-25 17:09:07
  */
-public class AlgoPjUtil {
+public class AlgoPjUtil extends BasicAlgoUtil{
 			
 	/**
 	 * 丁三

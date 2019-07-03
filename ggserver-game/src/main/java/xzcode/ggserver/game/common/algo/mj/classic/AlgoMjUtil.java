@@ -19,7 +19,7 @@ import xzcode.ggserver.game.common.algo.BasicAlgoUtil;
  * 
  * @author zai 2018-12-27 18:06:30
  */
-public class AlgoMjUtil {
+public class AlgoMjUtil extends BasicAlgoUtil{
 	
 	/**
 	 * 万开始值
@@ -135,7 +135,7 @@ public class AlgoMjUtil {
 	 * @return
 	 * @author zai 2018-12-27 19:20:15
 	 */
-	public static boolean isWan(int value) {
+	public boolean isWan(int value) {
 		return value / WAN_VAL == WAN_VAL;
 	}
 
@@ -146,7 +146,7 @@ public class AlgoMjUtil {
 	 * @return
 	 * @author zai 2018-12-27 19:20:15
 	 */
-	public static boolean isTiao(int value) {
+	public boolean isTiao(int value) {
 
 		return value / TIAO_VAL == TIAO_VAL;
 	}
@@ -158,7 +158,7 @@ public class AlgoMjUtil {
 	 * @return
 	 * @author zai 2018-12-27 19:20:15
 	 */
-	public static boolean isTong(int value) {
+	public boolean isTong(int value) {
 		return value / TONG_VAL == TONG_VAL;
 	}
 
@@ -171,7 +171,7 @@ public class AlgoMjUtil {
 	 * @return
 	 * @author zai 2018-12-27 19:20:15
 	 */
-	public static boolean isFeng(int value) {
+	public boolean isFeng(int value) {
 		return value / FENG_VAL == FENG_VAL;
 	}
 	
@@ -182,7 +182,7 @@ public class AlgoMjUtil {
 	 * @return
 	 * @author zai 2018-12-27 19:20:15
 	 */
-	public static boolean isZi(int value) {
+	public boolean isZi(int value) {
 		return value / ZI_VAL == ZI_VAL;
 	}
 	
@@ -195,7 +195,7 @@ public class AlgoMjUtil {
 	 * @return
 	 * @author zai 2018-12-27 19:20:15
 	 */
-	public static boolean isHua(int value) {
+	public boolean isHua(int value) {
 		return value / HUA_VAL == HUA_VAL;
 	}
 	
@@ -207,7 +207,7 @@ public class AlgoMjUtil {
 	 * @author zai
 	 * 2018-12-31 15:01:41
 	 */
-	public static int getMjType(int value) {
+	public int getMjType(int value) {
 		if (isWan(value)) {
 			return AlgoMjType.WAN;
 		}
@@ -236,7 +236,7 @@ public class AlgoMjUtil {
 	 * @return
 	 * @author zai 2018-12-27 18:53:15
 	 */
-	private static List<AlgoMj> createFullSortedMjList(boolean hasHuapai) {
+	private List<AlgoMj> createFullSortedMjList(boolean hasHuapai) {
 		List<Integer> valueList = new ArrayList<>();
 		for (int i = 0; i < 4; i++) {
 			valueList.addAll(WAN_VALUE_LIST);
@@ -269,7 +269,7 @@ public class AlgoMjUtil {
 	 * @return
 	 * @author zai 2018-12-27 18:10:22
 	 */
-	public static List<AlgoMj> newShuffledMjList(boolean hasHuapai) {
+	public List<AlgoMj> newShuffledMjList(boolean hasHuapai) {
 		List<AlgoMj> algoMjs = new ArrayList<>(144);
 		if (hasHuapai) {
 			algoMjs.addAll(createFullSortedMjList(true));
@@ -286,7 +286,7 @@ public class AlgoMjUtil {
 	 * @return
 	 * @author zai 2018-12-27 18:58:03
 	 */
-	public static List<AlgoMj> newShuffledHuaMjList() {
+	public List<AlgoMj> newShuffledHuaMjList() {
 		return newShuffledMjList(true);
 	}
 
@@ -296,7 +296,7 @@ public class AlgoMjUtil {
 	 * @return
 	 * @author zai 2018-12-27 18:56:40
 	 */
-	public static List<AlgoMj> newShuffledMjList() {
+	public List<AlgoMj> newShuffledMjList() {
 		return newShuffledMjList(false);
 	}
 
@@ -307,7 +307,7 @@ public class AlgoMjUtil {
 	 * @return
 	 * @author zai 2018-12-27 19:21:25
 	 */
-	public static boolean hasWan(List<AlgoMj> list) {
+	public boolean hasWan(List<AlgoMj> list) {
 		for (AlgoMj algoMj : list) {
 			if (isWan(algoMj.getValue())) {
 				return true;
@@ -323,7 +323,7 @@ public class AlgoMjUtil {
 	 * @return
 	 * @author zai 2018-12-27 19:21:25
 	 */
-	public static boolean hasTiao(List<AlgoMj> list) {
+	public boolean hasTiao(List<AlgoMj> list) {
 		for (AlgoMj algoMj : list) {
 			if (isTiao(algoMj.getValue())) {
 				return true;
@@ -339,7 +339,7 @@ public class AlgoMjUtil {
 	 * @return
 	 * @author zai 2018-12-27 19:21:25
 	 */
-	public static boolean hasTong(List<AlgoMj> list) {
+	public boolean hasTong(List<AlgoMj> list) {
 		for (AlgoMj algoMj : list) {
 			if (isTong(algoMj.getValue())) {
 				return true;
@@ -355,7 +355,7 @@ public class AlgoMjUtil {
 	 * @return
 	 * @author zai 2018-12-27 19:21:25
 	 */
-	public static boolean hasZi(List<AlgoMj> list) {
+	public boolean hasZi(List<AlgoMj> list) {
 		for (AlgoMj algoMj : list) {
 			if (isZi(algoMj.getValue())) {
 				return true;
@@ -371,7 +371,7 @@ public class AlgoMjUtil {
 	 * @return
 	 * @author zai 2018-12-27 19:21:25
 	 */
-	public static boolean hasJian(List<AlgoMj> list) {
+	public boolean hasJian(List<AlgoMj> list) {
 		for (AlgoMj algoMj : list) {
 			if (isFeng(algoMj.getValue())) {
 				return true;
@@ -387,7 +387,7 @@ public class AlgoMjUtil {
 	 * @return
 	 * @author zai 2018-12-27 19:21:25
 	 */
-	public static boolean hasHua(List<AlgoMj> list) {
+	public boolean hasHua(List<AlgoMj> list) {
 		for (AlgoMj algoMj : list) {
 			if (isHua(algoMj.getValue())) {
 				return true;
@@ -402,7 +402,7 @@ public class AlgoMjUtil {
 	 * @param list
 	 * @author zai 2018-12-28 10:37:44
 	 */
-	public static void sort(List<? extends AlgoMj> list) {
+	public void sort(List<? extends AlgoMj> list) {
 		Collections.sort(list, (mj1, mj2) -> mj1.getValue() - mj2.getValue());
 	}
 
@@ -412,7 +412,7 @@ public class AlgoMjUtil {
 	 * @param list
 	 * @author zai 2018-12-28 10:44:42
 	 */
-	public static void rSort(List<AlgoMj> list) {
+	public void rSort(List<AlgoMj> list) {
 		Collections.sort(list, (mj1, mj2) -> mj2.getValue() - mj1.getValue());
 	}
 	
@@ -424,7 +424,7 @@ public class AlgoMjUtil {
 	 * @author zai
 	 * 2019-05-27 10:39:07
 	 */
-	public static boolean checkKanShun(List<Integer> list)
+	public boolean checkKanShun(List<Integer> list)
     {
     	if(list.size()%3!=0) return false;
     	int k=0;
@@ -461,7 +461,7 @@ public class AlgoMjUtil {
 	 * @author zai
 	 * 2019-05-27 10:37:45
 	 */
-	public static boolean checkKanShun(List<Integer> list, boolean lian) {
+	public boolean checkKanShun(List<Integer> list, boolean lian) {
 		if (list.size() % 3 != 0)
 			return false;
 		int k = 0;
@@ -483,7 +483,7 @@ public class AlgoMjUtil {
 
 	}
 
-	public static boolean checkHu(List<Integer> list, Integer check) {
+	public boolean checkHu(List<Integer> list, Integer check) {
 		List<Integer> all = new ArrayList<>(list.size());
 		all.addAll(list);
 		all.add(check);
@@ -515,7 +515,7 @@ public class AlgoMjUtil {
 	 * @author zai
 	 * 2019-05-27 10:54:26
 	 */
-	public static List<Integer> ting(List<Integer> list) {
+	public List<Integer> ting(List<Integer> list) {
 		List<Integer> result = null;
 		for (Integer integer : ALL_VALUE_LIST) {
 			if (checkHu(list, integer)) {
@@ -538,7 +538,7 @@ public class AlgoMjUtil {
 	 * @author zai
 	 * 2019-01-07 13:33:38
 	 */
-	public static boolean isCanHu(List<AlgoMj> shoupai, AlgoMj mopai) {
+	public boolean isCanHu(List<AlgoMj> shoupai, AlgoMj mopai) {
 		List<Integer> valList = toValList(shoupai);
 		return checkHu(valList, mopai.getValue());
 	}
@@ -553,7 +553,7 @@ public class AlgoMjUtil {
 	 * @author zai
 	 * 2018-12-31 22:57:26
 	 */
-	public static List<int[]> getChiGroup(List<AlgoMj> list, AlgoMj algoMj) {
+	public List<int[]> getChiGroup(List<AlgoMj> list, AlgoMj algoMj) {
 		int mjVal = algoMj.getValue();
 		if (isZi(mjVal) || isFeng(mjVal)) {
 			return null;
@@ -604,7 +604,7 @@ public class AlgoMjUtil {
 	 * @author zai
 	 * 2018-12-31 22:57:11
 	 */
-	public static boolean isCanChi(List<AlgoMj> list, AlgoMj algoMj) {
+	public boolean isCanChi(List<AlgoMj> list, AlgoMj algoMj) {
 		int mjVal = algoMj.getValue();
 		if (isZi(mjVal) || isFeng(mjVal)) {
 			return false;
@@ -639,7 +639,7 @@ public class AlgoMjUtil {
 	}
 	
 	
-	public static boolean isCanPeng(List<AlgoMj> list, AlgoMj algoMj) {
+	public boolean isCanPeng(List<AlgoMj> list, AlgoMj algoMj) {
 		if (list == null || list.size() < 3) {
 			return false;
 		}
@@ -666,7 +666,7 @@ public class AlgoMjUtil {
 	 * @author zai
 	 * 2018-12-31 23:29:36
 	 */
-	public static boolean isCanGang(List<AlgoMj> list, AlgoMj algoMj) {
+	public boolean isCanGang(List<AlgoMj> list, AlgoMj algoMj) {
 		/*if (list == null || list.size() < 5) {
 			return false;
 		}*/
@@ -694,7 +694,7 @@ public class AlgoMjUtil {
 	 * @author zai
 	 * 2018-12-31 23:17:35
 	 */
-	public static boolean isCanAnGang(List<AlgoMj> list, AlgoMj targetMj) {
+	public boolean isCanAnGang(List<AlgoMj> list, AlgoMj targetMj) {
 		/*if (list == null || list.size() < 5) {
 			return false;
 		}*/
@@ -722,7 +722,7 @@ public class AlgoMjUtil {
 	 * @author zai
 	 * 2019-01-12 18:53:04
 	 */
-	public static List<Integer> getAnGangGroup(List<AlgoMj> list, AlgoMj targetMj) {
+	public List<Integer> getAnGangGroup(List<AlgoMj> list, AlgoMj targetMj) {
 		
 		List<AlgoMj> list2 = new ArrayList<>(list);
 		list2.add(targetMj);
@@ -753,7 +753,7 @@ public class AlgoMjUtil {
 	 * @author zai
 	 * 2019-01-16 10:59:28
 	 */
-	public static boolean isCanPengGang(List<? extends AlgoMj> shoupai, List<? extends AlgoMjOperation<AlgoMj, AlgoMjPlayer>> operations, AlgoMj targetMj) {
+	public boolean isCanPengGang(List<? extends AlgoMj> shoupai, List<? extends AlgoMjOperation<AlgoMj, AlgoMjPlayer>> operations, AlgoMj targetMj) {
 		
 		List<Integer> valList = toDistinctValList(shoupai);
 		if (targetMj != null) {
@@ -780,7 +780,7 @@ public class AlgoMjUtil {
 	 * @author zai
 	 * 2019-01-16 11:05:12
 	 */
-	public static List<Integer> getPengGangGroup(List<AlgoMj> shoupai, List<AlgoMjOperation<AlgoMj, AlgoMjPlayer>> operations, AlgoMj targetMj) {
+	public List<Integer> getPengGangGroup(List<AlgoMj> shoupai, List<AlgoMjOperation<AlgoMj, AlgoMjPlayer>> operations, AlgoMj targetMj) {
 		List<AlgoMj> list = new ArrayList<>();
 		list.addAll(shoupai);
 		if (targetMj != null) {
@@ -812,7 +812,7 @@ public class AlgoMjUtil {
 	 * @author zai
 	 * 2018-12-31 13:20:18
 	 */
-	public static int[] remove4n(int[] arr) {
+	public int[] remove4n(int[] arr) {
 		if (arr.length < 4) {
 			return arr;
 		}
@@ -848,7 +848,7 @@ public class AlgoMjUtil {
 	 * @author zai
 	 * 2018-12-31 14:11:07
 	 */
-	public static int[] remove3n(int[] arr) {
+	public int[] remove3n(int[] arr) {
 		if (arr.length < 3) {
 			return arr;
 		}
@@ -893,7 +893,7 @@ public class AlgoMjUtil {
 	 * @author zai
 	 * 2018-12-31 14:10:01
 	 */
-	public static int[] removeDui(int[] arr) {
+	public int[] removeDui(int[] arr) {
 		for (int i = 0; i < arr.length; i++) {
 			
 			if (i + 1 < arr.length) {
@@ -927,7 +927,7 @@ public class AlgoMjUtil {
 	}
 
 	// 判断开始两个牌是不是顺或对
-	public static boolean isStartWidthDuiOrShun(int[] arr) {
+	public boolean isStartWidthDuiOrShun(int[] arr) {
 		if (arr[0] == arr[1] || arr[0] == arr[1] - 1) {
 			return true;
 		}
@@ -942,7 +942,7 @@ public class AlgoMjUtil {
 	 * @author zai
 	 * 2018-12-31 13:39:24
 	 */
-	public static int[] sortAndToValArr(List<? extends AlgoMj> list) {
+	public int[] sortAndToValArr(List<? extends AlgoMj> list) {
 		sort(list);
 		return toValArr(list);
 	}
@@ -954,7 +954,7 @@ public class AlgoMjUtil {
 	 * @return
 	 * @author zai 2018-12-30 21:21:54
 	 */
-	public static int[] toValArr(List<? extends AlgoMj> list) {
+	public int[] toValArr(List<? extends AlgoMj> list) {
 		int[] arr = new int[list.size()];
 		for (int i = 0; i < arr.length; i++) {
 			arr[i] = list.get(i).getValue();
@@ -969,7 +969,7 @@ public class AlgoMjUtil {
 	 * @author zai
 	 * 2019-01-12 18:05:24
 	 */
-	public static int[] toDistinctValArr(List<? extends AlgoMj> list) {
+	public int[] toDistinctValArr(List<? extends AlgoMj> list) {
 		if (list == null) {
 			return null;
 		}
@@ -995,7 +995,7 @@ public class AlgoMjUtil {
 	 * @author zai
 	 * 2019-01-12 18:11:33
 	 */
-	public static List<Integer> toDistinctValList(List<? extends AlgoMj> list) {
+	public List<Integer> toDistinctValList(List<? extends AlgoMj> list) {
 		if (list == null) {
 			return null;
 		}
@@ -1016,7 +1016,7 @@ public class AlgoMjUtil {
 	 * @author zai
 	 * 2019-01-07 13:32:14
 	 */
-	public static int[] valListToArr(List<Integer> list) {
+	public int[] valListToArr(List<Integer> list) {
 		int[] arr = new int[list.size()];
 		for (int i = 0; i < arr.length; i++) {
 			arr[i] = list.get(i).intValue();
@@ -1032,7 +1032,7 @@ public class AlgoMjUtil {
 	 * @author zai
 	 * 2019-01-06 15:04:53
 	 */
-	public static List<Integer> toValList(List<? extends AlgoMj> list) {
+	public List<Integer> toValList(List<? extends AlgoMj> list) {
 		if (list == null) {
 			return null;
 		}
@@ -1050,7 +1050,7 @@ public class AlgoMjUtil {
 	 * @author zai
 	 * 2019-01-14 10:28:58
 	 */
-	public static List<Integer> getChiLimit(List<int[]> chiGroups, List<Integer> chosenChiOption, Integer targetVal) {
+	public List<Integer> getChiLimit(List<int[]> chiGroups, List<Integer> chosenChiOption, Integer targetVal) {
 		if (chiGroups == null) {
 			return null;
 		}
@@ -1080,20 +1080,20 @@ public class AlgoMjUtil {
 	 * @author zai
 	 * 2019-01-06 15:08:27
 	 */
-	public static List<Integer> toZeroValList(List<AlgoMj> list) {
+	public List<Integer> toZeroValList(List<AlgoMj> list) {
 		return list.stream().map((mj) -> {
 			return 0;
 		}).collect(Collectors.toList());
 	}
 	
-	public static boolean isHu(List<Integer> srcList, int checkHu) {
+	public boolean isHu(List<Integer> srcList, int checkHu) {
 		List<Integer> list = new ArrayList<>(srcList.size() + 1);
 		list.addAll(srcList);
 		list.add(checkHu);
 		Collections.sort(list);
 		
 		
-		Map<Integer, List<Integer>> map = BasicAlgoUtil.getSameElemenets(list, null);
+		Map<Integer, List<Integer>> map = getSameElemenets(list, null);
 		Set<Entry<Integer, List<Integer>>> entrySet = map.entrySet();
 		
 		Iterator<Entry<Integer, List<Integer>>> it = entrySet.iterator();

@@ -3,13 +3,11 @@ package xzcode.ggserver.game.common.algo;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -33,9 +31,10 @@ public class BasicAlgoUtil {
 	 * @author zai
 	 * 2019-05-28 15:29:59
 	 */
-	public static void sort(int[] arr) {
+	public  void sort(int[] arr) {
 		Arrays.sort(arr);
 	}
+	
 	
 	/**
 	 * 从大到小排序int[]
@@ -44,7 +43,7 @@ public class BasicAlgoUtil {
 	 * @author zai
 	 * 2019-05-28 15:30:12
 	 */
-	public static void rSort(int[] arr) {
+	public void rSort(int[] arr) {
 		Arrays.sort(arr);
 		ArrayUtils.reverse(arr);
 	}
@@ -57,7 +56,7 @@ public class BasicAlgoUtil {
 	 * @author zai
 	 * 2019-05-28 16:40:01
 	 */
-	public static int[] distinct(int[] arr) {
+	public int[] distinct(int[] arr) {
 		int count = 0;
 		int[] arr1 = new int[arr.length];
 		boolean flag = false;
@@ -85,7 +84,7 @@ public class BasicAlgoUtil {
 	 * @author zai
 	 * 2019-05-28 18:20:52
 	 */
-	public static int distinctAndCount(int[] arr) {
+	public int distinctAndCount(int[] arr) {
 		int count = 0;
 		int[] arr1 = new int[arr.length];
 		boolean flag = false;
@@ -114,7 +113,7 @@ public class BasicAlgoUtil {
 	 * @author zai
 	 * 2019-05-28 19:02:50
 	 */
-	public static Map<Integer, List<Integer>> getSameElemenets(List<Integer> srcList, Integer minElementSize) {
+	public Map<Integer, List<Integer>> getSameElemenets(List<Integer> srcList, Integer minElementSize) {
 		Map<Integer, List<Integer>> map = new LinkedHashMap<>(10);
 		List<Integer> tmp = null;
 		for (int i = 0; i < srcList.size(); i++) {
@@ -140,7 +139,7 @@ public class BasicAlgoUtil {
 	}
 	
 	
-	public static List<Integer> intArrToList(int[] srcArr) {
+	public List<Integer> intArrToList(int[] srcArr) {
 		List<Integer> list = new ArrayList<>(srcArr.length);
 		for (int i : srcArr) {
 			list.add(i);
@@ -158,7 +157,7 @@ public class BasicAlgoUtil {
 	 * @param <T>
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> void shift(List<T> list, int offset) {
+	public <T> void shift(List<T> list, int offset) {
 		
 		Object[] array = list.toArray();
 		ArrayUtils.shift(array, offset);
@@ -176,7 +175,7 @@ public class BasicAlgoUtil {
 	 * @author zai
 	 * 2019-06-03 16:30:21
 	 */
-	public static void shift(int[] array, int offset) {
+	public void shift(int[] array, int offset) {
 		ArrayUtils.shift(array, offset);
 	}
 	
@@ -190,7 +189,7 @@ public class BasicAlgoUtil {
 	 * @author zai
 	 * 2019-05-30 16:18:23
 	 */
-	public static List<int[]> getStraightCombo(int[] srcArr, int target, int comboLen) {
+	public List<int[]> getStraightCombo(int[] srcArr, int target, int comboLen) {
 		List<int[]> createStraightCombos = createStraightCombos(target, comboLen);
 		List<int[]> list = new ArrayList<>(createStraightCombos.size());
 		for (int i = 0; i < createStraightCombos.size(); i++) {
@@ -217,7 +216,7 @@ public class BasicAlgoUtil {
 	}
 	
 	
-	public static List<List<Integer>> createStraightComboList(int target, int comboLen) {
+	public List<List<Integer>> createStraightComboList(int target, int comboLen) {
 		List<List<Integer>> list = new ArrayList<>(comboLen);
 		List<Integer> tmp = null;
 		int min = target - comboLen + 1;
@@ -241,7 +240,7 @@ public class BasicAlgoUtil {
 	 * @author zai
 	 * 2019-06-01 23:33:50
 	 */
-	public static List<int[]> createStraightCombos(int target, int comboLen) {
+	public List<int[]> createStraightCombos(int target, int comboLen) {
 		List<int[]> list = new ArrayList<>(comboLen);
 		int[] tmp = null;
 		int min = target - comboLen + 1;
@@ -263,7 +262,7 @@ public class BasicAlgoUtil {
 	 * @author zai
 	 * 2019-06-02 00:07:43
 	 */
-	public static int[] toDistinctArr(List<int[]> list) {
+	public int[] toDistinctArr(List<int[]> list) {
 		int count = 0;
 		for (int[] iarr : list) {
 			count += iarr.length;
@@ -290,7 +289,7 @@ public class BasicAlgoUtil {
 	 * @author zai
 	 * 2019-05-31 16:25:23
 	 */
-    public static int combination(int n, int m) {
+    public int combination(int n, int m) {
         if (m > n)
             return 0; // 如果总数小于取出的数，直接返回0
 
@@ -315,7 +314,7 @@ public class BasicAlgoUtil {
      * @author zai
      * 2019-06-01 20:02:08
      */
-    public static long combination(long n, long m) {
+    public long combination(long n, long m) {
         if (m > n)
             return 0; // 如果总数小于取出的数，直接返回0
 
@@ -340,7 +339,7 @@ public class BasicAlgoUtil {
      * @author zai
      * 2019-06-01 20:09:33
      */
-    public static BigInteger combinationBig(long n, long m) {
+    public BigInteger combinationBig(long n, long m) {
         if (m > n) {
         	return BIG_INTEGER_ZERO; 
         }
@@ -393,7 +392,7 @@ public class BasicAlgoUtil {
     }
 
 	
-	public static void printArr(int[] arr) {
+	public void printArr(int[] arr) {
 		for (int i = 0; i < arr.length; i++) {
 			System.out.print(arr[i]);
 			if (i < arr.length - 1) {
@@ -402,7 +401,7 @@ public class BasicAlgoUtil {
 		}
 		System.out.println();
 	}
-	public static String concatArr(int[] arr) {
+	public String concatArr(int[] arr) {
 		StringBuilder sb = new StringBuilder(arr.length + arr.length - 1);
 		for (int i = 0; i < arr.length; i++) {
 			sb.append(arr[i]);
@@ -415,6 +414,7 @@ public class BasicAlgoUtil {
 	
     
     public static void main(String[] args) throws Exception {
+    	BasicAlgoUtil util = new BasicAlgoUtil();
     	int len = 100 * 10000;
     	//len = 10;
 		List<int[]> list = new ArrayList<>(len);
@@ -448,7 +448,7 @@ public class BasicAlgoUtil {
 		
 		startMs = System.currentTimeMillis();
 		for (int[] arr : list) {
-			sort(arr);
+			util.sort(arr);
 		}
 		endMs = System.currentTimeMillis() - startMs;
 		System.out.println("sortIntArrayAsc time:"+ endMs + " ms");
@@ -457,7 +457,7 @@ public class BasicAlgoUtil {
 		
 		startMs = System.currentTimeMillis();
 		for (int[] arr : list) {
-			rSort(arr);
+			util.rSort(arr);
 		}
 		endMs = System.currentTimeMillis() - startMs;
 		System.out.println("sortIntArrayDesc time:"+ endMs + " ms");
@@ -466,7 +466,7 @@ public class BasicAlgoUtil {
 		startMs = System.currentTimeMillis();
 		for (int[] arr : list) {
 			
-			distinct(arr);
+			util.distinct(arr);
 			//printArr(distinct(arr));
 		}
 		endMs = System.currentTimeMillis() - startMs;
@@ -475,7 +475,7 @@ public class BasicAlgoUtil {
 		startMs = System.currentTimeMillis();
 		for (int[] arr : list) {
 			
-			distinctAndCount(arr);
+			util.distinctAndCount(arr);
 		}
 		endMs = System.currentTimeMillis() - startMs;
 		System.out.println("distinctAndCount time:"+ endMs + " ms");
@@ -483,7 +483,7 @@ public class BasicAlgoUtil {
 		
 		startMs = System.currentTimeMillis();
 		for (int i = 0; i < len; i++) {
-			getSameElemenets(srcList, 3);
+			util.getSameElemenets(srcList, 3);
 		}
 		endMs = System.currentTimeMillis() - startMs;
 		System.out.println("getSameElemenets time:"+ endMs + " ms");
@@ -491,30 +491,30 @@ public class BasicAlgoUtil {
 		
 		
 		
-		List<int[]> createStraightCombos = createStraightCombos(target, comboLen);
+		List<int[]> createStraightCombos = util.createStraightCombos(target, comboLen);
 		String cb3string = "";
 		for (int[] is : createStraightCombos) {
-			cb3string +="[" +concatArr(is) + "],";
+			cb3string +="[" + util.concatArr(is) + "],";
 		}
 		System.out.println("createStraightCombos :"+ cb3string + "");
 		startMs = System.currentTimeMillis();
 		for (int i = 0; i < len; i++) {
-			createStraightCombos(5, 4);			
+			util.createStraightCombos(5, 4);			
 		}
 		endMs = System.currentTimeMillis() - startMs;
 		System.out.println("createStraightCombos time:"+ endMs + "ms");
 		
 		
 		
-		List<int[]> getStraightCombo = getStraightCombo(srcArr,target, comboLen);
+		List<int[]> getStraightCombo = util.getStraightCombo(srcArr,target, comboLen);
 		String getStraightComboStr = "";
 		for (int[] is : getStraightCombo) {
-			getStraightComboStr +="[" +concatArr(is) + "],";
+			getStraightComboStr +="[" +util.concatArr(is) + "],";
 		}
 		System.out.println("getStraightCombo :"+ getStraightComboStr + "");
 		startMs = System.currentTimeMillis();
 		for (int i = 0; i < len; i++) {
-			getStraightCombo(srcArr,target, comboLen);			
+			util.getStraightCombo(srcArr,target, comboLen);			
 		}
 		endMs = System.currentTimeMillis() - startMs;
 		System.out.println("getStraightCombo time:"+ endMs + "ms");
@@ -523,7 +523,7 @@ public class BasicAlgoUtil {
 		
 		startMs = System.currentTimeMillis();
 		for (int i = 0; i < len; i++) {
-			combination(54, 13);
+			util.combination(54, 13);
 		}
 		endMs = System.currentTimeMillis() - startMs;
 		System.out.println("combination :"+ endMs + " ms");
@@ -531,7 +531,7 @@ public class BasicAlgoUtil {
 		
 		startMs = System.currentTimeMillis();
 		for (int i = 0; i < len; i++) {
-			combination(32L, 13L);
+			util.combination(32L, 13L);
 		}
 		endMs = System.currentTimeMillis() - startMs;
 		System.out.println("combination long :"+ endMs + " ms");
@@ -539,31 +539,31 @@ public class BasicAlgoUtil {
 		
 		startMs = System.currentTimeMillis();
 		for (int i = 0; i < len; i++) {
-			combinationBig(32, 13);			
+			util.combinationBig(32, 13);			
 		}
 		endMs = System.currentTimeMillis() - startMs;
 		System.out.println("combinationBig :"+ endMs + " ms");
 		
 		startMs = System.currentTimeMillis();
 		for (int i = 0; i < len; i++) {
-			shift(srcList, 5);			
+			util.shift(srcList, 5);			
 		}
 		endMs = System.currentTimeMillis() - startMs;
 		System.out.println("shift :"+ endMs + " ms");
 		
 		startMs = System.currentTimeMillis();
 		for (int i = 0; i < len; i++) {
-			shift(srcArr, 5);
+			util.shift(srcArr, 5);
 		}
 		endMs = System.currentTimeMillis() - startMs;
 		System.out.println("shift int[] :"+ endMs + " ms");
 		
 		
 		System.out.println();
-		System.out.println(combination(13, 5) * combination(8, 5) * 1);
+		System.out.println(util.combination(13, 5) * util.combination(8, 5) * 1);
 		
 		int[] aa = new int[] {2,3,5,4,1};
-		rSort(aa);
+		util.rSort(aa);
 		for (int i : aa) {
 			System.out.print(i + " ,");
 		}

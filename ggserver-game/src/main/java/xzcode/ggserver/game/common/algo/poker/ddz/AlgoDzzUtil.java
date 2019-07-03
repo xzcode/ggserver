@@ -45,6 +45,8 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 		return CARD_VAL_LIST;
 	}
 	
+	
+	
 	/**
 	 * 是否A
 	 * 
@@ -565,6 +567,7 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 		}
 		//获取跟牌三张
 		List<Integer> followShunZiOpts = getShunZiOptions(followCards, 3);
+		
 		//获取手牌三张集合
 		List<Integer> shunZiOptions = getShunZiOptions(cards, 3);
 		
@@ -688,8 +691,9 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 				}
 			}
 			if (opts.size() > 0) {
+				
 				for (Integer opt : opts) {
-					for (int i = 0; i < cards.length; i++) {
+					for (int i = 0; i < cards.length - 1; i++) {
 						int card = cards[i];
 						if (card % 100 != opt) {
 							if (cards[i] % 100 == cards[i + 1] % 100) {
@@ -708,9 +712,9 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 										}
 									}
 								}
-								arr[3] = card;
+								arr[4] = cards[i];
+								arr[5] = cards[i + 1];
 								list.add(arr);
-							
 							}
 							
 						}
@@ -965,9 +969,10 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 		long startTime = 0;
 		long useTime = 0;
 		
-		int[] cards = new int[] {105,205,305,108, 201,306};
-		int[] followCards = new int[] {103,203,303,405};
+		int[] cards = new int[] {105,205,305,108, 208,306};
+		int[] followCards = new int[] {103,203,303,405,305};
 		for (int i = 0; i < testTimes; i++) {
+			
 			/*
 			testList.add(new int[] {
 				random.nextInt(101, 114),
@@ -980,8 +985,9 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 				random.nextInt(501, 514),
 				random.nextInt(501, 514),
 				random.nextInt(501, 514),
-			});		
+			});	
 			*/	
+			
 			testList.add(cards);
 		}
 		
@@ -989,9 +995,11 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 		//预热
 		int cardType = util.checkCardType(cards);
 		List<int[]> checkFollowSanDaiYi = util.checkFollowSanDaiYi(cards,followCards);
+		List<int[]> checkFollowSanDaiEr = util.checkFollowSanDaiEr(cards,followCards);
 		
 		System.out.println("checkCardType: " + cardType);
 		System.out.println("checkFollowSanDaiYi: " + checkFollowSanDaiYi);
+		System.out.println("checkFollowSanDaiEr: " + checkFollowSanDaiEr);
 		
 		//计算时间
 		startTime = System.currentTimeMillis();

@@ -5,12 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import xzcode.ggserver.game.common.algo.BasicAlgoUtil;
+
 /**
  * 二八杠算法工具类
  * 
  * @author zai 2019-05-25 17:09:07
  */
-public class AlgoG28Util {
+public class AlgoG28Util  extends BasicAlgoUtil{
 
 	public static final int TONG_1 = 110;
 	public static final int TONG_2 = 120;
@@ -131,7 +133,7 @@ public class AlgoG28Util {
 	 * @author zai
 	 * 2019-05-27 17:36:00
 	 */
-	public static AlgoG28CardType checkCardType(int[] cards) {
+	public AlgoG28CardType checkCardType(int[] cards) {
 		rSort(cards);
 		AlgoG28CardType cardType = CARD_TYPES.get(cards[0] * 1000 + cards[1]);
 		if (cardType == null) {
@@ -148,7 +150,7 @@ public class AlgoG28Util {
 	 * @author zai
 	 * 2019-05-27 17:28:02
 	 */
-	public static void rSort(int[] cards) {
+	public void rSort(int[] cards) {
 		if (cards[0] < cards[1]) {
 			int tmp = cards[0];
 			cards[0] = cards[1];

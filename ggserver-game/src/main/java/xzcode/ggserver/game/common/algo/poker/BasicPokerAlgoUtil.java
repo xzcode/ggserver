@@ -226,6 +226,78 @@ public class BasicPokerAlgoUtil extends BasicAlgoUtil{
 		return 0;
 	}
 	
+	
+	/**
+	 * 排序，并把相同牌值的牌放在一起
+	 * 
+	 * @param cards 牌集
+	 * @param orderType 排序方式，true 升序，false降序
+	 * @author zai
+	 * 2019-07-03 18:40:50
+	 */
+	public void sortSameValues(int[] cards, boolean orderType) {
+		
+		List<Integer> list = new ArrayList<>(cards.length);
+		for (int i = 0; i < cards.length; i++) {
+			list.add(cards[i]);
+		}
+		
+		list.sort((o1, o2) -> {
+			if (orderType) {
+				if (o1 % 100 == o2 % 100) {
+					return o1 - o2;
+				}else {
+					return o1 % 100 - o2 % 100;
+				}
+			}else {
+				if (o2 % 100 == o1 % 100) {
+					return o2 - o1;
+				}else {
+					return o2 % 100 - o1 % 100;
+				}
+			}
+		});
+		
+		for (int i = 0; i < cards.length; i++) {
+			cards[i] = list.get(i);
+		}
+	}
+	/**
+	 * 升序牌型，并把相同牌值并在一起
+	 * 
+	 * @param cards
+	 * @author zai
+	 * 2019-07-03 18:43:34
+	 */
+	public void sortSameValues(int[] cards) {
+		sortSameValues(cards, true);
+	}
+	
+	/**
+	 * 将序牌型，并把相同牌值并在一起
+	 * 
+	 * @param cards
+	 * @author zai
+	 * 2019-07-03 18:44:02
+	 */
+	public void rSortSameValues(int[] cards) {
+		sortSameValues(cards, true);
+	}
+	
+	
+	public List<Integer> getContainValues(List<Integer> cards, Integer containValue) {
+		List<Integer> list = null;
+		for (Integer card : cards) {
+			if (card % 100 == containValue % 100) {
+				if (list == null) {
+					list = new ArrayList<>(cards.size() / 2);					
+				}
+				list.add(card);
+			}
+		}
+		return list;
+	}
+	
 	/**
 	 * 去除花色(百位)
 	 * 
@@ -496,6 +568,8 @@ public class BasicPokerAlgoUtil extends BasicAlgoUtil{
 		boolean containsValue = util.containsValue(new int[] {101,105,106,102,209}, 209);
 		boolean hasFlush = util.hasFlush(new int[] {106,101,101,102,103}, 3);
 		boolean isFullHouse = util.isFullHouse(new int[] {102,102,106,106,106});
+		int[] sortTestArr = new int[] {109,202,206,106,306,113,307,313};
+		util.sortSameValues(sortTestArr);
 		
 		System.out.println("straight: " + straight);
 		System.out.println("straightA: " + straightA);
@@ -503,6 +577,9 @@ public class BasicPokerAlgoUtil extends BasicAlgoUtil{
 		System.out.println("containsValue: " + containsValue);
 		System.out.println("hasFlush: " + hasFlush);
 		System.out.println("isFullHouse: " + isFullHouse);
+		
+		System.out.println("sortSameValues: " + sortTestArr);
+		util.printArr(sortTestArr);
 		
 		//计算时间
 		startTime = System.currentTimeMillis();
