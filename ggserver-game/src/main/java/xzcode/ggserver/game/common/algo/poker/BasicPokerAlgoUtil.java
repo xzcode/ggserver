@@ -238,6 +238,54 @@ public class BasicPokerAlgoUtil extends BasicAlgoUtil{
 	public void sortSameValues(int[] cards, boolean orderType) {
 		
 		List<Integer> list = new ArrayList<>(cards.length);
+		for (Integer card : cards) {
+			list.add(card);
+		}
+		List<Integer> multiple = new ArrayList<>(cards.length / 2);
+		for (Integer card : cards) {
+			List<Integer> containValues = getContainValues(list, card);
+			if (containValues != null && containValues.size() > 1) {
+				multiple.addAll(containValues);
+				list.removeAll(containValues);
+			}
+		}
+		
+		if (orderType) {
+			multiple.sort((o1, o2) -> {
+				if (orderType) {
+					if (o1 % 100 == o2 % 100) {
+						return o1 - o2;
+					}else {
+						return o1 % 100 - o2 % 100;
+					}
+				}else {
+					if (o2 % 100 == o1 % 100) {
+						return o2 - o1;
+					}else {
+						return o2 % 100 - o1 % 100;
+					}
+				}
+			});
+			list.sort((o1, o2) -> o1 % 100 - o2 % 100);
+		}
+		
+		list.addAll(0, multiple);
+		for (int i = 0; i < cards.length; i++) {
+			cards[i] = list.get(i);
+		}
+	}
+	
+	/**
+	 * 相同牌值的牌放在一起
+	 * 
+	 * @param cards 牌集
+	 * @param orderType 排序方式，true 升序，false降序
+	 * @author zai
+	 * 2019-07-03 18:40:50
+	 */
+	public void makeSameValuesTogether(int[] cards, boolean orderType) {
+		
+		List<Integer> list = new ArrayList<>(cards.length);
 		for (int i = 0; i < cards.length; i++) {
 			list.add(cards[i]);
 		}
@@ -257,11 +305,12 @@ public class BasicPokerAlgoUtil extends BasicAlgoUtil{
 				}
 			}
 		});
-		
 		for (int i = 0; i < cards.length; i++) {
 			cards[i] = list.get(i);
 		}
+	
 	}
+	
 	/**
 	 * 升序牌型，并把相同牌值并在一起
 	 * 
@@ -555,7 +604,16 @@ public class BasicPokerAlgoUtil extends BasicAlgoUtil{
 					random.nextInt(201, 214),
 					random.nextInt(301, 314),
 					random.nextInt(401, 414),
-					random.nextInt(501, 514),
+					random.nextInt(101, 114),
+					random.nextInt(301, 314),
+					random.nextInt(401, 414),
+					random.nextInt(401, 414),
+					random.nextInt(101, 114),
+					random.nextInt(201, 214),
+					random.nextInt(301, 314),
+					random.nextInt(401, 414),
+					random.nextInt(201, 214),
+					random.nextInt(301, 314),
 					});			
 		}
 		
@@ -568,7 +626,7 @@ public class BasicPokerAlgoUtil extends BasicAlgoUtil{
 		boolean containsValue = util.containsValue(new int[] {101,105,106,102,209}, 209);
 		boolean hasFlush = util.hasFlush(new int[] {106,101,101,102,103}, 3);
 		boolean isFullHouse = util.isFullHouse(new int[] {102,102,106,106,106});
-		int[] sortTestArr = new int[] {109,202,206,106,306,113,307,313};
+		int[] sortTestArr = new int[] {109,202,206,106,306,113,307,313,101,123,406};
 		util.sortSameValues(sortTestArr);
 		
 		System.out.println("straight: " + straight);
@@ -579,6 +637,9 @@ public class BasicPokerAlgoUtil extends BasicAlgoUtil{
 		System.out.println("isFullHouse: " + isFullHouse);
 		
 		System.out.println("sortSameValues: " + sortTestArr);
+		
+		
+		
 		util.printArr(sortTestArr);
 		
 		//计算时间
@@ -643,13 +704,27 @@ public class BasicPokerAlgoUtil extends BasicAlgoUtil{
 		
 		//计算时间
 		startTime = System.currentTimeMillis();
-		
 		for (int[] is : testList) {
 			util.hasFlush(is, 3);
 		}
 		useTime = System.currentTimeMillis() - startTime;
-		
 		System.out.println("hasFlush : " + useTime + " ms");
+		
+		//计算时间
+		startTime = System.currentTimeMillis();
+		for (int[] is : testList) {
+			util.sortSameValues(is);
+		}
+		useTime = System.currentTimeMillis() - startTime;
+		System.out.println("sortSameValues : " + useTime + " ms");
+		
+		//计算时间
+		startTime = System.currentTimeMillis();
+		for (int[] is : testList) {
+			util.makeSameValuesTogether(is, true);
+		}
+		useTime = System.currentTimeMillis() - startTime;
+		System.out.println("makeSameValuesTogether : " + useTime + " ms");
 		
 	}
 	

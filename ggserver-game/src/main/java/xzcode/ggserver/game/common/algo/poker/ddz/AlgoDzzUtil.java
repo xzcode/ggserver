@@ -222,33 +222,36 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 		
 		//判断对子
 		if (isDuiZi(followCards)) {
-			opts =  checkFollowDuiZi(cards, followCards);
+			opts = checkFollowDuiZi(cards, followCards);
 		}
 		
 		//判断三张
 		if (isSanZhang(followCards)) {
-			opts =  checkFollowDuiZi(cards, followCards);
+			opts = checkFollowDuiZi(cards, followCards);
 		}
 		
 		//判断炸弹
 		if (isZhaDan(followCards)) {
-			opts =  checkFollowZhaDan(cards, followCards);
+			opts = checkFollowZhaDan(cards, followCards);
 		}
 		
 		//判断三带一
 		if (isSanDaiYi(followCards)) {
-			opts =  checkFollowSanDaiYi(cards, followCards);
+			opts = checkFollowSanDaiYi(cards, followCards);
 		}
-		/*
 		//判断三带二
 		if (isSanDaiEr(followCards)) {
-			opts =  AlgoDzzCardType.SAN_DAI_ER;
+			opts = checkFollowSanDaiYi(cards, followCards);
 		}
+		
 		
 		//判断四带二(四带二张单牌)
 		if (isSiDaiErDan(followCards)) {
-			opts =  AlgoDzzCardType.SI_DAI_ER_DAN;
+			opts = checkSiDaiErDan(cards, followCards);
 		}
+		
+		
+		/*
 		
 		//判断四带二(四张带两对)
 		if (isSiDaiErShuang(followCards)) {
@@ -621,13 +624,12 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 		List<Integer> list = null;
 		int[] ncards = removeSuits(cards);
 		sort(ncards);
-		for (int i = 0; i < ncards.length - shunziSize; i++) {
+		for (int i = 0; i <= ncards.length - shunziSize ; i++) {
 			if (ncards[i] == ncards[i + shunziSize - 1]) {
 				if (list == null) {
 					list = new ArrayList<>(3);
 				}
 				list.add(ncards[i]);
-				i += shunziSize - 1;
 			}
 		}
 		return list;
@@ -691,17 +693,18 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 				}
 			}
 			if (opts.size() > 0) {
-				
+				//让相同点算的牌放在一起
+				makeSameValuesTogether(cards, true);
 				for (Integer opt : opts) {
 					for (int i = 0; i < cards.length - 1; i++) {
 						int card = cards[i];
 						if (card % 100 != opt) {
 							if (cards[i] % 100 == cards[i + 1] % 100) {
-							
+								
 								if (list == null) {
 									list = new ArrayList<>(3);
 								}
-								int[] arr = new int[4];
+								int[] arr = new int[5];
 								int k = 0;
 								for (int j = 0; j < 3; j++) {
 									for (; k < cards.length; k++) {
@@ -712,16 +715,15 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 										}
 									}
 								}
-								arr[4] = cards[i];
-								arr[5] = cards[i + 1];
+								arr[3] = cards[i];
+								arr[4] = cards[i + 1];
 								list.add(arr);
+								//i++;  //解除注释可开启对子同牌值的多个选项
 							}
-							
 						}
 					}
 				}
 			}
-		
 		}
 		
 		return list;
@@ -747,6 +749,78 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 				(cardvals[0] == cardvals[3]) 
 				|| 
 				(cardvals[2] == cardvals[5]);
+	}
+	
+	/**
+	 * 获取四带二跟牌（四张带两张）
+	 * 
+	 * @param cards
+	 * @param followCards
+	 * @return
+	 * @author zai
+	 * 2019-07-02 17:58:40
+	 */
+	public List<int[]> checkSiDaiErDan(int[] cards, int[] followCards) {
+		List<int[]> list = null;
+		if (cards.length < followCards.length) {
+			return list;
+		}
+		//获取跟牌三张
+		List<Integer> followShunZiOpts = getShunZiOptions(followCards, 4);
+		//获取手牌三张集合
+		List<Integer> shunZiOptions = getShunZiOptions(cards, 4);
+		
+		if (shunZiOptions != null) {
+			
+			List<Integer> opts = null;
+			
+			//对比牌值大小
+			for (Integer opt : shunZiOptions) {
+				for (Integer fopt : followShunZiOpts) {
+					if (opt > fopt) {
+						if (opts == null) {
+							opts = new ArrayList<>(2);
+						}
+						opts.add(opt);
+					}
+				}
+			}
+			if (opts.size() > 0) {
+				
+				//让相同点算的牌放在一起
+				makeSameValuesTogether(cards, true);
+				
+				for (Integer opt : opts) {
+					for (int i = 0; i < cards.length - 1; i++) {
+						if (cards[i] % 100 != opt && cards[i + 1] % 100 != opt) {
+							//if (cards[i] % 100 == cards[i + 1] % 100) {
+								
+								if (list == null) {
+									list = new ArrayList<>(3);
+								}
+								int[] arr = new int[6];
+								int k = 0;
+								for (int j = 0; j < 4; j++) {
+									for (; k < cards.length; k++) {
+										if (cards[k] % 100 == opt) {
+											arr[j] = cards[k];
+											k++;
+											break;
+										}
+									}
+								}
+								arr[4] = cards[i];
+								arr[5] = cards[i + 1];
+								list.add(arr);
+								//i++;  //解除注释可开启对子同牌值的多个选项
+							}
+						//}
+					}
+				}
+			}
+		}
+		
+		return list;
 	}
 	
 	/**
@@ -781,6 +855,79 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 				cardvals[4] == cardvals[7]
 			);
 	}
+	
+	/**
+	 * 获取四带二跟牌（四张带两对）
+	 * 
+	 * @param cards
+	 * @param followCards
+	 * @return
+	 * @author zai
+	 * 2019-07-02 17:58:40
+	 */
+	public List<int[]> checkSiDaiErShuang(int[] cards, int[] followCards) {
+		List<int[]> list = null;
+		if (cards.length < followCards.length) {
+			return list;
+		}
+		//获取跟牌三张
+		List<Integer> followShunZiOpts = getShunZiOptions(followCards, 4);
+		//获取手牌三张集合
+		List<Integer> shunZiOptions = getShunZiOptions(cards, 4);
+		
+		if (shunZiOptions != null) {
+			
+			List<Integer> opts = null;
+			
+			//对比牌值大小
+			for (Integer opt : shunZiOptions) {
+				for (Integer fopt : followShunZiOpts) {
+					if (opt > fopt) {
+						if (opts == null) {
+							opts = new ArrayList<>(2);
+						}
+						opts.add(opt);
+					}
+				}
+			}
+			if (opts.size() > 0) {
+				
+				//让相同点算的牌放在一起
+				makeSameValuesTogether(cards, true);
+				
+				for (Integer opt : opts) {
+					for (int i = 0; i < cards.length - 1; i++) {
+						if (cards[i] % 100 != opt) {
+							if (cards[i] % 100 == cards[i + 1] % 100) {
+								
+								if (list == null) {
+									list = new ArrayList<>(3);
+								}
+								int[] arr = new int[6];
+								int k = 0;
+								for (int j = 0; j < 4; j++) {
+									for (; k < cards.length; k++) {
+										if (cards[k] % 100 == opt) {
+											arr[j] = cards[k];
+											k++;
+											break;
+										}
+									}
+								}
+								arr[3] = cards[i];
+								arr[4] = cards[i + 1];
+								list.add(arr);
+								//i++;  //解除注释可开启对子同牌值的多个选项
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		return list;
+	}
+	
 	
 	
 	/**
@@ -969,8 +1116,8 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 		long startTime = 0;
 		long useTime = 0;
 		
-		int[] cards = new int[] {105,205,305,108, 208,306};
-		int[] followCards = new int[] {103,203,303,405,305};
+		int[] cards = new int[] { 114, 105, 205, 305, 108, 208, 306, 214, 101, 206,405, 303, 314, 313, 412, 413, 414 };
+		int[] followCards = new int[] {103, 203, 303, 403, 405, 305};
 		for (int i = 0; i < testTimes; i++) {
 			
 			/*
@@ -996,10 +1143,31 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 		int cardType = util.checkCardType(cards);
 		List<int[]> checkFollowSanDaiYi = util.checkFollowSanDaiYi(cards,followCards);
 		List<int[]> checkFollowSanDaiEr = util.checkFollowSanDaiEr(cards,followCards);
+		List<int[]> checkSiDaiErDan = util.checkSiDaiErDan(cards,followCards);
+		List<int[]> checkSiDaiErShuang = util.checkSiDaiErShuang(cards,followCards);
 		
 		System.out.println("checkCardType: " + cardType);
-		System.out.println("checkFollowSanDaiYi: " + checkFollowSanDaiYi);
-		System.out.println("checkFollowSanDaiEr: " + checkFollowSanDaiEr);
+		System.out.println("checkFollowSanDaiYi: ");
+		for (int[] is : checkFollowSanDaiYi) {
+			util.printArr(is);
+		}
+		System.out.println("checkFollowSanDaiEr: ");
+		for (int[] is : checkFollowSanDaiEr) {
+			util.printArr(is);
+		}
+		System.out.println("checkSiDaiErDan: ");
+		if (checkSiDaiErDan != null) {
+			for (int[] is : checkSiDaiErDan) {
+				util.printArr(is);
+			}
+		}
+		
+		System.out.println("checkSiDaiErShuang: ");		
+		if (checkSiDaiErShuang != null) {
+			for (int[] is : checkSiDaiErShuang) {
+				util.printArr(is);
+			}
+		}
 		
 		//计算时间
 		startTime = System.currentTimeMillis();
@@ -1016,6 +1184,15 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 		}
 		useTime = System.currentTimeMillis() - startTime;
 		System.out.println("checkFollowSanDaiYi : " + useTime + " ms");
+		
+		
+		//计算时间
+		startTime = System.currentTimeMillis();
+		for (int[] is : testList) {
+			util.checkFollowSanDaiEr(cards, followCards);
+		}
+		useTime = System.currentTimeMillis() - startTime;
+		System.out.println("checkFollowSanDaiEr : " + useTime + " ms");
 		
 		
 	}
