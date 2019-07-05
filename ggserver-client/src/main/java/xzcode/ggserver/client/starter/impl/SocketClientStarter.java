@@ -65,16 +65,17 @@ public class SocketClientStarter {
             if (logger.isInfoEnabled()) {
             	logger.info("GGServer Client start success!");
             }
-            channel.closeFuture().sync();
+            //channel.closeFuture().sync();
         }catch (Exception e) {
         	
         	throw new RuntimeException("GGServer Client start failed !! ", e);
         	
-		} finally {
+		} 
+        /*finally {
 			
             config.getWorkerGroup().shutdownGracefully();
             
-        }
+        }*/
     }
     
     /**

@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import xzcode.ggserver.game.common.algo.BasicAlgoUtil;
 
 /**
@@ -12,7 +11,7 @@ import xzcode.ggserver.game.common.algo.BasicAlgoUtil;
  * 
  * @author zai 2019-05-25 17:09:07
  */
-public class AlgoG28Util  extends BasicAlgoUtil{
+public class AlgoG28Util extends BasicAlgoUtil {
 
 	public static final int TONG_1 = 110;
 	public static final int TONG_2 = 120;
@@ -48,7 +47,7 @@ public class AlgoG28Util  extends BasicAlgoUtil{
 	/**
 	 * 牌型集合
 	 */
-	public static final Map<Integer, AlgoG28CardType> CARD_TYPES = new HashMap<>();
+	public static final Map<Integer, Integer> CARD_TYPES = new HashMap<>();
 	static {
 		
 		//初始化牌型集合
@@ -110,7 +109,6 @@ public class AlgoG28Util  extends BasicAlgoUtil{
 		
 		CARD_TYPES.put(TONG_8 * 1000 + TONG_2, AlgoG28CardType.GANG_28);
 		
-		
 		CARD_TYPES.put(TONG_1 * 1000 + TONG_1, AlgoG28CardType.BAO_1);
 		CARD_TYPES.put(TONG_2 * 1000 + TONG_2, AlgoG28CardType.BAO_2);
 		CARD_TYPES.put(TONG_3 * 1000 + TONG_3, AlgoG28CardType.BAO_3);
@@ -133,14 +131,30 @@ public class AlgoG28Util  extends BasicAlgoUtil{
 	 * @author zai
 	 * 2019-05-27 17:36:00
 	 */
-	public AlgoG28CardType checkCardType(int[] cards) {
+	public int checkCardType(int[] cards) {
 		rSort(cards);
-		AlgoG28CardType cardType = CARD_TYPES.get(cards[0] * 1000 + cards[1]);
-		if (cardType == null) {
-			return AlgoG28CardType.NONE;
+		return CARD_TYPES.get(cards[0] * 1000 + cards[1]);
+	}
+	
+	/**
+	 * 值对比
+	 * 
+	 * @param cards1
+	 * @param cards2
+	 * @return 如果cards1 大 返回1，如果cards2大返回-1，一样的值返回0
+	 * @author zai
+	 * 2019-07-05 18:29:52
+	 */
+	public int compareValues(int[] cards1, int[] cards2) {
+		int value1 = cards1[0] * 1000 + cards1[1];
+		int value2 = cards2[0] * 1000 + cards2[1];
+		if (value1 > value2) {
+			return 1;
 		}
-		
-		return cardType;
+		if (value1 < value2) {
+			return -1;
+		}
+		return 0;
 	}
 	
 	/**

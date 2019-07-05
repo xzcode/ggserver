@@ -97,7 +97,7 @@ public class TcpDecodeHandler extends ByteToMessageDecoder {
 		
 		in.readBytes(dataTag);
 		
-		String reqTag = new String(dataTag, config.getCharset());
+		//String reqTag = new String(dataTag, config.getCharset());
 		
 		//读取数据体 =  总包长 - 标识长度占用字节 - 标识体占用字节数
 		int bodyLen = packLen - REQUEST_TAG_LENGTH_BYTES - reqTagSize;
@@ -112,11 +112,11 @@ public class TcpDecodeHandler extends ByteToMessageDecoder {
 		
 		
 		//获取与请求标识关联的方法参数对象
-		IOnMessageInvoker invoker = config.getRequestMessageManager().get(reqTag);
+		//IOnMessageInvoker invoker = config.getRequestMessageManager().get(reqTag);
 		
-		if (invoker != null) {
+		//if (invoker != null) {
 			config.getTaskExecutor().submit(new RequestMessageTask(dataTag, data, ctx.channel().attr(DefaultChannelAttributeKeys.SESSION).get(), config));
-		}
+		//}
 		
 		if(LOGGER.isDebugEnabled()){
         	LOGGER.debug("\nReceived binary message  <----,\nchannel:{}\ntag:{}\nbytes-length:{}", ctx.channel(), dataTag, bodyLen);

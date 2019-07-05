@@ -1,85 +1,95 @@
 package xzcode.ggserver.game.common.algo.g28;
 
-public enum AlgoG28CardType {
+public interface AlgoG28CardType {
 	
-	NONE(1000, "鳖十"),
+	/**鳖十*/
+	int NONE = 1000;
+	/**一点*/
+	int DOT_1 = 1010;
+	/**一点半*/
+	int DOT_1_HALF = 1015;
 	
-	DOT_1(1010, "一点"),
-	DOT_1_HALF(1015, "一点半"),
+	/**二点*/
+	int DOT_2 = 1020;
 	
-	DOT_2(1020, "二点"),
-	DOT_2_HALF(1025, "二点半"),
+	/**二点半*/
+	int DOT_2_HALF = 1025;
 	
-	DOT_3(1030, "三点"),
-	DOT_3_HALF(1035, "三点半"),
+	/**三点*/
+	int DOT_3 = 1030;
 	
-	DOT_4(1040, "四点"),
-	DOT_4_HALF(1045, "四点半"),
+	/**三点半*/
+	int DOT_3_HALF = 1035;
 	
-	DOT_5(1050, "五点"),
-	DOT_5_HALF(1055, "五点半"),
+	/**四点*/
+	int DOT_4 = 1040;
 	
-	DOT_6(1060, "六点"),
-	DOT_6_HALF(1065, "六点半"),
+	/**四点半*/
+	int DOT_4_HALF = 1045;
 	
-	DOT_7(1070, "七点"),
-	DOT_7_HALF(1075, "七点半"),
+	/**五点*/
+	int DOT_5 = 1050;
 	
-	DOT_8(1080, "八点"),
-	DOT_8_HALF(1085, "八点半"),
+	/**五点半*/
+	int DOT_5_HALF = 1055;
 	
-	DOT_9(1090, "九点"),
-	DOT_9_HALF(1095, "九点半"),
+	/**六点*/
+	int DOT_6 = 1060;
 	
-	GANG_28(1128, "二八杠"),
+	/**六点半*/
+	int DOT_6_HALF = 1065;
 	
-	BAO_1(1210, "一宝"),
-	BAO_2(1220, "二宝"),
-	BAO_3(1230, "三宝"),
-	BAO_4(1240, "四宝"),
-	BAO_5(1250, "五宝"),
-	BAO_6(1260, "六宝"),
-	BAO_7(1270, "七宝"),
-	BAO_8(1280, "八宝"),
-	BAO_9(1290, "九宝"),
+	/**七点*/
+	int DOT_7 = 1070;
 	
-	TIAN_WANG(1310, "天王"),
+	/**七点半*/
+	int DOT_7_HALF = 1075;
 	
-	;
+	/**八点*/
+	int DOT_8 = 1080;
+	/**八点半*/
+	int DOT_8_HALF = 1085;
+	
+	/**九点*/
+	int DOT_9 = 1090;
+	
+	/**九点半*/
+	int DOT_9_HALF = 1095;
+	
+	/**二八杠*/
+	int GANG_28 = 1128;
+	
+	/**一宝*/
+	int BAO_1 = 1210;
+	
+	/**二宝*/
+	int BAO_2 = 1220;
+	
+	/**三宝*/
+	int BAO_3 = 1230;
+	
+	/**四宝*/
+	int BAO_4 = 1240;
+	
+	/**五宝*/
+	int BAO_5 = 1250;
+	
+	/**六宝*/
+	int BAO_6 = 1260;
+	
+	/**七宝*/
+	int BAO_7 = 1270;
+	
+	/**八宝*/
+	int BAO_8 = 1280;
+	
+	/**九宝*/
+	int BAO_9 = 1290;
+	
+	/**天王*/
+	int TIAN_WANG = 1310;
 	
 	
-	private int value;
-	private String name;
-	
-		
-	private AlgoG28CardType(int value, String name) {
-		this.value = value;
-		this.name = name;
-	}
-
-
-
-	public int getValue() {
-		return value;
-	}
-
-
-
-	public void setValue(int value) {
-		this.value = value;
-	}
-
-
-
-	public String getName() {
-		return name;
-	}
-
-
-
-	public void setName(String name) {
-		this.name = name;
-	}
 
 
 	

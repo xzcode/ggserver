@@ -69,10 +69,10 @@ public class TimeoutHolder implements TimeoutRunnable{
 	 */
 	public TimeoutHolder startTask() {
 		if (this.syncLock != null) {
-			gg.schedule(this.syncLock, this, timeoutMs);
+			gg.schedule(this.syncLock, timeoutMs, this);
 			return this;
 		}
-		gg.schedule(this, timeoutMs);
+		gg.schedule(timeoutMs, this);
 		return this;
 	}
 	
