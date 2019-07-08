@@ -1,21 +1,12 @@
 package xzcode.ggserver.game.common.house;
 
 import java.lang.reflect.ParameterizedType;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import nonapi.io.github.classgraph.concurrency.SimpleThreadFactory;
-import xzcode.ggserver.game.common.house.listener.IRemoveRoomListener;
+import xzcode.ggserver.core.GGServer;
 import xzcode.ggserver.game.common.player.Player;
 import xzcode.ggserver.game.common.room.Room;
 
@@ -33,6 +24,11 @@ public abstract class House< P extends Player, R extends Room<P, R, H>, H> {
 	protected Class<P> pClass;
 	protected Class<R> rClass;
 	protected Class<H> hClass;
+	
+	/**
+	 * ggserver对象
+	 */
+	protected GGServer gg;
 
 	/**
 	 * 大厅id
@@ -44,61 +40,50 @@ public abstract class House< P extends Player, R extends Room<P, R, H>, H> {
 	 */
 	protected Long gameId;
 	
-	protected ConcurrentHashMap<Long, P> players = new ConcurrentHashMap<>();
+	/**
+	 * 玩家集合
+	 */
+	protected ConcurrentHashMap<Long, P> players = new ConcurrentHashMap<>(2000);
 
 
 	/**
 	 * 房间集合
 	 */
-	protected ConcurrentHashMap<String, R> rooms = new ConcurrentHashMap<>();
+	protected ConcurrentHashMap<String, R> rooms = new ConcurrentHashMap<>(1000);
 	
-	
-	/**
-	 * 移除房间监听器集合
-	 */
-	protected List<IRemoveRoomListener<R, H>> reomveListeners = new ArrayList<>();
-	
-	/**
-	 * 大厅线程任务执行器
-	 */
-	protected static final ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(10, new SimpleThreadFactory("game-house-", false));
-	
-	
-	public House(Long houseId) {
-		this.houseId = houseId;
-		init();
-	}
 
 	public House() {
 		init();
 	}
 	
+	public Long getHouseId() {
+		return houseId;
+	}
+	
+	/**
+	 * 设置大厅id
+	 * 
+	 * @param houseId
+	 * @author zai
+	 * 2019-07-08 10:57:31
+	 */
+	public void setHouseId(Long houseId) {
+		this.houseId = houseId;
+		
+		
+	}
+	/**
+	 * 初始化
+	 * 
+	 * @author zai
+	 * 2019-07-08 10:58:17
+	 */
 	private void init() {
+		
 		this.pClass = this.getPClass();
 		this.rClass = this.getRClass();
 		this.hClass = this.getHClass();
 		
-		//游戏房间检查
-		executor.scheduleWithFixedDelay(() -> {
-			try {
-				Set<Entry<String, R>> es = rooms.entrySet();
-				R room = null; 
-				for (Entry<String, R> e : es) {
-					room = e.getValue();
-					//如果房间没有玩家，自动回收
-					if (room.getPlayerNum() == 0) {
-						synchronized(room) {
-							if (room.getPlayerNum() == 0) {
-								this.removeRoom(e.getKey());
-							}
-						}
-						continue;
-					}
-				}
-			} catch (Exception e) {
-				logger.error("loop room error!", e);
-			}
-		}, 500, 1, TimeUnit.MILLISECONDS);
 	}
 	
 	private Class<?> getSuperClassGenericsClass(int index){
@@ -118,16 +103,7 @@ public abstract class House< P extends Player, R extends Room<P, R, H>, H> {
 		return (Class<H>) getSuperClassGenericsClass(2);
 	}
 	
-	/**
-	 * 添加移除房间监听器
-	 * 
-	 * @param listener
-	 * @author zai
-	 * 2019-04-15 11:39:29
-	 */
-	public void addRemoveRoomListener(IRemoveRoomListener<R, H> listener) {
-		this.reomveListeners.add(listener);
-	}
+	
 
 	/**
 	 * 获取房间
@@ -147,15 +123,8 @@ public abstract class House< P extends Player, R extends Room<P, R, H>, H> {
 	 * @return
 	 * @author zai 2019-01-04 17:49:01
 	 */
-	@SuppressWarnings("unchecked")
 	public R removeRoom(String roomNo) {
-		R room = rooms.remove(roomNo);
-		if (room != null) {
-			for (IRemoveRoomListener<R, H> listener : reomveListeners) {
-				listener.onRemove(room, (H) this);
-			}
-		}
-		return room;
+		return rooms.remove(roomNo);
 	}
 
 	/**
@@ -222,13 +191,6 @@ public abstract class House< P extends Player, R extends Room<P, R, H>, H> {
 		return this.players.size();
 	}
 
-	public Long getHouseId() {
-		return houseId;
-	}
-
-	public void setHouseId(Long houseId) {
-		this.houseId = houseId;
-	}
 
 	public Long getGameId() {
 		return gameId;
@@ -237,6 +199,17 @@ public abstract class House< P extends Player, R extends Room<P, R, H>, H> {
 	public void setGameId(Long gameId) {
 		this.gameId = gameId;
 	}
+
+
+	public GGServer getGg() {
+		return gg;
+	}
+
+
+	public void setGg(GGServer gg) {
+		this.gg = gg;
+	}
+	
 	
 	
 }

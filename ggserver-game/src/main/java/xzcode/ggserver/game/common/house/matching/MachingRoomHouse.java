@@ -38,8 +38,7 @@ public abstract class MachingRoomHouse<P extends CoinsRoomPlayer<R, H>,R extends
 	public abstract MachingRoomHolder<R, P, H> match();
 	
 	
-	
-	
+
 	/**
 	 * 添加匹配中玩家容器
 	 * 

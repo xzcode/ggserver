@@ -308,8 +308,28 @@ public class GGServer implements ISendMessage, IGGServerExecution{
 		return future;
 	}
 	
+	/**
+	 * 异步任务
+	 */
 	public Future<?> asyncTask(Runnable task) {
 		return this.config.getTaskExecutor().submit(task);
+	}
+	
+	/**
+	 * 异步任务
+	 * 
+	 * @param syncLock
+	 * @param task
+	 * @return
+	 * @author zai
+	 * 2019-07-08 11:56:08
+	 */
+	public Future<?> asyncTask(Object syncLock, Runnable task) {
+		return this.config.getTaskExecutor().submit(() -> {
+			synchronized (syncLock) {
+				task.run();
+			}
+		});
 	}
 	
 	@Override

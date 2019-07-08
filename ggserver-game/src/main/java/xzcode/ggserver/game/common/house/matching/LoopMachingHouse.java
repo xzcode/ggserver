@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
@@ -14,6 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import xzcode.ggserver.game.common.house.House;
 import xzcode.ggserver.game.common.house.listener.IRemoveRoomListener;
+import xzcode.ggserver.game.common.house.listener.IRoomTimeoutListener;
 import xzcode.ggserver.game.common.house.matching.interfaces.ILoopCheckRemoveAction;
 import xzcode.ggserver.game.common.house.matching.interfaces.ILoopCheckTimeoutAction;
 import xzcode.ggserver.game.common.house.matching.interfaces.ILoopMatchedAction;
@@ -72,6 +75,45 @@ extends House<P, R, H>{
 	protected ILoopCheckRemoveAction<R> checkRemoveAction;
 	
 
+	/**
+	 * 移除房间监听器集合
+	 */
+	protected List<IRemoveRoomListener<R, H>> reomveListeners = new ArrayList<>(1);
+	
+	/**
+	 * 房间超时监听器集合
+	 */
+	protected List<IRoomTimeoutListener<R>> roomTimeoutListeners = new ArrayList<>(1);
+	
+	/**
+	 * 大厅线程任务执行器
+	 */
+	protected ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1);
+	
+	private ScheduledFuture<?> changeThreadNameSF;
+	
+
+	/**
+	 * 添加移除房间监听器
+	 * 
+	 * @param listener
+	 * @author zai
+	 * 2019-04-15 11:39:29
+	 */
+	public void addRemoveRoomListener(IRemoveRoomListener<R, H> listener) {
+		this.reomveListeners.add(listener);
+	}
+	
+	/**
+	 * 添加房间超时监听器
+	 * 
+	 * @param listener
+	 * @author zai
+	 * 2019-07-08 10:50:41
+	 */
+	public void addRoomTimeoutListener(IRoomTimeoutListener<R> listener) {
+		this.roomTimeoutListeners.add(listener);
+	}
 	
 	
 	public LoopMachingHouse() {
@@ -83,6 +125,44 @@ extends House<P, R, H>{
 	public void init() {
 		
 		
+		//定义一个定时任务，用来修改当前线程名称
+		changeThreadNameSF = executor.scheduleWithFixedDelay(() -> {
+			if (houseId != null) {
+				Thread.currentThread().setName("game-house-" + houseId + "-");	
+				changeThreadNameSF.cancel(false);
+			}
+		}, 10 * 1000, 5 * 1000, TimeUnit.MILLISECONDS);
+		
+		//游戏房间检查
+		executor.scheduleWithFixedDelay(() -> {
+			
+			try {
+				Set<Entry<String, R>> es = rooms.entrySet();
+				for (Entry<String, R> e : es) {
+					
+					R room = e.getValue();
+					
+					//如果房间没有玩家，标记并自动回收
+					if (!room.isMarkedToRemove() && room.getPlayerNum() == 0) {
+						synchronized(room) {
+							if (room.getPlayerNum() == 0) {
+								room.setMarkedToRemove(true);
+								gg.asyncTask(() -> {
+									removeRoom(room.getRoomNo());
+								});
+							}
+						}
+					}
+					//检查房间使用超时
+					checkRoomTimeout(room);
+					
+				}
+			} catch (Exception e) {
+				logger.error("loop room error!", e);
+			}
+			
+		}, 500, 10, TimeUnit.MILLISECONDS);
+		
 		//满员游戏房间检查
 		executor.scheduleWithFixedDelay(() -> {
 			try {
@@ -90,12 +170,18 @@ extends House<P, R, H>{
 				R room = null; 
 				for (Entry<String, R> e : es) {
 					room = e.getValue();
-					synchronized (room) {
-						if (!room.isFullPlayers()) {
-							fullPlayerRooms.remove(e.getKey());
-							matchingRooms.put(e.getKey(), e.getValue());
+					if (!room.isFullPlayers()) {
+						synchronized (room) {
+							if (!room.isFullPlayers()) {
+								fullPlayerRooms.remove(e.getKey());
+								matchingRooms.put(e.getKey(), e.getValue());									
+							}
 						}
 					}
+					
+					//检查房间使用超时
+					checkRoomTimeout(room);
+					
 				}
 			} catch (Exception e) {
 				logger.error("loop room error!", e);
@@ -106,9 +192,8 @@ extends House<P, R, H>{
 		executor.scheduleWithFixedDelay(() -> {
 			try {
 				Set<Entry<String, R>> es = matchingRooms.entrySet();
-				R room = null; 
 				for (Entry<String, R> e : es) {
-					room = e.getValue();
+					R room = e.getValue();
 					if (checkRemoveAction != null) {
 						if (checkRemoveAction.checkRemove(room)) {
 							synchronized(room) {
@@ -119,6 +204,9 @@ extends House<P, R, H>{
 							continue;
 						}
 					}
+					
+					//检查房间使用超时
+					checkRoomTimeout(room);
 					
 					//超时行为触发
 					if (this.checkTimeoutAction != null && timeoutListeners.size() > 0) {
@@ -137,6 +225,33 @@ extends House<P, R, H>{
 				logger.error("loop matching error!", e);
 			}
 		}, 10 * 1000, 10, TimeUnit.MILLISECONDS);
+	}
+	
+	/**
+	 * 检查房间使用超时
+	 * 
+	 * @param room
+	 * @author zai
+	 * 2019-07-08 18:08:49
+	 */
+	public void checkRoomTimeout(R room) {
+		//如果房间使用已超时，回收房间
+		if (!room.isPlayTimeout() && room.getPlayTimeoutMs() > 0) {
+			synchronized (room) {
+				if (!room.isPlayTimeout() && room.getPlayTimeoutMs() > 0) {
+					if (System.currentTimeMillis() > room.getPlayTimeoutMs()) {
+						if (gg != null) {
+							//异步执行超时监听器任务
+							gg.asyncTask(() -> {
+								for (IRoomTimeoutListener<R> listener : roomTimeoutListeners) {
+									listener.onTimeout(room);
+								}
+							});
+						}
+					}
+				}
+			}
+		}
 	}
 	
 	/**

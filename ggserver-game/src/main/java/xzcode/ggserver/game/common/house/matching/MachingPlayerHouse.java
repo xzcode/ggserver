@@ -39,7 +39,6 @@ extends House<P, R, H>{
 	 */
 	public abstract List<MachingPlayerHolder<P>> match();
 	
-	
 	/**
 	 * 添加匹配中玩家容器
 	 * 
