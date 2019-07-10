@@ -2,6 +2,11 @@ package xzcode.ggserver.core.message.receive.invoker;
 
 import java.lang.reflect.Method;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import xzcode.ggserver.core.message.receive.RequestMessageManager;
+
 /**
  * 请求消息调用模型
  * 
@@ -9,6 +14,8 @@ import java.lang.reflect.Method;
  * 2019-01-01 22:11:15
  */
 public class MethodInvoker implements IOnMessageInvoker{
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodInvoker.class);
 	
 	/**
 	 * 调用类型
@@ -43,14 +50,18 @@ public class MethodInvoker implements IOnMessageInvoker{
 	
 
 	@Override
-	public void invoke(String requestTag, Object message) throws Exception {
+	public void invoke(String action, Object message) throws Exception {
 		//如果消息体为空
 		if (message == null) {
 			if (method.getParameterCount() > 0) {
 				method.invoke(componentObj, message);
 				return;
 			}
-			method.invoke(componentObj);
+			if (componentObj != null) {
+				method.invoke(componentObj);				
+			}else {
+				LOGGER.error("Can't invoke action:{} , cause 'componentObj' is null !", action);
+			}
 			return;
 		}
 		//如果消息体不为空

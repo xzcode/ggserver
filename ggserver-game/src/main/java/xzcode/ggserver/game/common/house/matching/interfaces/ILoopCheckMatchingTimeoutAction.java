@@ -6,7 +6,7 @@ package xzcode.ggserver.game.common.house.matching.interfaces;
  * @author zai
  * 2019-04-12 15:55:33
  */
-public interface ILoopCheckTimeoutAction<R> {
+public interface ILoopCheckMatchingTimeoutAction<R> {
 	
 	/**
 	 * 超时检查

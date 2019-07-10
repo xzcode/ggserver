@@ -3,10 +3,8 @@ package xzcode.ggserver.game.common.house.matching;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -18,7 +16,7 @@ import xzcode.ggserver.game.common.house.House;
 import xzcode.ggserver.game.common.house.listener.IRemoveRoomListener;
 import xzcode.ggserver.game.common.house.listener.IRoomTimeoutListener;
 import xzcode.ggserver.game.common.house.matching.interfaces.ILoopCheckRemoveAction;
-import xzcode.ggserver.game.common.house.matching.interfaces.ILoopCheckTimeoutAction;
+import xzcode.ggserver.game.common.house.matching.interfaces.ILoopCheckMatchingTimeoutAction;
 import xzcode.ggserver.game.common.house.matching.interfaces.ILoopMatchedAction;
 import xzcode.ggserver.game.common.house.matching.interfaces.ILoopMatchingTimeoutListener;
 import xzcode.ggserver.game.common.player.CoinsRoomPlayer;
@@ -43,15 +41,6 @@ extends House<P, R, H>{
 	private static final Logger logger = LoggerFactory.getLogger(LoopMachingHouse.class);
 	
 
-	/**
-	 * 匹配容器集合
-	 */
-	protected Map<String, R> matchingRooms = new ConcurrentHashMap<>(); 
-	
-	/**
-	 * 匹配容器集合
-	 */
-	protected Map<String, R> fullPlayerRooms = new ConcurrentHashMap<>(); 
 	
 	/**
 	 * 匹配超时时间(毫秒)
@@ -67,7 +56,7 @@ extends House<P, R, H>{
 	/**
 	 * 超时检查行为
 	 */
-	protected ILoopCheckTimeoutAction<R> checkTimeoutAction;
+	protected ILoopCheckMatchingTimeoutAction<R> checkMatchingTimeoutAction;
 	
 	/**
 	 * 可移除房间检查行为
@@ -141,6 +130,8 @@ extends House<P, R, H>{
 				for (Entry<String, R> e : es) {
 					
 					R room = e.getValue();
+					//检查房间使用超时
+					checkRoomTimeout(room);
 					
 					//如果房间没有玩家，标记并自动回收
 					if (!room.isMarkedToRemove() && room.getPlayerNum() == 0) {
@@ -153,8 +144,22 @@ extends House<P, R, H>{
 							}
 						}
 					}
-					//检查房间使用超时
-					checkRoomTimeout(room);
+					
+					//匹配超时行为触发
+					if (!room.isFullPlayers()) {//检查房间是否满员
+						if (this.checkMatchingTimeoutAction != null && timeoutListeners.size() > 0) {
+							if (this.checkMatchingTimeoutAction.checkTimeout(room)) {
+								synchronized(room) {
+									if (this.checkMatchingTimeoutAction.checkTimeout(room)) {
+										for (ILoopMatchingTimeoutListener<R, H> listener : timeoutListeners) {
+											listener.onTimeout(room, (H) this);
+										}
+									}
+								}
+							}
+						}
+					}
+					
 					
 				}
 			} catch (Exception e) {
@@ -163,68 +168,7 @@ extends House<P, R, H>{
 			
 		}, 500, 10, TimeUnit.MILLISECONDS);
 		
-		//满员游戏房间检查
-		executor.scheduleWithFixedDelay(() -> {
-			try {
-				Set<Entry<String, R>> es = fullPlayerRooms.entrySet();
-				R room = null; 
-				for (Entry<String, R> e : es) {
-					room = e.getValue();
-					if (!room.isFullPlayers()) {
-						synchronized (room) {
-							if (!room.isFullPlayers()) {
-								fullPlayerRooms.remove(e.getKey());
-								matchingRooms.put(e.getKey(), e.getValue());									
-							}
-						}
-					}
-					
-					//检查房间使用超时
-					checkRoomTimeout(room);
-					
-				}
-			} catch (Exception e) {
-				logger.error("loop room error!", e);
-			}
-		}, 10 * 1000, 10, TimeUnit.MILLISECONDS);
 		
-		//匹配房间检查
-		executor.scheduleWithFixedDelay(() -> {
-			try {
-				Set<Entry<String, R>> es = matchingRooms.entrySet();
-				for (Entry<String, R> e : es) {
-					R room = e.getValue();
-					if (checkRemoveAction != null) {
-						if (checkRemoveAction.checkRemove(room)) {
-							synchronized(room) {
-								if (checkRemoveAction.checkRemove(room)) {
-									this.removeMatchingRoom(room.getRoomNo());
-								}
-							}
-							continue;
-						}
-					}
-					
-					//检查房间使用超时
-					checkRoomTimeout(room);
-					
-					//超时行为触发
-					if (this.checkTimeoutAction != null && timeoutListeners.size() > 0) {
-						if (this.checkTimeoutAction.checkTimeout(room)) {
-							synchronized(room) {
-								if (this.checkTimeoutAction.checkTimeout(room)) {
-									for (ILoopMatchingTimeoutListener<R, H> listener : timeoutListeners) {
-										listener.onTimeout(room, (H) this);
-									}
-								}
-							}
-						}
-					}
-				}
-			} catch (Exception e) {
-				logger.error("loop matching error!", e);
-			}
-		}, 10 * 1000, 10, TimeUnit.MILLISECONDS);
 	}
 	
 	/**
@@ -263,25 +207,21 @@ extends House<P, R, H>{
 	 * @author zai
 	 * 2019-04-12 15:08:58
 	 */
-	public R match(P player, ILoopMatchedAction<P, R, H> matchedAction) {
+	public R match(P player, int roomType, ILoopMatchedAction<P, R, H> matchedAction) {
 		R room = null;
-		if (matchingRooms.size() > 0) {
-			Set<Entry<String, R>> es = matchingRooms.entrySet();
+		if (rooms.size() > 0) {
+			Set<Entry<String, R>> es = rooms.entrySet();
 			Iterator<Entry<String, R>> it = es.iterator();
 			while (it.hasNext()) {
 				Entry<String, R> e = it.next();
 				room = e.getValue();
-				if (!room.isFullPlayers() && room.getPlayerNum() != 0) {
+				if (room.getRoomType() == roomType && !room.isFullPlayers() && room.getPlayerNum() != 0) {
 					synchronized (room) {
-						if (!room.isFullPlayers() && room.getPlayerNum() != 0) {
+						if (room.getRoomType() == roomType && !room.isFullPlayers() && room.getPlayerNum() != 0) {
 							player.setRoom(room );
 							room.addPlayer(player);
 							if (matchedAction != null) {
 								matchedAction.onMatch(player, room, this);								
-							}
-							if (room.isFullPlayers()) {
-								fullPlayerRooms.put(e.getKey(), e.getValue());
-								matchingRooms.remove(e.getKey());
 							}
 							return room;
 						}
@@ -300,8 +240,8 @@ extends House<P, R, H>{
 	 * @author zai
 	 * 2019-04-15 11:23:59
 	 */
-	public R match(P player) {
-		return match(player, null);
+	public R match(P player, int roomType) {
+		return match(player, roomType, null);
 	}
 	
 	/**
@@ -328,72 +268,11 @@ extends House<P, R, H>{
 	}
 	
 	
-	/**
-	 * 移除匹配房间
-	 * 
-	 * @param roomNo
-	 * @return
-	 * @author zai
-	 * 2019-04-15 14:19:40
-	 */
-	@SuppressWarnings("unchecked")
-	public R removeMatchingRoom(String roomNo) {
-		R room = null;
-		room = matchingRooms.remove(roomNo);
-		if (room == null) {
-			room = fullPlayerRooms.remove(roomNo);
-		}else {
-			fullPlayerRooms.remove(roomNo);
-		}
-		if (room != null) {
-			for (IRemoveRoomListener<R, H> listener : reomveListeners) {
-				listener.onRemove(room, (H) this);
-			}
-		}
-		return room;
-	}
-
-	/**
-	 * 添加匹配房间
-	 * 
-	 * @param room
-	 * @author zai
-	 * 2019-04-15 11:58:32
-	 */
-	public void addMatchingRoom(R room) {
-		this.matchingRooms.put(room.getRoomNo(), room);
-	}
-	
-	/**
-	 * 获取参与匹配的房间
-	 * 
-	 * @param roomNo
-	 * @return
-	 * @author zai
-	 * 2019-04-17 18:55:32
-	 */
-	public R getMatchingRoom(String roomNo) {
-		R room = matchingRooms.get(roomNo);
-		if (room == null) {
-			room = fullPlayerRooms.get(roomNo);
-		}
-		return room;
-	}
-	
-	
 	@Override
 	public int getTotalRoomsNum() {
-		return super.getTotalRoomsNum() + this.matchingRooms.size() + this.fullPlayerRooms.size();
+		return this.rooms.size();
 	}
 	
-	public int getOpenRoomsNum() {
-		return super.getTotalRoomsNum();
-	}
-	public int getMatchingRoomsNum() {
-		return this.matchingRooms.size() + this.fullPlayerRooms.size();
-	}
-
-
 	public void setMatchingTimeoutMillisec(long matchingTimeoutMillisec) {
 		this.matchingTimeoutMillisec = matchingTimeoutMillisec;
 	}
@@ -402,11 +281,11 @@ extends House<P, R, H>{
 		return matchingTimeoutMillisec;
 	}
 	
-	public void setCheckTimeoutAction(ILoopCheckTimeoutAction<R> checkTimeoutAction) {
-		this.checkTimeoutAction = checkTimeoutAction;
+	public void setCheckTimeoutAction(ILoopCheckMatchingTimeoutAction<R> checkTimeoutAction) {
+		this.checkMatchingTimeoutAction = checkTimeoutAction;
 	}
-	public ILoopCheckTimeoutAction<R> getCheckTimeoutAction() {
-		return checkTimeoutAction;
+	public ILoopCheckMatchingTimeoutAction<R> getCheckTimeoutAction() {
+		return checkMatchingTimeoutAction;
 	}
 	
 	public void setCheckRemoveAction(ILoopCheckRemoveAction<R> checkRemoveAction) {

@@ -98,8 +98,14 @@ public class RedirectMessageTask implements Runnable{
 			
 			IOnMessageInvoker invoker = config.getMessageInvokerManager().get(actionStr);
 			Object msgObj = message;
-			if (message != null && message instanceof byte[]) {
-				msgObj = config.getSerializer().deserialize((byte[])message, invoker.getMessageClass());
+			if (invoker != null) {
+				if (message != null && message instanceof byte[]) {
+					msgObj = config.getSerializer().deserialize((byte[])message, invoker.getMessageClass());					
+				}
+			}else {
+				if (LOGGER.isWarnEnabled()) {
+					LOGGER.warn("Action Id:{} is not mapped!", actionStr);					
+				}
 			}
 			
 			if (!this.config.getMessageFilterManager().doRequestFilters(actionStr, msgObj)) {
