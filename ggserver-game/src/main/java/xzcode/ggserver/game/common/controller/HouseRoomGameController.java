@@ -200,6 +200,18 @@ extends
 			return null;
 		}
 	}
+	@Override
+	public P getInGamePlayer(R room, ICheckCondition<P> condition) {
+		synchronized (room) {
+			for (Entry<Object, P> entry : room.getPlayers().entrySet()) {
+				P player = entry.getValue();
+				if (player.isInGame() && condition.check(player)) {
+					return entry.getValue();
+				}
+			}
+			return null;
+		}
+	}
 	
 	@Override
 	public List<P> getPlayerList(R room) {

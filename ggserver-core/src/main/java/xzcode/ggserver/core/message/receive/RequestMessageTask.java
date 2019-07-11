@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 
 import xzcode.ggserver.core.config.GGServerConfig;
 import xzcode.ggserver.core.message.receive.invoker.IOnMessageInvoker;
-import xzcode.ggserver.core.message.send.SendModel;
 import xzcode.ggserver.core.session.GGSession;
 import xzcode.ggserver.core.session.GGSessionThreadLocalUtil;
 
@@ -66,7 +65,6 @@ public class RequestMessageTask implements Runnable{
 		try {
 			
 			if (!this.config.getMessageFilterManager().doPreDeserializeFilters(action, message)) {
-				GGSessionThreadLocalUtil.removeSession();
 				return;
 			}
 			
@@ -74,12 +72,16 @@ public class RequestMessageTask implements Runnable{
 			
 			IOnMessageInvoker invoker = config.getMessageInvokerManager().get(actionStr);
 			Object msgObj = null;
-			if (message != null) {
-				msgObj = config.getSerializer().deserialize(message, invoker.getMessageClass());
+			if (invoker != null) {
+				if (message != null) {
+					msgObj = config.getSerializer().deserialize(message, invoker.getMessageClass());
+				}
+			}else {
+				LOGGER.error("Can not invoke action:{}, cause 'invoker' is null!", actionStr);
+				return;
 			}
 			
 			if (!this.config.getMessageFilterManager().doRequestFilters(actionStr, msgObj)) {
-				GGSessionThreadLocalUtil.removeSession();
 				return;
 			}
 			
@@ -87,8 +89,9 @@ public class RequestMessageTask implements Runnable{
 			
 		} catch (Exception e) {
 			LOGGER.error("Request Message Task ERROR!! -- actionId: {}, error: {}", actionStr, e);
+		}finally {
+			GGSessionThreadLocalUtil.removeSession();			
 		}
-		GGSessionThreadLocalUtil.removeSession();
 		
 	}
 	

@@ -64,6 +64,17 @@ H extends House<P, R, H>
 	 * 2019-02-16 17:48:42
 	 */
 	P getPlayer(R room, ICheckCondition<P> condition);
+	
+	/**
+	 * 获取并筛选参与游戏的玩家
+	 * 
+	 * @param room
+	 * @param condition
+	 * @return
+	 * @author zai
+	 * 2019-07-11 09:56:53
+	 */
+	P getInGamePlayer(R room, ICheckCondition<P> condition);
 
 	/**
 	 * 遍历所有玩家
@@ -372,6 +383,8 @@ H extends House<P, R, H>
 	 * 2019-06-26 11:06:07
 	 */
 	void bcToAllPlayer(R room, String actionId);
+
+
 
 
 	

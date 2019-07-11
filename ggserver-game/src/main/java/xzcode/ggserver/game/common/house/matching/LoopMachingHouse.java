@@ -244,6 +244,20 @@ extends House<P, R, H>{
 		return match(player, roomType, null);
 	}
 	
+	
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public R removeRoom(String roomNo) {
+		R removeRoom = super.removeRoom(roomNo);
+		if (this.reomveListeners.size() > 0) {
+			for (IRemoveRoomListener<R, H> listener : reomveListeners) {
+				listener.onRemove(removeRoom, (H) this);
+			}
+		}
+		return removeRoom;
+	}
+
 	/**
 	 * 添加匹配超时监听器
 	 * 
