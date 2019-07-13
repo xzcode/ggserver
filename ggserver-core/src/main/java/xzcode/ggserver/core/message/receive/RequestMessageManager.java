@@ -54,6 +54,7 @@ public class RequestMessageManager {
 		IOnMessageInvoker invoker = map.get(action);
 		if (invoker != null) {
 			invoker.invoke(action, message);
+			
 			return;
 		}
 		LOGGER.warn("No such action: {} ", action);

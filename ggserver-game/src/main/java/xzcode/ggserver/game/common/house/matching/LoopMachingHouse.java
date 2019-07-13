@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Queue;
 import java.util.Set;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -116,9 +118,13 @@ extends House<P, R, H>{
 		
 		//定义一个定时任务，用来修改当前线程名称
 		changeThreadNameSF = executor.scheduleWithFixedDelay(() -> {
-			if (houseId != null) {
-				Thread.currentThread().setName("game-house-" + houseId + "-");	
-				changeThreadNameSF.cancel(false);
+			try {
+				if (houseId != null) {
+					Thread.currentThread().setName("game-house-" + houseId);	
+					changeThreadNameSF.cancel(false);
+				}
+			} catch (Exception e) {
+				logger.error("Change house thread name error!", e);
 			}
 		}, 10 * 1000, 5 * 1000, TimeUnit.MILLISECONDS);
 		
@@ -136,7 +142,7 @@ extends House<P, R, H>{
 					//如果房间没有玩家，标记并自动回收
 					if (!room.isMarkedToRemove() && room.getPlayerNum() == 0) {
 						synchronized(room) {
-							if (room.getPlayerNum() == 0) {
+							if (!room.isMarkedToRemove() && room.getPlayerNum() == 0) {
 								room.setMarkedToRemove(true);
 								gg.asyncTask(() -> {
 									removeRoom(room.getRoomNo());
@@ -180,23 +186,22 @@ extends House<P, R, H>{
 	 */
 	public void checkRoomTimeout(R room) {
 		//如果房间使用已超时，回收房间
-		if (!room.isPlayTimeout() && room.getPlayTimeoutMs() > 0) {
+		if (!room.isPlayTimeout() && room.getPlayTimeoutMs() > 0 && System.currentTimeMillis() > room.getPlayTimeoutMs()) {
 			synchronized (room) {
-				if (!room.isPlayTimeout() && room.getPlayTimeoutMs() > 0) {
-					if (System.currentTimeMillis() > room.getPlayTimeoutMs()) {
-						if (gg != null) {
-							//异步执行超时监听器任务
-							gg.asyncTask(() -> {
-								for (IRoomTimeoutListener<R> listener : roomTimeoutListeners) {
-									listener.onTimeout(room);
-								}
-							});
-						}
+				if (!room.isPlayTimeout() && room.getPlayTimeoutMs() > 0 && System.currentTimeMillis() > room.getPlayTimeoutMs()) {
+					if (gg != null) {
+						//异步执行超时监听器任务
+						gg.asyncTask(() -> {
+							for (IRoomTimeoutListener<R> listener : roomTimeoutListeners) {
+								listener.onTimeout(room);
+							}
+						});
 					}
 				}
 			}
 		}
 	}
+	
 	
 	/**
 	 * 对玩家进行匹配
@@ -208,6 +213,7 @@ extends House<P, R, H>{
 	 * 2019-04-12 15:08:58
 	 */
 	public R match(P player, int roomType, ILoopMatchedAction<P, R, H> matchedAction) {
+		
 		R room = null;
 		if (rooms.size() > 0) {
 			Set<Entry<String, R>> es = rooms.entrySet();

@@ -5,8 +5,6 @@ import java.lang.reflect.Method;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import xzcode.ggserver.core.message.receive.RequestMessageManager;
-
 /**
  * 请求消息调用模型
  * 
@@ -58,7 +56,11 @@ public class MethodInvoker implements IOnMessageInvoker{
 				return;
 			}
 			if (componentObj != null) {
-				method.invoke(componentObj);				
+				try {
+					method.invoke(componentObj);
+				} catch (Exception e) {
+					LOGGER.error("Can't invoke action:{} , 'componentObj' = {}, error: {}", action, componentObj, e.getMessage());
+				}
 			}else {
 				LOGGER.error("Can't invoke action:{} , cause 'componentObj' is null !", action);
 			}
