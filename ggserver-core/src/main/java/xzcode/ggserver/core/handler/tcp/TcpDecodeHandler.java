@@ -11,7 +11,6 @@ import io.netty.handler.codec.ByteToMessageDecoder;
 import xzcode.ggserver.core.channel.DefaultChannelAttributeKeys;
 import xzcode.ggserver.core.config.GGServerConfig;
 import xzcode.ggserver.core.message.receive.RequestMessageTask;
-import xzcode.ggserver.core.message.receive.invoker.IOnMessageInvoker;
 
 /**
  * TCP自定协议解析
