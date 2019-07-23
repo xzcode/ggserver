@@ -1,5 +1,6 @@
 package xzcode.ggserver.core.handler.tcp;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -70,8 +71,19 @@ public class TcpDecodeHandler extends ByteToMessageDecoder {
 		if (readableBytes < HEADER_BYTES) {
 			return;
 		}
-		
+		/*
 		in.markReaderIndex();
+		byte[] bb = new byte[readableBytes];
+		ArrayList<Byte> arrayList = new ArrayList<>();
+		
+		in.getBytes(0, bb);
+		for (byte b : bb) {
+			arrayList.add(b);
+		}
+		System.out.println(arrayList);
+		in.resetReaderIndex();
+		
+		*/
 		
 		int packLen = in.readInt();
 		
@@ -86,7 +98,7 @@ public class TcpDecodeHandler extends ByteToMessageDecoder {
 		int reqTagSize = in.readUnsignedShort();
 		
 		
-		if (readableBytes - HEADER_BYTES - reqTagSize < packLen) {
+		if (readableBytes - PACKAGE_LENGTH_BYTES < packLen) {
 			in.resetReaderIndex();
 			return;
 		}
