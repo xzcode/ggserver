@@ -3,7 +3,7 @@
   
   <groupId>xzcode</groupId>
   <artifactId>ggserver</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.0.5-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>ggserver</name>
   
@@ -49,7 +49,7 @@
 		</repository>
 
 	</repositories>
-
+	
 	
 	<dependencyManagement>
 	
@@ -104,17 +104,18 @@
 			</dependency>
     </dependencies>
     
-    <distributionManagement>
-        <repository>
-            <id>nexus-releases</id>
-            <url>${nexus.host}</url>
-        </repository>
-        <!--这是打成快照版本的配置，如果不用这个snapshotRepository标签，打包失败，会报权限问题 -->
-        <snapshotRepository>
-            <id>nexus-snapshots</id>
-            <url>${nexus.host}</url>
-        </snapshotRepository>
-    </distributionManagement>
+    <distributionManagement>  
+	    <repository>  
+	      <id>nexus-releases</id>  
+	      <name>Nexus Release Repository</name>  
+	      <url>http://common.host:8081/repository/maven-releases/</url>  
+	    </repository>  
+	    <snapshotRepository>  
+	      <id>nexus-snapshots</id>  
+	      <name>Nexus Snapshot Repository</name>  
+	      <url>http://common.host:8081/repository/maven-snapshots/</url>  
+	    </snapshotRepository>  
+	  </distributionManagement>
     
     <build>  
         <plugins>  
