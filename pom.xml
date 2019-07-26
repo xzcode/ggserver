@@ -12,7 +12,7 @@
   
   <properties>
     <jdk.version>1.8</jdk.version>
-    <spring.boot.version>2.1.5.RELEASE</spring.boot.version>
+    <spring.boot.version>2.1.6.RELEASE</spring.boot.version>
     <netty.version>4.1.33.Final</netty.version>
   </properties>
   
@@ -22,7 +22,6 @@
             <id>dev</id>
             <properties>
 				<nexus.public>http://common.host:8081/repository/maven-public/</nexus.public>
-                <nexus.host>http://common.host:8081/repository/maven-snapshots/</nexus.host>
             </properties>
             <activation>
                 <activeByDefault>true</activeByDefault>
@@ -33,7 +32,6 @@
             <id>release</id>
             <properties>
 				<nexus.public>http://release.host:8081/repository/maven-public/</nexus.public>
-                <nexus.host>http://release.host:8081/repository/maven-releases/</nexus.host>
             </properties>
         </profile>
     </profiles>
