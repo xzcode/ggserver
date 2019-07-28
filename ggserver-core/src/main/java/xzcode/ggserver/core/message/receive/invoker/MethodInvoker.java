@@ -59,15 +59,19 @@ public class MethodInvoker implements IOnMessageInvoker{
 				try {
 					method.invoke(componentObj);
 				} catch (Exception e) {
-					LOGGER.error("Can't invoke action:{} , 'componentObj' = {}, error: {}", action, componentObj, e.getMessage());
+					LOGGER.error("Can't invoke action:{} , 'componentObj' = {}, error: {}", action, componentObj, e);
 				}
 			}else {
 				LOGGER.error("Can't invoke action:{} , cause 'componentObj' is null !", action);
 			}
 			return;
 		}
-		//如果消息体不为空
-		method.invoke(componentObj, message);
+		try {
+			//如果消息体不为空
+			method.invoke(componentObj, message);
+		} catch (Exception e) {
+			LOGGER.error("Can't invoke action:{} , 'componentObj' = {}, error: {}", action, componentObj, e.getMessage());
+		}
 	}
 	
 	

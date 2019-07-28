@@ -63,11 +63,11 @@ public class WebSocketOutboundFrameHandler extends ChannelOutboundHandlerAdapter
 			SendModel sendModel = (SendModel) msg;
 			
 			if (LOGGER.isDebugEnabled()) {
-				LOGGER.debug("\nSending message ---> \ntag:{}\nmessage:{}", sendModel.getSendTag(), GSON.toJson(sendModel));
+				LOGGER.debug("\nSending message ---> \ntag:{}\nmessage:{}", sendModel.getAction(), GSON.toJson(sendModel));
 			}
 			
 			
-			byte[] tagBytes = sendModel.getSendTag();
+			byte[] tagBytes = sendModel.getAction();
 			
 			ByteBuf out = null;
 			

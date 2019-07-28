@@ -4,6 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import xzcode.ggserver.core.config.GGServerConfig;
+import xzcode.ggserver.core.handler.serializer.ISerializer;
+import xzcode.ggserver.core.message.filter.MessageFilterManager;
 import xzcode.ggserver.core.message.receive.invoker.IOnMessageInvoker;
 import xzcode.ggserver.core.session.GGSession;
 import xzcode.ggserver.core.session.GGSessionThreadLocalUtil;
@@ -41,7 +43,6 @@ public class RequestMessageTask implements Runnable{
 	
 	
 	
-	
 	public RequestMessageTask() {
 		
 	}
@@ -61,34 +62,45 @@ public class RequestMessageTask implements Runnable{
 	public void run() {
 		
 		GGSessionThreadLocalUtil.setSession(this.session);
-		String actionStr = null;
+		Request request = new Request();
+		ISerializer serializer = config.getSerializer();
+		MessageFilterManager messageFilterManager = this.config.getMessageFilterManager();
+		String oldAction = null;
 		try {
 			
-			if (!this.config.getMessageFilterManager().doPreDeserializeFilters(action, message)) {
-				return;
-			}
-			
-			actionStr = new String(action, config.getCharset());
-			
-			IOnMessageInvoker invoker = config.getMessageInvokerManager().get(actionStr);
-			Object msgObj = null;
-			if (invoker != null) {
-				if (message != null) {
-					msgObj = config.getSerializer().deserialize(message, invoker.getMessageClass());
+			request.setAction(new String(action, config.getCharset()));
+			oldAction = request.getAction();
+			if (message != null) {
+				IOnMessageInvoker invoker = config.getMessageInvokerManager().get(request.getAction());
+				if (invoker != null) {
+					request.setMessage(serializer.deserialize(message, invoker.getMessageClass()));
 				}
-			}else {
-				LOGGER.error("Can not invoke action:{}, cause 'invoker' is null!", actionStr);
-				return;
 			}
 			
-			if (!this.config.getMessageFilterManager().doRequestFilters(actionStr, msgObj)) {
+			if (!messageFilterManager.doRequestFilters(request)) {
 				return;
 			}
+			while (!oldAction.equals(request.getAction())) {
+				oldAction = request.getAction();
+				if (message != null) {
+					IOnMessageInvoker invoker = config.getMessageInvokerManager().get(request.getAction());
+					if (invoker != null) {
+						request.setMessage(serializer.deserialize(message, invoker.getMessageClass()));
+					}else {
+						LOGGER.error("Can not invoke action:{}, cause 'invoker' is null!", request.getAction());
+						return;
+					}
+				}
+				//如果action发生了改变，再次调用过滤器
+				if (!messageFilterManager.doRequestFilters(request)) {
+					return;
+				}
+			}
 			
-			config.getRequestMessageManager().invoke(actionStr, msgObj);
+			config.getRequestMessageManager().invoke(request.getAction(), request.getMessage());
 			
 		} catch (Exception e) {
-			LOGGER.error("Request Message Task ERROR!! -- actionId: {}, error: {}", actionStr, e);
+			LOGGER.error("Request Message Task ERROR!! -- actionId: {}, error: {}", request.getAction(), e);
 		}finally {
 			GGSessionThreadLocalUtil.removeSession();			
 		}

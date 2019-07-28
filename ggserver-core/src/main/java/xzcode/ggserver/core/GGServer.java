@@ -241,7 +241,7 @@ public class GGServer implements ISendMessage, IGGServerExecution{
 	 * @author zai
 	 * 2019-06-23 18:15:41
 	 */
-	public void redirect(byte[] action, byte[] message) {
+	public void redirect(String action, byte[] message) {
 		new RedirectMessageTask(action, message, GGSessionThreadLocalUtil.getSession(), config).run();
 	}
 	/**
@@ -250,9 +250,9 @@ public class GGServer implements ISendMessage, IGGServerExecution{
 	 * @param action
 	 * @param message
 	 * @author zai
-	 * 2019-06-23 18:15:41
+	 * 2019-07-28 16:18:58
 	 */
-	public void redirect(String action, byte[] message) {
+	public void redirect(String action, Object message) {
 		new RedirectMessageTask(action, message, GGSessionThreadLocalUtil.getSession(), config).run();
 	}
 	

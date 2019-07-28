@@ -6,6 +6,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import io.netty.channel.Channel;
 import xzcode.ggserver.core.config.GGServerConfig;
 import xzcode.ggserver.core.session.GGSession;
@@ -79,7 +80,7 @@ public class SendMessageManager implements ISendMessage{
 	public void send(String action) {
 		GGSession session = GGSessionThreadLocalUtil.getSession();
 		if (session != null) {
-			if (!config.getMessageFilterManager().doResponseFilters(session.getRegisteredUserId(), action, null)) {
+			if (!config.getMessageFilterManager().doResponseFilters(session.getRegisteredUserId(), Response.create(action, null))) {
 				return;
 			}
 			this.send(session.getChannel(),SendModel.create(action.getBytes(), null));
@@ -108,7 +109,7 @@ public class SendMessageManager implements ISendMessage{
 			session = GGSessionThreadLocalUtil.getSession();
 		}
 		if (session != null) {
-			if (!config.getMessageFilterManager().doResponseFilters(userId, action, message)) {
+			if (!config.getMessageFilterManager().doResponseFilters(userId,Response.create(action, message))) {
 				return;
 			}
 			try {
