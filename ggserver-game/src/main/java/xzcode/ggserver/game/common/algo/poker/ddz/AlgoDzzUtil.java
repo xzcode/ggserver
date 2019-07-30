@@ -253,43 +253,129 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 			opts = checkSiDaiErDan(cards, followCards);
 		}
 		
+		//****VV****//
 		
-		/*
 		
 		//判断四带二(四张带两对)
 		if (isSiDaiErShuang(followCards)) {
-			opts =  AlgoDzzCardType.SI_DAI_ER_SHUANG;
+			opts =  checkSiDaiErShuang(cards, followCards);
 		}
 		
 		//判断单顺子
 		if (isStraightSingle(followCards)) {
-			opts =  AlgoDzzCardType.DAN_SHUN_ZI;
+			opts =  checkStraightSingle(cards, followCards);
 		}
 		
 		//判断双顺子(连对)
 		if (isStraightPairs(followCards)) {
-			opts =  AlgoDzzCardType.SHUANG_SHUN_ZI;
+			opts =  checkStraightPairs(cards, followCards);
 		}
 		
 		//判断三顺子
 		if (isStraightThreeCards(followCards)) {
-			opts =  AlgoDzzCardType.SAN_SHUN_ZI;
+			opts =  checkStraightThreeCards(cards, followCards);
 		}
 		
 		//判断飞机(三顺带单张)
 		if (isFeiJiDan(followCards)) {
-			opts =  AlgoDzzCardType.FEI_JI_31;
+			opts = checkFeiJiDan(cards, followCards);
 		}
 		
 		//判断飞机(三顺带对子)
 		if (isFeiJiShuang(followCards)) {
-			opts =  AlgoDzzCardType.FEI_JI_32;
+			opts =  checkFeiJiShuang(cards, followCards);
 		}
-		*/
+		
 		return null;
 	}
 	
+
+	/**
+	 * 获取四带二（四张带两对）跟牌
+	 * 
+	 * @author zai
+	 * 2019-07-30 10:18:13
+	 */
+	public void checkSiDaiErShuang() {
+		//TODO 获取四带二（四张带两对）跟牌
+	}
 	
+	/**
+	 * 获取飞机(三顺带对子)跟牌
+	 * 
+	 * @param cards
+	 * @param followCards
+	 * @return
+	 * @author zai
+	 * 2019-07-30 10:22:34
+	 */
+	private List<int[]> checkFeiJiShuang(int[] cards, int[] followCards) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	/**
+	 * 获取飞机(三顺带单张)跟牌
+	 * 
+	 * @param cards
+	 * @param followCards
+	 * @return
+	 * @author zai
+	 * 2019-07-30 10:22:55
+	 */
+	private List<int[]> checkFeiJiDan(int[] cards, int[] followCards) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	/**
+	 * 获取三顺子跟牌
+	 * 
+	 * @param cards
+	 * @param followCards
+	 * @return
+	 * @author zai
+	 * 2019-07-30 10:23:14
+	 */
+	private List<int[]> checkStraightThreeCards(int[] cards, int[] followCards) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	/**
+	 * 获取双顺子(连对)跟牌
+	 * 
+	 * @param cards
+	 * @param followCards
+	 * @return
+	 * @author zai
+	 * 2019-07-30 10:23:31
+	 */
+	private List<int[]> checkStraightPairs(int[] cards, int[] followCards) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	/**
+	 * 获取单顺子跟牌
+	 * 
+	 * @param cards
+	 * @param followCards
+	 * @return
+	 * @author zai
+	 * 2019-07-30 10:24:04
+	 */
+	private List<int[]> checkStraightSingle(int[] cards, int[] followCards) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
 	/**
 	 * 是否有炸弹
 	 * 
@@ -859,6 +945,7 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 				cardvals[4] == cardvals[7]
 			);
 	}
+	
 	
 	/**
 	 * 获取四带二跟牌（四张带两对）
