@@ -56,7 +56,8 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 	 * 2019-07-02 14:20:17
 	 */
 	public boolean isAce(int value) {
-		return value == 114 || value == 214 || value == 314 || value == 414;
+		return value%100==14;
+		 //return value == 114 || value == 214 || value == 314 || value == 414;
 	}
 	
 	/**
@@ -68,7 +69,8 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 	 * 2019-07-02 14:20:24
 	 */
 	public boolean isTwo(int value) {
-		return value == 122 || value == 222 || value == 322 || value == 422;
+		return value%100==22;
+		//return value == 122 || value == 222 || value == 322 || value == 422;
 	}
 	
 	/**
@@ -98,16 +100,17 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 			return false;
 		}
 		
-		
 		//判断出牌牌型与上家是否匹配
+		
+		
 		if (lastPlayerChupai.length != chupai.length) {
 			//如果不匹配，判断是否是王炸并且 手牌中是否有 王炸
 			if (isWangZha(chupai) && hasWangZha(curHandcards)) {
 				return true;
 			}
 		}
-		
 		//判断手牌中是否存在出牌牌型
+		
 		
 		return false;
 	}
@@ -347,10 +350,11 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 	 * 2019-05-28 11:28:23
 	 */
 	public boolean isWangZha(int[] cards) {
-		if (cards.length != 2) {
-			return false;
-		}
-		return cards[0] == XIAO_WANG || cards[0] == DA_WANG || cards[1] == XIAO_WANG || cards[1] == DA_WANG;
+		//if (cards.length != 2) {
+		//	return false;
+		//}
+		return cards.length != 2?false: cards[0]>=XIAO_WANG&&cards[1]>=XIAO_WANG;
+		//return cards[0] == XIAO_WANG || cards[0] == DA_WANG || cards[1] == XIAO_WANG || cards[1] == DA_WANG;
 	}
 	
 	/**
@@ -526,7 +530,7 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 						list = new ArrayList<>(6);
 					}
 					list.add(new int[] {cards[i], cards[i + 3]});
-					i+=3;;
+					i+=3;
 				}
 			}
 		}
@@ -1042,7 +1046,7 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 			return false;
 		}
 		Map<Integer, Integer> map = new LinkedHashMap<>(len);
-		for (int i : cardvals) {
+		for (int i : cardvals) 	{
 			Integer count = map.get(i);
 			if (count == null) {
 				map.put(i, 1);			
