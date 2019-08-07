@@ -25,22 +25,22 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 	/**
 	 * 小王牌值
 	 */
-	public static int DA_WANG = 531;
+	public static int DA_WANG = 532;
 	
 	/**
 	 * 大王牌值
 	 */
-	public static int XIAO_WANG = 532;
+	public static int XIAO_WANG = 531;
 	
 	public static final List<Integer> CARD_VAL_LIST = Arrays.asList(
 			103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 222,		//方块1 到 K
 			203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 222,		//梅花1 到 K
 			303, 304, 305, 306, 307, 308, 309, 310, 311, 312, 313, 314, 322,		//红桃1 到 K
 			403, 404, 405, 406, 407, 408, 409, 410, 411, 412, 413, 414, 422,		//黑桃1 到 K
-			531, //小王
-			532 //大王
+			531, // 小王
+			532  // 大王
 		);
-	
+
 	public static List<Integer> getCardValList() {
 		return CARD_VAL_LIST;
 	}
@@ -84,35 +84,18 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 	 * 2019-05-28 11:19:52
 	 */
 	public boolean isCanChupai(int[] curHandcards, int[] chupai, int[] lastPlayerChupai) {
-		
-		//如果没有传入上家出牌，则可出任意牌型
-		if (lastPlayerChupai == null) {
-			
-			//TODO 判断所出牌型是否合法
-			
-			
-			//如果只出单张牌，可以直接出牌
-			if (chupai.length == 1) {
-				return true;
-			}
-			
-			
-			return false;
-		}
-		
-		//判断出牌牌型与上家是否匹配
-		
-		
-		if (lastPlayerChupai.length != chupai.length) {
-			//如果不匹配，判断是否是王炸并且 手牌中是否有 王炸
-			if (isWangZha(chupai) && hasWangZha(curHandcards)) {
-				return true;
-			}
-		}
-		//判断手牌中是否存在出牌牌型
-		
-		
-		return false;
+		   //如果没有传入上家出牌，则可出任意牌型
+        if (lastPlayerChupai == null)
+        {
+            int chupaiType = checkNumListType(getNumList(chupai));
+            if (chupaiType > AlgoDzzCardType.NONE) return true;
+            else return false;
+        }
+        else
+        {
+            if (compareCardsType(chupai, lastPlayerChupai) > 0) return true;
+            else return false;
+        }
 	}
 	
 	/**
@@ -125,80 +108,13 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 	 */
 	public int checkCardType(int[] cards) {
 		
-		//判断王炸
-		if (isWangZha(cards)) {
-			return AlgoDzzCardType.WANG_ZHA;
-		}
-		
-		//是否单张
-		if (isDanZhang(cards)) {
-			return AlgoDzzCardType.DAN_ZHANG;
-		}
-		
-		//判断对子
-		if (isDuiZi(cards)) {
-			return AlgoDzzCardType.DUI_ZI;
-		}
-		
-		//***进行排序
-		sort(cards);
-		
-		//判断三张
-		if (isSanZhang(cards)) {
-			return AlgoDzzCardType.SAN_ZHANG;
-		}
-		
-		//判断炸弹
-		if (isZhaDan(cards)) {
-			return AlgoDzzCardType.ZHA_DAN;
-		}
-		
-		//判断三带一
-		if (isSanDaiYi(cards)) {
-			return AlgoDzzCardType.SAN_DAI_YI;
-		}
-		
-		//判断三带二
-		if (isSanDaiEr(cards)) {
-			return AlgoDzzCardType.SAN_DAI_ER;
-		}
-		
-		//判断四带二(四带二张单牌)
-		if (isSiDaiErDan(cards)) {
-			return AlgoDzzCardType.SI_DAI_ER_DAN;
-		}
-		
-		//判断四带二(四张带两对)
-		if (isSiDaiErShuang(cards)) {
-			return AlgoDzzCardType.SI_DAI_ER_SHUANG;
-		}
-		
-		//判断单顺子
-		if (isStraightSingle(cards)) {
-			return AlgoDzzCardType.DAN_SHUN_ZI;
-		}
-		
-		//判断双顺子(连对)
-		if (isStraightPairs(cards)) {
-			return AlgoDzzCardType.SHUANG_SHUN_ZI;
-		}
-		
-		//判断三顺子
-		if (isStraightThreeCards(cards)) {
-			return AlgoDzzCardType.SAN_SHUN_ZI;
-		}
-		
-		//判断飞机(三顺带单张)
-		if (isFeiJiDan(cards)) {
-			return AlgoDzzCardType.FEI_JI_31;
-		}
-		
-		//判断飞机(三顺带对子)
-		if (isFeiJiShuang(cards)) {
-			return AlgoDzzCardType.FEI_JI_32;
-		}
-		
-		return AlgoDzzCardType.NONE;
+		 if (cards == null) return AlgoDzzCardType.NONE;
+         int[] numList = getNumList(cards);
+         int[] sortType = new int[1];
+         int result = checkNumListType(numList, sortType);
+         if (sortType[0] >= 1) sortValueType(cards);
+         if (sortType[0] == 2) sortBaseNumList(cards, numList);
+         return result;
 	}
 	
 	/**
@@ -210,1006 +126,633 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 	 * 2019-07-02 16:16:45
 	 */
 	public List<int[]> checkFollowOptions(int[] cards, int[] followCards) {
-		
-		//判断王炸
-		if (isWangZha(followCards)) {
-			return null;
-		}
-		
-		List<int[]> opts = null;
-		
-		//判断单张
-		if (isDanZhang(followCards)) {
-			opts = checkFollowDanZhang(followCards, followCards[0]);
-		}
-		
-		//判断对子
-		if (isDuiZi(followCards)) {
-			opts = checkFollowDuiZi(cards, followCards);
-		}
-		
-		//判断三张
-		if (isSanZhang(followCards)) {
-			opts = checkFollowDuiZi(cards, followCards);
-		}
-		
-		//判断炸弹
-		if (isZhaDan(followCards)) {
-			opts = checkFollowZhaDan(cards, followCards);
-		}
-		
-		//判断三带一
-		if (isSanDaiYi(followCards)) {
-			opts = checkFollowSanDaiYi(cards, followCards);
-		}
-		//判断三带二
-		if (isSanDaiEr(followCards)) {
-			opts = checkFollowSanDaiYi(cards, followCards);
-		}
-		
-		
-		//判断四带二(四带二张单牌)
-		if (isSiDaiErDan(followCards)) {
-			opts = checkSiDaiErDan(cards, followCards);
-		}
-		
-		//****VV****//
-		
-		
-		//判断四带二(四张带两对)
-		if (isSiDaiErShuang(followCards)) {
-			opts =  checkSiDaiErShuang(cards, followCards);
-		}
-		
-		//判断单顺子
-		if (isStraightSingle(followCards)) {
-			opts =  checkStraightSingle(cards, followCards);
-		}
-		
-		//判断双顺子(连对)
-		if (isStraightPairs(followCards)) {
-			opts =  checkStraightPairs(cards, followCards);
-		}
-		
-		//判断三顺子
-		if (isStraightThreeCards(followCards)) {
-			opts =  checkStraightThreeCards(cards, followCards);
-		}
-		
-		//判断飞机(三顺带单张)
-		if (isFeiJiDan(followCards)) {
-			opts = checkFeiJiDan(cards, followCards);
-		}
-		
-		//判断飞机(三顺带对子)
-		if (isFeiJiShuang(followCards)) {
-			opts =  checkFeiJiShuang(cards, followCards);
-		}
-		
-		return null;
-	}
-	
-
-	/**
-	 * 获取四带二（四张带两对）跟牌
-	 * 
-	 * @author zai
-	 * 2019-07-30 10:18:13
-	 */
-	public void checkSiDaiErShuang() {
-		//TODO 获取四带二（四张带两对）跟牌
-	}
-	
-	/**
-	 * 获取飞机(三顺带对子)跟牌
-	 * 
-	 * @param cards
-	 * @param followCards
-	 * @return
-	 * @author zai
-	 * 2019-07-30 10:22:34
-	 */
-	private List<int[]> checkFeiJiShuang(int[] cards, int[] followCards) {
-		// TODO Auto-generated method stub
-		return null;
+		if (followCards == null || cards == null) return null;
+        int[] catchNumList = getNumList(followCards);
+        int[] sortType = new int[1];
+        int catchType = checkNumListType(catchNumList,  sortType); //内部实现catchNumList排序
+        if (catchType == AlgoDzzCardType.NONE || catchType == AlgoDzzCardType.WANG_ZHA) return null;
+        int[] numList = getNumList(cards);
+        sort(numList);
+        List<List<Integer>> getSort = getSortCell(numList);
+        List<int[]> findNumTips = null;
+        if (cards.length >= followCards.length)   //相同牌型的获取
+        {
+            switch (catchType)
+            {
+                case AlgoDzzCardType.DAN_ZHANG:
+                case AlgoDzzCardType.DUI_ZI:
+                case AlgoDzzCardType.SAN_ZHANG:
+                case AlgoDzzCardType.ZHA_DAN:
+                    {
+                        findNumTips = findSame(getSort, catchNumList);
+                    }; break;
+                case AlgoDzzCardType.DAN_SHUN_ZI: findNumTips = findStraight(numList, catchNumList, 1); break;
+                case AlgoDzzCardType.SHUANG_SHUN_ZI: findNumTips = findStraight(numList, catchNumList, 2); break;
+                case AlgoDzzCardType.SAN_SHUN_ZI: findNumTips = findStraight(numList, catchNumList, 3); break;
+                case AlgoDzzCardType.SAN_DAI_YI: findNumTips = findSameCarry(getSort, catchNumList, 3, 1); break;
+                case AlgoDzzCardType.SAN_DAI_ER: findNumTips = findSameCarry(getSort, catchNumList, 3, 2); break;
+                case AlgoDzzCardType.SI_DAI_ER_DAN: findNumTips = findSameCarry(getSort, catchNumList, 4, 1); break;
+                case AlgoDzzCardType.SI_DAI_ER_SHUANG: findNumTips = findSameCarry(getSort, catchNumList, 4, 2); break;
+                case AlgoDzzCardType.FEI_JI_31: findNumTips = findPlane(getSort, numList, catchNumList, 1); break;
+                case AlgoDzzCardType.FEI_JI_32: findNumTips = findPlane(getSort, numList, catchNumList, 2); break;
+            }
+        }
+        if (catchType < AlgoDzzCardType.ZHA_DAN)
+        {
+            List<int[]> zha = findSame(getSort, new int[] { 0, 0, 0, 0 });
+            if (zha != null)
+            {
+                if (findNumTips == null) findNumTips = new ArrayList<int[]>();
+                findNumTips.addAll(zha);
+            }
+        }
+        if (catchType < AlgoDzzCardType.WANG_ZHA)
+        {
+            if (containCell(numList, XIAO_WANG % 100) && containCell(numList, DA_WANG % 100))
+            {
+                if (findNumTips == null) findNumTips = new ArrayList<int[]>();
+                findNumTips.add(new int[] { DA_WANG % 100, XIAO_WANG % 100 });
+            }
+        }
+        if (findNumTips == null) return null;
+        else
+        {
+            sortValueType(cards);
+            List<int[]> result = new ArrayList<int[]>();
+            for (int i = 0; i < findNumTips.size(); i++)
+            {
+                result.add(findCardsBaseNum(cards, findNumTips.get(i)));
+            }
+            return result;
+        }
 	}
 
+       public void sort(int[] cards)
+       {
+           Arrays.sort(cards);
+       }
+       public void sortValueType(int[] cards)
+       {
+    	   
+         //  Arrays.sort(cards, (x, y) ->
+         //    {
+         //       int result = x % 100 - y % 100;
+         //      if (result == 0) result = x / 100 - y / 100;
+         //      return result;
+         //  });
+      }
+       public int[] getNumList(int[] cards)
+       {
+           int[] result = new int[cards.length];
+           for (int i = 0; i < cards.length; i++)
+           {
+               result[i] = cards[i] % 100;
+           }
+           return result;
+       }
+       public void sortSpecial(int[] numList,int index,int lengthNum)
+       {
+           int[] indexs = new int[1];
+           indexs[0] = index;
+           sortSpecial(numList, indexs, lengthNum);
+       }
+       public void sortSpecial(int[] numList, int[] indexs, int lengthNum)
+       {
+           int[] temp =  Arrays.copyOf(numList,numList.length);
+           int index = 0;
+           boolean[] find = new boolean[numList.length];
+           for (int i = 0; i < indexs.length; i++)
+           {
+               for (int j = indexs[i]; j < lengthNum + indexs[i]; j++)
+               {
+                   numList[index] = temp[j];
+                   find[j] = true;
+                   index++;
+               }
+           }
+           for (int i = 0; i < temp.length; i++)
+           {
+               if (!find[i])
+               {
+                   numList[index] = temp[i];
+                   index++;
+               }
+           }
+       }
+       public void sortBaseNumList(int[] cards,int[] numList)
+       {
+           int[] temp =  Arrays.copyOf(cards,cards.length);
+           boolean[] haveAdd = new boolean[cards.length];
+           for (int i = 0; i < numList.length; i++)
+           {
+               for (int j = 0; j < temp.length; j++)
+               {
+                   if (!haveAdd[j] && temp[j] % 100 == numList[i])
+                   {
+                       cards[i] = temp[j];
+                       haveAdd[j] = true;
+                       break;
+                   }
+               }
+           }
+       }
+       public boolean containCell(int[]  arr,int value)
+       {
+           int min = 0;
+           int max = arr.length - 1;
+           while(min<=max)
+           {
+               int mid = (max + min) / 2;
+               int valu1 = arr[mid];
+               if (value == valu1) return true;
+               else if (value < valu1) max = mid - 1;
+               else min = mid + 1;
+           }
+           return false;
+       }
+       public  int[] distinct(int[] arr,boolean haveSort,int minNum)//事先排序
+       {
+           if (!haveSort) Arrays.sort(arr);
+           int[]result = new int[arr.length] ;
+           int startCut = 0;
+           int nowIndex = 0;
+           if (arr.length == 1) return new int[] { arr[0] };
+           for (int i = 0; i < arr.length - 1; i++)
+           {
+               if (arr[i] != arr[i + 1])
+               {
+                 
+                   if (i - startCut + 1 >= minNum)
+                   {
+                       result[nowIndex] = (arr[i]);
+                       nowIndex++;
+                   }
+                   startCut = i + 1;
+                   if (startCut == arr.length - 1 && minNum == 1)
+                   {
+                       result[nowIndex] = (arr[i + 1]);
+                       nowIndex++;
+                   }
+               }
+               else if (i == arr.length - 2)
+               {
+                   int index = i - startCut + 1;
+                   if (index + 1 >= minNum)
+                   {
+                       result[nowIndex] = (arr[i]);
+                       nowIndex++;
+                   }
+               }
+           }
+           int[] last = new int[nowIndex];
+           for (int i = 0; i < last.length; i++)
+           {
+               last[i] = result[i];
+           }
+           return last;
+       }
+       /**same类型检测（单张，对子，三张，炸弹）
+        * 
+        * @param numList
+        * @return
+        */
+       public int isSame(int[] numList) //**事先排序
+       {
+           if (numList.length > 4 || numList[0] != numList[numList.length - 1]) return 0;
+           return numList.length;
+       }
+       /**顺检测
+        * 
+        * @param numList 检测数组
+        * @param singleNum 单元素的数量
+        * @return
+        */
+       public boolean isStraight(int[] numList, int singleNum) //**事先排序
+       {
+           int minTypeNum = singleNum == 1 ? 5 : 2;
+           if (numList.length % singleNum != 0 || numList.length < singleNum * minTypeNum) return false;
+           return straight(numList, singleNum, numList.length / singleNum, 0);
+       }
+       /**判断numList某段数据是否是某顺
+        * 
+        * @param numList 检测数组
+        * @param singleNum 单元素的数量
+        * @param typeNum 几连顺
+        * @param startIndex 开始检测的下标
+        * @return
+        */
+       public boolean straight(int[] numList, int singleNum, int typeNum, int startIndex) //**事先排序
+       {
+           int endIndex = startIndex + singleNum * typeNum - 1;
+           if (endIndex >= numList.length) return false;
+           for (int i = startIndex + singleNum; i <= endIndex; i += singleNum)
+           {
+               if (numList[i] != numList[i - singleNum] + 1) return false;
+               if (singleNum > 1)
+               {
+                   if (numList[i] != numList[i + singleNum - 1] || numList[i - 1] != numList[i - singleNum]) return false;
+               }
+           }
+           return true;
+       }
+       public boolean planeDouble(int[] numList) //**事先排序
+       {
+           if (numList.length >= 10 && numList.length % 5 == 0) //飞机带对
+           {
+               int typeNum = numList.length / 5;
+               boolean findPlane = false;
+               int findIndex = 0;
+               for (int i = 0; i < numList.length - 1; i += 2)
+               {
+                   if (!findPlane)
+                   {
+                       if (straight(numList, 3, typeNum, i))
+                       {
+                           findPlane = true;
+                           findIndex = i;
+                           i += typeNum * 3 - 2;
+                           continue;
+                       }
+                       else if (i == numList.length - typeNum * 3) return false;
+                   }
+                   if (numList[i] != numList[i + 1])
+                   {
+                       findPlane = false;
+                       break;
+                   }
+               }
+               if (findPlane)
+               {
+                   sortSpecial(numList, findIndex, typeNum * 3);
+               }
+               return findPlane;
+           }
+           return false; 
+       }
+       public boolean planeSingle(int[] numList) //**事先排序
+       {
+           if (numList.length >= 8 && numList.length % 4 == 0)
+           {
+               int typeNum = numList.length / 4;
+               int[] find = new int[typeNum];
+               int[] findIndex = new int[typeNum];
+               int index = 0;
+               for (int i = 0; i <= numList.length - 3;)
+               {
+                   if (numList[i] == numList[i + 2]&&index<find.length)
+                   {
 
-	/**
-	 * 获取飞机(三顺带单张)跟牌
-	 * 
-	 * @param cards
-	 * @param followCards
-	 * @return
-	 * @author zai
-	 * 2019-07-30 10:22:55
-	 */
-	private List<int[]> checkFeiJiDan(int[] cards, int[] followCards) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+                       find[index] = numList[i];
+                       findIndex[index] = i;
+                       index++;
+                       i += 3;
+                       if (i < numList.length && numList[i] == numList[i - 1]) i++;
+                   }
+                   else i++;
+               }
+               if (index == typeNum)
+               {
+                   if (straight(find, 1, find.length, 0))
+                   {
+                       sortSpecial(numList, findIndex, 3);
+                       return true;
+                   }
+               }
+           }
+           return false;
+       }
+       /** 三带一，三带对，四带一，四带对
+        * 
+        * @param numList 检测数组
+        * @param type 3带或者4带
+        * @param carryType 1：带单，2：带对）
+        * @return
+        */
+       public boolean isSameCarry(int[] numList,int type,int carryType) //**事先排序
+       {
+           int carryTypeNum = type == 3 ? 1 : 2;
+           if (numList.length != type + carryTypeNum * carryType) return false;
+           if (numList.length == 4 && numList[0] == numList[3]) return false; //三带一排除炸弹的影响
+           boolean findType = false;
+           int findIndex = 0;
+           for (int i = 0; i < numList.length - 1;)
+           {
+               if (!findType && i <= numList.length - type && numList[i] == numList[i + type - 1])
+               {
+                   findType = true;
+                   findIndex = i;
+                   i += type;
+                   if (carryType == 2) continue;
+                   else break;
+               }
+               if (carryType == 2)
+               {
+                   if (numList[i] != numList[i + 1])
+                   {
+                       return false;
+                   }
+                   else i += 2;
+               }
+               else  i++;
+           }
+           if (findType == false) return false;
+           sortSpecial(numList, findIndex, type);
+           return true;
+       }
+       public int checkNumListType(int[] numList) //##内部排序
+       {
+           int[] sortType = new int[1];
+           return checkNumListType(numList,  sortType);
+       }
+       /** 检测numList返回牌型
+        * 
+        * @param numList 检测数组
+        * @param sortType 返回排序类型,0:无需排序，1：正常排序，2：特殊排序
+        * @return
+        */
+       public int checkNumListType(int[] numList, int[] sortType) //##内部排序
+       {
+           int result = AlgoDzzCardType.NONE;
+           if (numList.length > 2)
+           {
+               sort(numList);
+           }
+           for (int i = 0; i <= 3; i++)
+           {
+               switch (i)
+               {
+                   case 0:  //返回无需排序(Same牌型) 4个
+                       {
+                           if (isSame(numList) > 0)
+                           {
+                               if (numList.length == 1) return AlgoDzzCardType.DAN_ZHANG;
+                               else if (numList.length == 2) return AlgoDzzCardType.DUI_ZI;
+                               else if (numList.length == 3) return AlgoDzzCardType.SAN_ZHANG;
+                               else if (numList.length == 4) return AlgoDzzCardType.ZHA_DAN;
+                           }
+                       }
+                       break;
+                   case 1: //返回正常排序（Straight、双王） 4个
+                       {
+                           if (isStraight(numList, 1)) result = AlgoDzzCardType.DAN_SHUN_ZI;
+                           else if (isStraight(numList, 2)) result = AlgoDzzCardType.SHUANG_SHUN_ZI;
+                           else if (isStraight(numList, 3)) result = AlgoDzzCardType.SAN_SHUN_ZI;
+                           else if (numList.length == 2 && numList[0] >= XIAO_WANG % 100 && numList[1] >= XIAO_WANG % 100) result = AlgoDzzCardType.WANG_ZHA;
+                           if (result != AlgoDzzCardType.NONE)
+                           {
+                               sortType[0] = 1;
+                               return result;
+                           }
+                       }
+                       break;
+                   case 2: //Carry牌型检测，  （返回特殊排序） 6个
+                       {
+                           if (planeSingle(numList)) result = AlgoDzzCardType.FEI_JI_31;
+                           else if (planeDouble(numList)) result = AlgoDzzCardType.FEI_JI_32;
+                           else if (isSameCarry(numList, 3, 1)) result = AlgoDzzCardType.SAN_DAI_YI;
+                           else if (isSameCarry(numList, 4, 1)) result = AlgoDzzCardType.SI_DAI_ER_DAN;
+                           else if (isSameCarry(numList, 3, 2)) result = AlgoDzzCardType.SAN_DAI_ER;
+                           else if (isSameCarry(numList, 4, 2)) result = AlgoDzzCardType.SI_DAI_ER_SHUANG;
+                           if (result != AlgoDzzCardType.NONE)
+                           {
+                               sortType[0] = 2;
+                               return result;
+                           }
+                       }
+                       break;
+               }
+           }
+           return AlgoDzzCardType.NONE;
+       }
+       public int compareCardsType(int[] cardsOne,int[] cardsTwo)
+       {
+           int[] oneList = getNumList(cardsOne);
+           int[] twoList = getNumList(cardsTwo);
+           int oneType = checkNumListType(oneList);
+           int twoType = checkNumListType(twoList);
+           if(oneType==twoType&&cardsOne.length==cardsTwo.length )
+           {
+               return oneList[0] - twoList[0];
+           }
+           if(oneType!=twoType)
+           {
+               if (oneType == AlgoDzzCardType.WANG_ZHA) return 1;
+               if (twoType == AlgoDzzCardType.WANG_ZHA) return -1;
+               if (oneType == AlgoDzzCardType.ZHA_DAN) return 1;
+               if (twoType == AlgoDzzCardType.ZHA_DAN) return -1;
+           }
+           return 1000;
+       }
+       /**按元素个数特性获取分类数组。
+        * 
+        * @param numList
+        * @return
+        */
+       public List<List<Integer>> getSortCell(int[] numList ) //**事先排序
+       {
+           List<List<Integer>> result = new ArrayList<List<Integer>>();
+           for (int i = 0; i < 4; i++)
+           {
+               result.add(new  ArrayList<Integer>());
+           }
+           int startIndex = 0;
+           for (int i = 0; i < numList.length-1; i++)
+           {
+               if(numList[i]!=numList[i+1])
+                {
+                   int index = i - startIndex ;
+                   result.get(index).add(numList[i]);
+                   startIndex = i + 1 ;
+                   if(startIndex==numList.length-1)
+                   {
+                       result.get(0).add(numList[startIndex]);
+                   }
+               }
+               else if(i==numList.length-2)
+               {
+                   int index = i - startIndex+1;
+                   result.get(index).add(numList[i]);
+               }
+           }
+           return result;
+       }
+       public void addCell(int[] result,int cell,int num,int startIndex)
+       {
+           for (int j = startIndex; j < num; j++)
+           {
+               result[j] = cell;
+           }
+       }
+       public int[] findCardsBaseNum(int[] cards,int[] numList) //cards事先排序
+       {
+           boolean[] find = new boolean[cards.length];
+           int[] result = new int[numList.length];
+           for(int i=0 ;i< numList.length;i++)
+           {
+               for (int j = 0; j < cards.length; j++)
+               {
+                   if (find[j]) continue;
+                   if (cards[j] % 100 !=numList[i]) continue;
+                   result[i] = cards[j];
+                   find[j] = true;
+                   break;
+               }
+           }
+           return result;
+           
+       }
+       /**寻找单张，对子，三张，炸弹。
+        * 
+        * @param getSort 分类数组
+        * @param catchNum 接牌数据
+        * @return
+        */
+       public List<int[]> findSame(List<List<Integer>> getSort, int[] catchNum) //**事先排序
+       {
+           List<int[]> result = null;
+           for (int i = catchNum.length-1; i < getSort.size(); i++)
+           {
+               if (getSort.get(i).size() > 0)
+               {
+                   for (int ii : getSort.get(i))
+                   {
+                       if (ii > catchNum[0])
+                       {
+                           if (result == null) result = new ArrayList<int[]>();
+                           int[] temp = new int[catchNum.length];
+                           addCell(temp, ii, catchNum.length, 0);
+                           result.add(temp);
+                       }
+                   }
+               }
+           }
+           return result;
+       }
+       /** 寻找顺类型
+        * 
+        * @param numList 检测数组
+        * @param catchNum 接牌数据
+        * @param singelNum 单元素数量
+        * @return
+        */
+       public List<int[]> findStraight(int[] numList, int[] catchNum, int singelNum)  //**事先排序
+       {
+           if (numList.length < catchNum.length) return null;
+           int[] dis = distinct(numList,true,singelNum);
+           List<int[]> result = null;
+           int typeNum = catchNum.length / singelNum;
+           for (int i = 0; i <= dis.length-(typeNum); i++)
+           {
+               if (dis[i] > catchNum[0] && straight(dis, 1, typeNum, i ))
+               {
+                   if (result == null) result = new ArrayList<int[]>();
+                   int[] addCell = new int[catchNum.length];
+                   int index = 0;
+                   for (int k = i; k < typeNum + i; k++)
+                   {
+                       for (int j = 0; j < singelNum; j++)
+                       {
+                           addCell[index] = dis[k];
+                           index++;
+                       }
+                   }
+                   result.add(addCell);
+               }
+           }
+           return result;
+       }
+       public List<int[]> findSameCarry(List<List<Integer>> getSort, int[] catchNum,int type,int carryType)  //事先排序
+       {
+           List<int[]> result = null;
+           for (int i = type - 1; i < getSort.size(); i++)
+           {
+               if (getSort.get(i).size() == 0) continue;
+               for (int ii :getSort.get(i))
+               {
+                   if (ii <= catchNum[0]) continue;
+                   if (result == null) result = new ArrayList<int[]>();
+                   int[] cell = new int[catchNum.length];
+                   addCell(cell, ii, type, 0); //same添加   
+                   int addIndex = type;
+                   for (int j = carryType - 1; j < getSort.size(); j++) //carry添加
+                   {
+                       if (getSort.get(j).size() == 0) continue;
+                       if (addIndex == catchNum.length) break; //carry加满
+                       for (int jj : getSort.get(j))
+                       {
+                           if (addIndex == catchNum.length) break;
+                           if (ii == jj) continue;//carry不可能和same相等
+                           cell[addIndex++] = jj;
+                           if (carryType == 2) cell[addIndex++] = jj;
+                           else if (j > 0 && addIndex < catchNum.length) cell[addIndex++] = jj;
+                       }
+                   }
+                   if (addIndex == catchNum.length) result.add(cell);
+               }
+           }
+           return result;
+       }
+       public List<int[]> findPlane(List<List<Integer>> getSort,int[] numList, int[] catchNum,int carryType) //事先排序
+       {
+           int typeNum = carryType == 0 ? catchNum.length / 3 : carryType == 1 ? catchNum.length / 4 : catchNum.length / 5;
+           int singleNum = 3;
+           int[] dis = distinct(numList, true, 3);
+           List<int[]> result = null;
+           for (int i = 0; i <= dis.length - (typeNum); i++)
+           {
+               if (!(dis[i] > catchNum[0] && straight(dis, 1, typeNum, i))) continue;
+               if (result == null) result = new ArrayList<int[]>();
+               int[] addCell = new int[catchNum.length];
+               int index = 0;
+               for (int k = i; k < typeNum + i; k++)
+               {
+                   for (int j = 0; j < singleNum; j++)
+                   {
+                       addCell[index] = dis[k];
+                       index++;
+                   }
+               }
+               if (carryType < 1) continue;
+               //carry添加
+               int addIndex = typeNum * singleNum;
+               for (int j = carryType - 1; j < getSort.size(); j++) //carry添加
+               {
+                   if (getSort.get(j).size() == 0) continue;
+                   if (addIndex == catchNum.length) break;
+                   for (int jj : getSort.get(j))
+                   {
+                       if (addIndex == catchNum.length) break;
+                       if (containCell(addCell, jj) && j == 2) continue; //不重复添加
+                       addCell[addIndex++] = jj;
+                       if (carryType == 2) addCell[addIndex++] = jj;
+                       else if (j > 0)
+                       {
+                           for (int k = 0; k < j; k++)
+                           {
+                               if (addIndex == catchNum.length) break;
+                               addCell[addIndex++] = jj;
+                           }
+                       }
+                   }
+               }
+               result.add(addCell);
+           }
+           return result;
+       }
 
-
-	/**
-	 * 获取三顺子跟牌
-	 * 
-	 * @param cards
-	 * @param followCards
-	 * @return
-	 * @author zai
-	 * 2019-07-30 10:23:14
-	 */
-	private List<int[]> checkStraightThreeCards(int[] cards, int[] followCards) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	/**
-	 * 获取双顺子(连对)跟牌
-	 * 
-	 * @param cards
-	 * @param followCards
-	 * @return
-	 * @author zai
-	 * 2019-07-30 10:23:31
-	 */
-	private List<int[]> checkStraightPairs(int[] cards, int[] followCards) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	/**
-	 * 获取单顺子跟牌
-	 * 
-	 * @param cards
-	 * @param followCards
-	 * @return
-	 * @author zai
-	 * 2019-07-30 10:24:04
-	 */
-	private List<int[]> checkStraightSingle(int[] cards, int[] followCards) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-
-	/**
-	 * 是否有炸弹
-	 * 
-	 * @param handcards 手牌牌值
-	 * @param targetValue 目标值
-	 * @return
-	 * @author zai
-	 * 2019-05-28 11:00:43
-	 */
-	public boolean hasZhaDan(int[] handcards, int targetValue) {
-		int count = 0;
-		for (int i : handcards) {
-			if (i == targetValue) {
-				count++;
-				if (count == 4) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-	
-	/**
-	 * 是否有王炸
-	 * 
-	 * @param handcards 手牌
-	 * @return
-	 * @author zai
-	 * 2019-05-28 11:04:39
-	 */
-	public boolean hasWangZha(int[] handcards) {
-		
-		boolean dawang = false;
-		boolean xiaowang = false;
-		
-		for (int i : handcards) {
-			if (i == XIAO_WANG) {
-				xiaowang = true;
-			}
-			if (i == DA_WANG) {
-				dawang = true;
-			}
-			
-			if (dawang && xiaowang) {
-				return true;
-			}
-		}
-		
-		return false;
-	}
-	
-	/**
-	 * 是否王炸
-	 * 
-	 * @param cards
-	 * @return
-	 * @author zai
-	 * 2019-05-28 11:28:23
-	 */
-	public boolean isWangZha(int[] cards) {
-		//if (cards.length != 2) {
-		//	return false;
-		//}
-		return cards.length != 2?false: cards[0]>=XIAO_WANG&&cards[1]>=XIAO_WANG;
-		//return cards[0] == XIAO_WANG || cards[0] == DA_WANG || cards[1] == XIAO_WANG || cards[1] == DA_WANG;
-	}
-	
-	/**
-	 * 是否单张
-	 * 
-	 * @param cardvals
-	 * @return
-	 * @author zai
-	 * 2019-07-02 16:23:38
-	 */
-	public boolean isDanZhang(int[] cardvals) {
-		return cardvals.length == 1;
-	}
-	
-	/**
-	 * 获取单张跟牌选项
-	 * 
-	 * @param cards 手牌牌值集合
-	 * @param followCardVal 跟牌牌值集合
-	 * @return
-	 * @author zai
-	 * 2019-07-02 16:26:48
-	 */
-	public List<int[]> checkFollowDanZhang(int[] cards, int followCardVal) {
-		int[] dcards = distinct(cards);
-		List<int[]> list = null;
-		int followCalcVal = followCardVal % 100;
-		for (int i = 0; i < dcards.length; i++) {
-			if (dcards[i] % 100 > followCalcVal) {
-				if (list == null) {
-					list = new ArrayList<>(5);
-				}
-				list.add(new int[] {cards[i]});
-			}
-		}
-		return list;
-	}
-	
-	
-	/**
-	 * 是否对子
-	 * 
-	 * @param cardvals
-	 * @return
-	 * @author zai
-	 * 2019-06-29 10:45:57
-	 */
-	public boolean isDuiZi(int[] cards) {
-		if (cards.length != 2) {
-			return false;
-		}
-		//获取去除花色的值
-		int[] cardvals = removeSuits(cards);
-		return cardvals[0] == cardvals[1];
-	}
-	
-	/**
-	 * 获取对子跟牌
-	 * 
-	 * @param cards
-	 * @param followCardVal
-	 * @return
-	 * @author zai
-	 * 2019-07-02 16:41:54
-	 */
-	public List<int[]> checkFollowDuiZi(int[] cards, int[] followCards) {
-		int[] cardvals = removeSuits(cards);
-		sort(cardvals);
-		int followVal = followCards[0] % 100;
-		List<int[]> list = null;
-		for (int i = 0; i < cardvals.length; i++) {
-			if (cardvals[i] > followVal) {
-				if (cardvals[i] == cardvals[i + 1]) {
-					if (list == null) {
-						list = new ArrayList<>(5);
-					}
-					list.add(new int[] {cards[i], cards[i + 1]});
-					i++;
-				}
-			}
-		}
-		return list;
-	}
-	
-	
-	/**
-	 * 是否三张
-	 * 
-	 * @param cardvals
-	 * @return
-	 * @author zai
-	 * 2019-06-29 10:45:57
-	 */
-	public boolean isSanZhang(int[] cards) {
-		if (cards.length != 3) {
-			return false;
-		}
-		//获取去除花色的值
-		int[] cardvals = removeSuits(cards);
-		return cardvals[0] == cardvals[2];
-	}
-	
-	/**
-	 * 获取三张跟牌
-	 * 
-	 * @param cards
-	 * @param followCards
-	 * @return
-	 * @author zai
-	 * 2019-07-02 17:58:40
-	 */
-	public List<int[]> checkFollowSanZhang(int[] cards, int[] followCards) {
-		List<int[]> list = null;
-		if (cards.length < followCards.length) {
-			return list;
-		}
-		int[] cardvals = removeSuits(cards);
-		sort(cardvals);
-		int followVal = followCards[0] % 100;
-		for (int i = 0; i < cardvals.length; i++) {
-			if (cardvals[i] > followVal) {
-				if (cardvals[i] == cardvals[i + 2]) {
-					if (list == null) {
-						list = new ArrayList<>(6);
-					}
-					list.add(new int[] {cards[i], cards[i + 2]});
-					i+=2;;
-				}
-			}
-		}
-		return list;
-	}
-	
-	/**
-	 * 是否炸弹
-	 * 
-	 * @param cardvals
-	 * @return
-	 * @author zai
-	 * 2019-07-02 11:17:43
-	 */
-	public boolean isZhaDan(int[] cards) {
-		if (cards.length != 4) {
-			return false;
-		}
-		//获取去除花色的值
-		int[] cardvals = removeSuits(cards);
-		sort(cardvals);
-		return cardvals[0] == cardvals[3];
-	}
-	
-	/**
-	 * 获取炸弹跟牌
-	 * 
-	 * @param cards
-	 * @param followCards
-	 * @return
-	 * @author zai
-	 * 2019-07-02 17:58:40
-	 */
-	public List<int[]> checkFollowZhaDan(int[] cards, int[] followCards) {
-		List<int[]> list = null;
-		if (cards.length < followCards.length) {
-			return list;
-		}
-		int[] cardvals = removeSuits(cards);
-		sort(cardvals);
-		int followVal = followCards[0] % 100;
-		for (int i = 0; i < cardvals.length; i++) {
-			if (cardvals[i] > followVal) {
-				if (cardvals[i] == cardvals[i + 3]) {
-					if (list == null) {
-						list = new ArrayList<>(6);
-					}
-					list.add(new int[] {cards[i], cards[i + 3]});
-					i+=3;
-				}
-			}
-		}
-		return list;
-	}
-	
-	
-	/**
-	 * 是否三带一
-	 * 
-	 * @param cardvals
-	 * @return
-	 * @author zai
-	 * 2019-06-29 10:45:57
-	 */
-	public boolean isSanDaiYi(int[] cards) {
-		if (cards.length != 4) {
-			return false;
-		}
-		//获取去除花色的值
-		int[] cardvals = removeSuits(cards);
-		sort(cardvals);
-		return cardvals[0] == cardvals[2] 
-				&& 
-			   cardvals[0] != cardvals[3];
-	}
-	
-	/**
-	 * 获取三带一跟牌
-	 * 
-	 * @param cards
-	 * @param followCards
-	 * @return
-	 * @author zai
-	 * 2019-07-02 17:58:40
-	 */
-	public List<int[]> checkFollowSanDaiYi(int[] cards, int[] followCards) {
-		List<int[]> list = null;
-		if (cards.length < followCards.length) {
-			return list;
-		}
-		//获取跟牌三张
-		List<Integer> followShunZiOpts = getShunZiOptions(followCards, 3);
-		
-		//获取手牌三张集合
-		List<Integer> shunZiOptions = getShunZiOptions(cards, 3);
-		
-		if (shunZiOptions != null) {
-			
-			List<Integer> opts = null;
-			
-			//对比牌值大小
-			for (Integer opt : shunZiOptions) {
-				for (Integer fopt : followShunZiOpts) {
-					if (opt > fopt) {
-						if (opts == null) {
-							opts = new ArrayList<>(2);
-						}
-						opts.add(opt);
-					}
-				}
-			}
-			if (opts.size() > 0) {
-				for (Integer opt : opts) {
-					for (int i = 0; i < cards.length; i++) {
-						int card = cards[i];
-						if (card % 100 != opt) {
-							if (list == null) {
-								list = new ArrayList<>(3);
-							}
-							int[] arr = new int[4];
-							int k = 0;
-							for (int j = 0; j < 3; j++) {
-								for (; k < cards.length; k++) {
-									if (cards[k] % 100 == opt) {
-										arr[j] = cards[k];
-										k++;
-										break;
-									}
-								}
-							}
-							arr[3] = card;
-							list.add(arr);
-						}
-					}
-				}
-			}
-		
-		}
-		
-		return list;
-	}
-	
-	public List<Integer> getShunZiOptions(int[] cards, int shunziSize) {
-		List<Integer> list = null;
-		int[] ncards = removeSuits(cards);
-		sort(ncards);
-		for (int i = 0; i <= ncards.length - shunziSize ; i++) {
-			if (ncards[i] == ncards[i + shunziSize - 1]) {
-				if (list == null) {
-					list = new ArrayList<>(3);
-				}
-				list.add(ncards[i]);
-			}
-		}
-		return list;
-	}
-	
-	/**
-	 * 是否三带二
-	 * 
-	 * @param cardvals
-	 * @return
-	 * @author zai
-	 * 2019-06-29 10:45:57
-	 */
-	public boolean isSanDaiEr(int[] cards) {
-		if (cards.length != 5) {
-			return false;
-		}
-		//获取去除花色的值
-		int[] cardvals = removeSuits(cards);
-		sort(cardvals);
-		return cardvals[0] == cardvals[2] 
-				&& 
-			   cardvals[0] != cardvals[3]
-				&& 
-			   cardvals[0] != cardvals[4];
-	}
-	
-	
-	/**
-	 * 获取三带二跟牌
-	 * 
-	 * @param cards
-	 * @param followCards
-	 * @return
-	 * @author zai
-	 * 2019-07-02 17:58:40
-	 */
-	public List<int[]> checkFollowSanDaiEr(int[] cards, int[] followCards) {
-		List<int[]> list = null;
-		if (cards.length < followCards.length) {
-			return list;
-		}
-		//获取跟牌三张
-		List<Integer> followShunZiOpts = getShunZiOptions(followCards, 3);
-		//获取手牌三张集合
-		List<Integer> shunZiOptions = getShunZiOptions(cards, 3);
-		
-		if (shunZiOptions != null) {
-			
-			List<Integer> opts = null;
-			
-			//对比牌值大小
-			for (Integer opt : shunZiOptions) {
-				for (Integer fopt : followShunZiOpts) {
-					if (opt > fopt) {
-						if (opts == null) {
-							opts = new ArrayList<>(2);
-						}
-						opts.add(opt);
-					}
-				}
-			}
-			if (opts.size() > 0) {
-				//让相同点算的牌放在一起
-				makeSameValuesTogether(cards, true);
-				for (Integer opt : opts) {
-					for (int i = 0; i < cards.length - 1; i++) {
-						int card = cards[i];
-						if (card % 100 != opt) {
-							if (cards[i] % 100 == cards[i + 1] % 100) {
-								
-								if (list == null) {
-									list = new ArrayList<>(3);
-								}
-								int[] arr = new int[5];
-								int k = 0;
-								for (int j = 0; j < 3; j++) {
-									for (; k < cards.length; k++) {
-										if (cards[k] % 100 == opt) {
-											arr[j] = cards[k];
-											k++;
-											break;
-										}
-									}
-								}
-								arr[3] = cards[i];
-								arr[4] = cards[i + 1];
-								list.add(arr);
-								//i++;  //解除注释可开启对子同牌值的多个选项
-							}
-						}
-					}
-				}
-			}
-		}
-		
-		return list;
-	}
-	
-	
-	/**
-	 * 是否四带二（四张带两张）
-	 * 
-	 * @param cardvals
-	 * @return
-	 * @author zai
-	 * 2019-06-29 10:45:57
-	 */
-	public boolean isSiDaiErDan(int[] cards) {
-		if (cards.length != 6) {
-			return false;
-		}
-		//获取去除花色的值
-		int[] cardvals = removeSuits(cards);
-		sort(cardvals);
-		return 
-				(cardvals[0] == cardvals[3]) 
-				|| 
-				(cardvals[2] == cardvals[5]);
-	}
-	
-	/**
-	 * 获取四带二跟牌（四张带两张）
-	 * 
-	 * @param cards
-	 * @param followCards
-	 * @return
-	 * @author zai
-	 * 2019-07-02 17:58:40
-	 */
-	public List<int[]> checkSiDaiErDan(int[] cards, int[] followCards) {
-		List<int[]> list = null;
-		if (cards.length < followCards.length) {
-			return list;
-		}
-		//获取跟牌三张
-		List<Integer> followShunZiOpts = getShunZiOptions(followCards, 4);
-		//获取手牌三张集合
-		List<Integer> shunZiOptions = getShunZiOptions(cards, 4);
-		
-		if (shunZiOptions != null) {
-			
-			List<Integer> opts = null;
-			
-			//对比牌值大小
-			for (Integer opt : shunZiOptions) {
-				for (Integer fopt : followShunZiOpts) {
-					if (opt > fopt) {
-						if (opts == null) {
-							opts = new ArrayList<>(2);
-						}
-						opts.add(opt);
-					}
-				}
-			}
-			if (opts.size() > 0) {
-				
-				//让相同点算的牌放在一起
-				makeSameValuesTogether(cards, true);
-				
-				for (Integer opt : opts) {
-					for (int i = 0; i < cards.length - 1; i++) {
-						if (cards[i] % 100 != opt && cards[i + 1] % 100 != opt) {
-							//if (cards[i] % 100 == cards[i + 1] % 100) {
-								
-								if (list == null) {
-									list = new ArrayList<>(3);
-								}
-								int[] arr = new int[6];
-								int k = 0;
-								for (int j = 0; j < 4; j++) {
-									for (; k < cards.length; k++) {
-										if (cards[k] % 100 == opt) {
-											arr[j] = cards[k];
-											k++;
-											break;
-										}
-									}
-								}
-								arr[4] = cards[i];
-								arr[5] = cards[i + 1];
-								list.add(arr);
-								//i++;  //解除注释可开启对子同牌值的多个选项
-							}
-						//}
-					}
-				}
-			}
-		}
-		
-		return list;
-	}
-	
-	/**
-	 * 是否四带二（四张带两对）
-	 * 
-	 * @param cardvals
-	 * @return
-	 * @author zai
-	 * 2019-06-29 10:44:11
-	 */
-	public boolean isSiDaiErShuang(int[] cards) {
-		if (cards.length != 8) {
-			return false;
-		}
-		//获取去除花色的值
-		int[] cardvals = removeSuits(cards);
-		sort(cardvals);
-		return 
-			(
-				cardvals[0] == cardvals[3] 
-				&& 
-				cardvals[4] == cardvals[5]
-				&& 
-				cardvals[6] == cardvals[7]
-			) 
-			|| 
-			(
-				cardvals[0] == cardvals[1] 
-				&& 
-				cardvals[2] == cardvals[3]
-				&& 
-				cardvals[4] == cardvals[7]
-			);
-	}
-	
-	
-	/**
-	 * 获取四带二跟牌（四张带两对）
-	 * 
-	 * @param cards
-	 * @param followCards
-	 * @return
-	 * @author zai
-	 * 2019-07-02 17:58:40
-	 */
-	public List<int[]> checkSiDaiErShuang(int[] cards, int[] followCards) {
-		List<int[]> list = null;
-		if (cards.length < followCards.length) {
-			return list;
-		}
-		//获取跟牌三张
-		List<Integer> followShunZiOpts = getShunZiOptions(followCards, 4);
-		//获取手牌三张集合
-		List<Integer> shunZiOptions = getShunZiOptions(cards, 4);
-		
-		if (shunZiOptions != null) {
-			
-			List<Integer> opts = null;
-			
-			//对比牌值大小
-			for (Integer opt : shunZiOptions) {
-				for (Integer fopt : followShunZiOpts) {
-					if (opt > fopt) {
-						if (opts == null) {
-							opts = new ArrayList<>(2);
-						}
-						opts.add(opt);
-					}
-				}
-			}
-			if (opts.size() > 0) {
-				
-				//让相同点算的牌放在一起
-				makeSameValuesTogether(cards, true);
-				
-				for (Integer opt : opts) {
-					for (int i = 0; i < cards.length - 1; i++) {
-						if (cards[i] % 100 != opt) {
-							if (cards[i] % 100 == cards[i + 1] % 100) {
-								
-								if (list == null) {
-									list = new ArrayList<>(3);
-								}
-								int[] arr = new int[6];
-								int k = 0;
-								for (int j = 0; j < 4; j++) {
-									for (; k < cards.length; k++) {
-										if (cards[k] % 100 == opt) {
-											arr[j] = cards[k];
-											k++;
-											break;
-										}
-									}
-								}
-								arr[3] = cards[i];
-								arr[4] = cards[i + 1];
-								list.add(arr);
-								//i++;  //解除注释可开启对子同牌值的多个选项
-							}
-						}
-					}
-				}
-			}
-		}
-		
-		return list;
-	}
-	
-	
-	
-	/**
-	 * 是否单顺子
-	 * 
-	 * @param cardvals
-	 * @return
-	 * @author zai
-	 * 2019-06-29 16:39:03
-	 */
-	public boolean isStraightSingle(int[] cards) {
-		return isStraightSingle(cards, true);
-	}
-	
-	/**
-	 * 判断单顺子
-	 * 
-	 * @param cardvals
-	 * @param checkLen 是否检查长度
-	 * @return
-	 * @author zai
-	 * 2019-06-29 17:48:53
-	 */
-	public boolean isStraightSingle(int[] cards, boolean checkLen) {
-		if (checkLen && cards.length < 5) {
-			return false;
-		}
-		//获取去除花色的值
-		int[] cardvals = removeSuits(cards);
-		sort(cardvals);
-		for (int i = 1; i < cardvals.length; i++) {
-			if (cardvals[i] != cardvals[i - 1] + 1) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-	/**
-	 * 是否连对
-	 * 
-	 * @param cardvals
-	 * @return
-	 * @author zai
-	 * 2019-06-29 11:17:54
-	 */
-	public boolean isStraightPairs(int[] cards) {
-		if (cards.length < 6) {
-			return false;
-		}
-		//获取去除花色的值
-		int[] cardvals = removeSuits(cards);
-		sort(cardvals);
-		for (int i = 2; i < cardvals.length - 2; i += 2) {
-			if (
-				cardvals[i] != cardvals[i + 1]
-				||
-				cardvals[i - 1] != cardvals[i - 2]
-				||
-				cardvals[i] != cardvals[i - 1] + 1
-				) {
-				return false;
-			}
-		}
-		return true;
-	}
-	
-	/**
-	 * 是否三顺
-	 * 
-	 * @param cardvals
-	 * @return
-	 * @author zai
-	 * 2019-06-29 11:17:54
-	 */
-	public boolean isStraightThreeCards(int[] cards) {
-		if (cards.length < 6) {
-			return false;
-		}
-		//获取去除花色的值
-		int[] cardvals = removeSuits(cards);
-		sort(cardvals);
-		int len = cardvals.length - 3;
-		for (int i = 3; i < len; i+=3) {
-			if (
-				cardvals[i] != cardvals[i + 1]
-				||
-				cardvals[i - 1] != cardvals[i - 3]
-				||
-				cardvals[i] != cardvals[i - 1] + 1
-				) {
-				return false;
-			}
-		}
-		return true;
-	}
-	
-	/**
-	 * 是否飞机（三顺带一张）
-	 * 
-	 * @param cardvals
-	 * @return
-	 * @author zai
-	 * 2019-06-29 11:17:54
-	 */
-	public boolean isFeiJiDan(int[] cards) {
-		//获取去除花色的值
-		int[] cardvals = removeSuits(cards);
-		sort(cardvals);
-		int len = cardvals.length;
-		if (len < 7 || len % 4 != 0) {
-			return false;
-		}
-		Map<Integer, Integer> map = new LinkedHashMap<>(len);
-		for (int i : cardvals) 	{
-			Integer count = map.get(i);
-			if (count == null) {
-				map.put(i, 1);			
-			}else {
-				map.put(i, count + 1);			
-			}
-		}
-		int[] sanshun = new int[len / 4];
-		int i = 0;
-		for (Entry<Integer, Integer> entry : map.entrySet()) {
-			int count = entry.getValue();
-			if (count != 1 || count != 3) {
-				return false;
-			}
-			if (count == 3) {
-				sanshun[i] = entry.getKey();
-				i++;
-			}
-		}
-		return isStraightSingle(sanshun, false);
-	}
-	
-	/**
-	 * 是否飞机（三顺带对子）
-	 * 
-	 * @param cardvals
-	 * @return
-	 * @author zai
-	 * 2019-06-29 11:17:54
-	 */
-	public boolean isFeiJiShuang(int[] cards) {
-		//获取去除花色的值
-		int[] cardvals = removeSuits(cards);
-		sort(cardvals);
-		int len = cardvals.length;
-		if (len < 8 || len % 5 != 0) {
-			return false;
-		}
-		Map<Integer, Integer> map = new LinkedHashMap<>(len);
-		for (int i : cardvals) {
-			Integer count = map.get(i);
-			if (count == null) {
-				map.put(i, 1);			
-			}else {
-				map.put(i, count + 1);			
-			}
-		}
-		int[] sanshun = new int[len / 4];
-		int i = 0;
-		for (Entry<Integer, Integer> entry : map.entrySet()) {
-			int count = entry.getValue();
-			if (count != 2 && count != 3) {
-				return false;
-			}
-			if (count == 3) {
-				sanshun[i] = entry.getKey();
-				i++;
-			}
-		}
-		return isStraightSingle(sanshun, false);
-	}
-	
-	
 	public static void main(String[] args) {
-		AlgoDzzUtil util = new AlgoDzzUtil();
+	//	AlgoDzzUtil util = new AlgoDzzUtil();
 		
-		int testTimes = 100 * 10000;
-		List<int[]> testList = new ArrayList<>();
-		ThreadLocalRandom random = ThreadLocalRandom.current();
+		//int testTimes = 100 * 10000;
+		//List<int[]> testList = new ArrayList<>();
+		//ThreadLocalRandom random = ThreadLocalRandom.current();
 		
-		long startTime = 0;
-		long useTime = 0;
+		//long startTime = 0;
+		//long useTime = 0;
 		
-		int[] cards = new int[] { 114, 105, 205, 305, 108, 208, 306, 214, 101, 206,405, 303, 314, 313, 412, 413, 414 };
-		int[] followCards = new int[] {103, 203, 303, 403, 405, 305};
-		for (int i = 0; i < testTimes; i++) {
+		//int[] cards = new int[] { 114, 105, 205, 305, 108, 208, 306, 214, 101, 206,405, 303, 314, 313, 412, 413, 414 };
+		//int[] followCards = new int[] {103, 203, 303, 403, 405, 305};
+		//for (int i = 0; i < testTimes; i++) {
 			
 			/*
 			testList.add(new int[] {
@@ -1226,64 +769,75 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 			});	
 			*/	
 			
-			testList.add(cards);
-		}
+			//testList.add(cards);
+		//}
 		
 		
 		//预热
-		int cardType = util.checkCardType(cards);
-		List<int[]> checkFollowSanDaiYi = util.checkFollowSanDaiYi(cards,followCards);
-		List<int[]> checkFollowSanDaiEr = util.checkFollowSanDaiEr(cards,followCards);
-		List<int[]> checkSiDaiErDan = util.checkSiDaiErDan(cards,followCards);
-		List<int[]> checkSiDaiErShuang = util.checkSiDaiErShuang(cards,followCards);
+		//int cardType = util.checkCardType(cards);
+		//List<int[]> checkFollowSanDaiYi = util.checkFollowSanDaiYi(cards,followCards);
+		//List<int[]> checkFollowSanDaiEr = util.checkFollowSanDaiEr(cards,followCards);
+		//List<int[]> checkSiDaiErDan = util.checkSiDaiErDan(cards,followCards);
+		//List<int[]> checkSiDaiErShuang = util.checkSiDaiErShuang(cards,followCards);
 		
-		System.out.println("checkCardType: " + cardType);
-		System.out.println("checkFollowSanDaiYi: ");
-		for (int[] is : checkFollowSanDaiYi) {
-			util.printArr(is);
-		}
-		System.out.println("checkFollowSanDaiEr: ");
-		for (int[] is : checkFollowSanDaiEr) {
-			util.printArr(is);
-		}
-		System.out.println("checkSiDaiErDan: ");
-		if (checkSiDaiErDan != null) {
-			for (int[] is : checkSiDaiErDan) {
-				util.printArr(is);
-			}
-		}
+		//System.out.println("checkCardType: " + cardType);
+		//System.out.println("checkFollowSanDaiYi: ");
+		//for (int[] is : checkFollowSanDaiYi) {
+		//	util.printArr(is);
+		//}
+		//System.out.println("checkFollowSanDaiEr: ");
+	//	for (int[] is : checkFollowSanDaiEr) {
+		//	util.printArr(is);
+	//	}
+		//System.out.println("checkSiDaiErDan: ");
+		//if (checkSiDaiErDan != null) {
+		//	for (int[] is : checkSiDaiErDan) {
+		//		util.printArr(is);
+	//		}
+	//	}
 		
-		System.out.println("checkSiDaiErShuang: ");		
-		if (checkSiDaiErShuang != null) {
-			for (int[] is : checkSiDaiErShuang) {
-				util.printArr(is);
-			}
-		}
-		
-		//计算时间
-		startTime = System.currentTimeMillis();
-		for (int[] is : testList) {
-			util.checkCardType(is);
-		}
-		useTime = System.currentTimeMillis() - startTime;
-		System.out.println("checkCardType : " + useTime + " ms");
-		
-		//计算时间
-		startTime = System.currentTimeMillis();
-		for (int[] is : testList) {
-			util.checkFollowSanDaiYi(cards,followCards);
-		}
-		useTime = System.currentTimeMillis() - startTime;
-		System.out.println("checkFollowSanDaiYi : " + useTime + " ms");
+	//	System.out.println("checkSiDaiErShuang: ");		
+	//	if (checkSiDaiErShuang != null) {
+	//		for (int[] is : checkSiDaiErShuang) {
+	//			util.printArr(is);
+	//		}
+	//	}
 		
 		
 		//计算时间
-		startTime = System.currentTimeMillis();
-		for (int[] is : testList) {
-			util.checkFollowSanDaiEr(cards, followCards);
-		}
-		useTime = System.currentTimeMillis() - startTime;
-		System.out.println("checkFollowSanDaiEr : " + useTime + " ms");
+	//	startTime = System.currentTimeMillis();
+	//	for (int[] is : testList) {
+	//		util.checkCardType(is);
+	//	}
+	//	useTime = System.currentTimeMillis() - startTime;
+	//	System.out.println("checkCardType : " + useTime + " ms");
+		
+		//计算飞机时间
+	//	int[] ff=new int[]	{2,2,3,3,3,4,4,4,6,6};
+		//		startTime = System.currentTimeMillis();
+		//		for(int i=0;i<30000000;i++)
+		//		{
+		//		   util.FindSame(util.GetSortCell(ff),new int[] {2,2});
+				  // System.out.println("Plane gg : " + useTime + " ms");
+		//		}
+		//		useTime = System.currentTimeMillis() - startTime;
+	//			System.out.println("Plane gg : " + useTime + " ms");
+		//计算时间
+	//	startTime = System.currentTimeMillis();
+	//	for (int[] is : testList) {
+	//	util.checkFollowSanDaiYi(cards,followCards);
+	//	}
+	//	useTime = System.currentTimeMillis() - startTime;
+	//	System.out.println("checkFollowSanDaiYi : " + useTime + " ms");
+		
+		
+		//计算时间
+	//	startTime = System.currentTimeMillis();
+	//	for (int[] is : testList) {
+	//		util.checkFollowSanDaiEr(cards, followCards);
+	//	}
+	//	useTime = System.currentTimeMillis() - startTime;
+	//	System.out.println("checkFollowSanDaiEr : " + useTime + " ms");
 		
 		
 	}

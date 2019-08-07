@@ -75,7 +75,6 @@ public class BasicAlgoUtil {
 		}
 		return Arrays.copyOf(arr1, count);
 	}
-	
 	/**
 	 * 去重并获取元素个数
 	 * 
