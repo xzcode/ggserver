@@ -14,6 +14,11 @@ public class Player {
 	protected Long playerId; 
 	
 	/**
+	 * 用户token
+	 */
+	protected String token; 
+	
+	/**
 	 * 用户类型
 	 */
 	protected Integer userType; 
@@ -32,6 +37,11 @@ public class Player {
 	 * 用户头像
 	 */
 	protected String avatar; 
+	
+	/**
+	 * 是否参与游戏
+	 */
+	protected boolean inGame;
 	
 	/**
 	 * 是否在线
@@ -97,5 +107,21 @@ public class Player {
 		this.userType = userType;
 	}
 
+	public String getToken() {
+		return token;
+	}
+	
+	public void setToken(String token) {
+		this.token = token;
+	}
 
+
+	public boolean isInGame() {
+		return inGame;
+	}
+
+
+	public void setInGame(boolean inGame) {
+		this.inGame = inGame;
+	}
 }

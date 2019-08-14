@@ -20,10 +20,6 @@ public class RoomPlayer<R, H> extends Player{
 	protected int seatNum; 
 	
 	/**
-	 * 是否参与游戏
-	 */
-	protected boolean inGame;
-	/**
 	 * 是否已准备
 	 */
 	protected boolean ready;
@@ -125,12 +121,6 @@ public class RoomPlayer<R, H> extends Player{
 	}
 	public void setSeatNum(int seatNum) {
 		this.seatNum = seatNum;
-	}
-	public boolean isInGame() {
-		return inGame;
-	}
-	public void setInGame(boolean inGame) {
-		this.inGame = inGame;
 	}
 	public boolean isRobot() {
 		return robot;
