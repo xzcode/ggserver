@@ -48,6 +48,11 @@ public class Player {
 	 */
 	protected boolean online;
 	
+	/**
+	 * 座位号
+	 */
+	protected int seatNum;
+	
 	
 	public Long getPlayerId() {
 		return playerId;
@@ -123,5 +128,13 @@ public class Player {
 
 	public void setInGame(boolean inGame) {
 		this.inGame = inGame;
+	}
+	
+	public int getSeatNum() {
+		return seatNum;
+	}
+	
+	public void setSeatNum(int seatNum) {
+		this.seatNum = seatNum;
 	}
 }
