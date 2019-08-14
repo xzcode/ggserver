@@ -6,7 +6,6 @@ import java.util.Map;
 
 import xzcode.ggserver.game.common.house.House;
 import xzcode.ggserver.game.common.interfaces.condition.ICheckCondition;
-import xzcode.ggserver.game.common.player.CoinsRoomPlayer;
 import xzcode.ggserver.game.common.player.Player;
 import xzcode.ggserver.game.common.room.Room;
 

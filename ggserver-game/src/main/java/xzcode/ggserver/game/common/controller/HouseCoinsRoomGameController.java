@@ -17,7 +17,6 @@ import org.slf4j.LoggerFactory;
 import xzcode.ggserver.game.common.house.House;
 import xzcode.ggserver.game.common.interfaces.condition.ICheckCondition;
 import xzcode.ggserver.game.common.player.CoinsRoomPlayer;
-import xzcode.ggserver.game.common.player.Player;
 import xzcode.ggserver.game.common.room.Room;
 
 /**
@@ -25,9 +24,9 @@ import xzcode.ggserver.game.common.room.Room;
  * 
  * @author zai 2019-01-06 14:34:21
  */
-public abstract class HouseRoomGameController2
+public abstract class HouseCoinsRoomGameController
 <
-P extends Player,
+P extends CoinsRoomPlayer<R, H>,
 R extends Room< P, R, H>, 
 H extends House<P, R, H>
 > 
@@ -38,7 +37,7 @@ extends
 		IRoomGameController<P, R, H>, 
 		IHouseGameController<H> {
 
-	private static final Logger logger = LoggerFactory.getLogger(HouseRoomGameController2.class);
+	private static final Logger logger = LoggerFactory.getLogger(HouseCoinsRoomGameController.class);
 	
 	
 	protected Class<P> pClass;
@@ -91,7 +90,7 @@ extends
 		return h;
 	}
 	
-	public HouseRoomGameController2() {
+	public HouseCoinsRoomGameController() {
 		pClass = getPClass();
 		rClass = getRClass();
 		hClass = getHClass();

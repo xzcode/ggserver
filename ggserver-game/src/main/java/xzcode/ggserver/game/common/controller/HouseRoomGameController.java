@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import xzcode.ggserver.game.common.house.House;
 import xzcode.ggserver.game.common.interfaces.condition.ICheckCondition;
-import xzcode.ggserver.game.common.player.CoinsRoomPlayer;
+import xzcode.ggserver.game.common.player.Player;
 import xzcode.ggserver.game.common.room.Room;
 
 /**
@@ -26,7 +26,7 @@ import xzcode.ggserver.game.common.room.Room;
  */
 public abstract class HouseRoomGameController
 <
-P extends CoinsRoomPlayer<R, H>,
+P extends Player,
 R extends Room< P, R, H>, 
 H extends House<P, R, H>
 > 
