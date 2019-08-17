@@ -10,24 +10,24 @@ public class Response {
 	
 
 	/* 发送消息标识 */
-	private Object action;
+	private String action;
 
 	/* 消息体 */
 	private Object message;
 
-	public Response(Object action, Object message) {
+	public Response(String action, Object message) {
 		this.action = action;
 		this.message = message;
 	}
-	public static Response create(Object action, Object message) {
+	public static Response create(String action, Object message) {
 		return new Response(action, message);
 	}
 
-	public Object getAction() {
+	public String getAction() {
 		return action;
 	}
 
-	public void setAction(Object action) {
+	public void setAction(String action) {
 		this.action = action;
 	}
 
