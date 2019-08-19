@@ -70,7 +70,7 @@ public class MethodInvoker implements IOnMessageInvoker{
 			//如果消息体不为空
 			method.invoke(componentObj, message);
 		} catch (Exception e) {
-			LOGGER.error("Can't invoke action: {}, 'componentObj' = {}, error: {}", action, componentObj, e.getMessage());
+			LOGGER.error("Can't invoke action: {}, 'componentObj' = {}, error: {}", action, componentObj, e);
 		}
 	}
 	

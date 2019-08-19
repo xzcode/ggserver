@@ -37,6 +37,8 @@ public class TimeoutHolder implements TimeoutRunnable{
 	
 	protected long timeoutMs;
 	
+	protected long startTimeMs;
+	
 	
 	public static TimeoutHolder create(GGServer gg, TimeoutAction timeoutAction, long timeoutMs) {
 		TimeoutHolder timeoutHolder = new TimeoutHolder();
@@ -73,6 +75,7 @@ public class TimeoutHolder implements TimeoutRunnable{
 			return this;
 		}
 		gg.schedule(timeoutMs, this);
+		this.startTimeMs = System.currentTimeMillis();
 		return this;
 	}
 	
@@ -186,6 +189,9 @@ public class TimeoutHolder implements TimeoutRunnable{
 	 * 2019-01-21 13:20:23
 	 */
 	public long getRemainTime() {
+		if (this.timeoutFuture == null) {
+			return 0;
+		}
 		return this.timeoutFuture.getDelay(TimeUnit.MILLISECONDS);
 	}
 	
@@ -219,6 +225,12 @@ public class TimeoutHolder implements TimeoutRunnable{
 	}
 	public void setTimeoutAction(TimeoutAction timeoutAction) {
 		this.timeoutAction = timeoutAction;
+	}
+	public long getStartTimeMs() {
+		return startTimeMs;
+	}
+	public void setStartTimeMs(long startTimeMs) {
+		this.startTimeMs = startTimeMs;
 	}
 	
 	
