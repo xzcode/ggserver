@@ -383,7 +383,7 @@ public class GGServer implements ISendMessage, IGGServerExecution{
 	}
 	@Override
 	public void sendToAll(String action, Object message) {
-		this.config.getSendMessageManager().send(action, message);
+		this.config.getSendMessageManager().sendToAll(action, message);
 	}
 	@Override
 	public void sendToAll(String action) {

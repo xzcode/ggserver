@@ -109,7 +109,8 @@ public class SendMessageManager implements ISendMessage{
 			session = GGSessionThreadLocalUtil.getSession();
 		}
 		if (session != null) {
-			if (!config.getMessageFilterManager().doResponseFilters(userId,Response.create(action, message))) {
+			//发送过滤器
+			if (!config.getMessageFilterManager().doResponseFilters(userId, Response.create(action, message))) {
 				return;
 			}
 			try {
@@ -152,12 +153,17 @@ public class SendMessageManager implements ISendMessage{
 	@Override
 	public void sendToAll(String action, Object message) {
 		try {
+			
 			UserSessonManager sessonManager = config.getUserSessonManager();
 			Set<Entry<Object, GGSession>> entrySet = sessonManager.getSessionMap().entrySet();
 			Channel channel = null;
 			byte[] actionIdData = action.getBytes();
 			byte[] messageData = message == null ? null : this.config.getSerializer().serialize(message);
 			for (Entry<Object, GGSession> entry : entrySet) {
+				//发送过滤器
+				if (!config.getMessageFilterManager().doResponseFilters(entry.getKey(), Response.create(action, message))) {
+					return;
+				}
 				channel = entry.getValue().getChannel();
 				if (channel.isActive()) {
 					channel.writeAndFlush(SendModel.create(actionIdData, messageData));
