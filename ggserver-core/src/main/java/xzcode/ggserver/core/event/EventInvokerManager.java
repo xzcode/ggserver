@@ -1,6 +1,8 @@
 package xzcode.ggserver.core.event;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import xzcode.ggserver.core.component.GGComponentManager;
@@ -9,16 +11,18 @@ public class EventInvokerManager {
 	
 	
 	
-	private final Map<String, IEventInvoker> map = new HashMap<>();
+	private final Map<String, List<IEventInvoker>> map = new HashMap<>();
 	
 	
 	public void updateComponentObject(GGComponentManager componentObjectMapper) {
 		for (String key : map.keySet()) {
-			IEventInvoker invoker = map.get(key);
-			if (invoker instanceof EventMethodInvoker) {
-				EventMethodInvoker eventMethodInvoker = (EventMethodInvoker) invoker;
-				Class<?> clazz = eventMethodInvoker.getComponentClass();
-				eventMethodInvoker.setComponentObj(componentObjectMapper.getComponentObject(clazz));				
+			List<IEventInvoker> invokers = map.get(key);
+			for (IEventInvoker mapedInvoker : invokers) {
+				if (mapedInvoker instanceof EventMethodInvoker) {
+					EventMethodInvoker eventMethodInvoker = (EventMethodInvoker) mapedInvoker;
+					Class<?> clazz = eventMethodInvoker.getComponentClass();
+					eventMethodInvoker.setComponentObj(componentObjectMapper.getComponentObject(clazz));				
+				}				
 			}
 			
 		}
@@ -39,12 +43,16 @@ public class EventInvokerManager {
 	}
 	
 	public void invoke(String eventTag, Object message) throws Exception {
-		IEventInvoker invoker = map.get(eventTag);
-		if (invoker != null) {
+		List<IEventInvoker> invokers = map.get(eventTag);
+		if (invokers != null) {
 			if (message != null) {
-				invoker.invoke(message);
+				for (IEventInvoker invoker : invokers) {
+					invoker.invoke(message);
+				}
 			}else {
-				invoker.invoke();
+				for (IEventInvoker invoker : invokers) {
+					invoker.invoke();
+				}
 			}
 		}
 	}
@@ -57,16 +65,16 @@ public class EventInvokerManager {
 	 * 2019-01-03 10:14:47
 	 */
 	public void put(IEventInvoker invoker) {
-		IEventInvoker invoker2 = map.get(invoker.getEventTag());
-		if (invoker2 != null) {
-			if (invoker instanceof EventMethodInvoker) {
-				EventMethodInvoker eventMethodInvoker = (EventMethodInvoker) invoker;
-				eventMethodInvoker.getMethods().addAll(eventMethodInvoker.getMethods());
-				return;
-			}
+		List<IEventInvoker> invokers = map.get(invoker.getEventTag());
+		if (invokers != null) {
+			invokers.add(invoker);
+			return;
+		}else {
+			invokers = new ArrayList<>();
+			invokers.add(invoker);
 		}
 		
-		map.put(invoker.getEventTag(), invoker);
+		map.put(invoker.getEventTag(), invokers);
 	}
 	
 	
@@ -78,7 +86,7 @@ public class EventInvokerManager {
 	 * @author zai
 	 * 2017-08-02
 	 */
-	public IEventInvoker get(String eventTag){
+	public List<IEventInvoker> get(String eventTag){
 		return map.get(eventTag);
 	}
 	

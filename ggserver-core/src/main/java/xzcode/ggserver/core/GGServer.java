@@ -1,6 +1,7 @@
 package xzcode.ggserver.core;
 
 import java.lang.reflect.ParameterizedType;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledFuture;
@@ -199,11 +200,6 @@ public class GGServer implements ISendMessage, IGGServerExecution{
 	 * 2019-01-02 20:02:37
 	 */
 	public <T> void onEvent(String eventTag, Runnable runnable) {
-		IEventInvoker eventInvoker = config.getEventInvokerManager().get(eventTag);
-		if (eventInvoker != null) {
-			((EventRunnableInvoker)eventInvoker).addRunnable(runnable);
-			return;
-		}
 		EventRunnableInvoker invoker = new EventRunnableInvoker();
 		invoker.setEventTag(eventTag);
 		invoker.addRunnable(runnable);
