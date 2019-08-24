@@ -129,8 +129,8 @@ public class TcpDecodeHandler extends ByteToMessageDecoder {
 			config.getTaskExecutor().submit(new RequestMessageTask(dataTag, data, ctx.channel().attr(DefaultChannelAttributeKeys.SESSION).get(), config));
 		//}
 		
-		if(LOGGER.isDebugEnabled()){
-        	LOGGER.debug("\nReceived binary message  <----,\nchannel:{}\ntag:{}\nbytes-length:{}", ctx.channel(), dataTag, bodyLen);
+		if(LOGGER.isInfoEnabled()){
+        	LOGGER.info("\nReceived binary message  <----,\nchannel:{}\ntag:{}\nbytes-length:{}\ndata:{}", ctx.channel(), dataTag == null ? "" : new String(dataTag), bodyLen, data == null ? "" : new String(data));
         }
 		
 	}

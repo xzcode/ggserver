@@ -87,7 +87,7 @@ public class TcpEncodeHandler extends ChannelOutboundHandlerAdapter {
 				out.writeBytes(tagBytes);
 				out.writeBytes(bodyBytes);
 				if (LOGGER.isInfoEnabled()) {
-                	LOGGER.info("message sended. \nchannel:{}\ntag:{}\nmessage-length:{}", channel, new String(tagBytes, config.getCharset()), bodyBytes.length);
+                	LOGGER.info("message sended. \nchannel:{}\ntag:{}\nmessage-length:{}\ndata:{}", channel, new String(tagBytes, config.getCharset()), bodyBytes.length, new String(bodyBytes));
                 }
 			} else {
 			
@@ -118,7 +118,7 @@ public class TcpEncodeHandler extends ChannelOutboundHandlerAdapter {
 	                if (LOGGER.isInfoEnabled()) {
 	                	LOGGER.info("Sync message sended. \nchannel:{}\nmessage:{}", channel, GSON.toJson(msg));
 	                }
-	            } catch (InterruptedException e) {
+	            } catch (Exception e) {
 	            	if (LOGGER.isInfoEnabled()) {
 	            		LOGGER.info("write and flush msg exception. msg:[{}]", GSON.toJson(msg), e);
 	            	}
