@@ -30,20 +30,24 @@ public class AlgoSgUtil extends BasicPokerAlgoUtil{
 		}
 		
 		//是否炸弹
-		if (isBomb(cards)) {
+		else if (isBomb(cards)) {
 			result = new AlgoSgCheckResult(AlgoSgCardType.BOMB);
 		}
 		
 		//是否三公
-		if (isSanGong(cards)) {
+		else if (isSanGong(cards)) {
 			result = new AlgoSgCheckResult(AlgoSgCardType.SAN_GONG);
 		}
 		
-		int points = getPoints(cards);
+		else {
+			
+			int points = getPoints(cards);
+			
+			pointCardType = getPointCardType(points);
+			
+			result = new AlgoSgCheckResult(pointCardType, points);
+		}
 		
-		pointCardType = getPointCardType(points);
-		
-		result = new AlgoSgCheckResult(pointCardType, points);
 		
 		return result;
 	}
