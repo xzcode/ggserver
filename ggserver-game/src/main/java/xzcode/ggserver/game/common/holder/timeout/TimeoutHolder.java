@@ -8,7 +8,7 @@ import xzcode.ggserver.core.executor.task.TimeoutRunnable;
 import xzcode.ggserver.game.common.interfaces.timeout.TimeoutAction;
 
 /**
- * 离开房间超时等待模型
+ * 超时等待模型
  * 
  * @author zai
  * 2019-01-21 11:59:37

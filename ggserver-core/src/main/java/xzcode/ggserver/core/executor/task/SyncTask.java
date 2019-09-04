@@ -22,6 +22,10 @@ public class SyncTask implements Runnable{
 	}
 	
 	
+	public SyncTask(Runnable runnable) {
+		this.runnable = runnable;
+	}
+	
 	public SyncTask(Object syncLock, Runnable runnable) {
 		this.syncLock = syncLock;
 		this.runnable = runnable;

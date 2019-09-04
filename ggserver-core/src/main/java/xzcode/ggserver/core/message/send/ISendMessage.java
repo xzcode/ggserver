@@ -1,5 +1,8 @@
 package xzcode.ggserver.core.message.send;
 
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
+
 /**
  * 消息发送接口
  * 
@@ -31,5 +34,6 @@ public interface ISendMessage {
 	 */
 	void sendToAll(String action, Object message);
 	void sendToAll(String action);
+	
 
 }

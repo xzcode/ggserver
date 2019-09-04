@@ -134,13 +134,13 @@ public class GGServer implements ISendMessage, IGGServerExecution{
 		}
 		if (session != null && session.getChannel() != null) {
 			Channel channel = session.getChannel();
-			if (channel != null) {
+			if (channel != null && channel.isActive()) {
 				if (delayMs <= 0) {
 					channel.close();
 				}else {
-					schedule(() -> {
+					schedule(delayMs, () -> {
 						channel.close();
-					}, delayMs);
+					});
 				}
 			}
 		}
@@ -272,6 +272,14 @@ public class GGServer implements ISendMessage, IGGServerExecution{
 	@Override
 	public ScheduledFuture<?> schedule(Object syncLock, long delayMs, Runnable runnable) {
 		return this.config.getTaskExecutor().schedule(new SyncTask(syncLock, runnable), delayMs, TimeUnit.MILLISECONDS);
+	}
+	
+	public ScheduledFuture<?> scheduleWithFixedDelay(long initialDelay, long delayMs, Runnable runnable) {
+		return this.config.getTaskExecutor().scheduleWithFixedDelay(new SyncTask(runnable), initialDelay, delayMs, TimeUnit.MILLISECONDS);
+	}
+	
+	public ScheduledFuture<?> scheduleWithFixedDelay(long initialDelay, long delay, Runnable runnable, TimeUnit timeUnit) {
+		return this.config.getTaskExecutor().scheduleWithFixedDelay(new SyncTask(runnable), initialDelay, delay, timeUnit);
 	}
 	
 	@Deprecated
