@@ -1,17 +1,14 @@
 package xzcode.ggserver.core;
 
 import java.lang.reflect.ParameterizedType;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
-
 import io.netty.channel.Channel;
 import xzcode.ggserver.core.config.GGServerConfig;
 import xzcode.ggserver.core.event.EventRunnableInvoker;
 import xzcode.ggserver.core.event.GGEventTask;
-import xzcode.ggserver.core.event.IEventInvoker;
 import xzcode.ggserver.core.executor.task.SyncTask;
 import xzcode.ggserver.core.executor.task.TimeoutRunnable;
 import xzcode.ggserver.core.executor.timeout.IGGServerExecution;
