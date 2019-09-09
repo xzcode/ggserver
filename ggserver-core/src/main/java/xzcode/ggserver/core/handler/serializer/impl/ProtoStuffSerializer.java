@@ -18,7 +18,7 @@ public class ProtoStuffSerializer implements ISerializer {
 	public <T> byte[] serialize(T object) throws Exception {
 		@SuppressWarnings("unchecked")
 		Schema<T> schema = (Schema<T>) RuntimeSchema.getSchema(object.getClass());  
-        return ProtostuffIOUtil.toByteArray(object, schema, LinkedBuffer.allocate(LinkedBuffer.DEFAULT_BUFFER_SIZE)); 
+        return ProtostuffIOUtil.toByteArray(object, schema, LinkedBuffer.allocate(4096));
 	}
 
 	@Override
