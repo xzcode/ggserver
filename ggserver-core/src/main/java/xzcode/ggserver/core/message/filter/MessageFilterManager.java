@@ -1,14 +1,15 @@
 package xzcode.ggserver.core.message.filter;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import xzcode.ggserver.core.component.GGComponentManager;
+import xzcode.ggserver.core.message.receive.Request;
+import xzcode.ggserver.core.message.send.Response;
 
 /**
  * 消息过滤器集合
@@ -39,7 +40,13 @@ public class MessageFilterManager {
 	 */
 	public void updateComponentObject(GGComponentManager componentObjectMapper) {
 		
-		for (MessageFilterModel filterModel : requestFilters) {
+		updateComponentObject(componentObjectMapper, requestFilters);
+		updateComponentObject(componentObjectMapper, responseFilters);
+	}
+	
+	private void updateComponentObject(GGComponentManager componentObjectMapper, ArrayList<MessageFilterModel> filters) {
+		
+		for (MessageFilterModel filterModel : filters) {
 			Object object = componentObjectMapper.getComponentObject(filterModel.getFilterClazz());
 			if (object instanceof GGRequestFilter ) {
 				filterModel.setRequestFilter((GGRequestFilter) object);				
@@ -47,7 +54,6 @@ public class MessageFilterManager {
 				filterModel.setResponseFilter((GGResponseFilter) object);	
 			}
 		}
-		
 	}
 	
 	/**
@@ -58,28 +64,28 @@ public class MessageFilterManager {
 	 * 2019-02-09 14:24:29
 	 */
 	public void add(MessageFilterModel filterModel) {
-		if (filterModel.getFilterClazz() == GGRequestFilter.class) {
-			requestFilters.add(filterModel);
-			if (requestFilters.size() > 1) {
-				sort(requestFilters);
+		Type[] types = filterModel.getFilterClazz().getGenericInterfaces();
+		
+		for (Type type : types) {
+			if (type == GGRequestFilter.class) {
+				requestFilters.add(filterModel);
+				if (requestFilters.size() > 1) {
+					sort(requestFilters);
+				}
+				requestFilters.trimToSize();
+			}else if (type == GGResponseFilter.class ) {
+				responseFilters.add(filterModel);
+				if (responseFilters.size() > 1) {
+					sort(responseFilters);
+				}
+				responseFilters.trimToSize();
 			}
-			requestFilters.trimToSize();
-		}else if (filterModel.getFilterClazz() == GGResponseFilter.class ) {
-			responseFilters.add(filterModel);
-			if (responseFilters.size() > 1) {
-				sort(responseFilters);
-			}
-			responseFilters.trimToSize();
 		}
+		
 	}
 	
 	public void sort(List<MessageFilterModel> list) {
-		list.sort((o1,o2) -> {
-			if (o1.getOrder() > o2.getOrder()) {
-				return 1;
-			}
-			return -1;
-		});
+		list.sort((o1,o2) -> o1.getOrder() - o2.getOrder());
 	}
 	
 	/**
@@ -91,19 +97,21 @@ public class MessageFilterManager {
 	 * @author zai
 	 * 2017-09-27
 	 */
-	public boolean doRequestFilters(String action, Object message) {
+	public boolean doRequestFilters(Request request) {
 		GGRequestFilter filter = null;
 		for (MessageFilterModel filterModel : requestFilters) {
 			filter = filterModel.getRequestFilter();
-			if (!filter.doFilter(action, message)) {
+			if (!filter.doFilter(request)) {
 				if (LOGGER.isDebugEnabled()) {
-					LOGGER.debug("Message filtered by {}, requestTag:{} .", filter.getClass().getName(),action);					
+					LOGGER.debug("Message filtered by {}, action:{} .", filter.getClass().getName(),request.getAction());					
 				}
 				return false;
 			}
 		}
 		return true;
 	}
+	
+	
 	
 	/**
 	 * 顺序执行响应过滤器
@@ -114,13 +122,13 @@ public class MessageFilterManager {
 	 * @author zai
 	 * 2017-09-27
 	 */
-	public boolean doResponseFilters(Object userId, String action, Object message) {
+	public boolean doResponseFilters(Object userId, Response response) {
 		GGResponseFilter filter = null;
 		for (MessageFilterModel filterModel : responseFilters) {
 			filter = filterModel.getResponseFilter();
-			if (!filter.doFilter(userId, action, message)) {
+			if (!filter.doFilter(userId, response)) {
 				if (LOGGER.isDebugEnabled()) {
-					LOGGER.debug("Message filtered by {}, requestTag:{} .", filter.getClass().getName(),action);					
+					LOGGER.debug("Message filtered by {}, action:{} .", filter.getClass().getName(),response.getAction());					
 				}
 				return false;
 			}

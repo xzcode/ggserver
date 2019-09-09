@@ -3,9 +3,9 @@
   <parent>
     <groupId>xzcode</groupId>
     <artifactId>ggserver</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    
+    <version>0.0.7-SNAPSHOT</version>
   </parent>
+  
   <artifactId>ggserver-core</artifactId>
   <name>ggserver-core</name>
   <packaging>jar</packaging>
@@ -61,7 +61,7 @@
 	<dependency>
 	    <groupId>org.msgpack</groupId>
 	    <artifactId>msgpack-core</artifactId>
-	    <version>0.8.16</version>
+	    <version>0.8.17</version>
 	</dependency>
 	
 	<dependency>
@@ -69,6 +69,20 @@
 	    <artifactId>jackson-dataformat-msgpack</artifactId>
 	    <version>0.8.16</version>
 	</dependency>
+	
+	<dependency>
+	    <groupId>io.protostuff</groupId>
+	    <artifactId>protostuff-core</artifactId>
+	    <version>1.6.0</version>
+	</dependency> 
+
+	  
+	<dependency>  
+	    <groupId>io.protostuff</groupId>  
+	    <artifactId>protostuff-runtime</artifactId>  
+	    <version>1.6.0</version>  
+	</dependency>  
+	
 	
 	
   

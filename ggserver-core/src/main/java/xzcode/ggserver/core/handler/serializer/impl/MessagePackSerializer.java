@@ -1,13 +1,13 @@
 package xzcode.ggserver.core.handler.serializer.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import xzcode.ggserver.core.handler.serializer.ISerializer;
-
 import org.msgpack.core.MessageBufferPacker;
 import org.msgpack.core.MessagePack;
 import org.msgpack.core.MessageUnpacker;
 import org.msgpack.jackson.dataformat.MessagePackFactory;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import xzcode.ggserver.core.handler.serializer.ISerializer;
 
 /**
  * 基于MessagePack序列化库的实现
@@ -39,6 +39,12 @@ public class MessagePackSerializer implements ISerializer {
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T deserialize(byte[] bytes, Class<T> t) throws Exception {
+			if (bytes == null) {
+				return null;
+			}
+			if (t == null) {
+				return null;
+			}
 			if (t == String.class) {
 				MessageUnpacker unpacker = new MessagePack.UnpackerConfig()
 			            .withStringDecoderBufferSize(1024) // If your data contains many large strings (the default is 8k)
@@ -47,7 +53,8 @@ public class MessagePackSerializer implements ISerializer {
             	unpacker.close();
             	return (T) string;
 			}
-		  return objectMapper.readValue(bytes, t);
+			return objectMapper.readValue(bytes, t);
 	}
+	
 
 }

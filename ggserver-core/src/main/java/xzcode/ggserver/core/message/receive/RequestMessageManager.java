@@ -1,13 +1,13 @@
 package xzcode.ggserver.core.message.receive;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import xzcode.ggserver.core.component.GGComponentManager;
-import xzcode.ggserver.core.message.receive.invoker.IRequestMessageInvoker;
+import xzcode.ggserver.core.message.receive.invoker.IOnMessageInvoker;
 import xzcode.ggserver.core.message.receive.invoker.MethodInvoker;
 
 
@@ -21,7 +21,7 @@ public class RequestMessageManager {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(RequestMessageManager.class);
 
-	private final Map<String, IRequestMessageInvoker> map = new HashMap<>();
+	private final Map<String, IOnMessageInvoker> map = new ConcurrentHashMap<>();
 
 	/**
 	 * 更新方法调用者的组件对象
@@ -32,7 +32,7 @@ public class RequestMessageManager {
 	 */
 	public void updateComponentObject(GGComponentManager componentObjectMapper) {
 		for (String key : map.keySet()) {
-			IRequestMessageInvoker invoker = map.get(key);
+			IOnMessageInvoker invoker = map.get(key);
 			if (invoker instanceof MethodInvoker) {
 				MethodInvoker mInvoker = (MethodInvoker)invoker;
 				mInvoker.setComponentObj(componentObjectMapper.getComponentObject(mInvoker.getComponentClass()));
@@ -43,47 +43,37 @@ public class RequestMessageManager {
 
 	/**
 	 * 调用被缓存的方法
-	 * @param requestTag
+	 * @param action
 	 * @param message
 	 * @throws Exception
 	 *
 	 * @author zai
 	 * 2017-07-29
 	 */
-	public Object invoke(String requestTag, Object message) throws Exception {
-		IRequestMessageInvoker invoker = map.get(requestTag);
+	public void invoke(String action, Object message) throws Exception {
+		IOnMessageInvoker invoker = map.get(action);
 		if (invoker != null) {
-			return invoker.invoke(requestTag, message);
+			invoker.invoke(action, message);
+			
+			return;
 		}
-		LOGGER.warn("No method mapped with tag: {} ", requestTag);
-		return null;
+		LOGGER.warn("No such action: {} ", action);
 	}
 
 	/**
 	 * 添加缓存方法
-	 * @param requestTag
+	 * @param action
 	 *
 	 * @author zai
 	 * 2017-07-29
 	 */
-	public void put(String requestTag, IRequestMessageInvoker requestMessageInvoker) {
-		if (map.containsKey(requestTag)) {
-			throw new RuntimeException("requestTag '"+requestTag+"' is already mapped!");
+	public void put(String action, IOnMessageInvoker onMessageInvoker) {
+		if (map.containsKey(action)) {
+			throw new RuntimeException("action '"+action+"' is already mapped!");
 		}
-		map.put(requestTag, requestMessageInvoker);
+		map.put(action, onMessageInvoker);
 	}
 
-	/**
-	 * 获取返还标识
-	 * @param requestAction
-	 * @return
-	 *
-	 * @author zai
-	 * 2017-08-02
-	 */
-	public String getSendAction(String requestAction){
-		return get(requestAction).getSendAction();
-	}
 
 	/**
 	 * 获取关联方法模型
@@ -93,7 +83,7 @@ public class RequestMessageManager {
 	 * @author zai
 	 * 2017-08-02
 	 */
-	public IRequestMessageInvoker get(String requestTag){
+	public IOnMessageInvoker get(String requestTag){
 		return map.get(requestTag);
 	}
 

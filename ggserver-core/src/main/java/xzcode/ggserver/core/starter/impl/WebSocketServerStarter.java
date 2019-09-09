@@ -1,8 +1,6 @@
 package xzcode.ggserver.core.starter.impl;
 
 
-import javax.net.ssl.SSLEngine;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,7 +10,6 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
-import io.netty.handler.ssl.SslContext;
 import xzcode.ggserver.core.config.GGServerConfig;
 import xzcode.ggserver.core.config.scanner.GGComponentScanner;
 import xzcode.ggserver.core.handler.WebSocketChannelInitializer;
@@ -30,14 +27,9 @@ public class WebSocketServerStarter implements IGGServerStarter {
 	
 	private GGServerConfig config;
 	
-    private SslContext sslCtx;
-
-    public static SSLEngine sslEngine;
-    
     
     public WebSocketServerStarter(GGServerConfig config) {
     	
-    	config.setServerType(GGServerConfig.ServerTypeConstants.WEBSOCKET);
     	this.config = config;
     	
         GGComponentScanner.scan(
@@ -58,13 +50,18 @@ public class WebSocketServerStarter implements IGGServerStarter {
             //设置工作线程组
             boot.group(config.getBossGroup(), config.getWorkerGroup());
             
-            boot.handler(new LoggingHandler(LogLevel.INFO));
+            if (logger.isDebugEnabled()) {
+            	boot.handler(new LoggingHandler(LogLevel.INFO));				
+			}else {
+				boot.handler(new LoggingHandler(LogLevel.WARN));	
+			}
+            
             
             //设置channel类型
             boot.channel(NioServerSocketChannel.class); // (3)
             
             //设置消息处理器
-			boot.childHandler(new WebSocketChannelInitializer(config, sslCtx));
+			boot.childHandler(new WebSocketChannelInitializer(config));
             
             boot.option(ChannelOption.SO_BACKLOG, 128);         // (5)
             boot.childOption(ChannelOption.SO_KEEPALIVE, true); // (6)

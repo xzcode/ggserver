@@ -5,8 +5,6 @@ import static io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST;
 import static io.netty.handler.codec.http.HttpResponseStatus.FORBIDDEN;
 import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
 
-import java.nio.charset.Charset;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,17 +22,15 @@ import io.netty.handler.codec.http.HttpUtil;
 import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.CloseWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketFrame;
+import io.netty.handler.codec.http.websocketx.WebSocketHandshakeException;
 import io.netty.handler.codec.http.websocketx.WebSocketServerHandshaker;
 import io.netty.handler.codec.http.websocketx.WebSocketServerHandshakerFactory;
 import io.netty.util.CharsetUtil;
 import xzcode.ggserver.core.channel.DefaultChannelAttributeKeys;
 import xzcode.ggserver.core.config.GGServerConfig;
 import xzcode.ggserver.core.message.receive.RequestMessageTask;
-import xzcode.ggserver.core.message.receive.invoker.IRequestMessageInvoker;
 
-/**
- * Handles handshakes and messages
- */
+
 public class WebSocketInboundFrameHandler extends SimpleChannelInboundHandler<Object> {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(WebSocketInboundFrameHandler.class);
@@ -49,13 +45,13 @@ public class WebSocketInboundFrameHandler extends SimpleChannelInboundHandler<Ob
     
 
     public WebSocketInboundFrameHandler(GGServerConfig config) {
-		super();
 		this.config = config;
 	}
 
 	@Override
     public void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
         if (msg instanceof FullHttpRequest) {
+        	String uri = ((FullHttpRequest) msg).uri();
             handleHttpRequest(ctx, (FullHttpRequest) msg);
         } else if (msg instanceof WebSocketFrame) {
             handleWebSocketFrame(ctx, (WebSocketFrame) msg);
@@ -68,18 +64,18 @@ public class WebSocketInboundFrameHandler extends SimpleChannelInboundHandler<Ob
     }
 
     private void handleHttpRequest(ChannelHandlerContext ctx, FullHttpRequest req) throws Exception {
-        // Handle a bad request.
-        if (!req.decoderResult().isSuccess()) {
+        
+    	if (!req.decoderResult().isSuccess()) {
             sendHttpResponse(ctx, req, new DefaultFullHttpResponse(HTTP_1_1, BAD_REQUEST));
             return;
         }
 
-        // Allow only GET methods.
         if (req.method() != GET) {
             sendHttpResponse(ctx, req, new DefaultFullHttpResponse(HTTP_1_1, FORBIDDEN));
             return;
         }
-/*
+        
+        /*
         // Send the demo page and favicon.ico
         if ("/".equals(req.uri())) {
             ByteBuf content = WebSocketServerBenchmarkPage.getContent(getWebSocketLocation(req));
@@ -98,14 +94,20 @@ public class WebSocketInboundFrameHandler extends SimpleChannelInboundHandler<Ob
             sendHttpResponse(ctx, req, res);
             return;
         }
-*/
+         */
+        
         // Handshake
         WebSocketServerHandshakerFactory wsFactory = new WebSocketServerHandshakerFactory(getWebSocketLocation(req), null, true, config.getMaxDataLength());
         handshaker = wsFactory.newHandshaker(req);
         if (handshaker == null) {
             WebSocketServerHandshakerFactory.sendUnsupportedVersionResponse(ctx.channel());
         } else {
-            handshaker.handshake(ctx.channel(), req);
+        	try {
+        		handshaker.handshake(ctx.channel(), req);				
+			} catch (WebSocketHandshakeException e) {
+				LOGGER.error(e.getMessage());
+				ctx.channel().close();
+			}
         }
     }
 
@@ -193,6 +195,6 @@ public class WebSocketInboundFrameHandler extends SimpleChannelInboundHandler<Ob
 
     private String getWebSocketLocation(FullHttpRequest req) {
         String location =  req.headers().get(HttpHeaderNames.HOST) + this.config.getWebsocketPath();
-        return "wss://" + location;
+        return "ws://" + location;
     }
 }

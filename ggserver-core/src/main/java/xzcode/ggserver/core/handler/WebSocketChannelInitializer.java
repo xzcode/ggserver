@@ -9,15 +9,13 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpServerCodec;
-import io.netty.handler.ssl.SslContext;
 import io.netty.handler.timeout.IdleStateHandler;
 import xzcode.ggserver.core.config.GGServerConfig;
 import xzcode.ggserver.core.handler.common.InboundCommonHandler;
 import xzcode.ggserver.core.handler.common.OutboundCommonHandler;
 import xzcode.ggserver.core.handler.idle.IdleHandler;
-import xzcode.ggserver.core.handler.serializer.factory.SerializerFactory;
-import xzcode.ggserver.core.handler.web.WebSocketOutboundFrameHandler;
 import xzcode.ggserver.core.handler.web.WebSocketInboundFrameHandler;
+import xzcode.ggserver.core.handler.web.WebSocketOutboundFrameHandler;
 
 /**
  * WebSocket channel 初始化处理器
@@ -32,30 +30,16 @@ public class WebSocketChannelInitializer extends ChannelInitializer<SocketChanne
 	
 	private GGServerConfig config;
 	
-	private SslContext sslCtx;
-	
 	public WebSocketChannelInitializer() {
 	}
 	
-	public WebSocketChannelInitializer(
-			GGServerConfig config,
-			SslContext sslCtx
-			) {
-		super();
+	public WebSocketChannelInitializer(GGServerConfig config) {
 		this.config = config;
-		this.sslCtx = sslCtx;
 	}
 
 	@Override
 	protected void initChannel(SocketChannel ch) throws Exception {
 		
-		//Inbound 是顺序执行
-		if (sslCtx != null) {
-			ch.pipeline().addLast(sslCtx.newHandler(ch.alloc()));
-		}
-		/*
-		ch.pipeline().addLast(new SslHandler(WebSocketServerStarter.sslEngine));
-		*/
 	   	if (config.getIdleCheckEnabled()) {
 	   		
 		   	 //空闲事件触发器
@@ -65,15 +49,15 @@ public class WebSocketChannelInitializer extends ChannelInitializer<SocketChanne
 		   	 ch.pipeline().addLast(new IdleHandler(this.config));
 		   	 
 	   	}
-	   	//inbound异常处理
 	   	
-	   	ch.pipeline().addLast(new HttpServerCodec());
-	   	ch.pipeline().addLast(new HttpObjectAggregator(config.getHttpMaxContentLength()));
-	   	ch.pipeline().addLast(new WebSocketInboundFrameHandler(this.config));
+	   	ch.pipeline().addLast("HttpServerCodec", new HttpServerCodec());
+	   	ch.pipeline().addLast("HttpObjectAggregator", new HttpObjectAggregator(config.getHttpMaxContentLength()));
+	   	ch.pipeline().addLast("WebSocketInboundFrameHandler", new WebSocketInboundFrameHandler(this.config));
+	   	
+	   	
+	   	//inbound异常处理
 	   	ch.pipeline().addLast(new InboundCommonHandler(this.config));
 	   	
-	   	
-        
         //Outbound 是反顺序执行
 	   	ch.pipeline().addLast("WebSocketOutboundFrameHandler",new WebSocketOutboundFrameHandler(this.config ));
         
@@ -93,10 +77,4 @@ public class WebSocketChannelInitializer extends ChannelInitializer<SocketChanne
 		this.config = config;
 	}
 
-	public SslContext getSslCtx() {
-		return sslCtx;
-	}
-	public void setSslCtx(SslContext sslCtx) {
-		this.sslCtx = sslCtx;
-	}
 }

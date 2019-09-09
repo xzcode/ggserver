@@ -45,11 +45,11 @@ public class SendModel {
 		return new SendModel(action, message, callback);
 	}
 
-	public byte[] getSendTag() {
+	public byte[] getAction() {
 		return action;
 	}
 
-	public void setSendTag(byte[] sendTag) {
+	public void setAction(byte[] sendTag) {
 		this.action = sendTag;
 	}
 

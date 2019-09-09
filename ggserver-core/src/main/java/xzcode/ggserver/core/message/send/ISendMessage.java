@@ -1,6 +1,7 @@
 package xzcode.ggserver.core.message.send;
 
-import io.netty.channel.Channel;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 消息发送接口
@@ -11,12 +12,28 @@ import io.netty.channel.Channel;
  */
 public interface ISendMessage {
 	
+	void send(Object userId, String action, Object message, long delayMs);
 	void send(Object userId, String action, Object message);
 
 	void send(Object userId, String action);
+	void send(Object userId, String action, long delayMs);
 
 	void send(String action);
+	void send(String action, long delayMs);
 
 	void send(String action, Object message);
+	void send(String action, Object message, long delayMs);
+	
+	/**
+	 * 发送给所有人
+	 * 
+	 * @param action
+	 * @param message
+	 * @author zai
+	 * 2019-05-05 17:23:27
+	 */
+	void sendToAll(String action, Object message);
+	void sendToAll(String action);
+	
 
 }

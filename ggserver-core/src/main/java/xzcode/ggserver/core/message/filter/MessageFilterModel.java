@@ -14,20 +14,23 @@ public class MessageFilterModel {
 	
 	private Class<?> filterClazz;
 	
+	/**
+	 * 请求过滤器
+	 */
 	private GGRequestFilter requestFilter;
 	
+	/**
+	 * 响应过滤器
+	 */
 	private GGResponseFilter responseFilter;
 	
 	
 
 
 	public MessageFilterModel() {
-		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public MessageFilterModel(int order, Class<?> filterClazz) {
-		super();
 		this.order = order;
 		this.filterClazz = filterClazz;
 	}

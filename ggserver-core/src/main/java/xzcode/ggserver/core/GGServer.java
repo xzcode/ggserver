@@ -1,16 +1,19 @@
 package xzcode.ggserver.core;
 
 import java.lang.reflect.ParameterizedType;
+import java.util.Map;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledFuture;
-
+import java.util.concurrent.TimeUnit;
+import io.netty.channel.Channel;
 import xzcode.ggserver.core.config.GGServerConfig;
 import xzcode.ggserver.core.event.EventRunnableInvoker;
 import xzcode.ggserver.core.event.GGEventTask;
-import xzcode.ggserver.core.event.IEventInvoker;
+import xzcode.ggserver.core.executor.task.SyncTask;
 import xzcode.ggserver.core.executor.task.TimeoutRunnable;
 import xzcode.ggserver.core.executor.timeout.IGGServerExecution;
 import xzcode.ggserver.core.message.receive.IOnMessageAction;
+import xzcode.ggserver.core.message.receive.RedirectMessageTask;
 import xzcode.ggserver.core.message.receive.invoker.OnMessagerInvoker;
 import xzcode.ggserver.core.message.send.ISendMessage;
 import xzcode.ggserver.core.session.GGSession;
@@ -24,17 +27,14 @@ import xzcode.ggserver.core.session.GGSessionThreadLocalUtil;
  */
 public class GGServer implements ISendMessage, IGGServerExecution{
 	
-	private GGServerConfig serverConfig;
+	private GGServerConfig config;
 	
-	
-
 
 	public GGServer(GGServerConfig serverConfig) {
-		super();
-		this.serverConfig = serverConfig;
+		this.config = serverConfig;
 	}
 	public GGServerConfig getServerConfig() {
-		return serverConfig;
+		return config;
 	}
 
 	/**
@@ -57,7 +57,7 @@ public class GGServer implements ISendMessage, IGGServerExecution{
 	 * 2019-01-19 15:50:11
 	 */
 	public GGSession getSession(Object userId) {
-		return this.serverConfig.getUserSessonManager().get(userId);
+		return this.config.getUserSessonManager().get(userId);
 	}
 
 	/**
@@ -73,7 +73,7 @@ public class GGServer implements ISendMessage, IGGServerExecution{
 		session.register(userId);
 
 		// 已注册会话绑定
-		this.serverConfig.getUserSessonManager().put(userId, session);
+		this.config.getUserSessonManager().put(userId, session);
 	}
 
 	/**
@@ -99,7 +99,7 @@ public class GGServer implements ISendMessage, IGGServerExecution{
 		session.unregister();
 
 		// 注销会话绑定
-		this.serverConfig.getUserSessonManager().remove(userId);
+		this.config.getUserSessonManager().remove(userId);
 		
 		return session;
 	}
@@ -111,9 +111,35 @@ public class GGServer implements ISendMessage, IGGServerExecution{
 	 * @author zai 2017-08-19 01:12:07
 	 */
 	public void disconnect(Object userId) {
-		GGSession session = this.serverConfig.getUserSessonManager().get(userId);
+		disconnect(userId, 0);
+	}
+	/**
+	 * 延迟断开连接
+	 * 
+	 * @param userId
+	 * @param delayMs 延迟时间毫秒
+	 * @author zai
+	 * 2019-04-17 11:18:43
+	 */
+	public void disconnect(Object userId, long delayMs) {
+		
+		GGSession session = null;
+		if (userId == null) {
+			session = getSession();
+		}else {
+			session = this.config.getUserSessonManager().get(userId);			
+		}
 		if (session != null && session.getChannel() != null) {
-			session.getChannel().close();
+			Channel channel = session.getChannel();
+			if (channel != null && channel.isActive()) {
+				if (delayMs <= 0) {
+					channel.close();
+				}else {
+					schedule(delayMs, () -> {
+						channel.close();
+					});
+				}
+			}
 		}
 	}
 
@@ -123,29 +149,43 @@ public class GGServer implements ISendMessage, IGGServerExecution{
 	 * @author zai 2017-09-21
 	 */
 	public void disconnect() {
-		getSession().getChannel().close();
+		disconnect(null, 0);
+	}
+	
+	/**
+	 * 延迟断开当前连接
+	 * 
+	 * @author zai 2017-09-21
+	 */
+	public void disconnect(long delayMs) {
+		disconnect(null, delayMs);
 	}
 	
 	/**
 	 * 动态监听消息
 	 * 
 	 * @param string
-	 * @param socketOnMessage
+	 * @param onMessageAction
 	 * @author zai
 	 * 2019-01-02 09:41:59
 	 * @param <T>
 	 */
-	public <T> void on(String requestTag, IOnMessageAction<T> socketOnMessage) {
-		
+	public <T> void on(String actionId, IOnMessageAction<T> onMessageAction) {
 		
 		OnMessagerInvoker<T> invoker = new OnMessagerInvoker<>();
-		invoker.setOnMessage(socketOnMessage);
-		invoker.setRequestTag(requestTag);
+		invoker.setOnMessage(onMessageAction);
+		invoker.setRequestTag(actionId);
+		String typeName = ((ParameterizedType)onMessageAction.getClass().getGenericInterfaces()[0]).getActualTypeArguments()[0].getTypeName();
+		Class<?> msgClass = null;
 		//获取泛型类型参数
-		Class<?> msgClass = (Class<?>) ((ParameterizedType)socketOnMessage.getClass().getGenericInterfaces()[0]).getActualTypeArguments()[0];
+		if (typeName.startsWith("java.util.Map")) {
+			msgClass = Map.class;
+		}else {
+			msgClass = (Class<?>) ((ParameterizedType)onMessageAction.getClass().getGenericInterfaces()[0]).getActualTypeArguments()[0];			
+		}
 		invoker.setRequestMessageClass(msgClass );
 		
-		serverConfig.getMessageInvokerManager().put(requestTag, invoker);
+		config.getMessageInvokerManager().put(actionId, invoker);
 	}
 	
 	/**
@@ -157,20 +197,145 @@ public class GGServer implements ISendMessage, IGGServerExecution{
 	 * 2019-01-02 20:02:37
 	 */
 	public <T> void onEvent(String eventTag, Runnable runnable) {
-		IEventInvoker eventInvoker = serverConfig.getEventInvokerManager().get(eventTag);
-		if (eventInvoker != null) {
-			((EventRunnableInvoker)eventInvoker).addRunnable(runnable);
-			return;
-		}
 		EventRunnableInvoker invoker = new EventRunnableInvoker();
 		invoker.setEventTag(eventTag);
 		invoker.addRunnable(runnable);
-		serverConfig.getEventInvokerManager().put(invoker);
+		config.getEventInvokerManager().put(invoker);
 	}
-
+	
+	/**
+	 * 发送自定义事件
+	 * 
+	 * @param eventTag
+	 * @param message
+	 * @author zai
+	 * 2019-06-23 18:15:48
+	 */
+	public void emitEvent(String eventTag, Object message) {
+		config.getTaskExecutor().submit(new GGEventTask(getSession(), eventTag, message, config));
+	}
+	
+	/**
+	 * 发送自定义事件
+	 * 
+	 * @param eventTag
+	 * @author zai
+	 * 2019-06-23 18:16:17
+	 */
+	public void emitEvent(String eventTag) {
+		config.getTaskExecutor().submit(new GGEventTask(getSession(), eventTag, null, config));
+	}
+	
+	/**
+	 * 重定向消息
+	 * 
+	 * @param action
+	 * @param message
+	 * @author zai
+	 * 2019-06-23 18:15:41
+	 */
+	public void redirect(String action, byte[] message) {
+		new RedirectMessageTask(action, message, GGSessionThreadLocalUtil.getSession(), config).run();
+	}
+	/**
+	 * 重定向消息
+	 * 
+	 * @param action
+	 * @param message
+	 * @author zai
+	 * 2019-07-28 16:18:58
+	 */
+	public void redirect(String action, Object message) {
+		new RedirectMessageTask(action, message, GGSessionThreadLocalUtil.getSession(), config).run();
+	}
+	
+	@Deprecated
+	@Override
+	public ScheduledFuture<?> schedule(Runnable runnable, long delayMs) {
+		return this.config.getTaskExecutor().schedule(runnable, delayMs, TimeUnit.MILLISECONDS);
+	}
+	
+	@Override
+	public ScheduledFuture<?> schedule(long delayMs, Runnable runnable) {
+		return this.config.getTaskExecutor().schedule(runnable, delayMs, TimeUnit.MILLISECONDS);
+	}
+	
+	@Deprecated
+	@Override
+	public ScheduledFuture<?> schedule(Object syncLock, Runnable runnable, long delayMs) {
+		return this.config.getTaskExecutor().schedule(new SyncTask(syncLock, runnable), delayMs, TimeUnit.MILLISECONDS);
+	}
+	
+	@Override
+	public ScheduledFuture<?> schedule(Object syncLock, long delayMs, Runnable runnable) {
+		return this.config.getTaskExecutor().schedule(new SyncTask(syncLock, runnable), delayMs, TimeUnit.MILLISECONDS);
+	}
+	
+	public ScheduledFuture<?> scheduleWithFixedDelay(long initialDelay, long delayMs, Runnable runnable) {
+		return this.config.getTaskExecutor().scheduleWithFixedDelay(new SyncTask(runnable), initialDelay, delayMs, TimeUnit.MILLISECONDS);
+	}
+	
+	public ScheduledFuture<?> scheduleWithFixedDelay(long initialDelay, long delay, Runnable runnable, TimeUnit timeUnit) {
+		return this.config.getTaskExecutor().scheduleWithFixedDelay(new SyncTask(runnable), initialDelay, delay, timeUnit);
+	}
+	
+	@Deprecated
+	@Override
+	public ScheduledFuture<?> schedule(TimeoutRunnable runnable, long delayMs) {
+		ScheduledFuture<?> future = this.config.getTaskExecutor().schedule(runnable, delayMs, TimeUnit.MILLISECONDS);
+		runnable.setTimeoutFuture(future);
+		return future;
+	}
+	
+	@Override
+	public ScheduledFuture<?> schedule(long delayMs, TimeoutRunnable runnable) {
+		ScheduledFuture<?> future = this.config.getTaskExecutor().schedule(runnable, delayMs, TimeUnit.MILLISECONDS);
+		runnable.setTimeoutFuture(future);
+		return future;
+	}
+	
+	@Deprecated
+	@Override
+	public ScheduledFuture<?> schedule(Object syncLock, TimeoutRunnable runnable, long delayMs) {
+		ScheduledFuture<?> future = this.config.getTaskExecutor().schedule(new SyncTask(syncLock, runnable), delayMs, TimeUnit.MILLISECONDS);
+		runnable.setTimeoutFuture(future);
+		return future;
+	}
+	
+	@Override
+	public ScheduledFuture<?> schedule(Object syncLock, long delayMs, TimeoutRunnable runnable) {
+		ScheduledFuture<?> future = this.config.getTaskExecutor().schedule(new SyncTask(syncLock, runnable), delayMs, TimeUnit.MILLISECONDS);
+		runnable.setTimeoutFuture(future);
+		return future;
+	}
+	
+	/**
+	 * 异步任务
+	 */
+	public Future<?> asyncTask(Runnable task) {
+		return this.config.getTaskExecutor().submit(task);
+	}
+	
+	/**
+	 * 异步任务
+	 * 
+	 * @param syncLock
+	 * @param task
+	 * @return
+	 * @author zai
+	 * 2019-07-08 11:56:08
+	 */
+	public Future<?> asyncTask(Object syncLock, Runnable task) {
+		return this.config.getTaskExecutor().submit(() -> {
+			synchronized (syncLock) {
+				task.run();
+			}
+		});
+	}
+	
 	@Override
 	public void send(Object userId, String action, Object message) {
-		this.serverConfig.getSendMessageManager().send(userId, action, message);;
+		this.config.getSendMessageManager().send(userId, action, message);;
 		
 	}
 
@@ -178,7 +343,7 @@ public class GGServer implements ISendMessage, IGGServerExecution{
 
 	@Override
 	public void send(Object userId, String action) {
-		this.serverConfig.getSendMessageManager().send(userId, action);
+		this.config.getSendMessageManager().send(userId, action);
 		
 	}
 
@@ -186,37 +351,44 @@ public class GGServer implements ISendMessage, IGGServerExecution{
 
 	@Override
 	public void send(String action) {
-		this.serverConfig.getSendMessageManager().send(action);
+		this.config.getSendMessageManager().send(action);
 		
 	}
 
 
 	@Override
 	public void send(String action, Object message) {
-		this.serverConfig.getSendMessageManager().send(action, message);
+		this.config.getSendMessageManager().send(action, message);
 		
 	}
 	
-	public void emitEvent(String eventTag, Object message) {
-		serverConfig.getTaskExecutor().submit(new GGEventTask(getSession(), eventTag, message, serverConfig));
-	}
-	
-	public void emitEvent(String eventTag) {
-		serverConfig.getTaskExecutor().submit(new GGEventTask(getSession(), eventTag, null, serverConfig));
-	}
-	
 	@Override
-	public ScheduledFuture<?> setTimeout(Runnable runnable, long timeoutMilliSec) {
-		return this.serverConfig.getTaskExecutor().setTimeout(runnable, timeoutMilliSec);
+	public void send(Object userId, String action, Object message, long delayMs) {
+		this.config.getSendMessageManager().send(userId, action, message, delayMs);
+		
 	}
-
 	@Override
-	public ScheduledFuture<?> setTimeout(TimeoutRunnable runnable, long timeoutMilliSec) {
-		return this.serverConfig.getTaskExecutor().setTimeout(runnable, timeoutMilliSec);
+	public void send(Object userId, String action, long delayMs) {
+		this.config.getSendMessageManager().send(userId, action, delayMs);
+		
 	}
-	
-	public Future<?> submitTask(Runnable task) {
-		return this.serverConfig.getTaskExecutor().submit(task);
+	@Override
+	public void send(String action, long delayMs) {
+		this.config.getSendMessageManager().send(action, delayMs);
+		
+	}
+	@Override
+	public void send(String action, Object message, long delayMs) {
+		this.config.getSendMessageManager().send(action, message, delayMs);
+		
+	}
+	@Override
+	public void sendToAll(String action, Object message) {
+		this.config.getSendMessageManager().sendToAll(action, message);
+	}
+	@Override
+	public void sendToAll(String action) {
+		this.config.getSendMessageManager().sendToAll(action);
 	}
 
 }

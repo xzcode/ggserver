@@ -1,5 +1,7 @@
 package xzcode.ggserver.core.message.filter;
 
+import xzcode.ggserver.core.message.receive.Request;
+
 /**
  * 接收消息过滤器接口
  *
@@ -8,6 +10,6 @@ package xzcode.ggserver.core.message.filter;
  */
 public interface GGRequestFilter {
 	
-	public boolean doFilter(String actionId, Object message);
+	public boolean doFilter(Request request);
 
 }

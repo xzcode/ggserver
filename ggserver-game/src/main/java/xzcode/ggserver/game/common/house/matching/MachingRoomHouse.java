@@ -1,6 +1,5 @@
 package xzcode.ggserver.game.common.house.matching;
 
-import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.slf4j.Logger;
@@ -8,7 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import xzcode.ggserver.game.common.holder.matching.MachingRoomHolder;
 import xzcode.ggserver.game.common.house.House;
-import xzcode.ggserver.game.common.player.Player;
+import xzcode.ggserver.game.common.player.CoinsRoomPlayer;
 import xzcode.ggserver.game.common.room.Room;
 
 /**
@@ -19,7 +18,7 @@ import xzcode.ggserver.game.common.room.Room;
  * @author zai
  * 2019-02-20 14:33:01
  */
-public abstract class MachingRoomHouse<R extends Room<P>, P extends Player> extends House<R, P>{
+public abstract class MachingRoomHouse<P extends CoinsRoomPlayer<R, H>,R extends Room<P, R, H>,  H> extends House<P, R , H>{
 	
 	private static final Logger logger = LoggerFactory.getLogger(MachingRoomHouse.class);
 	
@@ -27,7 +26,7 @@ public abstract class MachingRoomHouse<R extends Room<P>, P extends Player> exte
 	/**
 	 * 匹配容器集合
 	 */
-	protected ConcurrentHashMap<Object, MachingRoomHolder<R, P>> machingRoomHolders = new ConcurrentHashMap<>();
+	protected ConcurrentHashMap<Object, MachingRoomHolder<R, P, H>> machingRoomHolders = new ConcurrentHashMap<>();
 
 	/**
 	 * 进行匹配
@@ -36,11 +35,10 @@ public abstract class MachingRoomHouse<R extends Room<P>, P extends Player> exte
 	 * @author zai
 	 * 2019-02-20 16:36:58
 	 */
-	public abstract MachingRoomHolder<R, P> match();
+	public abstract MachingRoomHolder<R, P, H> match();
 	
 	
-	
-	
+
 	/**
 	 * 添加匹配中玩家容器
 	 * 
@@ -48,7 +46,7 @@ public abstract class MachingRoomHouse<R extends Room<P>, P extends Player> exte
 	 * @author zai
 	 * 2019-01-24 11:11:28
 	 */
-	public boolean addMachingRoomHolder(MachingRoomHolder<R, P> roomHolder) {
+	public boolean addMachingRoomHolder(MachingRoomHolder<R, P, H> roomHolder) {
 		synchronized (roomHolder) {
 			if (!this.machingRoomHolders.containsKey(roomHolder.getRoom().getRoomNo())) {
 				roomHolder.setMatched(false);			
@@ -59,7 +57,7 @@ public abstract class MachingRoomHouse<R extends Room<P>, P extends Player> exte
 		return false;
 	}
 	
-	public ConcurrentHashMap<Object, MachingRoomHolder<R, P>> getMachingPlayerHolders() {
+	public ConcurrentHashMap<Object, MachingRoomHolder<R, P, H>> getMachingPlayerHolders() {
 		return machingRoomHolders;
 	}
 	
@@ -71,7 +69,7 @@ public abstract class MachingRoomHouse<R extends Room<P>, P extends Player> exte
 	 * @author zai
 	 * 2019-01-24 13:30:38
 	 */
-	public MachingRoomHolder<R, P> getMachingHolder(Object key) {
+	public MachingRoomHolder<R, P, H> getMachingHolder(Object key) {
 		return machingRoomHolders.get(key);
 	}
 	
@@ -84,8 +82,8 @@ public abstract class MachingRoomHouse<R extends Room<P>, P extends Player> exte
 	 * @author zai
 	 * 2019-01-28 14:47:55
 	 */
-	public MachingRoomHolder<R, P> cancelMatching(Object key) {
-		MachingRoomHolder<R, P> machingHolder = getMachingHolder(key);
+	public MachingRoomHolder<R, P, H> cancelMatching(Object key) {
+		MachingRoomHolder<R, P, H> machingHolder = getMachingHolder(key);
 		if (machingHolder != null) {
 			synchronized (this) {
 				machingHolder.cancelTask();

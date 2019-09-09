@@ -1,5 +1,7 @@
 package xzcode.ggserver.core.message.filter;
 
+import xzcode.ggserver.core.message.send.Response;
+
 /**
  * 发送消息过滤器接口
  *
@@ -8,6 +10,6 @@ package xzcode.ggserver.core.message.filter;
  */
 public interface GGResponseFilter {
 	
-	public boolean doFilter(Object userId, String actionId, Object message);
+	public boolean doFilter(Object userId, Response sendModel);
 
 }

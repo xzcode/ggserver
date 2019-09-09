@@ -1,10 +1,13 @@
 package xzcode.ggserver.game.common.controller;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
+import xzcode.ggserver.game.common.house.House;
 import xzcode.ggserver.game.common.interfaces.condition.ICheckCondition;
 import xzcode.ggserver.game.common.player.Player;
+import xzcode.ggserver.game.common.room.Room;
 
 /**
  * 房间游戏控制器接口
@@ -14,7 +17,13 @@ import xzcode.ggserver.game.common.player.Player;
  * @author zai
  * 2019-02-16 17:57:18
  */
-public interface IRoomGameController<R, P extends Player> {
+public interface IRoomGameController
+<
+P extends Player,
+R extends Room< P, R, H>, 
+H extends House<P, R, H>
+> 
+{
 
 	/**
 	 * 获取所有玩家
@@ -24,6 +33,17 @@ public interface IRoomGameController<R, P extends Player> {
 	 * @author zai 2019-02-10 14:18:49
 	 */
 	Map<Object, P> getPlayers(R room);
+	
+	/**
+	 * 获取参与游戏的玩家
+	 * 
+	 * @param room
+	 * @param condition
+	 * @return
+	 * @author zai
+	 * 2019-06-04 13:52:25
+	 */
+	List<P> getInGamePlayers(R room, ICheckCondition<P> condition);
 
 	/**
 	 * 根据id获取玩家
@@ -44,6 +64,17 @@ public interface IRoomGameController<R, P extends Player> {
 	 * 2019-02-16 17:48:42
 	 */
 	P getPlayer(R room, ICheckCondition<P> condition);
+	
+	/**
+	 * 获取并筛选参与游戏的玩家
+	 * 
+	 * @param room
+	 * @param condition
+	 * @return
+	 * @author zai
+	 * 2019-07-11 09:56:53
+	 */
+	P getInGamePlayer(R room, ICheckCondition<P> condition);
 
 	/**
 	 * 遍历所有玩家
@@ -65,6 +96,18 @@ public interface IRoomGameController<R, P extends Player> {
 	 * 2019-02-11 10:56:05
 	 */
 	boolean boolEachPlayer(R room, BoolForEachPlayer<P> eachPlayer);
+	
+	
+	/**
+	 * 遍历所有参与游戏的玩家并返回布尔值
+	 * 
+	 * @param room
+	 * @param eachPlayer
+	 * @return
+	 * @author zai
+	 * 2019-06-13 11:34:19
+	 */
+	boolean boolEachInGamePlayer(R room, BoolForEachPlayer<P> eachPlayer);
 
 	/**
 	 * 广播给所有玩家
@@ -242,9 +285,20 @@ public interface IRoomGameController<R, P extends Player> {
 	 * 2019-03-22 15:53:32
 	 */
 	int getPlayerSelfSeatType();
+	
+	/**
+	 * 获取玩家客户端座位号
+	 * 
+	 * @param self 
+	 * @param target
+	 * @return
+	 * @author zai
+	 * 2019-04-20 13:18:51
+	 */
+	int getPlayerSeatType(P self, P target);
 
 	/**
-	 * 根据客户端座位号
+	 * 根据客户端座位号获取玩家
 	 * 
 	 * @param room
 	 * @param selfSeatNum
@@ -254,6 +308,18 @@ public interface IRoomGameController<R, P extends Player> {
 	 * 2019-03-26 20:07:28
 	 */
 	P getPlayerBySeatType(R room, int selfSeatNum, int targetSeatType);
+	
+	/**
+	 * 根据客户端座位号获取玩家
+	 * 
+	 * @param room
+	 * @param self
+	 * @param targetSeatType
+	 * @return
+	 * @author zai
+	 * 2019-04-20 13:23:15
+	 */
+	P getPlayerBySeatType(R room, P self, int targetSeatType);
 
 	/**
 	 * 获取已排序的参与游戏的玩家
@@ -264,5 +330,69 @@ public interface IRoomGameController<R, P extends Player> {
 	 * 2019-03-27 16:26:55
 	 */
 	List<P> getSortedInGamePlayerList(R room);
+	
+	/**
+	 * 获取已排序的参与游戏的玩家
+	 * 
+	 * @param room
+	 * @param comparator
+	 * @return
+	 * @author zai
+	 * 2019-05-30 12:17:29
+	 */
+	List<P> getSortedInGamePlayerList(R room, Comparator<P> comparator);
+
+	/**
+	 * 遍历每个已准备玩家
+	 * 
+	 * @param room
+	 * @param eachPlayer
+	 * @author zai
+	 * 2019-05-16 14:19:58
+	 */
+	void eachInGamePlayer(R room, ForEachPlayer<P> eachPlayer);
+	
+	/**
+	 * 获取指定条件的参与游戏的玩家数量
+	 * 
+	 * @param room
+	 * @param condition
+	 * @return
+	 * @author zai
+	 * 2019-05-21 15:54:04
+	 */
+	int countInGamePlayers(R room, ICheckCondition<P> condition);
+	
+	/**
+	 * 获取参与游戏的玩家list
+	 * 
+	 * @param room
+	 * @return
+	 * @author zai
+	 * 2019-05-30 12:03:07
+	 */
+	List<P> getInGamePlayerList(R room);
+
+	
+	/**
+	 * 广播给所有玩家
+	 * 
+	 * @param room
+	 * @param actionId
+	 * @author zai
+	 * 2019-06-26 11:06:07
+	 */
+	void bcToAllPlayer(R room, String actionId);
+
+
+
+
+	
+
+	
+
+	
+
+	
 	
 }

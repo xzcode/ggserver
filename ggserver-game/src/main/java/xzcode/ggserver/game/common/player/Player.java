@@ -14,6 +14,16 @@ public class Player {
 	protected Long playerId; 
 	
 	/**
+	 * 用户token
+	 */
+	protected String token; 
+	
+	/**
+	 * 用户类型
+	 */
+	protected Integer userType; 
+	
+	/**
 	 * 用户编号
 	 */
 	protected String playerNo; 
@@ -29,30 +39,19 @@ public class Player {
 	protected String avatar; 
 	
 	/**
-	 * IP地址
-	 */
-	protected String ip; 
-	
-	/**
-	 * 用户座号
-	 */
-	protected int seatNum; 
-	
-	
-	/**
-	 * 是否在线
-	 */
-	protected boolean online;
-	/**
 	 * 是否参与游戏
 	 */
 	protected boolean inGame;
 	
 	/**
-	 * 是否机器人
+	 * 是否在线
 	 */
-	protected boolean robot;
+	protected boolean online;
 	
+	/**
+	 * 座位号
+	 */
+	protected int seatNum;
 	
 	
 	public Long getPlayerId() {
@@ -94,27 +93,6 @@ public class Player {
 		this.avatar = avatar;
 	}
 
-
-	public String getIp() {
-		return ip;
-	}
-
-
-	public void setIp(String ip) {
-		this.ip = ip;
-	}
-
-
-	public int getSeatNum() {
-		return seatNum;
-	}
-
-
-	public void setSeatNum(int seatNum) {
-		this.seatNum = seatNum;
-	}
-
-
 	public boolean isOnline() {
 		return online;
 	}
@@ -125,25 +103,38 @@ public class Player {
 	}
 
 
-	public boolean isRobot() {
-		return robot;
+	public Integer getUserType() {
+		return userType;
 	}
 
 
-	public void setRobot(boolean robot) {
-		this.robot = robot;
+	public void setUserType(Integer userType) {
+		this.userType = userType;
+	}
+
+	public String getToken() {
+		return token;
 	}
 	
-	
+	public void setToken(String token) {
+		this.token = token;
+	}
+
 
 	public boolean isInGame() {
 		return inGame;
 	}
-	
+
+
 	public void setInGame(boolean inGame) {
 		this.inGame = inGame;
 	}
-
 	
-
+	public int getSeatNum() {
+		return seatNum;
+	}
+	
+	public void setSeatNum(int seatNum) {
+		this.seatNum = seatNum;
+	}
 }

@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import xzcode.ggserver.game.common.holder.matching.MachingPlayerHolder;
 import xzcode.ggserver.game.common.house.House;
-import xzcode.ggserver.game.common.player.Player;
+import xzcode.ggserver.game.common.player.CoinsRoomPlayer;
 import xzcode.ggserver.game.common.room.Room;
 
 /**
@@ -18,7 +18,13 @@ import xzcode.ggserver.game.common.room.Room;
  * @author zai
  * 2019-01-22 19:02:38
  */
-public abstract class MachingPlayerHouse< R extends Room<P>, P extends Player> extends House<R, P>{
+public abstract class MachingPlayerHouse
+<
+P extends CoinsRoomPlayer<R, H>,
+R extends Room< P, R, H>, 
+H extends House<P, R, H>
+> 
+extends House<P, R, H>{
 	
 	private static final Logger logger = LoggerFactory.getLogger(MachingPlayerHouse.class);
 	
@@ -32,7 +38,6 @@ public abstract class MachingPlayerHouse< R extends Room<P>, P extends Player> e
 	 * 进行匹配
 	 */
 	public abstract List<MachingPlayerHolder<P>> match();
-	
 	
 	/**
 	 * 添加匹配中玩家容器

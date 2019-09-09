@@ -1,7 +1,5 @@
 package xzcode.ggserver.game.common.controller;
 
-import xzcode.ggserver.game.common.player.Player;
-
 /**
  * 遍历玩家接口
  * 
@@ -9,7 +7,7 @@ import xzcode.ggserver.game.common.player.Player;
  * @author zai
  * 2019-02-11 10:50:38
  */
-public interface ForEachPlayer<P extends Player> {
+public interface ForEachPlayer<P> {
 
 	/**
 	 * 每次遍历执行的方法

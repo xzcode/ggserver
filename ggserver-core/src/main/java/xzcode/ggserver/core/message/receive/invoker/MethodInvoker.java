@@ -2,13 +2,18 @@ package xzcode.ggserver.core.message.receive.invoker;
 
 import java.lang.reflect.Method;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * 请求消息调用模型
  * 
  * @author zai
  * 2019-01-01 22:11:15
  */
-public class MethodInvoker implements IRequestMessageInvoker{
+public class MethodInvoker implements IOnMessageInvoker{
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodInvoker.class);
 	
 	/**
 	 * 调用类型
@@ -18,22 +23,12 @@ public class MethodInvoker implements IRequestMessageInvoker{
 	/**
 	 * 请求标识
 	 */
-	private String requestTag;
+	private String action;
 	
 	/**
 	 * 接收消息的class类型
 	 */
 	private Class<?> requestMessageClass;
-	
-	/**
-	 * 发送标识
-	 */
-	private String sendTag;
-	
-	/**
-	 * 发送消息的class类型
-	 */
-	private Class<?> sendMessageClass;
 	
 	/**
 	 * 方法对象
@@ -53,34 +48,40 @@ public class MethodInvoker implements IRequestMessageInvoker{
 	
 
 	@Override
-	public Object invoke(String requestTag, Object message) throws Exception {
+	public void invoke(String action, Object message) throws Exception {
 		//如果消息体为空
 		if (message == null) {
 			if (method.getParameterCount() > 0) {
-				return method.invoke(componentObj, message);
+				method.invoke(componentObj, message);
+				return;
 			}
-			return method.invoke(componentObj);
+			if (componentObj != null) {
+				try {
+					method.invoke(componentObj);
+				} catch (Exception e) {
+					LOGGER.error("Can't invoke action:{}, 'componentObj' = {}, error: {}", action, componentObj, e);
+				}
+			}else {
+				LOGGER.error("Can't invoke action:{}, cause 'componentObj' is null !", action);
+			}
+			return;
 		}
-		//如果消息体不为空
-		return method.invoke(componentObj, message);
+		try {
+			//如果消息体不为空
+			method.invoke(componentObj, message);
+		} catch (Exception e) {
+			LOGGER.error("Can't invoke action: {}, 'componentObj' = {}, error: {}", action, componentObj, e);
+		}
 	}
 	
 	
 
-	public String getReceiveAction() {
-		return requestTag;
+	public String getAction() {
+		return action;
 	}
 
-	public void setRequestTag(String requestTag) {
-		this.requestTag = requestTag;
-	}
-
-	public String getSendAction() {
-		return sendTag;
-	}
-
-	public void setSendTag(String sendTag) {
-		this.sendTag = sendTag;
+	public void setAction(String action) {
+		this.action = action;
 	}
 	
 	public Method getMethod() {
@@ -91,20 +92,12 @@ public class MethodInvoker implements IRequestMessageInvoker{
 		this.method = method;
 	}
 
-	public Class<?> getRequestMessageClass() {
+	public Class<?> getMessageClass() {
 		return requestMessageClass;
 	}
 
 	public void setRequestMessageClass(Class<?> requestMessageClass) {
 		this.requestMessageClass = requestMessageClass;
-	}
-
-	public Class<?> getSendMessageClass() {
-		return sendMessageClass;
-	}
-
-	public void setSendMessageClass(Class<?> sendMessageClass) {
-		this.sendMessageClass = sendMessageClass;
 	}
 	public int getType() {
 		return type;

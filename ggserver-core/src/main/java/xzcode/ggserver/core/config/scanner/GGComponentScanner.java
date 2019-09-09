@@ -1,6 +1,8 @@
 package xzcode.ggserver.core.config.scanner;
 
 import java.lang.reflect.Method;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,16 +11,14 @@ import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ClassInfoList;
 import io.github.classgraph.ScanResult;
+import xzcode.ggserver.core.annotation.GGAction;
 import xzcode.ggserver.core.annotation.GGComponent;
+import xzcode.ggserver.core.annotation.GGController;
 import xzcode.ggserver.core.annotation.GGFilter;
 import xzcode.ggserver.core.annotation.GGOnEvent;
-import xzcode.ggserver.core.annotation.GGRequest;
-import xzcode.ggserver.core.annotation.GGResponse;
 import xzcode.ggserver.core.component.GGComponentManager;
 import xzcode.ggserver.core.event.EventInvokerManager;
 import xzcode.ggserver.core.event.EventMethodInvoker;
-import xzcode.ggserver.core.message.filter.GGRequestFilter;
-import xzcode.ggserver.core.message.filter.GGResponseFilter;
 import xzcode.ggserver.core.message.filter.MessageFilterManager;
 import xzcode.ggserver.core.message.filter.MessageFilterModel;
 import xzcode.ggserver.core.message.receive.RequestMessageManager;
@@ -54,13 +54,17 @@ public class GGComponentScanner {
 		.whitelistPackages(packageName)
 		.scan();
 		
+		Class<?> clazz = null;
 		ClassInfoList classInfoList = scanResult.getClassesWithAnnotation(GGComponent.class.getName());
 		for (ClassInfo classInfo : classInfoList) {
 
 			
-			Class<?> clazz = classInfo.loadClass();
+			clazz = classInfo.loadClass();
 
 			try {
+				if (clazz == GGController.class) {
+					return;
+				}
 				Object clazzInstance = clazz.newInstance();
 				componentManager.put(clazz, clazzInstance);
 
@@ -68,13 +72,6 @@ public class GGComponentScanner {
 				if (filter != null) {
 					MessageFilterModel messageFilterModel = new MessageFilterModel();
 					messageFilterModel.setFilterClazz(clazz);
-					/*
-					if (clazzInstance instanceof GGRequestFilter) {
-						messageFilterModel.setFilterClazz(GGRequestFilter.class);
-					}else if (clazzInstance instanceof GGResponseFilter) {
-						messageFilterModel.setFilterClazz(GGResponseFilter.class);
-					}
-					*/
 					int value = filter.value();
 					int order = filter.order();
 					messageFilterModel.setOrder(value);
@@ -84,33 +81,53 @@ public class GGComponentScanner {
 					filterManager.add(messageFilterModel);
 
 				}
-
-				Method[] methods = clazz.getMethods();
+				Set<Method> methods = new HashSet<>();
+				Method[] mtds = clazz.getMethods();
+				for (Method mtd : mtds) {
+					methods.add(mtd);
+				}
+				
+				mtds = clazz.getDeclaredMethods();
+				for (Method mtd : mtds) {
+					methods.add(mtd);
+				}
+				
+				GGController ggController = clazz.getAnnotation(GGController.class);
+				String prefix = "";
+				if (ggController != null) {
+					prefix = ggController.actionIdPrefix();
+					if (prefix != null && prefix.isEmpty()) {
+						prefix = ggController.value();
+					}
+				}
 				for (Method mtd : methods) {
 
-					// 扫描socketrequest
-					GGRequest requestMessage = mtd.getAnnotation(GGRequest.class);
+					// 扫描GGAction
+					GGAction requestMessage = mtd.getAnnotation(GGAction.class);
 					if (requestMessage != null) {
 
 						MethodInvoker methodInvoker = new MethodInvoker();
 						methodInvoker.setMethod(mtd);
 						//methodInvoker.setComponentObj(clazzInstance);
 						methodInvoker.setComponentClass(clazz);
-						methodInvoker.setRequestTag(requestMessage.value());
-						methodInvoker.setSendMessageClass(mtd.getReturnType());
+						
+						String action = prefix + requestMessage.value();
+						
+						methodInvoker.setAction(action);
+						
+						if (LOGGER.isInfoEnabled()) {
+							LOGGER.info("GGServer Mapped Message Action: {}", action);
+						}
+						
 						Class<?>[] parameterTypes = mtd.getParameterTypes();
 						if (parameterTypes != null && parameterTypes.length > 0) {
 							methodInvoker.setRequestMessageClass(parameterTypes[0]);
 						}
 
-						GGResponse sendMessage = mtd.getAnnotation(GGResponse.class);
-						if (sendMessage != null) {
-							methodInvoker.setSendTag(sendMessage.value());
-						}
-						requestMessageManager.put(requestMessage.value(), methodInvoker);
+						requestMessageManager.put(action, methodInvoker);
 					}
 
-					// 扫描 socketevent
+					// 扫描 GGOnEvent
 					GGOnEvent gGOnEvent = mtd.getAnnotation(GGOnEvent.class);
 					if (gGOnEvent != null) {
 
@@ -128,7 +145,7 @@ public class GGComponentScanner {
 
 				}
 			} catch (Exception e) {
-				throw new RuntimeException(e);
+				throw new RuntimeException(clazz.getName(), e);
 			}
 		}
 	}

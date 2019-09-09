@@ -42,6 +42,10 @@ public class InboundCommonHandler extends ChannelInboundHandlerAdapter{
 
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+		if (cause instanceof java.io.IOException) {
+			LOGGER.error("Inbound ERROR! {}", cause.getMessage());
+			return;
+		}
 		LOGGER.error("Inbound ERROR! ", cause);
 	}
 	
@@ -92,6 +96,7 @@ public class InboundCommonHandler extends ChannelInboundHandlerAdapter{
 			
 			//ChannelGroupsManager.getRegisteredGroup().remove(ctx.channel());
 		});
+		
 		super.channelActive(ctx);
 	}
 	

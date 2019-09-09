@@ -3,7 +3,7 @@
   
   <groupId>xzcode</groupId>
   <artifactId>ggserver</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.0.7-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>ggserver</name>
   
@@ -12,7 +12,7 @@
   
   <properties>
     <jdk.version>1.8</jdk.version>
-    <spring.boot.version>2.0.8.RELEASE</spring.boot.version>
+    <spring.boot.version>2.1.6.RELEASE</spring.boot.version>
     <netty.version>4.1.33.Final</netty.version>
   </properties>
   
@@ -22,7 +22,6 @@
             <id>dev</id>
             <properties>
 				<nexus.public>http://common.host:8081/repository/maven-public/</nexus.public>
-                <nexus.host>http://common.host:8081/repository/maven-snapshots/</nexus.host>
             </properties>
             <activation>
                 <activeByDefault>true</activeByDefault>
@@ -33,7 +32,6 @@
             <id>release</id>
             <properties>
 				<nexus.public>http://release.host:8081/repository/maven-public/</nexus.public>
-                <nexus.host>http://release.host:8081/repository/maven-releases/</nexus.host>
             </properties>
         </profile>
     </profiles>
@@ -51,7 +49,7 @@
 		</repository>
 
 	</repositories>
-
+	
 	
 	<dependencyManagement>
 	
@@ -90,32 +88,34 @@
 			    <version>1.11</version>
 			</dependency>
 			
-				        
-	        
+			<dependency>
+			    <groupId>org.apache.commons</groupId>
+			    <artifactId>commons-lang3</artifactId>
+			    <version>3.9</version>
+			</dependency>
 	    </dependencies>
 	</dependencyManagement>
 
     <dependencies>
-
 		<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-api</artifactId>
 				<version>1.7.25</version>
 			</dependency>
-
     </dependencies>
     
-    <distributionManagement>
-        <repository>
-            <id>nexus-releases</id>
-            <url>${nexus.host}</url>
-        </repository>
-        <!--这是打成快照版本的配置，如果不用这个snapshotRepository标签，打包失败，会报权限问题 -->
-        <snapshotRepository>
-            <id>nexus-snapshots</id>
-            <url>${nexus.host}</url>
-        </snapshotRepository>
-    </distributionManagement>
+    <distributionManagement>  
+	    <repository>  
+	      <id>nexus-releases</id>  
+	      <name>Nexus Release Repository</name>  
+	      <url>http://common.host:8081/repository/maven-releases/</url>  
+	    </repository>  
+	    <snapshotRepository>  
+	      <id>nexus-snapshots</id>  
+	      <name>Nexus Snapshot Repository</name>  
+	      <url>http://common.host:8081/repository/maven-snapshots/</url>  
+	    </snapshotRepository>  
+	  </distributionManagement>
     
     <build>  
         <plugins>  
@@ -151,6 +151,7 @@
   
   <modules>
   	<module>ggserver-spring-starter</module>
+  	<module>ggserver-client</module>
   	<module>ggserver-core</module>
   	<module>ggserver-game</module>
   	<module>ggserver-docs</module>
