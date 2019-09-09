@@ -20,7 +20,7 @@ public interface ISerializer {
 	 * @throws IOException
 	 * @throws Exception
 	 */
-	byte[] serialize(Object object) throws Exception;
+	<T> byte[] serialize(T object) throws Exception;
 
 	/**
 	 * byte数组反序列化成为对象
