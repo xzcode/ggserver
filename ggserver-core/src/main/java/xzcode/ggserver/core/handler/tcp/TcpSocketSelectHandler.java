@@ -69,7 +69,8 @@ public class TcpSocketSelectHandler extends ByteToMessageDecoder {
 		}
 		byte[] bytes = new byte[GGServerTypeConstants.TCP.length()];
 		in.readBytes(bytes);
-		String tag = new String(bytes);
+		String tag = new String(bytes, config.getCharset());
+		
 		if (tag.equals(GGServerTypeConstants.TCP)) {
 			ctx.pipeline().addAfter("TcpSocketSelectHandler","TcpDecodeHandler", new TcpDecodeHandler(config));
 			
@@ -84,6 +85,7 @@ public class TcpSocketSelectHandler extends ByteToMessageDecoder {
 			ctx.pipeline().addAfter("InboundCommonHandler","WebSocketOutboundFrameHandler", new WebSocketOutboundFrameHandler(config));
 			in.resetReaderIndex();
 		}
+		
 		ctx.pipeline().remove("TcpSocketSelectHandler");
 		
 	}
