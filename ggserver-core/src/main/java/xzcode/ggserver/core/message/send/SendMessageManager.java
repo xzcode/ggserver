@@ -180,4 +180,5 @@ public class SendMessageManager implements ISendMessage{
 	public void sendToAll(String action) {
 		sendToAll(action, null);
 	}
+
 }
