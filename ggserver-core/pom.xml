@@ -87,5 +87,10 @@
 			<artifactId>protostuff-runtime-md</artifactId>
 			<version>1.6.0</version>
 		</dependency>
+		<dependency>
+			<groupId>com.google.protobuf</groupId>
+			<artifactId>protobuf-java</artifactId>
+			<version>3.9.1</version>
+		</dependency>
 	</dependencies>
 </project>
