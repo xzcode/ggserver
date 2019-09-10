@@ -96,9 +96,7 @@ public class RequestMessageTask implements Runnable{
 					return;
 				}
 			}
-			
 			config.getRequestMessageManager().invoke(request.getAction(), request.getMessage());
-			
 		} catch (Exception e) {
 			LOGGER.error("Request Message Task ERROR!! -- actionId: {}, error: {}", request.getAction(), e);
 		}finally {
