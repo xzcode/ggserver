@@ -1,11 +1,11 @@
 package xzcode.ggserver.core.handler.serializer.impl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.dyuproject.protostuff.LinkedBuffer;
-import com.dyuproject.protostuff.ProtostuffIOUtil;
-import com.dyuproject.protostuff.Schema;
-import com.dyuproject.protostuff.runtime.RuntimeSchema;
 
+import io.protostuff.LinkedBuffer;
+import io.protostuff.ProtostuffIOUtil;
+import io.protostuff.Schema;
+import io.protostuff.runtime.RuntimeSchema;
 import xzcode.ggserver.core.handler.serializer.ISerializer;
 public class ProtobufSerializer  implements ISerializer {
 
@@ -13,9 +13,6 @@ public class ProtobufSerializer  implements ISerializer {
 
 	/**
 	 * 反序列化对象
-	 * @param paramArrayOfByte
-	 * @param targetClass
-	 * @return
 	 */
 	public <T> T deserialize(byte[] paramArrayOfByte, Class<T> targetClass) {
 		if (paramArrayOfByte == null || paramArrayOfByte.length == 0) {
@@ -36,14 +33,13 @@ public class ProtobufSerializer  implements ISerializer {
 
 	/**
 	 * 序列化对象
-	 * @param obj
-	 * @return
 	 */
-	public  byte[] serialize(Object obj) {
+	@SuppressWarnings("unchecked")
+	public <T> byte[] serialize(T obj) {
 		if (obj == null) {
 			throw new RuntimeException("Failed to serializer");
 		}
-		@SuppressWarnings("unchecked") Schema<Object> schema = (Schema<Object>) RuntimeSchema.getSchema(obj.getClass());
+		Schema<Object> schema = (Schema<Object>)RuntimeSchema.getSchema(obj.getClass());
 		LinkedBuffer buffer = LinkedBuffer.allocate(1024 * 1024);
 		byte[] protoStuff;
 		try {
