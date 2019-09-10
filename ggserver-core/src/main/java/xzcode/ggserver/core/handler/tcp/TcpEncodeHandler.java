@@ -66,8 +66,8 @@ public class TcpEncodeHandler extends ChannelOutboundHandlerAdapter {
 		
 			SendModel sendModel = (SendModel) msg;
 			
-			if (LOGGER.isDebugEnabled()) {
-				LOGGER.debug("\nSending message ---> \ntag:{}\nmessage:{}", sendModel.getAction(), GSON.toJson(sendModel));
+			if (LOGGER.isInfoEnabled()) {
+				LOGGER.info("\nSending message ---> \ntag:{}\nmessage:{}", sendModel.getAction(), GSON.toJson(sendModel));
 			}
 			
 			
@@ -129,7 +129,7 @@ public class TcpEncodeHandler extends ChannelOutboundHandlerAdapter {
 				if (sendModel.getCallback() != null) {
 					channelFuture.addListener(future -> {
 						if (future.isSuccess()) {
-								config.getTaskExecutor().submit(new ExectionTask(sendModel.getCallback(), channel.attr(DefaultChannelAttributeKeys.SESSION).get()));
+							config.getTaskExecutor().submit(new ExectionTask(sendModel.getCallback(), channel.attr(DefaultChannelAttributeKeys.SESSION).get()));
 	    				}
 					});
 				}

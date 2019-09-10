@@ -384,6 +384,27 @@ H extends House<P, R, H>
 	 */
 	void bcToAllPlayer(R room, String actionId);
 
+	
+	/**
+	 * 双循环玩家遍历
+	 * 
+	 * @param room
+	 * @param eachPlayer
+	 * @author zzz
+	 * 2019-09-10 12:16:44
+	 */
+	void doubleEachPlayer(R room, DoubleEachPlayer<P> eachPlayer);
+
+	/**
+	 * 双循环玩家遍历
+	 * 
+	 * @param room
+	 * @param eachPlayer
+	 * @author zzz
+	 * 2019-09-10 12:28:39
+	 */
+	void doubleEachInGamePlayer(R room, DoubleEachPlayer<P> eachPlayer);
+
 
 
 

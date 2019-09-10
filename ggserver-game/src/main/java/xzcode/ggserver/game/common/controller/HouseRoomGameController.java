@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
@@ -108,12 +109,43 @@ extends
 			}
 		}
 	}
+	
+	@Override
+	public void doubleEachInGamePlayer(R room, DoubleEachPlayer<P> eachPlayer) {
+		synchronized (room) {
+			P player = null;
+			P player2 = null;
+			Set<Entry<Object, P>> entrySet = room.getPlayers().entrySet();
+			for (Entry<Object, P> e : entrySet) {
+				player = e.getValue();
+				if (player.isInGame()) {
+					for (Entry<Object, P> e2 : entrySet) {
+						player2 = e2.getValue();
+						if (player2.isInGame()) {
+							eachPlayer.each(player, player2);							
+						}
+					}
+				}
+			}
+		}
+	}
 
 	@Override
 	public void eachPlayer(R room, ForEachPlayer<P> eachPlayer) {
 		synchronized (room) {
 			for (Entry<Object, P> e : room.getPlayers().entrySet()) {
 				eachPlayer.each(e.getValue());
+			}
+		}
+	}
+	@Override
+	public void doubleEachPlayer(R room, DoubleEachPlayer<P> eachPlayer) {
+		synchronized (room) {
+			Set<Entry<Object, P>> entrySet = room.getPlayers().entrySet();
+			for (Entry<Object, P> e : entrySet) {
+				for (Entry<Object, P> e2 : entrySet) {
+					eachPlayer.each(e.getValue(), e2.getValue());
+				}
 			}
 		}
 	}
