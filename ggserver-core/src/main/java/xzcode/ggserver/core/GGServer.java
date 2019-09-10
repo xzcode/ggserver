@@ -2,16 +2,15 @@ package xzcode.ggserver.core;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.Map;
-import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+
 import io.netty.channel.Channel;
 import xzcode.ggserver.core.config.GGServerConfig;
 import xzcode.ggserver.core.event.EventRunnableInvoker;
 import xzcode.ggserver.core.event.GGEventTask;
-import xzcode.ggserver.core.executor.task.SyncTask;
-import xzcode.ggserver.core.executor.task.TimeoutRunnable;
-import xzcode.ggserver.core.executor.timeout.IGGServerExecution;
+import xzcode.ggserver.core.executor.future.GGTaskFuture;
+import xzcode.ggserver.core.executor.task.GGTask;
 import xzcode.ggserver.core.message.receive.IOnMessageAction;
 import xzcode.ggserver.core.message.receive.RedirectMessageTask;
 import xzcode.ggserver.core.message.receive.invoker.OnMessagerInvoker;
@@ -25,7 +24,7 @@ import xzcode.ggserver.core.session.GGSessionThreadLocalUtil;
  * 
  * @author zai 2017-08-04
  */
-public class GGServer implements ISendMessage, IGGServerExecution{
+public class GGServer implements ISendMessage{
 	
 	private GGServerConfig config;
 	
@@ -249,71 +248,93 @@ public class GGServer implements ISendMessage, IGGServerExecution{
 		new RedirectMessageTask(action, message, GGSessionThreadLocalUtil.getSession(), config).run();
 	}
 	
-	@Deprecated
-	@Override
-	public ScheduledFuture<?> schedule(Runnable runnable, long delayMs) {
-		return this.config.getTaskExecutor().schedule(runnable, delayMs, TimeUnit.MILLISECONDS);
+	
+	/**
+	 * 计划延迟任务
+	 * 
+	 * @param delayMs
+	 * @param runnable
+	 * @return
+	 * @author zzz
+	 * 2019-09-10 11:05:24
+	 */
+	public GGTaskFuture schedule(long delayMs, Runnable runnable) {
+		return schedule(null, delayMs, TimeUnit.MILLISECONDS, runnable);
 	}
 	
-	@Override
-	public ScheduledFuture<?> schedule(long delayMs, Runnable runnable) {
-		return this.config.getTaskExecutor().schedule(runnable, delayMs, TimeUnit.MILLISECONDS);
+	
+	/**
+	 * 计划延迟任务
+	 * 
+	 * @param syncLock 同步对象
+	 * @param delayMs
+	 * @param runnable
+	 * @return
+	 * @author zzz
+	 * 2019-09-10 11:05:58
+	 */
+	public GGTaskFuture schedule(Object syncLock, long delayMs, Runnable runnable) {
+		return schedule(syncLock, delayMs, TimeUnit.MILLISECONDS, runnable);
 	}
 	
-	@Deprecated
-	@Override
-	public ScheduledFuture<?> schedule(Object syncLock, Runnable runnable, long delayMs) {
-		return this.config.getTaskExecutor().schedule(new SyncTask(syncLock, runnable), delayMs, TimeUnit.MILLISECONDS);
+	/**
+	 * 计划延迟任务
+	 * 
+	 * @param syncLock 同步对象
+	 * @param delayMs
+	 * @param timeUnit
+	 * @param runnable
+	 * @return
+	 * @author zzz
+	 * 2019-09-10 11:06:09
+	 */
+	public GGTaskFuture schedule(Object syncLock, long delayMs, TimeUnit timeUnit, Runnable runnable) {
+		GGTaskFuture taskFuture = new GGTaskFuture();
+		GGTask syncTask = new GGTask(runnable, taskFuture);
+		ScheduledFuture<?> future = this.config.getTaskExecutor().schedule(syncTask, delayMs, timeUnit);
+		taskFuture.setScheduledFuture(future);
+		return taskFuture;
 	}
 	
-	@Override
-	public ScheduledFuture<?> schedule(Object syncLock, long delayMs, Runnable runnable) {
-		return this.config.getTaskExecutor().schedule(new SyncTask(syncLock, runnable), delayMs, TimeUnit.MILLISECONDS);
+	/**
+	 * 计划循环任务
+	 * 
+	 * @param initialDelay
+	 * @param delayMs
+	 * @param runnable
+	 * @return
+	 * @author zzz
+	 * 2019-09-10 11:06:38
+	 */
+	public GGTaskFuture scheduleWithFixedDelay(long initialDelay, long delayMs, Runnable runnable) {
+		return scheduleWithFixedDelay(initialDelay, delayMs, runnable, TimeUnit.MILLISECONDS);
 	}
 	
-	public ScheduledFuture<?> scheduleWithFixedDelay(long initialDelay, long delayMs, Runnable runnable) {
-		return this.config.getTaskExecutor().scheduleWithFixedDelay(new SyncTask(runnable), initialDelay, delayMs, TimeUnit.MILLISECONDS);
+	/**
+	 * 计划延迟任务
+	 * 
+	 * @param initialDelay
+	 * @param delayMs
+	 * @param timeUnit
+	 * @param runnable
+	 * @return
+	 * @author zzz
+	 * 2019-09-10 11:06:09
+	 */
+	public GGTaskFuture scheduleWithFixedDelay(long initialDelay, long delay, Runnable runnable, TimeUnit timeUnit) {
+		GGTaskFuture taskFuture = new GGTaskFuture();
+		GGTask syncTask = new GGTask(runnable, taskFuture);
+		ScheduledFuture<?> future = this.config.getTaskExecutor().scheduleWithFixedDelay(syncTask, initialDelay, delay, timeUnit);
+		taskFuture.setScheduledFuture(future);
+		return taskFuture;
 	}
 	
-	public ScheduledFuture<?> scheduleWithFixedDelay(long initialDelay, long delay, Runnable runnable, TimeUnit timeUnit) {
-		return this.config.getTaskExecutor().scheduleWithFixedDelay(new SyncTask(runnable), initialDelay, delay, timeUnit);
-	}
-	
-	@Deprecated
-	@Override
-	public ScheduledFuture<?> schedule(TimeoutRunnable runnable, long delayMs) {
-		ScheduledFuture<?> future = this.config.getTaskExecutor().schedule(runnable, delayMs, TimeUnit.MILLISECONDS);
-		runnable.setTimeoutFuture(future);
-		return future;
-	}
-	
-	@Override
-	public ScheduledFuture<?> schedule(long delayMs, TimeoutRunnable runnable) {
-		ScheduledFuture<?> future = this.config.getTaskExecutor().schedule(runnable, delayMs, TimeUnit.MILLISECONDS);
-		runnable.setTimeoutFuture(future);
-		return future;
-	}
-	
-	@Deprecated
-	@Override
-	public ScheduledFuture<?> schedule(Object syncLock, TimeoutRunnable runnable, long delayMs) {
-		ScheduledFuture<?> future = this.config.getTaskExecutor().schedule(new SyncTask(syncLock, runnable), delayMs, TimeUnit.MILLISECONDS);
-		runnable.setTimeoutFuture(future);
-		return future;
-	}
-	
-	@Override
-	public ScheduledFuture<?> schedule(Object syncLock, long delayMs, TimeoutRunnable runnable) {
-		ScheduledFuture<?> future = this.config.getTaskExecutor().schedule(new SyncTask(syncLock, runnable), delayMs, TimeUnit.MILLISECONDS);
-		runnable.setTimeoutFuture(future);
-		return future;
-	}
 	
 	/**
 	 * 异步任务
 	 */
-	public Future<?> asyncTask(Runnable task) {
-		return this.config.getTaskExecutor().submit(task);
+	public GGTaskFuture asyncTask(Runnable task) {
+		return this.schedule(0, task);
 	}
 	
 	/**
@@ -325,12 +346,8 @@ public class GGServer implements ISendMessage, IGGServerExecution{
 	 * @author zai
 	 * 2019-07-08 11:56:08
 	 */
-	public Future<?> asyncTask(Object syncLock, Runnable task) {
-		return this.config.getTaskExecutor().submit(() -> {
-			synchronized (syncLock) {
-				task.run();
-			}
-		});
+	public GGTaskFuture asyncTask(Object syncLock, Runnable task) {
+		return this.schedule(syncLock, 0, task);
 	}
 	
 	@Override
