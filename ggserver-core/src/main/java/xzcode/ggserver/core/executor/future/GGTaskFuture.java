@@ -2,6 +2,8 @@ package xzcode.ggserver.core.executor.future;
 
 import java.util.concurrent.ScheduledFuture;
 
+import xzcode.ggserver.core.GGServer;
+
 /**
  * 
  * @author zzz
@@ -18,13 +20,16 @@ public class GGTaskFuture {
 	
 	public GGTaskFuture() {
 	}
-
+	
 
 	public GGTaskFuture(ScheduledFuture<?> scheduledFuture) {
 		this.scheduledFuture = scheduledFuture;
 	}
-
-
+	
+	
+	public GGTaskFuture(GGServer gg, ScheduledFuture<?> scheduledFuture) {
+		this.scheduledFuture = scheduledFuture;
+	}
 
 
 	/**
@@ -43,6 +48,7 @@ public class GGTaskFuture {
 				}
 			}
 	}
+	
 	
 	/**
 	 * 设置完成状态
@@ -79,6 +85,6 @@ public class GGTaskFuture {
 	public boolean isCompleted() {
 		return completed;
 	}
-	
-	
+
+
 }

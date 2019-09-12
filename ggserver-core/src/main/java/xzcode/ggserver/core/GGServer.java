@@ -290,16 +290,82 @@ public class GGServer implements ISendMessage{
 	 */
 	public GGTaskFuture schedule(Object syncLock, long delayMs, TimeUnit timeUnit, Runnable runnable) {
 		GGTaskFuture taskFuture = new GGTaskFuture();
-		GGTask syncTask = new GGTask(runnable, taskFuture);
+		GGTask syncTask = new GGTask(runnable,syncLock,taskFuture);
 		ScheduledFuture<?> future = this.config.getTaskExecutor().schedule(syncTask, delayMs, timeUnit);
 		taskFuture.setScheduledFuture(future);
 		return taskFuture;
 	}
 	
 	/**
+	 * 跟随上个任务执行完毕后执行下一个任务
+	 * 
+	 * @param afterFuture 跟随的任务future
+	 * @param delay
+	 * @param runnable
+	 * @return
+	 * @author zzz
+	 * 2019-09-11 11:49:50
+	 */
+	public GGTaskFuture scheduleAfter(GGTaskFuture afterFuture, long delay, Runnable runnable) {
+		return scheduleAfter(afterFuture, null, delay, TimeUnit.MILLISECONDS, runnable);
+	}
+	
+	/**
+	 * 跟随上个任务执行完毕后执行下一个任务
+	 * 
+	 * @param afterFuture 跟随的任务future
+	 * @param delay
+	 * @param timeUnit
+	 * @param runnable
+	 * @return
+	 * @author zzz
+	 * 2019-09-11 11:51:13
+	 */
+	public GGTaskFuture scheduleAfter(GGTaskFuture afterFuture, long delay, TimeUnit timeUnit, Runnable runnable) {
+		return scheduleAfter(afterFuture, null, delay, timeUnit, runnable);
+	}
+	
+	/**
+	 * 跟随上个任务执行完毕后执行下一个任务
+	 * 
+	 * @param afterFuture 跟随的任务future
+	 * @param syncLock
+	 * @param delay
+	 * @param runnable
+	 * @return
+	 * @author zzz
+	 * 2019-09-11 11:54:30
+	 */
+	public GGTaskFuture scheduleAfter(GGTaskFuture afterFuture, Object syncLock, long delay, Runnable runnable) {
+		return scheduleAfter(afterFuture, syncLock, delay, TimeUnit.MILLISECONDS, runnable);
+	}
+	
+	/**
+	 * 跟随上个任务执行完毕后执行下一个任务
+	 * 
+	 * @param afterFuture 跟随的任务future
+	 * @param syncLock
+	 * @param delay
+	 * @param timeUnit
+	 * @param runnable
+	 * @return
+	 * @author zzz
+	 * 2019-09-11 11:51:19
+	 */
+	public GGTaskFuture scheduleAfter(GGTaskFuture afterFuture, Object syncLock, long delay, TimeUnit timeUnit, Runnable runnable) {
+		GGTaskFuture taskFuture = new GGTaskFuture();
+		afterFuture.onComplete(() -> {
+			GGTask syncTask = new GGTask(runnable, syncLock, taskFuture);
+			ScheduledFuture<?> future = this.config.getTaskExecutor().schedule(syncTask, delay, timeUnit);
+			taskFuture.setScheduledFuture(future);
+		});
+		return taskFuture;
+	}
+	
+	/**
 	 * 计划循环任务
 	 * 
-	 * @param initialDelay
+	 * @param initialDelay 
 	 * @param delayMs
 	 * @param runnable
 	 * @return

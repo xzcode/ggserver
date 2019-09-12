@@ -146,6 +146,14 @@ public class BasicAlgoUtil {
 		return list;
 	}
 	
+	public int[] listToIntArr(List<Integer> srcList) {
+		int[] arr = new int[srcList.size()];
+		for (int i = 0; i < arr.length; i++) {
+			arr[i] = srcList.get(i);
+		}
+		return arr;
+	}
+	
 	/**
 	 * 移动位置
 	 * 

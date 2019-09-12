@@ -23,12 +23,12 @@ import xzcode.ggserver.game.common.algo.poker.BasicPokerAlgoUtil;
 public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 	
 	/**
-	 * 小王牌值
+	 * 大王牌值
 	 */
 	public static int DA_WANG = 532;
 	
 	/**
-	 * 大王牌值
+	 * 小王牌值
 	 */
 	public static int XIAO_WANG = 531;
 	
@@ -97,7 +97,13 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
             else return false;
         }
 	}
-	
+	public int checkCardType(List<Integer> cards) {
+		int[] arr = new int[cards.size()];
+		for (int i = 0; i < arr.length; i++) {
+			arr[i] = cards.get(i);
+		}
+		return checkCardType(arr);
+	}
 	/**
 	 * 检查牌型
 	 * 
@@ -115,6 +121,22 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
          if (sortType[0] >= 1) sortValueType(cards);
          if (sortType[0] == 2) sortBaseNumList(cards, numList);
          return result;
+	}
+	
+	public List<List<Integer>> checkFollowOptions(List<Integer> cards, List<Integer> followCards) {
+		int[] cardsArr = listToIntArr(cards);
+		int[] followCardsArr = listToIntArr(followCards);
+		
+		List<int[]> checkFollowOptions = checkFollowOptions(cardsArr, followCardsArr);
+		List<List<Integer>> list = new ArrayList<>();
+		for (int[] arr : checkFollowOptions) {
+			List<Integer> ll = new ArrayList<>();
+			for (int i = 0; i < arr.length; i++) {
+				ll.add(arr[i]);
+			}
+			list.add(ll);
+		}
+		return list;
 	}
 	
 	/**

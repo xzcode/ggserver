@@ -232,6 +232,7 @@ extends
 			return null;
 		}
 	}
+	
 	@Override
 	public P getInGamePlayer(R room, ICheckCondition<P> condition) {
 		synchronized (room) {
@@ -366,7 +367,11 @@ extends
 			//获取排序后的玩家
 			List<P> pList = getSortedInGamePlayerList(room);
 			//排除起始座位号
-			pList = pList.stream().filter(o -> o.getSeatNum() != startSeatNum && condition.check(o)).collect(Collectors.toList());
+			if (condition != null) {
+				pList = pList.stream().filter(o -> o.getSeatNum() != startSeatNum && condition.check(o)).collect(Collectors.toList());
+			}else {
+				pList = pList.stream().filter(o -> o.getSeatNum() != startSeatNum).collect(Collectors.toList());
+			}
 			
 			if (pList.size() == 0) {
 				return null;
@@ -387,6 +392,12 @@ extends
 	
 			return null;
 		}
+		
+	}
+	
+	@Override
+	public P getNextPlayer(R room, int startSeatNum) {
+		return getNextPlayer(room, startSeatNum, null);
 		
 	}
 	

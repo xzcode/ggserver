@@ -4,6 +4,7 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import xzcode.ggserver.core.GGServer;
+import xzcode.ggserver.core.executor.future.GGTaskFuture;
 
 /**
  * 超时等待模型
@@ -68,12 +69,13 @@ public class TimeoutHolder{
 	 * 2019-04-22 18:06:06
 	 */
 	public TimeoutHolder startTask() {
+		GGTaskFuture taskFuture;
 		if (this.syncLock != null) {
-			gg.schedule(this.syncLock, timeoutMs, timeoutAction);
-			this.startTimeMs = System.currentTimeMillis();
-			return this;
+			taskFuture = gg.schedule(this.syncLock, timeoutMs, timeoutAction);
+		}else {
+			taskFuture = gg.schedule(timeoutMs, timeoutAction);
 		}
-		gg.schedule(timeoutMs, timeoutAction);
+		this.timeoutFuture = taskFuture.getScheduledFuture();
 		this.startTimeMs = System.currentTimeMillis();
 		return this;
 	}
