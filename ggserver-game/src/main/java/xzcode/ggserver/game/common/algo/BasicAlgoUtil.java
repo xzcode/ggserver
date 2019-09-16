@@ -147,6 +147,9 @@ public class BasicAlgoUtil {
 	}
 	
 	public int[] listToIntArr(List<Integer> srcList) {
+		if (srcList == null) {
+			return null;
+		}
 		int[] arr = new int[srcList.size()];
 		for (int i = 0; i < arr.length; i++) {
 			arr[i] = srcList.get(i);
