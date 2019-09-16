@@ -563,7 +563,7 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
                if (oneType == AlgoDzzCardType.ZHA_DAN) return 1;
                if (twoType == AlgoDzzCardType.ZHA_DAN) return -1;
            }
-           return 1000;
+           return -1000;
        }
        /**按元素个数特性获取分类数组。
         * 
