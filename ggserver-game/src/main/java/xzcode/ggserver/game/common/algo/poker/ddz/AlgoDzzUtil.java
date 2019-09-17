@@ -578,6 +578,7 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
                result.add(new  ArrayList<Integer>());
            }
            int startIndex = 0;
+           if(numList.length==1) result.get(0).add(numList[0]);
            for (int i = 0; i < numList.length-1; i++)
            {
                if(numList[i]!=numList[i+1])
