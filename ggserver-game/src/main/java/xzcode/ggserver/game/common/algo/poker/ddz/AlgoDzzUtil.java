@@ -150,7 +150,14 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 	 * 2019-07-02 16:16:45
 	 */
 	public List<int[]> checkFollowOptions(int[] cards, int[] followCards) {
-		if (followCards == null || cards == null) return null;
+		if (cards == null) return null;
+		if(followCards==null)
+		{
+			List<int[]> result = new ArrayList<int[]>();
+			int[] get=getFirstRemind(cards);
+			result.add(get);
+			return result;
+		}
         int[] catchNumList = getNumList(followCards);
         int[] sortType = new int[1];
         int catchType = checkNumListType(catchNumList,  sortType); //内部实现catchNumList排序
@@ -547,6 +554,38 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
                }
            }
            return AlgoDzzCardType.NONE;
+       }
+       public int[] getFirstRemind(int[] cards)
+       {
+           //最小张的优先提示，单张，对子，三条不带。
+           //仅仅剩余炸弹和王炸的情况，提示炸弹  simple功能。
+           if (cards.length == 0) return null;
+           int[] numList = getNumList(cards);
+           sort(numList);
+           if (numList.length == 2 && numList[0] == 31 && numList[1] == 32) return cards;
+           List<List<Integer>> getSort = getSortCell(numList);
+           List<Integer> findMin = new ArrayList<Integer>();
+           int startIndex = -1;
+           for (int i=0;i<getSort.size();i++ )
+           {
+               if (getSort.get(i).size() == 0) continue;
+               if(startIndex==-1||getSort.get(i).get(0)<getSort.get(startIndex).get(0))
+               {
+                   startIndex = i;
+               }
+           }
+           int[] result = new int[startIndex+1];
+           int start = 0;
+           for (int i = 0; i < cards.length; i++)
+           {
+               if (cards[i] % 100 == getSort.get(startIndex).get(0))
+               {
+                   result[start] = cards[i];
+                   start++;
+                   if (start == result.length) break;
+               }
+           }
+           return result;
        }
        public int compareCardsType(int[] cardsOne,int[] cardsTwo)
        {
