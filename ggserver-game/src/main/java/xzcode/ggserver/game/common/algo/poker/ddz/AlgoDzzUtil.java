@@ -127,14 +127,16 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 		int[] cardsArr = listToIntArr(cards);
 		int[] followCardsArr = listToIntArr(followCards);
 		
-		List<int[]> checkFollowOptions = checkFollowOptions(cardsArr, followCardsArr);
 		List<List<Integer>> list = new ArrayList<>();
-		for (int[] arr : checkFollowOptions) {
-			List<Integer> ll = new ArrayList<>();
-			for (int i = 0; i < arr.length; i++) {
-				ll.add(arr[i]);
+		List<int[]> checkFollowOptions = checkFollowOptions(cardsArr, followCardsArr);
+		if (checkFollowOptions != null) {
+			for (int[] arr : checkFollowOptions) {
+				List<Integer> ll = new ArrayList<>();
+				for (int i = 0; i < arr.length; i++) {
+					ll.add(arr[i]);
+				}
+				list.add(ll);
 			}
-			list.add(ll);
 		}
 		return list;
 	}
