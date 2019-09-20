@@ -28,4 +28,6 @@ public interface GGSession {
 
 	void register(Object registeredUserId);
 
+	<T> T getAttribute(String key, Class<T> t);
+
 }
