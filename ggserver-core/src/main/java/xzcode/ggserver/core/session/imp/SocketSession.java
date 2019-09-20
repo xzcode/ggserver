@@ -83,6 +83,12 @@ public class SocketSession implements GGSession {
 	public Object getAttribute(String key) {
 		return channel.attr(AttributeKey.valueOf(key)).get();
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> T getAttribute(String key, Class<T> t) {
+		return (T) channel.attr(AttributeKey.valueOf(key)).get();
+	}
 
 	@Override
 	public Object reomveAttribute(String key) {
