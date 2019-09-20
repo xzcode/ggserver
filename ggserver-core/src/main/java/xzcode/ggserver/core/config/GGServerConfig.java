@@ -77,7 +77,7 @@ public class GGServerConfig {
 	private NioEventLoopGroup workerGroup;
 	
 	
-	private ScheduledThreadPoolExecutor taskExecutor;
+	/*private NioEventLoopGroup taskExecutor;*/
 	
 	public void init() {
 		componentManager = new GGComponentManager();
@@ -90,9 +90,10 @@ public class GGServerConfig {
 		bossGroup = new NioEventLoopGroup(getBossThreadSize(),new EventLoopGroupThreadFactory("netty-boss"));
 	    
 		workerGroup = new NioEventLoopGroup(getWorkThreadSize(),new EventLoopGroupThreadFactory("netty-worker"));
-		taskExecutor = new ScheduledThreadPoolExecutor(this.executorCorePoolSize, new SimpleThreadFactory("GGServer-Task-", false));
-		taskExecutor.setMaximumPoolSize(this.executorMaxPoolSize);
-		taskExecutor.prestartAllCoreThreads();
+		/*
+		taskExecutor = new NioEventLoopGroup(this.executorMaxPoolSize, new SimpleThreadFactory("GGServer-Task-", false));
+		taskExecutor.setIoRatio(0);
+		*/
 	}
 	
 	public int getExecutorCorePoolSize() {
@@ -362,12 +363,10 @@ public class GGServerConfig {
 	public void setComponentManager(GGComponentManager componentManager) {
 		this.componentManager = componentManager;
 	}
-	public ScheduledThreadPoolExecutor getTaskExecutor() {
-		return taskExecutor;
+	public NioEventLoopGroup getTaskExecutor() {
+		return workerGroup;
 	}
-	public void setTaskExecutor(ScheduledThreadPoolExecutor taskExecutor) {
-		this.taskExecutor = taskExecutor;
-	}
+	
 	
 	public String getCharset() {
 		return charset;
