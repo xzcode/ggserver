@@ -1,10 +1,8 @@
 package xzcode.ggserver.core.session.imp;
 
 import io.netty.channel.Channel;
+import io.netty.util.AttributeKey;
 import xzcode.ggserver.core.session.GGSession;
-
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 默认session实现
@@ -16,8 +14,6 @@ import java.util.concurrent.ConcurrentHashMap;
 public class SocketSession implements GGSession {
 	
 	private Object registeredUserId;
-	
-	private Map<Object, Object> attrMap;// = new ConcurrentHashMap<>();
 	
 	private Channel channel;
 	
@@ -35,10 +31,6 @@ public class SocketSession implements GGSession {
 			this.channel = null;
 		}
 	}
-	
-
-
-
 
 
 	public SocketSession(Channel channel, String host, int port) {
@@ -48,15 +40,23 @@ public class SocketSession implements GGSession {
 		this.port = port;
 	}
 
-
-
 	
-
 
 	@Override
 	public String toString() {
-		return "SocketSession [registeredUserId=" + registeredUserId + ", attrMap=" + attrMap + ", channel=" + channel
-				+ ", host=" + host + ", port=" + port + ", isActive=" + isActive + "]";
+		StringBuilder builder = new StringBuilder();
+		builder.append("SocketSession [registeredUserId=");
+		builder.append(registeredUserId);
+		builder.append(", channel=");
+		builder.append(channel);
+		builder.append(", host=");
+		builder.append(host);
+		builder.append(", port=");
+		builder.append(port);
+		builder.append(", isActive=");
+		builder.append(isActive);
+		builder.append("]");
+		return builder.toString();
 	}
 
 	public SocketSession(Channel channel) {
@@ -72,38 +72,21 @@ public class SocketSession implements GGSession {
 	@Override
 	public void unregister() {
 		this.registeredUserId = null;
-		this.attrMap = null;
-	}
-
-	public Map<Object, Object> getAttrMapMap(){
-		if (this.attrMap == null) {
-			synchronized (this) {
-				if (this.attrMap == null) {
-					this.attrMap = new ConcurrentHashMap<>();
-				}
-			}
-		}
-		return this.attrMap;
 	}
 	
 	@Override
-	public void addAttribute(Object key, Object value) {
-		getAttrMapMap().put(key, value);
-
+	public void addAttribute(String key, Object value) {
+		channel.attr(AttributeKey.valueOf(key)).set(value);
 	}
 
 	@Override
-	public Object getAttribute(Object key) {
-		return getAttrMapMap().get(key);
+	public Object getAttribute(String key) {
+		return channel.attr(AttributeKey.valueOf(key)).get();
 	}
 
 	@Override
-	public Object reomveAttribute(Object key) {
-		return getAttrMapMap().remove(key);
-	}
-
-	public void clear() {
-		attrMap.clear();
+	public Object reomveAttribute(String key) {
+		return channel.attr(AttributeKey.valueOf(key)).getAndSet(null);
 	}
 
 	@Override
