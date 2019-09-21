@@ -43,7 +43,7 @@ public class SocketChannelInitializer extends ChannelInitializer<SocketChannel> 
 		
 		LOGGER.debug("Init Channel:{}", ch);
 		
-		ch.pipeline().addLast("InitTcpHandler", new InitTcpHandler(config));
+		//ch.pipeline().addLast("InitTcpHandler", new InitTcpHandler(config));
 		//Inbound 是顺序执行
 	   	 
 	   	if (config.getIdleCheckEnabled()) {

@@ -65,11 +65,11 @@ public class TcpEncodeHandler extends ChannelOutboundHandlerAdapter {
 		if (msg instanceof SendModel) {
 		
 			SendModel sendModel = (SendModel) msg;
-			
+			/*
 			if (LOGGER.isInfoEnabled()) {
-				LOGGER.info("\nSending message ---> \ntag:{}\nmessage:{}", sendModel.getAction(), GSON.toJson(sendModel));
+				LOGGER.info("\nSending message ---> \ntag:{}\nmessage:{}", new String(sendModel.getAction()), GSON.toJson(sendModel));
 			}
-			
+			*/
 			
 			byte[] tagBytes = sendModel.getAction();
 		
@@ -87,7 +87,7 @@ public class TcpEncodeHandler extends ChannelOutboundHandlerAdapter {
 				out.writeBytes(tagBytes);
 				out.writeBytes(bodyBytes);
 				if (LOGGER.isInfoEnabled()) {
-                	LOGGER.info("message sended. \nchannel:{}\ntag:{}\nmessage-length:{}\ndata:{}", channel, new String(tagBytes, config.getCharset()), bodyBytes.length, new String(bodyBytes));
+                	LOGGER.info("\nmessage sended ---> \nchannel:{}\ntag:{}\nbytes-length:{}\ndata:{}", channel, new String(tagBytes, config.getCharset()), packLen +4 , new String(bodyBytes));
                 }
 			} else {
 			
@@ -102,7 +102,7 @@ public class TcpEncodeHandler extends ChannelOutboundHandlerAdapter {
 				out.writeBytes(tagBytes);
 				
 				if (LOGGER.isInfoEnabled()) {
-                	LOGGER.info("message sended. \nchannel:{}\ntag:{}\nmessage-length:{}", channel, new String(tagBytes, config.getCharset()), 0);
+                	LOGGER.info("\nmessage sended ---> \nchannel:{}\ntag:{}\nbytes-length:{}", channel, new String(tagBytes, config.getCharset()), packLen + 4);
                 }
 				
 			}

@@ -57,11 +57,11 @@ public class SocketClientStarter {
             ChannelFuture future = boot.connect(config.getHost(), config.getPort()).sync(); // (7)
             Channel channel = future.channel();
             config.setChannel(channel);
-            future.addListener((f) -> {
+            /*future.addListener((f) -> {
             	if (f.isSuccess()) {
             		channel.writeAndFlush(GGServerTypeConstants.TCP.getBytes());
 				}
-            });
+            });*/
             if (logger.isInfoEnabled()) {
             	logger.info("GGServer Client start success!");
             }

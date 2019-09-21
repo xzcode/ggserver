@@ -64,25 +64,25 @@ public class TcpSocketSelectHandler extends ByteToMessageDecoder {
 		
 		int readableBytes = in.readableBytes();
 		in.markReaderIndex();
-		if (readableBytes < GGServerTypeConstants.TCP.length()) {
+		if (readableBytes < 3) {
 			return;
 		}
-		byte[] bytes = new byte[GGServerTypeConstants.TCP.length()];
+		byte[] bytes = new byte[3];
 		in.readBytes(bytes);
 		String tag = new String(bytes, config.getCharset());
 		
-		if (tag.equals(GGServerTypeConstants.TCP)) {
-			ctx.pipeline().addAfter("TcpSocketSelectHandler","TcpDecodeHandler", new TcpDecodeHandler(config));
+		if (tag.equalsIgnoreCase("GET")) {
 			
-			ctx.pipeline().addAfter("InboundCommonHandler","TcpEncodeHandler", new TcpEncodeHandler(config));
-			//发送tcp响应标识
-			ctx.channel().writeAndFlush(GGServerTypeConstants.TCP.getBytes());
-		}else {
 			ctx.pipeline().addAfter("TcpSocketSelectHandler","HttpServerCodec", new HttpServerCodec());
 			ctx.pipeline().addAfter("HttpServerCodec","HttpObjectAggregator", new HttpObjectAggregator(config.getHttpMaxContentLength()));
 			ctx.pipeline().addAfter("HttpObjectAggregator","WebSocketInboundFrameHandler", new WebSocketInboundFrameHandler(config));
 			
 			ctx.pipeline().addAfter("InboundCommonHandler","WebSocketOutboundFrameHandler", new WebSocketOutboundFrameHandler(config));
+			in.resetReaderIndex();
+			
+		}else {
+			ctx.pipeline().addAfter("TcpSocketSelectHandler","TcpDecodeHandler", new TcpDecodeHandler(config));
+			ctx.pipeline().addAfter("InboundCommonHandler","TcpEncodeHandler", new TcpEncodeHandler(config));
 			in.resetReaderIndex();
 		}
 		

@@ -4,11 +4,11 @@ import io.netty.channel.Channel;
 
 public interface GGSession {
 
-	void addAttribute(Object key, Object value);
+	void addAttribute(String key, Object value);
 
-	Object getAttribute(Object key);
+	Object getAttribute(String key);
 
-	Object reomveAttribute(Object key);
+	Object reomveAttribute(String key);
 
 	void disconnect();
 
@@ -27,5 +27,7 @@ public interface GGSession {
 	void unregister();
 
 	void register(Object registeredUserId);
+
+	<T> T getAttribute(String key, Class<T> t);
 
 }

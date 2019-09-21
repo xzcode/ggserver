@@ -78,7 +78,7 @@ public class DefaultSocketServerStarter implements IGGServerStarter {
     
             // 绑定端口并开始接受连接，此时线程将阻塞不会继续往下执行
             ChannelFuture future = boot.bind(config.getPort()).sync(); // (7)
-    
+            
             future.channel().closeFuture().sync();
         }catch (Exception e) {
         	
@@ -88,7 +88,6 @@ public class DefaultSocketServerStarter implements IGGServerStarter {
 			
             config.getBossGroup().shutdownGracefully();
             config.getWorkerGroup().shutdownGracefully();
-            
         }
         return this;
     }

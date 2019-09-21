@@ -119,7 +119,7 @@ public class TcpDecodeHandler extends ByteToMessageDecoder {
 		config.getTaskExecutor().submit(new RequestMessageTask(dataTag, data, ctx.channel().attr(DefaultChannelAttributeKeys.SESSION).get(), config));
 		
 		if(LOGGER.isInfoEnabled()){
-        	LOGGER.info("\nReceived binary message  <----,\nchannel:{}\ntag:{}\nbytes-length:{}\ndata:{}", ctx.channel(), dataTag == null ? "" : new String(dataTag), bodyLen, data == null ? "" : new String(data));
+        	LOGGER.info("\nReceived binary message  <----,\nchannel:{}\ntag:{}\nbytes-length:{}\ndata:{}", ctx.channel(), dataTag == null ? "" : new String(dataTag), packLen + 4, data == null ? "" : new String(data));
         }
 		
 	}
