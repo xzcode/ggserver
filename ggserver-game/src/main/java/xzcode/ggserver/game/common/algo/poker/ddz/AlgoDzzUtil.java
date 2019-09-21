@@ -360,7 +360,7 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
         */
        public boolean isStraight(int[] numList, int singleNum) //**事先排序
        {
-           int minTypeNum = singleNum == 1 ? 5 : 2;
+           int minTypeNum = singleNum == 1 ? 5:singleNum==2?3: 2;
            if (numList.length % singleNum != 0 || numList.length < singleNum * minTypeNum) return false;
            return straight(numList, singleNum, numList.length / singleNum, 0);
        }
