@@ -154,6 +154,7 @@
   	<module>ggserver-client</module>
   	<module>ggserver-core</module>
   	<module>ggserver-game</module>
+  	<module>ggserver-game-support</module>
   	<module>ggserver-docs</module>
   	<module>ggserver-monitor</module>
   </modules>
