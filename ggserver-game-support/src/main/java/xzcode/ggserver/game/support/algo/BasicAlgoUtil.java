@@ -401,7 +401,13 @@ public class BasicAlgoUtil {
         return new BigInteger(String.valueOf(j/k));
     }
 
-	
+	/**
+	 * 输出数组信息
+	 * 
+	 * @param arr
+	 * @author zzz
+	 * 2019-09-22 12:17:08
+	 */
 	public void printArr(int[] arr) {
 		for (int i = 0; i < arr.length; i++) {
 			System.out.print(arr[i]);
@@ -411,6 +417,15 @@ public class BasicAlgoUtil {
 		}
 		System.out.println();
 	}
+	
+	/**
+	 * 数组拼接
+	 * 
+	 * @param arr
+	 * @return
+	 * @author zzz
+	 * 2019-09-22 12:17:17
+	 */
 	public String concatArr(int[] arr) {
 		StringBuilder sb = new StringBuilder(arr.length + arr.length - 1);
 		for (int i = 0; i < arr.length; i++) {

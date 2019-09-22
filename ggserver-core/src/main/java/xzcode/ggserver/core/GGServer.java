@@ -2,10 +2,10 @@ package xzcode.ggserver.core;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.Map;
-import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import io.netty.channel.Channel;
+import io.netty.util.concurrent.ScheduledFuture;
 import xzcode.ggserver.core.config.GGServerConfig;
 import xzcode.ggserver.core.event.EventRunnableInvoker;
 import xzcode.ggserver.core.event.GGEventTask;
@@ -290,7 +290,7 @@ public class GGServer implements ISendMessage{
 	 */
 	public GGTaskFuture schedule(Object syncLock, long delayMs, TimeUnit timeUnit, Runnable runnable) {
 		GGTaskFuture taskFuture = new GGTaskFuture();
-		GGTask syncTask = new GGTask(runnable,syncLock,taskFuture);
+		GGTask syncTask = new GGTask(syncLock, runnable);
 		ScheduledFuture<?> future = this.config.getTaskExecutor().schedule(syncTask, delayMs, timeUnit);
 		taskFuture.setScheduledFuture(future);
 		return taskFuture;
@@ -354,8 +354,8 @@ public class GGServer implements ISendMessage{
 	 */
 	public GGTaskFuture scheduleAfter(GGTaskFuture afterFuture, Object syncLock, long delay, TimeUnit timeUnit, Runnable runnable) {
 		GGTaskFuture taskFuture = new GGTaskFuture();
-		afterFuture.onComplete(() -> {
-			GGTask syncTask = new GGTask(runnable, syncLock, taskFuture);
+		afterFuture.getScheduledFuture().addListener((e) -> {
+			GGTask syncTask = new GGTask(syncLock, runnable);
 			ScheduledFuture<?> future = this.config.getTaskExecutor().schedule(syncTask, delay, timeUnit);
 			taskFuture.setScheduledFuture(future);
 		});
@@ -389,7 +389,7 @@ public class GGServer implements ISendMessage{
 	 */
 	public GGTaskFuture scheduleWithFixedDelay(long initialDelay, long delay, Runnable runnable, TimeUnit timeUnit) {
 		GGTaskFuture taskFuture = new GGTaskFuture();
-		GGTask syncTask = new GGTask(runnable, taskFuture);
+		GGTask syncTask = new GGTask(runnable);
 		ScheduledFuture<?> future = this.config.getTaskExecutor().scheduleWithFixedDelay(syncTask, initialDelay, delay, timeUnit);
 		taskFuture.setScheduledFuture(future);
 		return taskFuture;

@@ -30,10 +30,6 @@ public class Player {
 	protected boolean online;
 	
 	
-	
-	
-	
-
 
 	public Object getPlayerId() {
 		return playerId;

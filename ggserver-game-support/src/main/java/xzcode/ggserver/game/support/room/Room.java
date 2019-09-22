@@ -1,15 +1,12 @@
 package xzcode.ggserver.game.support.room;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ThreadLocalRandom;
 
 import xzcode.ggserver.core.GGServer;
-import xzcode.ggserver.game.support.player.Player;
+import xzcode.ggserver.game.support.cardgames.player.RoomPlayer;
 import xzcode.ggserver.game.support.room.listener.IRoomAddPlayerListener;
 import xzcode.ggserver.game.support.room.listener.IRoomPlayerListener;
 
@@ -19,9 +16,9 @@ import xzcode.ggserver.game.support.room.listener.IRoomPlayerListener;
  * 
  * @author zai 2018-05-24
  */
-public abstract class Room<P extends Player>{	
+public abstract class Room<P extends RoomPlayer<R>, R>{	
 	
-	protected GGServer gg;
+	protected GGServer ggServer;
 	
 	/**
 	 * 房间id
@@ -197,72 +194,15 @@ public abstract class Room<P extends Player>{
 	}
 
 
-	public GGServer getGg() {
-		return gg;
-	}
-
-
-	public void setGg(GGServer gg) {
-		this.gg = gg;
-	}
 	
-	public static void main(String[] args) {
-		int size = 5;
-		int times = 100 * 10000;
-		List<Integer> list = new ArrayList<>(4);
-		Map<Integer, Integer> map = new HashMap<>(4);
-		for (int i = 0; i < size; i++) {
-			list.add(1);
-			map.put(i, i);
-		}
-		
-		long startTime = 0;
-		long endTime = 0;
-		int valu11 = 4;
-		Integer tmp = 0;
-		
-		ThreadLocalRandom.current();
-		
-		startTime = System.currentTimeMillis();
-		for (int i = 0; i < times; i++) {
-			int ran = ThreadLocalRandom.current().nextInt(5);
-			for (Integer value : list) {
-				if (value == ran) {
-					tmp = value;
-				}				
-			}
-		}
-		endTime = System.currentTimeMillis();
-		System.out.println("list for:" + (startTime - endTime) + " ms");
-		
-		startTime = System.currentTimeMillis();
-		for (int i = 0; i < times; i++) {
-			int ran = ThreadLocalRandom.current().nextInt(5);
-			tmp = map.get(ran);
-		}
-		endTime = System.currentTimeMillis();
-		System.out.println("map for:" + (startTime - endTime) + " ms");
-		
-		
-		startTime = System.currentTimeMillis();
-		for (int i = 0; i < times; i++) {
-			int ran = ThreadLocalRandom.current().nextInt(5);
-			for (Integer value : list) {
-								
-			}
-		}
-		endTime = System.currentTimeMillis();
-		System.out.println("list for:" + (startTime - endTime) + " ms");
-		
-		startTime = System.currentTimeMillis();
-		Integer value;
-		for (int i = 0; i < times; i++) {
-			for (Entry<Integer, Integer> entry : map.entrySet()) {
-				value = entry.getValue();
-			}
-		}
-		endTime = System.currentTimeMillis();
-		System.out.println("map for:" + (startTime - endTime) + " ms");
+	
+	public GGServer getGgServer() {
+		return ggServer;
+	}
+
+
+	public void setGgServer(GGServer ggServer) {
+		this.ggServer = ggServer;
 	}
 	
 }

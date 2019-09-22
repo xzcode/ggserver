@@ -1,7 +1,7 @@
 package xzcode.ggserver.core.executor.future;
 
-import java.util.concurrent.ScheduledFuture;
 
+import io.netty.util.concurrent.ScheduledFuture;
 import xzcode.ggserver.core.GGServer;
 
 /**
@@ -20,7 +20,6 @@ public class GGTaskFuture {
 	
 	public GGTaskFuture() {
 	}
-	
 
 	public GGTaskFuture(ScheduledFuture<?> scheduledFuture) {
 		this.scheduledFuture = scheduledFuture;
@@ -29,41 +28,6 @@ public class GGTaskFuture {
 	
 	public GGTaskFuture(GGServer gg, ScheduledFuture<?> scheduledFuture) {
 		this.scheduledFuture = scheduledFuture;
-	}
-
-
-	/**
-	 * 当任务执行完毕执行
-	 * 
-	 * @param run
-	 * @author zzz
-	 * 2019-09-09 18:06:38
-	 */
-	public void onComplete(Runnable completeAction) {
-		
-			synchronized (this) {
-				this.completeAction = completeAction;
-				if (completed) {
-					completeAction.run();
-				}
-			}
-	}
-	
-	
-	/**
-	 * 设置完成状态
-	 * 
-	 * @param completed
-	 * @author zzz
-	 * 2019-09-10 10:45:20
-	 */
-	public void setCompleted(boolean completed) {
-		synchronized (this) {
-			this.completed = completed;
-			if (this.completed && this.completeAction != null) {
-				completeAction.run();
-			}
-		}
 	}
 	
 

@@ -11,9 +11,9 @@ import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
-import xzcode.ggserver.core.GGServer;
+import xzcode.ggserver.game.support.cardgames.player.RoomPlayer;
+import xzcode.ggserver.game.support.interfaces.IGGServerSupport;
 import xzcode.ggserver.game.support.interfaces.condition.ICheckCondition;
-import xzcode.ggserver.game.support.player.RoomPlayer;
 
 /**
  * 房间游戏控制器接口
@@ -22,27 +22,12 @@ import xzcode.ggserver.game.support.player.RoomPlayer;
  * @param <P>
  * @author zai
  * 2019-02-16 17:57:18
+ * @param <R>
  */
-public interface IRoomSupport<P extends RoomPlayer<R>, R> {
+public interface IRoomSupport<P extends RoomPlayer<R>, R>  extends IGGServerSupport {
 	
-	/**
-	 * 获取ggserver对象
-	 * 
-	 * @return
-	 * @author zzz
-	 * 2019-09-21 14:01:28
-	 */
-	GGServer getGGServer();
 	
-	/**
-	 * 获取房间对象
-	 * 
-	 * @return
-	 * @author zzz
-	 * 2019-09-21 14:01:18
-	 */
-	R getRoom();
-
+	
 	/**
 	 * 获取所有玩家
 	 * 
@@ -135,7 +120,7 @@ public interface IRoomSupport<P extends RoomPlayer<R>, R> {
 	 * 
 	 * @author zai 2019-02-10 14:19:14
 	 */
-	default void eachPlayer(ForEachPlayer<P> eachPlayer) {
+	default void eachPlayer(IForEachPlayer<P> eachPlayer) {
 		for (Entry<Object, P> e : getPlayers().entrySet()) {
 			eachPlayer.each(e.getValue());
 		}
@@ -150,7 +135,7 @@ public interface IRoomSupport<P extends RoomPlayer<R>, R> {
 	 * @author zai
 	 * 2019-02-11 10:56:05
 	 */
-	default boolean boolEachPlayer(BoolForEachPlayer<P> eachPlayer) {
+	default boolean boolEachPlayer(IBoolForEachPlayer<P> eachPlayer) {
 		for (Entry<Object, P> entry : getPlayers().entrySet()) {
 			if (!eachPlayer.each(entry.getValue())) {
 				return false;
@@ -169,7 +154,7 @@ public interface IRoomSupport<P extends RoomPlayer<R>, R> {
 	 * @author zai
 	 * 2019-06-13 11:34:19
 	 */
-	default boolean boolEachInGamePlayer(BoolForEachPlayer<P> eachPlayer) {
+	default boolean boolEachInGamePlayer(IBoolForEachPlayer<P> eachPlayer) {
 			for (Entry<Object, P> entry : getPlayers().entrySet()) {
 				if (!entry.getValue().isInGame()) {
 					continue;
@@ -388,7 +373,7 @@ public interface IRoomSupport<P extends RoomPlayer<R>, R> {
 	 * @author zai
 	 * 2019-02-23 16:03:00
 	 */
-	default void iteratePlayer(PlayerIteration<P> iteration) {
+	default void iteratePlayer(IPlayerIteration<P> iteration) {
 		Iterator<Entry<Object, P>> it = getPlayers().entrySet().iterator();
 		while (it.hasNext()) {
 			Entry<Object, P> next = it.next();
@@ -464,7 +449,7 @@ public interface IRoomSupport<P extends RoomPlayer<R>, R> {
 	 * @author zai
 	 * 2019-03-19 11:13:21
 	 */
-	default int getPlayerSelfClientSeatNo(int maxPlayer, int selfSeatNo) {
+	default int getSelfClientSeatNo(int maxPlayer, int selfSeatNo) {
 		return getPlayerClientSeatNo(maxPlayer,selfSeatNo,selfSeatNo);
 	}
 	
@@ -476,7 +461,7 @@ public interface IRoomSupport<P extends RoomPlayer<R>, R> {
 	 * @author zai
 	 * 2019-03-18 18:10:01
 	 */
-	default int getPlayerSelfClientSeatNo(int selfSeatNo) {
+	default int getSelfClientSeatNo(int selfSeatNo) {
 		return getPlayerClientSeatNo(getMaxPlayerNum(), selfSeatNo,selfSeatNo);
 	}
 
@@ -487,7 +472,7 @@ public interface IRoomSupport<P extends RoomPlayer<R>, R> {
 	 * @author zai
 	 * 2019-03-22 15:53:32
 	 */
-	default int getPlayerSelfClientSeatNo() {
+	default int getSelfClientSeatNo() {
 		return 1;
 	}
 	
@@ -500,7 +485,7 @@ public interface IRoomSupport<P extends RoomPlayer<R>, R> {
 	 * @author zai
 	 * 2019-04-20 13:18:51
 	 */
-	default int getPlayerClientSeatNo(P self, P target) {
+	default int getClientSeatNo(P self, P target) {
 		return getPlayerClientSeatNo(getMaxPlayerNum(), self.getSeatNo(), target.getSeatNo());
 	}
 
@@ -575,7 +560,7 @@ public interface IRoomSupport<P extends RoomPlayer<R>, R> {
 	 * @author zai
 	 * 2019-05-16 14:19:58
 	 */
-	default void eachInGamePlayer(ForEachPlayer<P> eachPlayer) {
+	default void eachInGamePlayer(IForEachPlayer<P> eachPlayer) {
 		P player = null;
 		for (Entry<Object, P> e : getPlayers().entrySet()) {
 			player = e.getValue();
@@ -650,7 +635,7 @@ public interface IRoomSupport<P extends RoomPlayer<R>, R> {
 	 * @author zzz
 	 * 2019-09-10 12:16:44
 	 */
-	default void doubleEachPlayer(DoubleEachPlayer<P> eachPlayer) {
+	default void doubleEachPlayer(IDoubleEachPlayer<P> eachPlayer) {
 		Set<Entry<Object, P>> entrySet = getPlayers().entrySet();
 		for (Entry<Object, P> e : entrySet) {
 			for (Entry<Object, P> e2 : entrySet) {
@@ -667,7 +652,7 @@ public interface IRoomSupport<P extends RoomPlayer<R>, R> {
 	 * @author zzz
 	 * 2019-09-10 12:28:39
 	 */
-	default void doubleEachInGamePlayer(DoubleEachPlayer<P> eachPlayer) {
+	default void doubleEachInGamePlayer(IDoubleEachPlayer<P> eachPlayer) {
 		P player = null;
 		P player2 = null;
 		Set<Entry<Object, P>> entrySet = getPlayers().entrySet();
