@@ -1,6 +1,6 @@
 #1 设置新的版本号
 
-mvn versions:set -DnewVersion=0.0.8-SNAPSHOT
+mvn versions:set -DnewVersion=0.0.9-SNAPSHOT
 
  
 

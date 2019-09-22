@@ -3,7 +3,7 @@
   
   <groupId>xzcode</groupId>
   <artifactId>ggserver</artifactId>
-  <version>0.0.8-SNAPSHOT</version>
+  <version>0.0.9-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>ggserver</name>
   
