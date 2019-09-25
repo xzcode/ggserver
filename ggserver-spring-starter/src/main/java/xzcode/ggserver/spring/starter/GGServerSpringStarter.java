@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.StringUtils;
 import xzcode.ggserver.core.GGServer;
-import xzcode.ggserver.core.config.GGServerConfig;
+import xzcode.ggserver.core.config.GGConfig;
 import xzcode.ggserver.core.handler.serializer.factory.SerializerFactory;
 import xzcode.ggserver.core.starter.IGGServerStarter;
 import xzcode.ggserver.core.starter.impl.DefaultSocketServerStarter;
@@ -35,8 +35,7 @@ public class GGServerSpringStarter implements ApplicationContextAware {
     @Bean
     public IGGServerStarter iGGServerStarter() {
     	
-        GGServerConfig config = ggServerConfig();
-        config.init();
+        GGConfig config = ggServerConfig();
         
         config.setSerializer(SerializerFactory.geSerializer(config.getSerializerType()));
 
@@ -67,8 +66,8 @@ public class GGServerSpringStarter implements ApplicationContextAware {
     
     @Bean
     @ConfigurationProperties(prefix = GGServerSpringStarter.PROPERTIES_PREFIX)
-    public GGServerConfig ggServerConfig() {
-    	return new GGServerConfig();
+    public GGConfig ggServerConfig() {
+    	return new GGConfig();
     }
 
     /**
@@ -77,7 +76,7 @@ public class GGServerSpringStarter implements ApplicationContextAware {
      * @author zai
      * 2017-10-30
      */
-    public void beanDefinitionRegistry(GGServerConfig config) {
+    public void beanDefinitionRegistry(GGConfig config) {
 
         //获取BeanFactory
         DefaultListableBeanFactory defaultListableBeanFactory = (DefaultListableBeanFactory) this.applicationContext.getAutowireCapableBeanFactory();

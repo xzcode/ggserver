@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import xzcode.ggserver.core.session.GGSession;
-import xzcode.ggserver.core.session.GGSessionThreadLocalUtil;
+import xzcode.ggserver.core.session.GGSessionUtil;
 
 /**
  * socket执行任务
@@ -44,7 +44,7 @@ public class ExectionTask implements Runnable{
 	@Override
 	public void run() {
 		
-		GGSessionThreadLocalUtil.setSession(this.session);
+		GGSessionUtil.setSession(this.session);
 		try {
 			if (this.syncObjc != null) {
 				synchronized (syncObjc) {
@@ -57,7 +57,7 @@ public class ExectionTask implements Runnable{
 		} catch (Exception e) {
 			LOGGER.error("Request Message Task ERROR!!", e);
 		}
-		GGSessionThreadLocalUtil.removeSession();
+		GGSessionUtil.removeSession();
 		
 	}
 	

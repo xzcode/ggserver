@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.timeout.IdleStateHandler;
-import xzcode.ggserver.core.config.GGServerConfig;
+import xzcode.ggserver.core.config.GGConfig;
 import xzcode.ggserver.core.handler.common.InboundCommonHandler;
 import xzcode.ggserver.core.handler.common.OutboundCommonHandler;
 import xzcode.ggserver.core.handler.idle.IdleHandler;
@@ -25,7 +25,7 @@ public class SocketChannelInitializer extends ChannelInitializer<SocketChannel> 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SocketChannelInitializer.class);
 
 
-	private GGServerConfig config;
+	private GGConfig config;
 	
 	
 	public SocketChannelInitializer() {
@@ -33,7 +33,7 @@ public class SocketChannelInitializer extends ChannelInitializer<SocketChannel> 
 	}
 	
 
-	public SocketChannelInitializer(GGServerConfig config) {
+	public SocketChannelInitializer(GGConfig config) {
 		this.config = config;
 	}
 
@@ -68,11 +68,11 @@ public class SocketChannelInitializer extends ChannelInitializer<SocketChannel> 
 	}
 	
 
-	public GGServerConfig getConfig() {
+	public GGConfig getConfig() {
 		return config;
 	}
 	
-	public void setConfig(GGServerConfig config) {
+	public void setConfig(GGConfig config) {
 		this.config = config;
 	}
 	

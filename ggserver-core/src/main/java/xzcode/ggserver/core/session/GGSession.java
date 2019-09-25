@@ -10,6 +10,8 @@ public interface GGSession {
 
 	Object reomveAttribute(String key);
 
+	<T> T getAttribute(String key, Class<T> t);
+
 	void disconnect();
 
 	Channel getChannel();
@@ -28,6 +30,5 @@ public interface GGSession {
 
 	void register(Object registeredUserId);
 
-	<T> T getAttribute(String key, Class<T> t);
 
 }

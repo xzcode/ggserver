@@ -1,9 +1,6 @@
 package xzcode.ggserver.core.config;
 
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-
 import io.netty.channel.nio.NioEventLoopGroup;
-import nonapi.io.github.classgraph.concurrency.SimpleThreadFactory;
 import xzcode.ggserver.core.component.GGComponentManager;
 import xzcode.ggserver.core.constant.GGServerTypeConstants;
 import xzcode.ggserver.core.event.EventInvokerManager;
@@ -13,7 +10,7 @@ import xzcode.ggserver.core.handler.serializer.factory.SerializerFactory;
 import xzcode.ggserver.core.message.filter.MessageFilterManager;
 import xzcode.ggserver.core.message.receive.RequestMessageManager;
 import xzcode.ggserver.core.message.send.SendMessageManager;
-import xzcode.ggserver.core.session.UserSessonManager;
+import xzcode.ggserver.core.session.GGUserSessonManager;
 
 /**
  * socket 服务器配置类
@@ -21,11 +18,13 @@ import xzcode.ggserver.core.session.UserSessonManager;
  * @author zai
  * 2017-08-13 19:03:31
  */
-public class GGServerConfig {
+public class GGConfig {
 	
 	private boolean 	enabled = false;
 
 	private boolean 	autoRun = false;
+	
+	private boolean 	client = false;
 
 	private String[] 	scanPackage;
 
@@ -37,15 +36,12 @@ public class GGServerConfig {
 	
 	private int 		workThreadSize = 0;
 
-	private int 		executorCorePoolSize = 10;
-	private int 		executorMaxPoolSize = 100;
-	private long 		executorKeepAliveTime = 10000;
-	private int 		executorTaskQueueSize = 100;
-	
-
 	private boolean 	idleCheckEnabled = true;
+	
 	private long 		readerIdleTime = 5000;
+	
 	private long 		writerIdleTime = 5000;
+	
 	private long 		allIdleTime = 5000;
 	
 	private int 		maxDataLength = 1024 * 1024 * 5;
@@ -70,14 +66,11 @@ public class GGServerConfig {
 	private SendMessageManager sendMessageManager;
 	private MessageFilterManager messageFilterManager;
 	private EventInvokerManager eventInvokerManager;
-	private UserSessonManager userSessonManager;
+	private GGUserSessonManager userSessonManager;
 	
 	private NioEventLoopGroup bossGroup;
     
 	private NioEventLoopGroup workerGroup;
-	
-	
-	/*private NioEventLoopGroup taskExecutor;*/
 	
 	public void init() {
 		componentManager = new GGComponentManager();
@@ -85,47 +78,37 @@ public class GGServerConfig {
 		sendMessageManager = new SendMessageManager(this);
 		messageFilterManager = new MessageFilterManager();
 		eventInvokerManager = new EventInvokerManager();
-		userSessonManager = new UserSessonManager();
+		userSessonManager = new GGUserSessonManager();
 		
-		bossGroup = new NioEventLoopGroup(getBossThreadSize(),new EventLoopGroupThreadFactory("netty-boss"));
+		if (!isClient()) {
+			bossGroup = new NioEventLoopGroup(getBossThreadSize(),new EventLoopGroupThreadFactory("netty-boss"));
+		}
 	    
 		workerGroup = new NioEventLoopGroup(getWorkThreadSize(),new EventLoopGroupThreadFactory("netty-worker"));
-		/*
-		taskExecutor = new NioEventLoopGroup(this.executorMaxPoolSize, new SimpleThreadFactory("GGServer-Task-", false));
-		taskExecutor.setIoRatio(0);
-		*/
 	}
 	
-	public int getExecutorCorePoolSize() {
-		return executorCorePoolSize;
+	
+	public GGConfig() {
+		super();
+		init();
+	}
+	
+	
+
+
+	public GGConfig(boolean client) {
+		super();
+		this.client = client;
+		init();
 	}
 
-	public void setExecutorCorePoolSize(int executorCorePoolSize) {
-		this.executorCorePoolSize = executorCorePoolSize;
+
+	public boolean isClient() {
+		return client;
 	}
 
-	public int getExecutorMaxPoolSize() {
-		return executorMaxPoolSize;
-	}
-
-	public void setExecutorMaxPoolSize(int executorMaxPoolSize) {
-		this.executorMaxPoolSize = executorMaxPoolSize;
-	}
-
-	public long getExecutorKeepAliveTime() {
-		return executorKeepAliveTime;
-	}
-
-	public void setExecutorKeepAliveTime(long executorKeepAliveTime) {
-		this.executorKeepAliveTime = executorKeepAliveTime;
-	}
-
-	public int getExecutorTaskQueueSize() {
-		return executorTaskQueueSize;
-	}
-
-	public void setExecutorTaskQueueSize(int executorTaskQueueSize) {
-		this.executorTaskQueueSize = executorTaskQueueSize;
+	public void setClient(boolean client) {
+		this.client = client;
 	}
 
 	public NioEventLoopGroup getBossGroup() {
@@ -292,10 +275,10 @@ public class GGServerConfig {
 	public void setEventInvokerManager(EventInvokerManager eventInvokerManager) {
 		this.eventInvokerManager = eventInvokerManager;
 	}
-	public UserSessonManager getUserSessonManager() {
+	public GGUserSessonManager getUserSessonManager() {
 		return userSessonManager;
 	}
-	public void setUserSessonManager(UserSessonManager userSessonManager) {
+	public void setUserSessonManager(GGUserSessonManager userSessonManager) {
 		this.userSessonManager = userSessonManager;
 	}
 	
@@ -322,39 +305,6 @@ public class GGServerConfig {
 	public void setSendMessageManager(SendMessageManager sendMessageManager) {
 		this.sendMessageManager = sendMessageManager;
 	}
-
-	public int getReqTaskCorePoolSize() {
-		return executorCorePoolSize;
-	}
-
-	public void setReqTaskCorePoolSize(int reqTaskCorePoolSize) {
-		this.executorCorePoolSize = reqTaskCorePoolSize;
-	}
-
-	public int getReqTaskMaxPoolSize() {
-		return executorMaxPoolSize;
-	}
-
-	public void setReqTaskMaxPoolSize(int reqTaskMaxPoolSize) {
-		this.executorMaxPoolSize = reqTaskMaxPoolSize;
-	}
-
-	public long getReqTaskKeepAliveTime() {
-		return executorKeepAliveTime;
-	}
-
-	public void setReqTaskKeepAliveTime(long reqTaskKeepAliveTime) {
-		this.executorKeepAliveTime = reqTaskKeepAliveTime;
-	}
-
-	public int getReqTaskTaskQueueSize() {
-		return executorTaskQueueSize;
-	}
-
-	public void setReqTaskTaskQueueSize(int reqTaskTaskQueueSize) {
-		this.executorTaskQueueSize = reqTaskTaskQueueSize;
-	}
-
 
 	public GGComponentManager getComponentManager() {
 		return componentManager;

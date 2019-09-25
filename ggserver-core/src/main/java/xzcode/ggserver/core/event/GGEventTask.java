@@ -3,9 +3,9 @@ package xzcode.ggserver.core.event;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import xzcode.ggserver.core.config.GGServerConfig;
+import xzcode.ggserver.core.config.GGConfig;
 import xzcode.ggserver.core.session.GGSession;
-import xzcode.ggserver.core.session.GGSessionThreadLocalUtil;
+import xzcode.ggserver.core.session.GGSessionUtil;
 
 /**
  * 事件任务
@@ -17,7 +17,7 @@ public class GGEventTask implements Runnable{
 	
 private final static Logger LOGGER = LoggerFactory.getLogger(GGEventTask.class);
 	
-	private GGServerConfig config;
+	private GGConfig config;
 	
 
 	/**
@@ -37,7 +37,7 @@ private final static Logger LOGGER = LoggerFactory.getLogger(GGEventTask.class);
 	
 	
 
-	public GGEventTask(GGSession session, String eventTag, Object message, GGServerConfig config) {
+	public GGEventTask(GGSession session, String eventTag, Object message, GGConfig config) {
 		super();
 		this.session = session;
 		this.eventTag = eventTag;
@@ -48,7 +48,7 @@ private final static Logger LOGGER = LoggerFactory.getLogger(GGEventTask.class);
 	@Override
 	public void run() {
 		
-		GGSessionThreadLocalUtil.setSession(this.session);
+		GGSessionUtil.setSession(this.session);
 		try {
 			
 			LOGGER.debug("Runing  SocketEventTask... tag:{}", eventTag);
@@ -62,7 +62,7 @@ private final static Logger LOGGER = LoggerFactory.getLogger(GGEventTask.class);
 		} catch (Exception e) {
 			LOGGER.error("Socket Event Task Error!!", e);
 		}
-		GGSessionThreadLocalUtil.removeSession();
+		GGSessionUtil.removeSession();
 	}
 
 }

@@ -10,7 +10,7 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.timeout.IdleStateHandler;
-import xzcode.ggserver.core.config.GGServerConfig;
+import xzcode.ggserver.core.config.GGConfig;
 import xzcode.ggserver.core.handler.common.InboundCommonHandler;
 import xzcode.ggserver.core.handler.common.OutboundCommonHandler;
 import xzcode.ggserver.core.handler.idle.IdleHandler;
@@ -28,12 +28,12 @@ public class MixedSocketChannelInitializer extends ChannelInitializer<SocketChan
 	
 	private static final Logger logger = LoggerFactory.getLogger(MixedSocketChannelInitializer.class);
 	
-	private GGServerConfig config;
+	private GGConfig config;
 	
 	public MixedSocketChannelInitializer() {
 	}
 	
-	public MixedSocketChannelInitializer(GGServerConfig config) {
+	public MixedSocketChannelInitializer(GGConfig config) {
 		this.config = config;
 	}
 
@@ -41,32 +41,18 @@ public class MixedSocketChannelInitializer extends ChannelInitializer<SocketChan
 	protected void initChannel(SocketChannel ch) throws Exception {
 		
 	   	if (config.getIdleCheckEnabled()) {
-	   		
 		   	 //空闲事件触发器
 		   	 ch.pipeline().addLast(new IdleStateHandler(config.getReaderIdleTime(), config.getWriterIdleTime(), config.getAllIdleTime(), TimeUnit.MILLISECONDS));
 		   	 
 		   	 //心跳包处理
 		   	 ch.pipeline().addLast(new IdleHandler(this.config));
-		   	 
 	   	}
 	   	
 	   	
 	   	ch.pipeline().addLast("TcpSocketSelectHandler", new TcpSocketSelectHandler(config));
 	   	
-	   	/*
-	   	
-	   	ch.pipeline().addLast("HttpServerCodec", new HttpServerCodec());
-	   	ch.pipeline().addLast("HttpObjectAggregator", new HttpObjectAggregator(config.getHttpMaxContentLength()));
-	   	ch.pipeline().addLast("WebSocketInboundFrameHandler", new WebSocketInboundFrameHandler(this.config));
-	   	*/
-	   	
-	   	
 	   	//inbound异常处理
 	   	ch.pipeline().addLast("InboundCommonHandler", new InboundCommonHandler(this.config));
-	   	/*
-        //Outbound 是反顺序执行
-	   	ch.pipeline().addLast("WebSocketOutboundFrameHandler",new WebSocketOutboundFrameHandler(this.config ));
-        */
         //outbound异常处理
         ch.pipeline().addLast("OutboundCommonHandler", new OutboundCommonHandler());
         
@@ -75,11 +61,11 @@ public class MixedSocketChannelInitializer extends ChannelInitializer<SocketChan
 	}
 
 
-	public GGServerConfig getConfig() {
+	public GGConfig getConfig() {
 		return config;
 	}
 	
-	public void setConfig(GGServerConfig config) {
+	public void setConfig(GGConfig config) {
 		this.config = config;
 	}
 

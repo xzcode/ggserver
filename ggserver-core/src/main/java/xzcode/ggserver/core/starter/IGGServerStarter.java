@@ -1,6 +1,6 @@
 package xzcode.ggserver.core.starter;
 
-import xzcode.ggserver.core.config.GGServerConfig;
+import xzcode.ggserver.core.config.GGConfig;
 
 public interface IGGServerStarter {
 	
@@ -8,5 +8,5 @@ public interface IGGServerStarter {
 	
 	IGGServerStarter shutdown();
 	
-	void setConfig(GGServerConfig config);
+	void setConfig(GGConfig config);
 }

@@ -10,7 +10,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpServerCodec;
-import xzcode.ggserver.core.config.GGServerConfig;
+import xzcode.ggserver.core.config.GGConfig;
 import xzcode.ggserver.core.constant.GGServerTypeConstants;
 import xzcode.ggserver.core.handler.web.WebSocketInboundFrameHandler;
 import xzcode.ggserver.core.handler.web.WebSocketOutboundFrameHandler;
@@ -44,7 +44,7 @@ public class TcpSocketSelectHandler extends ByteToMessageDecoder {
 	 */
 	public static final int HEADER_BYTES = PACKAGE_LENGTH_BYTES + REQUEST_TAG_LENGTH_BYTES;
 	
-	private GGServerConfig config;
+	private GGConfig config;
 	
 	public TcpSocketSelectHandler() {
 		
@@ -52,7 +52,7 @@ public class TcpSocketSelectHandler extends ByteToMessageDecoder {
 	
 	
 
-	public TcpSocketSelectHandler(GGServerConfig config) {
+	public TcpSocketSelectHandler(GGConfig config) {
 		super();
 		this.config = config;
 	}

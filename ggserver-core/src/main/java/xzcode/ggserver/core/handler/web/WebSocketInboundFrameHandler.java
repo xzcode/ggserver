@@ -27,7 +27,7 @@ import io.netty.handler.codec.http.websocketx.WebSocketServerHandshaker;
 import io.netty.handler.codec.http.websocketx.WebSocketServerHandshakerFactory;
 import io.netty.util.CharsetUtil;
 import xzcode.ggserver.core.channel.DefaultChannelAttributeKeys;
-import xzcode.ggserver.core.config.GGServerConfig;
+import xzcode.ggserver.core.config.GGConfig;
 import xzcode.ggserver.core.message.receive.RequestMessageTask;
 
 
@@ -40,11 +40,11 @@ public class WebSocketInboundFrameHandler extends SimpleChannelInboundHandler<Ob
     private WebSocketServerHandshaker handshaker;
     
     
-    private GGServerConfig config;
+    private GGConfig config;
     
     
 
-    public WebSocketInboundFrameHandler(GGServerConfig config) {
+    public WebSocketInboundFrameHandler(GGConfig config) {
 		this.config = config;
 	}
 

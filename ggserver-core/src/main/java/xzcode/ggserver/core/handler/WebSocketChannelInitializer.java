@@ -10,7 +10,7 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.timeout.IdleStateHandler;
-import xzcode.ggserver.core.config.GGServerConfig;
+import xzcode.ggserver.core.config.GGConfig;
 import xzcode.ggserver.core.handler.common.InboundCommonHandler;
 import xzcode.ggserver.core.handler.common.OutboundCommonHandler;
 import xzcode.ggserver.core.handler.idle.IdleHandler;
@@ -28,12 +28,12 @@ public class WebSocketChannelInitializer extends ChannelInitializer<SocketChanne
 	
 	private static final Logger logger = LoggerFactory.getLogger(WebSocketChannelInitializer.class);
 	
-	private GGServerConfig config;
+	private GGConfig config;
 	
 	public WebSocketChannelInitializer() {
 	}
 	
-	public WebSocketChannelInitializer(GGServerConfig config) {
+	public WebSocketChannelInitializer(GGConfig config) {
 		this.config = config;
 	}
 
@@ -69,11 +69,11 @@ public class WebSocketChannelInitializer extends ChannelInitializer<SocketChanne
 	}
 
 
-	public GGServerConfig getConfig() {
+	public GGConfig getConfig() {
 		return config;
 	}
 	
-	public void setConfig(GGServerConfig config) {
+	public void setConfig(GGConfig config) {
 		this.config = config;
 	}
 

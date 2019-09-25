@@ -10,7 +10,7 @@ import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import xzcode.ggserver.core.channel.DefaultChannelAttributeKeys;
-import xzcode.ggserver.core.config.GGServerConfig;
+import xzcode.ggserver.core.config.GGConfig;
 import xzcode.ggserver.core.event.GGEventTask;
 import xzcode.ggserver.core.event.GGEvents;
 import xzcode.ggserver.core.session.GGSession;
@@ -21,14 +21,14 @@ public class InboundCommonHandler extends ChannelInboundHandlerAdapter{
 	private static final Logger LOGGER = LoggerFactory.getLogger(InboundCommonHandler.class);
 	
 	
-	private GGServerConfig config;
+	private GGConfig config;
 	
 	public InboundCommonHandler() {
 	}
 	
 	
 	
-	public InboundCommonHandler(GGServerConfig config) {
+	public InboundCommonHandler(GGConfig config) {
 		super();
 		this.config = config;
 	}
@@ -122,11 +122,11 @@ public class InboundCommonHandler extends ChannelInboundHandlerAdapter{
 
 
 
-	public GGServerConfig getConfig() {
+	public GGConfig getConfig() {
 		return config;
 	}
 	
-	public void setConfig(GGServerConfig config) {
+	public void setConfig(GGConfig config) {
 		this.config = config;
 	}
 

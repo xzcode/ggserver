@@ -15,7 +15,7 @@ import io.netty.channel.ChannelPromise;
 import io.netty.handler.codec.http.DefaultFullHttpResponse;
 import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
 import xzcode.ggserver.core.channel.DefaultChannelAttributeKeys;
-import xzcode.ggserver.core.config.GGServerConfig;
+import xzcode.ggserver.core.config.GGConfig;
 import xzcode.ggserver.core.executor.task.ExectionTask;
 import xzcode.ggserver.core.message.send.SendModel;
 
@@ -29,7 +29,7 @@ public class WebSocketOutboundFrameHandler extends ChannelOutboundHandlerAdapter
 
     private static final Logger LOGGER = LoggerFactory.getLogger(WebSocketOutboundFrameHandler.class);
     
-    private GGServerConfig config;
+    private GGConfig config;
     
     private static final Gson GSON = new GsonBuilder()
     		.serializeNulls()
@@ -42,7 +42,7 @@ public class WebSocketOutboundFrameHandler extends ChannelOutboundHandlerAdapter
     
     
 
-	public WebSocketOutboundFrameHandler(GGServerConfig config) {
+	public WebSocketOutboundFrameHandler(GGConfig config) {
 		super();
 		this.config = config;
 	}

@@ -7,7 +7,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.timeout.IdleStateEvent;
 import xzcode.ggserver.core.channel.DefaultChannelAttributeKeys;
-import xzcode.ggserver.core.config.GGServerConfig;
+import xzcode.ggserver.core.config.GGConfig;
 import xzcode.ggserver.core.event.GGEventTask;
 import xzcode.ggserver.core.event.GGEvents;
 import xzcode.ggserver.core.session.GGSession;
@@ -22,7 +22,7 @@ public class IdleHandler extends ChannelInboundHandlerAdapter{
 	
 	private final static Logger LOGGER = LoggerFactory.getLogger(IdleHandler.class);
 
-	private GGServerConfig config;
+	private GGConfig config;
 	
 	
 	private boolean readerIdleEnabled;
@@ -31,7 +31,7 @@ public class IdleHandler extends ChannelInboundHandlerAdapter{
 	
 	private boolean allIdleEnabled;
 	
-	public IdleHandler(GGServerConfig config) {
+	public IdleHandler(GGConfig config) {
 		this.config = config;
 		init();
 	}

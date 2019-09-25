@@ -13,7 +13,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelOutboundHandlerAdapter;
 import io.netty.channel.ChannelPromise;
 import xzcode.ggserver.core.channel.DefaultChannelAttributeKeys;
-import xzcode.ggserver.core.config.GGServerConfig;
+import xzcode.ggserver.core.config.GGConfig;
 import xzcode.ggserver.core.executor.task.ExectionTask;
 import xzcode.ggserver.core.message.send.SendModel;
 
@@ -31,7 +31,7 @@ public class TcpEncodeHandler extends ChannelOutboundHandlerAdapter {
 	private static final Logger LOGGER = LoggerFactory.getLogger(TcpEncodeHandler.class);
 	    
 
-	private GGServerConfig config;
+	private GGConfig config;
 	
 	private static final Gson GSON = new GsonBuilder()
     		.serializeNulls()
@@ -42,7 +42,7 @@ public class TcpEncodeHandler extends ChannelOutboundHandlerAdapter {
 	}
 	
 	
-	public TcpEncodeHandler(GGServerConfig config) {
+	public TcpEncodeHandler(GGConfig config) {
 		super();
 		this.config = config;
 	}

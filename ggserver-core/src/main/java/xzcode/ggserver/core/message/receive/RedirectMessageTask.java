@@ -3,9 +3,9 @@ package xzcode.ggserver.core.message.receive;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import xzcode.ggserver.core.config.GGServerConfig;
+import xzcode.ggserver.core.config.GGConfig;
 import xzcode.ggserver.core.session.GGSession;
-import xzcode.ggserver.core.session.GGSessionThreadLocalUtil;
+import xzcode.ggserver.core.session.GGSessionUtil;
 
 /**
  * 转发消息任务
@@ -21,7 +21,7 @@ public class RedirectMessageTask implements Runnable{
 	/**
 	 * 配置
 	 */
-	private GGServerConfig config;
+	private GGConfig config;
 	
 	/**
 	 * 请求标识
@@ -49,7 +49,7 @@ public class RedirectMessageTask implements Runnable{
 	}
 	
 
-	public RedirectMessageTask(String action, Object message, GGSession session, Object syncLock, GGServerConfig config) {
+	public RedirectMessageTask(String action, Object message, GGSession session, Object syncLock, GGConfig config) {
 		this.message = message;
 		this.session = session;
 		this.action = action;
@@ -57,7 +57,7 @@ public class RedirectMessageTask implements Runnable{
 		this.syncObj = syncLock;
 	}
 
-	public RedirectMessageTask(String action, Object message, GGSession session, GGServerConfig config) {
+	public RedirectMessageTask(String action, Object message, GGSession session, GGConfig config) {
 		this.message = message;
 		this.session = session;
 		this.action = action;
@@ -69,7 +69,7 @@ public class RedirectMessageTask implements Runnable{
 	@Override
 	public void run() {
 		
-		GGSessionThreadLocalUtil.setSession(this.session);
+		GGSessionUtil.setSession(this.session);
 		try {
 			if (syncObj != null) {
 				synchronized (syncObj) {
@@ -82,7 +82,7 @@ public class RedirectMessageTask implements Runnable{
 		} catch (Exception e) {
 			LOGGER.error("Redirect Message Task ERROR!! -- actionId: {}, error: {}", action, e);
 		}finally {
-			GGSessionThreadLocalUtil.removeSession();
+			GGSessionUtil.removeSession();
 		}
 		
 	}

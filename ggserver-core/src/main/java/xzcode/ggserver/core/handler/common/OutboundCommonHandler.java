@@ -3,7 +3,7 @@ package xzcode.ggserver.core.handler.common;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelOutboundHandlerAdapter;
 import io.netty.channel.ChannelPromise;
-import xzcode.ggserver.core.session.GGSessionThreadLocalUtil;
+import xzcode.ggserver.core.session.GGSessionUtil;
 import xzcode.ggserver.core.session.imp.SocketSession;
 
 import org.slf4j.Logger;

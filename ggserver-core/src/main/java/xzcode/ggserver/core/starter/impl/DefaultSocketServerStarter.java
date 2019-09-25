@@ -10,12 +10,9 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
-import xzcode.ggserver.core.config.GGServerConfig;
+import xzcode.ggserver.core.config.GGConfig;
 import xzcode.ggserver.core.config.scanner.GGComponentScanner;
-import xzcode.ggserver.core.constant.GGServerTypeConstants;
 import xzcode.ggserver.core.handler.MixedSocketChannelInitializer;
-import xzcode.ggserver.core.handler.SocketChannelInitializer;
-import xzcode.ggserver.core.handler.WebSocketChannelInitializer;
 import xzcode.ggserver.core.starter.IGGServerStarter;
 
 /**
@@ -26,11 +23,11 @@ import xzcode.ggserver.core.starter.IGGServerStarter;
  */
 public class DefaultSocketServerStarter implements IGGServerStarter {
 	
-	private static final Logger logger = LoggerFactory.getLogger(WebSocketServerStarter.class);
+	private static final Logger logger = LoggerFactory.getLogger(DefaultSocketServerStarter.class);
 	
-	private GGServerConfig config;
+	private GGConfig config;
 	
-    public DefaultSocketServerStarter(GGServerConfig config) {
+    public DefaultSocketServerStarter(GGConfig config) {
     	
     	this.config = config;
     	
@@ -62,15 +59,7 @@ public class DefaultSocketServerStarter implements IGGServerStarter {
             boot.channel(NioServerSocketChannel.class); // (3)
             
             //设置消息处理器
-            if (config.getServerType().equals(GGServerTypeConstants.MIXED)) {
-            	boot.childHandler(new MixedSocketChannelInitializer(config));
-			}else if (config.getServerType().equals(GGServerTypeConstants.WEBSOCKET)) {
-				boot.childHandler(new WebSocketChannelInitializer(config));
-			}else if (config.getServerType().equals(GGServerTypeConstants.TCP)) {
-				boot.childHandler(new MixedSocketChannelInitializer(config));
-			}else {
-				throw new RuntimeException("GGServer ServerType Error!!");
-			}
+            boot.childHandler(new MixedSocketChannelInitializer(config));
             
             
             boot.option(ChannelOption.SO_BACKLOG, 128);         // (5)
@@ -109,10 +98,10 @@ public class DefaultSocketServerStarter implements IGGServerStarter {
         return this;
 	}
     
-    public void setConfig(GGServerConfig config) {
+    public void setConfig(GGConfig config) {
 		this.config = config;
 	}
-    public GGServerConfig getConfig() {
+    public GGConfig getConfig() {
 		return config;
 	}
     

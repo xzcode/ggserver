@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * 
  * @author zai 2017-07-30 23:11:44
  */
-public class UserSessonManager {
+public class GGUserSessonManager {
 	
 	private final ConcurrentHashMap<Object, GGSession> sessionMap = new ConcurrentHashMap<>();
 	

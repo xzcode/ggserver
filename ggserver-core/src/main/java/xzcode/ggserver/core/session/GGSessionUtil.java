@@ -7,7 +7,7 @@ package xzcode.ggserver.core.session;
  * @author zai
  * 2019-02-09 10:10:42
  */
-public class GGSessionThreadLocalUtil {
+public class GGSessionUtil {
 	
 	private static final ThreadLocal<GGSession> THREAD_LOCAL = new ThreadLocal<>();
 	

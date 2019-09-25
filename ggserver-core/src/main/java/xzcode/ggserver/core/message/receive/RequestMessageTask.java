@@ -3,12 +3,12 @@ package xzcode.ggserver.core.message.receive;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import xzcode.ggserver.core.config.GGServerConfig;
+import xzcode.ggserver.core.config.GGConfig;
 import xzcode.ggserver.core.handler.serializer.ISerializer;
 import xzcode.ggserver.core.message.filter.MessageFilterManager;
 import xzcode.ggserver.core.message.receive.invoker.IOnMessageInvoker;
 import xzcode.ggserver.core.session.GGSession;
-import xzcode.ggserver.core.session.GGSessionThreadLocalUtil;
+import xzcode.ggserver.core.session.GGSessionUtil;
 
 /**
  * 请求消息任务
@@ -24,7 +24,7 @@ public class RequestMessageTask implements Runnable{
 	/**
 	 * 配置
 	 */
-	private GGServerConfig config;
+	private GGConfig config;
 	
 	/**
 	 * 请求标识
@@ -49,7 +49,7 @@ public class RequestMessageTask implements Runnable{
 	
 	
 
-	public RequestMessageTask(byte[] action, byte[] message, GGSession session, GGServerConfig config) {
+	public RequestMessageTask(byte[] action, byte[] message, GGSession session, GGConfig config) {
 		this.message = message;
 		this.session = session;
 		this.action = action;
@@ -61,7 +61,7 @@ public class RequestMessageTask implements Runnable{
 	@Override
 	public void run() {
 		
-		GGSessionThreadLocalUtil.setSession(this.session);
+		GGSessionUtil.setSession(this.session);
 		Request request = new Request();
 		ISerializer serializer = config.getSerializer();
 		MessageFilterManager messageFilterManager = this.config.getMessageFilterManager();
@@ -102,7 +102,7 @@ public class RequestMessageTask implements Runnable{
 		} catch (Exception e) {
 			LOGGER.error("Request Message Task ERROR!! -- actionId: {}, error: {}", request.getAction(), e);
 		}finally {
-			GGSessionThreadLocalUtil.removeSession();			
+			GGSessionUtil.removeSession();			
 		}
 		
 	}

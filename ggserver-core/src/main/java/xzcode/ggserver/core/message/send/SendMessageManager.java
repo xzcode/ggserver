@@ -8,10 +8,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.netty.channel.Channel;
-import xzcode.ggserver.core.config.GGServerConfig;
+import xzcode.ggserver.core.config.GGConfig;
 import xzcode.ggserver.core.session.GGSession;
-import xzcode.ggserver.core.session.GGSessionThreadLocalUtil;
-import xzcode.ggserver.core.session.UserSessonManager;
+import xzcode.ggserver.core.session.GGSessionUtil;
+import xzcode.ggserver.core.session.GGUserSessonManager;
 import xzcode.ggserver.core.utils.json.GGServerJsonUtil;
 
 /**
@@ -21,14 +21,14 @@ import xzcode.ggserver.core.utils.json.GGServerJsonUtil;
  * @author zai
  * 2019-02-09 14:30:13
  */
-public class SendMessageManager implements ISendMessage{
+public class SendMessageManager implements ISendMessageSupport{
 	
 	private final static Logger logger = LoggerFactory.getLogger(SendMessageManager.class);
 	
-	private GGServerConfig config;
+	private GGConfig config;
 	
 	
-	public SendMessageManager(GGServerConfig config) {
+	public SendMessageManager(GGConfig config) {
 		super();
 		this.config = config;
 	}
@@ -78,7 +78,7 @@ public class SendMessageManager implements ISendMessage{
 	 */
 	@Override
 	public void send(String action) {
-		GGSession session = GGSessionThreadLocalUtil.getSession();
+		GGSession session = GGSessionUtil.getSession();
 		if (session != null) {
 			if (!config.getMessageFilterManager().doResponseFilters(session.getRegisteredUserId(), Response.create(action, null))) {
 				return;
@@ -106,7 +106,7 @@ public class SendMessageManager implements ISendMessage{
 		if (userId != null) {
 			session = this.config.getUserSessonManager().get(userId);
 		}else {
-			session = GGSessionThreadLocalUtil.getSession();
+			session = GGSessionUtil.getSession();
 		}
 		if (session != null) {
 			//发送过滤器
@@ -154,7 +154,7 @@ public class SendMessageManager implements ISendMessage{
 	public void sendToAll(String action, Object message) {
 		try {
 			
-			UserSessonManager sessonManager = config.getUserSessonManager();
+			GGUserSessonManager sessonManager = config.getUserSessonManager();
 			Set<Entry<Object, GGSession>> entrySet = sessonManager.getSessionMap().entrySet();
 			Channel channel = null;
 			byte[] actionIdData = action.getBytes();
@@ -179,6 +179,11 @@ public class SendMessageManager implements ISendMessage{
 	@Override
 	public void sendToAll(String action) {
 		sendToAll(action, null);
+	}
+
+	@Override
+	public SendMessageManager getSendMessageManager() {
+		return this;
 	}
 
 }

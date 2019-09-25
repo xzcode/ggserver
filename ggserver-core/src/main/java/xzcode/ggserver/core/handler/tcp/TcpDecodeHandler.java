@@ -9,7 +9,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
 import xzcode.ggserver.core.channel.DefaultChannelAttributeKeys;
-import xzcode.ggserver.core.config.GGServerConfig;
+import xzcode.ggserver.core.config.GGConfig;
 import xzcode.ggserver.core.message.receive.RequestMessageTask;
 
 /**
@@ -47,13 +47,13 @@ public class TcpDecodeHandler extends ByteToMessageDecoder {
 	public static final int HEADER_BYTES = PACKAGE_LENGTH_BYTES + REQUEST_TAG_LENGTH_BYTES;
 	
 	
-	private GGServerConfig config;
+	private GGConfig config;
 	
 	public TcpDecodeHandler() {
 		
 	}
 	
-	public TcpDecodeHandler(GGServerConfig config) {
+	public TcpDecodeHandler(GGConfig config) {
 		super();
 		this.config = config;
 	}
