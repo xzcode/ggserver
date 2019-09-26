@@ -83,7 +83,12 @@ public class TcpSocketSelectHandler extends ByteToMessageDecoder {
 		}else {
 			ctx.pipeline().addAfter("TcpSocketSelectHandler","TcpDecodeHandler", new TcpDecodeHandler(config));
 			ctx.pipeline().addAfter("InboundCommonHandler","TcpEncodeHandler", new TcpEncodeHandler(config));
-			in.resetReaderIndex();
+			if(!tag.equalsIgnoreCase("tcp")){
+				in.resetReaderIndex();
+			}else {
+				ctx.channel().writeAndFlush(GGServerTypeConstants.TCP.getBytes());
+			}
+			
 		}
 		
 		ctx.pipeline().remove("TcpSocketSelectHandler");

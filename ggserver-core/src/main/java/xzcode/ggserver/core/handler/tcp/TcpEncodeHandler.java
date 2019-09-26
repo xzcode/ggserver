@@ -1,5 +1,7 @@
 package xzcode.ggserver.core.handler.tcp;
 
+import java.util.Arrays;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,82 +31,84 @@ import xzcode.ggserver.core.message.send.SendModel;
 public class TcpEncodeHandler extends ChannelOutboundHandlerAdapter {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(TcpEncodeHandler.class);
-	    
+
 
 	private GGServerConfig config;
-	
+
 	private static final Gson GSON = new GsonBuilder()
-    		.serializeNulls()
-    		.create();
-	
-	
+			.serializeNulls()
+			.create();
+
+
 	public TcpEncodeHandler() {
 	}
-	
-	
+
+
 	public TcpEncodeHandler(GGServerConfig config) {
 		super();
 		this.config = config;
 	}
 
-	
-	
+
+
 	@Override
 	public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
-		
+
 		Channel channel = ctx.channel();
 		if (!channel.isActive()) {
-    		if(LOGGER.isDebugEnabled()){
-        		LOGGER.debug("\nWrite channel:{} is inActive...", ctx.channel());        		
-        	}
+			if(LOGGER.isDebugEnabled()){
+				LOGGER.debug("\nWrite channel:{} is inActive...", ctx.channel());        		
+			}
 			return;
 		}
-		
+
 		ByteBuf out = null;
-		
+
 		if (msg instanceof SendModel) {
-		
+
 			SendModel sendModel = (SendModel) msg;
 			/*
 			if (LOGGER.isInfoEnabled()) {
 				LOGGER.info("\nSending message ---> \ntag:{}\nmessage:{}", new String(sendModel.getAction()), GSON.toJson(sendModel));
 			}
-			*/
-			
+			 */
+
 			byte[] tagBytes = sendModel.getAction();
-		
+
 			//如果有消息体
 			if (sendModel.getMessage() != null) {
-				
+
 				byte[] bodyBytes = (byte[]) sendModel.getMessage();
-				
+
 				int packLen = 2 + tagBytes.length + bodyBytes.length;
-				
+
+				System.err.println(bodyBytes.length+"返回给客户端协议：----》》"+Arrays.toString(bodyBytes));
+
 				out = ctx.alloc().buffer(packLen);
-				
+
 				out.writeInt(packLen);
 				out.writeShort(tagBytes.length);
 				out.writeBytes(tagBytes);
 				out.writeBytes(bodyBytes);
 				if (LOGGER.isInfoEnabled()) {
-                	LOGGER.info("\nmessage sended ---> \nchannel:{}\ntag:{}\nbytes-length:{}\ndata:{}", channel, new String(tagBytes, config.getCharset()), packLen +4 , new String(bodyBytes));
-                }
+					LOGGER.info("\nmessage sended ---> \nchannel:{}\ntag:{}\nbytes-length:{}\ndata:{}", channel, new String(tagBytes, config.getCharset()), packLen +4 , new String(bodyBytes));
+				}
 			} else {
-			
+
 				//如果没消息体
-				
+
 				int packLen = 2 + tagBytes.length;
-				
+
 				out = ctx.alloc().buffer(packLen);
-				
+
 				out.writeInt(packLen);
 				out.writeShort(tagBytes.length);
 				out.writeBytes(tagBytes);
-				
+
 				if (LOGGER.isInfoEnabled()) {
-                	LOGGER.info("\nmessage sended ---> \nchannel:{}\ntag:{}\nbytes-length:{}", channel, new String(tagBytes, config.getCharset()), packLen + 4);
-                }
-				
+					LOGGER.info("\nmessage sended ---> \nchannel:{}\ntag:{}\nbytes-length:{}", channel, new String(tagBytes, config.getCharset()), packLen + 4);
+				}
+
 			}
 			ChannelFuture channelFuture = null;
 			if(channel.isWritable()){
@@ -112,17 +116,17 @@ public class TcpEncodeHandler extends ChannelOutboundHandlerAdapter {
 			}else {
 				try {
 					if (LOGGER.isInfoEnabled()) {
-	                	LOGGER.info("Channel is not writable, change to sync mode! \nchannel:{}", channel);
-	                }
+						LOGGER.info("Channel is not writable, change to sync mode! \nchannel:{}", channel);
+					}
 					channelFuture = channel.writeAndFlush(out).sync();
-	                if (LOGGER.isInfoEnabled()) {
-	                	LOGGER.info("Sync message sended. \nchannel:{}\nmessage:{}", channel, GSON.toJson(msg));
-	                }
-	            } catch (Exception e) {
-	            	if (LOGGER.isInfoEnabled()) {
-	            		LOGGER.info("write and flush msg exception. msg:[{}]", GSON.toJson(msg), e);
-	            	}
-	            }
+					if (LOGGER.isInfoEnabled()) {
+						LOGGER.info("Sync message sended. \nchannel:{}\nmessage:{}", channel, GSON.toJson(msg));
+					}
+				} catch (Exception e) {
+					if (LOGGER.isInfoEnabled()) {
+						LOGGER.info("write and flush msg exception. msg:[{}]", GSON.toJson(msg), e);
+					}
+				}
 			}
 			//添加回调
 			if (channelFuture != null) {
@@ -130,7 +134,7 @@ public class TcpEncodeHandler extends ChannelOutboundHandlerAdapter {
 					channelFuture.addListener(future -> {
 						if (future.isSuccess()) {
 							config.getTaskExecutor().submit(new ExectionTask(sendModel.getCallback(), channel.attr(DefaultChannelAttributeKeys.SESSION).get()));
-	    				}
+						}
 					});
 				}
 			}
@@ -140,10 +144,10 @@ public class TcpEncodeHandler extends ChannelOutboundHandlerAdapter {
 			out.writeBytes(bytes);
 			ctx.writeAndFlush(out);
 		}
-		
+
 	}
 
 
-	
+
 
 }
