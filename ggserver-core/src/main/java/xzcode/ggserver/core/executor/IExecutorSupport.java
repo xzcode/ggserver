@@ -122,8 +122,9 @@ public interface IExecutorSupport {
 	 * 2019-09-11 11:51:19
 	 */
 	default GGTaskFuture scheduleAfter(GGTaskFuture afterFuture, Object syncLock, long delay, TimeUnit timeUnit, Runnable runnable) {
+		
 		GGTaskFuture taskFuture = new GGTaskFuture();
-		afterFuture.getScheduledFuture().addListener((e) -> {
+		afterFuture.setCompleteAction(() -> {
 			GGTask syncTask = new GGTask(syncLock, runnable);
 			ScheduledFuture<?> future = getTaskExecutor().schedule(syncTask, delay, timeUnit);
 			taskFuture.setScheduledFuture(future);

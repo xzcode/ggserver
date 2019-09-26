@@ -22,7 +22,17 @@ public class GGTaskFuture {
 	}
 
 	public GGTaskFuture(ScheduledFuture<?> scheduledFuture) {
+		setScheduledFuture(scheduledFuture);
+	}
+	
+
+	public void setScheduledFuture(ScheduledFuture<?> scheduledFuture) {
 		this.scheduledFuture = scheduledFuture;
+		scheduledFuture.addListener((e) -> {
+			if (this.completeAction != null) {
+				this.completeAction.run();
+			}
+		});
 	}
 	
 	
@@ -35,9 +45,6 @@ public class GGTaskFuture {
 		return scheduledFuture;
 	}
 
-	public void setScheduledFuture(ScheduledFuture<?> scheduledFuture) {
-		this.scheduledFuture = scheduledFuture;
-	}
 
 	public Runnable getCompleteAction() {
 		return completeAction;
