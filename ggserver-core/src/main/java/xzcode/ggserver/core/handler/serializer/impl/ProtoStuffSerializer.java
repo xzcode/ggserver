@@ -1,4 +1,5 @@
 package xzcode.ggserver.core.handler.serializer.impl;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -40,6 +41,7 @@ public class ProtoStuffSerializer  implements ISerializer {
 	@Override
 	public <T> T deserialize(byte[] bytes, Class<T> clazz) throws Exception {
 		try {
+			System.err.println("客户端：bytes--》》》"+Arrays.toString(bytes));
 			T message = objenesis.newInstance(clazz);
 			Schema<T> schema = getSchema(clazz);
 			ProtostuffIOUtil.mergeFrom(bytes, message, schema);
