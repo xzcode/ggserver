@@ -7,16 +7,12 @@ import org.slf4j.LoggerFactory;
 
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
-import io.netty.handler.codec.http.HttpObjectAggregator;
-import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.timeout.IdleStateHandler;
 import xzcode.ggserver.core.config.GGConfig;
 import xzcode.ggserver.core.handler.common.InboundCommonHandler;
 import xzcode.ggserver.core.handler.common.OutboundCommonHandler;
 import xzcode.ggserver.core.handler.idle.IdleHandler;
 import xzcode.ggserver.core.handler.tcp.TcpSocketSelectHandler;
-import xzcode.ggserver.core.handler.web.WebSocketInboundFrameHandler;
-import xzcode.ggserver.core.handler.web.WebSocketOutboundFrameHandler;
 
 /**
  * 混合tcp与websocket 初始化处理器

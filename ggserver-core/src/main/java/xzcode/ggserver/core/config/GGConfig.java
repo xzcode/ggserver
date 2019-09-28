@@ -24,8 +24,9 @@ public class GGConfig {
 
 	private boolean 	autoRun = false;
 	
+	//是否客户端
 	private boolean 	client = false;
-
+	
 	private String[] 	scanPackage;
 
 	private String 		host = "0.0.0.0";

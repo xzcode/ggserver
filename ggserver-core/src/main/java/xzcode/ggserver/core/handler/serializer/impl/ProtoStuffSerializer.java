@@ -15,17 +15,15 @@ import xzcode.ggserver.core.handler.serializer.ISerializer;
  */
 public class ProtoStuffSerializer implements ISerializer {
 
+	@SuppressWarnings("unchecked")
 	public <T> byte[] serialize(T object) throws Exception {
-		@SuppressWarnings("unchecked")
-		Schema<T> schema = (Schema<T>) RuntimeSchema.getSchema(object.getClass());  
-        return ProtostuffIOUtil.toByteArray(object, schema, LinkedBuffer.allocate(4096));
+        return ProtostuffIOUtil.toByteArray(object, (Schema<T>) RuntimeSchema.getSchema(object.getClass()), LinkedBuffer.allocate(512));
 	}
 
 	@Override
 	public <T> T deserialize(byte[] bytes, Class<T> clazz) throws Exception {
 		T obj = clazz.newInstance();
-		Schema<T> schema = (Schema<T>) RuntimeSchema.getSchema(clazz);  
-		ProtostuffIOUtil.mergeFrom(bytes, obj, schema);
+		ProtostuffIOUtil.mergeFrom(bytes, obj, RuntimeSchema.getSchema(clazz));
         return obj;  
 	}
 }
