@@ -446,8 +446,8 @@ public class GGServer implements ISendMessage{
 	}
 
 	@Override
-	public void sendProtoStuff(String action, byte[] message) {
-		this.config.getSendMessageManager().sendProtoStuff(action, message);
+	public void sendProtoStuff(Object userId, String action, byte[] message) {
+		this.config.getSendMessageManager().sendProtoStuff(userId, action,message);
 
 	}
 
@@ -484,6 +484,10 @@ public class GGServer implements ISendMessage{
 		this.config.getSendMessageManager().sendProtoStuff(userId, action, message,delayMs);
 
 	}
-	
+	@Override
+	public void sendProtoStuff(String action, byte[] message) {
+		this.config.getSendMessageManager().sendProtoStuff(action, action, message);
+	}
+
 
 }

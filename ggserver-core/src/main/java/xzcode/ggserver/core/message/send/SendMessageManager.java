@@ -182,8 +182,13 @@ public class SendMessageManager implements ISendMessage{
 	}
 
 	@Override
-	public void sendProtoStuff(String action, byte[] message) {
-		sendProtoStuff(null, action, message, 0);
+	public void sendProtoStuff(Object userId,String action, byte[] message) {
+		sendProtoStuff(userId, action, message);
+	}
+
+	@Override
+	public void sendProtoStuff(String action, byte[]  message) {
+		sendProtoStuff(null, action, message,0);
 	}
 
 	@Override
@@ -213,5 +218,4 @@ public class SendMessageManager implements ISendMessage{
 			}
 		}
 	}
-
 }

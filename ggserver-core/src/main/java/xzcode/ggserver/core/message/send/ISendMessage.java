@@ -12,8 +12,8 @@ import java.util.concurrent.TimeUnit;
  */
 public interface ISendMessage {
 
-
-	void sendProtoStuff(String action, byte[] message);
+	void sendProtoStuff(String action, byte[]  message);
+	void sendProtoStuff(Object userId,String action, byte[] message);
 	void sendProtoStuff(Object userId, String action,byte[] message, long delayMs);
 	
 
