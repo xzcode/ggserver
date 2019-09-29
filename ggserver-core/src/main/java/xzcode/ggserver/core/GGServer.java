@@ -25,9 +25,9 @@ import xzcode.ggserver.core.session.GGSessionThreadLocalUtil;
  * @author zai 2017-08-04
  */
 public class GGServer implements ISendMessage{
-	
+
 	private GGServerConfig config;
-	
+
 
 	public GGServer(GGServerConfig serverConfig) {
 		this.config = serverConfig;
@@ -46,7 +46,7 @@ public class GGServer implements ISendMessage{
 	public GGSession getSession() {
 		return GGSessionThreadLocalUtil.getSession();
 	}
-	
+
 	/**
 	 * 获取指定用户的session
 	 * 
@@ -99,7 +99,7 @@ public class GGServer implements ISendMessage{
 
 		// 注销会话绑定
 		this.config.getUserSessonManager().remove(userId);
-		
+
 		return session;
 	}
 
@@ -121,7 +121,7 @@ public class GGServer implements ISendMessage{
 	 * 2019-04-17 11:18:43
 	 */
 	public void disconnect(Object userId, long delayMs) {
-		
+
 		GGSession session = null;
 		if (userId == null) {
 			session = getSession();
@@ -150,7 +150,7 @@ public class GGServer implements ISendMessage{
 	public void disconnect() {
 		disconnect(null, 0);
 	}
-	
+
 	/**
 	 * 延迟断开当前连接
 	 * 
@@ -159,7 +159,7 @@ public class GGServer implements ISendMessage{
 	public void disconnect(long delayMs) {
 		disconnect(null, delayMs);
 	}
-	
+
 	/**
 	 * 动态监听消息
 	 * 
@@ -170,7 +170,7 @@ public class GGServer implements ISendMessage{
 	 * @param <T>
 	 */
 	public <T> void on(String actionId, IOnMessageAction<T> onMessageAction) {
-		
+
 		OnMessagerInvoker<T> invoker = new OnMessagerInvoker<>();
 		invoker.setOnMessage(onMessageAction);
 		invoker.setRequestTag(actionId);
@@ -183,10 +183,10 @@ public class GGServer implements ISendMessage{
 			msgClass = (Class<?>) ((ParameterizedType)onMessageAction.getClass().getGenericInterfaces()[0]).getActualTypeArguments()[0];			
 		}
 		invoker.setRequestMessageClass(msgClass );
-		
+
 		config.getMessageInvokerManager().put(actionId, invoker);
 	}
-	
+
 	/**
 	 * 动态添加事件监听
 	 * 
@@ -201,7 +201,7 @@ public class GGServer implements ISendMessage{
 		invoker.addRunnable(runnable);
 		config.getEventInvokerManager().put(invoker);
 	}
-	
+
 	/**
 	 * 发送自定义事件
 	 * 
@@ -213,7 +213,7 @@ public class GGServer implements ISendMessage{
 	public void emitEvent(String eventTag, Object message) {
 		config.getTaskExecutor().submit(new GGEventTask(getSession(), eventTag, message, config));
 	}
-	
+
 	/**
 	 * 发送自定义事件
 	 * 
@@ -224,7 +224,7 @@ public class GGServer implements ISendMessage{
 	public void emitEvent(String eventTag) {
 		config.getTaskExecutor().submit(new GGEventTask(getSession(), eventTag, null, config));
 	}
-	
+
 	/**
 	 * 重定向消息
 	 * 
@@ -247,8 +247,8 @@ public class GGServer implements ISendMessage{
 	public void redirect(String action, Object message) {
 		new RedirectMessageTask(action, message, GGSessionThreadLocalUtil.getSession(), config).run();
 	}
-	
-	
+
+
 	/**
 	 * 计划延迟任务
 	 * 
@@ -261,8 +261,8 @@ public class GGServer implements ISendMessage{
 	public GGTaskFuture schedule(long delayMs, Runnable runnable) {
 		return schedule(null, delayMs, TimeUnit.MILLISECONDS, runnable);
 	}
-	
-	
+
+
 	/**
 	 * 计划延迟任务
 	 * 
@@ -276,7 +276,7 @@ public class GGServer implements ISendMessage{
 	public GGTaskFuture schedule(Object syncLock, long delayMs, Runnable runnable) {
 		return schedule(syncLock, delayMs, TimeUnit.MILLISECONDS, runnable);
 	}
-	
+
 	/**
 	 * 计划延迟任务
 	 * 
@@ -295,7 +295,7 @@ public class GGServer implements ISendMessage{
 		taskFuture.setScheduledFuture(future);
 		return taskFuture;
 	}
-	
+
 	/**
 	 * 跟随上个任务执行完毕后执行下一个任务
 	 * 
@@ -309,7 +309,7 @@ public class GGServer implements ISendMessage{
 	public GGTaskFuture scheduleAfter(GGTaskFuture afterFuture, long delay, Runnable runnable) {
 		return scheduleAfter(afterFuture, null, delay, TimeUnit.MILLISECONDS, runnable);
 	}
-	
+
 	/**
 	 * 跟随上个任务执行完毕后执行下一个任务
 	 * 
@@ -324,7 +324,7 @@ public class GGServer implements ISendMessage{
 	public GGTaskFuture scheduleAfter(GGTaskFuture afterFuture, long delay, TimeUnit timeUnit, Runnable runnable) {
 		return scheduleAfter(afterFuture, null, delay, timeUnit, runnable);
 	}
-	
+
 	/**
 	 * 跟随上个任务执行完毕后执行下一个任务
 	 * 
@@ -339,7 +339,7 @@ public class GGServer implements ISendMessage{
 	public GGTaskFuture scheduleAfter(GGTaskFuture afterFuture, Object syncLock, long delay, Runnable runnable) {
 		return scheduleAfter(afterFuture, syncLock, delay, TimeUnit.MILLISECONDS, runnable);
 	}
-	
+
 	/**
 	 * 跟随上个任务执行完毕后执行下一个任务
 	 * 
@@ -361,7 +361,7 @@ public class GGServer implements ISendMessage{
 		});
 		return taskFuture;
 	}
-	
+
 	/**
 	 * 计划循环任务
 	 * 
@@ -375,7 +375,7 @@ public class GGServer implements ISendMessage{
 	public GGTaskFuture scheduleWithFixedDelay(long initialDelay, long delayMs, Runnable runnable) {
 		return scheduleWithFixedDelay(initialDelay, delayMs, runnable, TimeUnit.MILLISECONDS);
 	}
-	
+
 	/**
 	 * 计划延迟任务
 	 * 
@@ -394,15 +394,15 @@ public class GGServer implements ISendMessage{
 		taskFuture.setScheduledFuture(future);
 		return taskFuture;
 	}
-	
-	
+
+
 	/**
 	 * 异步任务
 	 */
 	public GGTaskFuture asyncTask(Runnable task) {
 		return this.schedule(0, task);
 	}
-	
+
 	/**
 	 * 异步任务
 	 * 
@@ -415,11 +415,11 @@ public class GGServer implements ISendMessage{
 	public GGTaskFuture asyncTask(Object syncLock, Runnable task) {
 		return this.schedule(syncLock, 0, task);
 	}
-	
+
 	@Override
 	public void send(Object userId, String action, Object message) {
 		this.config.getSendMessageManager().send(userId, action, message);;
-		
+
 	}
 
 
@@ -427,7 +427,7 @@ public class GGServer implements ISendMessage{
 	@Override
 	public void send(Object userId, String action) {
 		this.config.getSendMessageManager().send(userId, action);
-		
+
 	}
 
 
@@ -435,35 +435,41 @@ public class GGServer implements ISendMessage{
 	@Override
 	public void send(String action) {
 		this.config.getSendMessageManager().send(action);
-		
+
 	}
 
 
 	@Override
 	public void send(String action, Object message) {
 		this.config.getSendMessageManager().send(action, message);
-		
+
 	}
-	
+
+	@Override
+	public void sendProtoStuff(String action, byte[] message) {
+		this.config.getSendMessageManager().sendProtoStuff(action, message);
+
+	}
+
 	@Override
 	public void send(Object userId, String action, Object message, long delayMs) {
 		this.config.getSendMessageManager().send(userId, action, message, delayMs);
-		
+
 	}
 	@Override
 	public void send(Object userId, String action, long delayMs) {
 		this.config.getSendMessageManager().send(userId, action, delayMs);
-		
+
 	}
 	@Override
 	public void send(String action, long delayMs) {
 		this.config.getSendMessageManager().send(action, delayMs);
-		
+
 	}
 	@Override
 	public void send(String action, Object message, long delayMs) {
 		this.config.getSendMessageManager().send(action, message, delayMs);
-		
+
 	}
 	@Override
 	public void sendToAll(String action, Object message) {
@@ -473,5 +479,11 @@ public class GGServer implements ISendMessage{
 	public void sendToAll(String action) {
 		this.config.getSendMessageManager().sendToAll(action);
 	}
+	@Override
+	public void sendProtoStuff(Object userId,String action, byte[] message, long delayMs) {
+		this.config.getSendMessageManager().sendProtoStuff(userId, action, message,delayMs);
+
+	}
+	
 
 }

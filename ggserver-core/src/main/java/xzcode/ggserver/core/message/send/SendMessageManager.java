@@ -22,12 +22,12 @@ import xzcode.ggserver.core.utils.json.GGServerJsonUtil;
  * 2019-02-09 14:30:13
  */
 public class SendMessageManager implements ISendMessage{
-	
+
 	private final static Logger logger = LoggerFactory.getLogger(SendMessageManager.class);
-	
+
 	private GGServerConfig config;
-	
-	
+
+
 	public SendMessageManager(GGServerConfig config) {
 		super();
 		this.config = config;
@@ -42,7 +42,7 @@ public class SendMessageManager implements ISendMessage{
 			}
 		}
 	}
-	
+
 	/**
 	 * 发送消息
 	 * 
@@ -56,7 +56,7 @@ public class SendMessageManager implements ISendMessage{
 	public void send(Object userId, String action, Object message) {
 		send(userId, action, message, 0);
 	}
-	
+
 	/**
 	 * 根据用户id发送消息（无消息体）
 	 * 
@@ -66,10 +66,10 @@ public class SendMessageManager implements ISendMessage{
 	 */
 	@Override
 	public void send(Object userId, String action) {
-		
+
 		send(userId, action, null, 0);
 	}
-	
+
 	/**
 	 * 发送消息（无消息体）
 	 * 
@@ -86,7 +86,7 @@ public class SendMessageManager implements ISendMessage{
 			this.send(session.getChannel(),SendModel.create(action.getBytes(), null));
 		}
 	}
-	
+
 	/**
 	 * 发送消息到当前通道
 	 * 
@@ -118,7 +118,7 @@ public class SendMessageManager implements ISendMessage{
 				if (channel != null && channel.isActive()) {
 					byte[] actionIdData = action.getBytes(config.getCharset());
 					byte[] messageData = message == null ? null : this.config.getSerializer().serialize(message);
-					
+
 					if (delayMs > 0) {
 						this.config.getTaskExecutor().schedule(() -> {
 							this.send(channel, SendModel.create(actionIdData, messageData));
@@ -141,19 +141,19 @@ public class SendMessageManager implements ISendMessage{
 	@Override
 	public void send(String action, long delayMs) {
 		send(null, action, null, delayMs);
-		
+
 	}
 
 	@Override
 	public void send(String action, Object message, long delayMs) {
 		send(null, action, message, delayMs);
-		
+
 	}
 
 	@Override
 	public void sendToAll(String action, Object message) {
 		try {
-			
+
 			UserSessonManager sessonManager = config.getUserSessonManager();
 			Set<Entry<Object, GGSession>> entrySet = sessonManager.getSessionMap().entrySet();
 			Channel channel = null;
@@ -168,17 +168,50 @@ public class SendMessageManager implements ISendMessage{
 				if (channel.isActive()) {
 					channel.writeAndFlush(SendModel.create(actionIdData, messageData));
 				}
-				
+
 			}
 		} catch (Exception e) {
 			logger.error("GGServer sendToAll ERROR!");
 		}
-		
+
 	}
 
 	@Override
 	public void sendToAll(String action) {
 		sendToAll(action, null);
+	}
+
+	@Override
+	public void sendProtoStuff(String action, byte[] message) {
+		sendProtoStuff(null, action, message, 0);
+	}
+
+	@Override
+	public void sendProtoStuff(Object userId,String action, byte[] messageData, long delayMs) {
+		GGSession session = null;
+		if (userId != null) {
+			session = this.config.getUserSessonManager().get(userId);
+		}else {
+			session = GGSessionThreadLocalUtil.getSession();
+		}
+		if (session != null) {
+			try {
+				Channel channel = session.getChannel();
+				if (channel != null && channel.isActive()) {
+					byte[] actionIdData = action.getBytes(config.getCharset());
+
+					if (delayMs > 0) {
+						this.config.getTaskExecutor().schedule(() -> {
+							this.send(channel, SendModel.create(actionIdData, messageData));
+						}, delayMs, TimeUnit.MILLISECONDS);
+					}else {
+						this.send(channel, SendModel.create(actionIdData, messageData));
+					}
+				}
+			} catch (Exception e) {
+				logger.error("Send message Error!", e);
+			}
+		}
 	}
 
 }
