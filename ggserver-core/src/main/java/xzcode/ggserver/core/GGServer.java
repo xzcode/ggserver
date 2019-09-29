@@ -486,7 +486,7 @@ public class GGServer implements ISendMessage{
 	}
 	@Override
 	public void sendProtoStuff(String action, byte[] message) {
-		this.config.getSendMessageManager().sendProtoStuff(action, action, message);
+		this.config.getSendMessageManager().sendProtoStuff(action, message);
 	}
 
 

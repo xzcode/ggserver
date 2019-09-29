@@ -183,7 +183,7 @@ public class SendMessageManager implements ISendMessage{
 
 	@Override
 	public void sendProtoStuff(Object userId,String action, byte[] message) {
-		sendProtoStuff(userId, action, message);
+		sendProtoStuff(userId, action, message,0);
 	}
 
 	@Override
