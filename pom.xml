@@ -151,8 +151,8 @@
   
   <modules>
   	<module>ggserver-spring-starter</module>
-  	<module>ggserver-client</module>
   	<module>ggserver-core</module>
+  	<module>ggserver-core-proxy</module>
   	<module>ggserver-game</module>
   	<module>ggserver-game-support</module>
   	<module>ggserver-docs</module>

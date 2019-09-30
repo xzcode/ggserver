@@ -1,4 +1,4 @@
-package xzcode.ggserver.core.event;
+package xzcode.ggserver.core.proxy.event;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -38,7 +38,7 @@ public class EventMethodInvoker implements IEventInvoker {
 		Method method = null;
 		for (int i = 0; i < methods.size(); i++) {
 			method = methods.get(i);
-			if (message == null || method.getParameterCount() <= 0) {
+			if (message != null) {
 				method.invoke(componentObj);				
 			}else {
 				method.invoke(componentObj, message);

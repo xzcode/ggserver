@@ -131,10 +131,10 @@ public class GGComponentScanner {
 					GGOnEvent gGOnEvent = mtd.getAnnotation(GGOnEvent.class);
 					if (gGOnEvent != null) {
 
-						if (mtd.getParameterCount() > 0) {
+						/*if (mtd.getParameterCount() > 0) {
 							throw new RuntimeException("Annotation @" + GGOnEvent.class.getSimpleName()
 									+ " unsupport methods with parameters! ");
-						}
+						}*/
 
 						EventMethodInvoker eventMethodInvoker = new EventMethodInvoker();
 						eventMethodInvoker.setEventTag(gGOnEvent.value()).addMethod(mtd);
