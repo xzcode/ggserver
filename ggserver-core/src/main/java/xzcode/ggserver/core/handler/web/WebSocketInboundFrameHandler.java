@@ -114,37 +114,11 @@ public class WebSocketInboundFrameHandler extends SimpleChannelInboundHandler<Ob
     private void handleWebSocketFrame(ChannelHandlerContext ctx, WebSocketFrame frame) throws Exception {
     	
     	if (frame instanceof BinaryWebSocketFrame) {
-    		ByteBuf content = ((BinaryWebSocketFrame) frame).content();
+    		ByteBuf in = ((BinaryWebSocketFrame) frame).content();
             
-            Integer readUShort = content.readUnsignedShort();
-            
-            byte[] tagBytes = new byte[readUShort];
-            content.readBytes(tagBytes);
-            
-            //String tag = new String(tagBytes, Charset.forName("utf-8"));
-            
-            //如果没有数据体
-            if (content.readableBytes() == 0) {            	
-            	
-            	config.getTaskExecutor().submit(new RequestMessageTask(tagBytes, null, ctx.channel().attr(DefaultChannelAttributeKeys.SESSION).get(), config));
-            	if(LOGGER.isDebugEnabled()){
-                	LOGGER.debug("\nReceived no-data-body binary message <----, \nchannel:{}\ntag:{}", ctx.channel(), new String(tagBytes));
-                }
-            	return;
-			}
-            
-            
-          //如果有数据体
-            
-            byte[] bytes = new byte[content.readableBytes()];
-            content.readBytes(bytes);
-            
-            //提交任务
-            config.getTaskExecutor().submit(new RequestMessageTask(tagBytes, bytes, ctx.channel().attr(DefaultChannelAttributeKeys.SESSION).get(), config));
-            
-            if(LOGGER.isDebugEnabled()){
-            	LOGGER.debug("\nReceived binary message  <----,\nchannel:{}\ntag:{}\nbytes-length:{}", ctx.channel(), new String(tagBytes), bytes.length);
-            }
+    		//调用解码处理器
+    		config.getDecodeHandler().handle(ctx, in);
+    		
     		return;
     	}
     	if (frame instanceof CloseWebSocketFrame) {

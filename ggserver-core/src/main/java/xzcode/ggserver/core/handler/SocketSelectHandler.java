@@ -1,4 +1,4 @@
-package xzcode.ggserver.core.handler.tcp;
+package xzcode.ggserver.core.handler;
 
 import java.util.List;
 
@@ -7,11 +7,16 @@ import org.slf4j.LoggerFactory;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelPipeline;
 import io.netty.handler.codec.ByteToMessageDecoder;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpServerCodec;
 import xzcode.ggserver.core.config.GGConfig;
-import xzcode.ggserver.core.constant.GGServerTypeConstants;
+import xzcode.ggserver.core.handler.codec.impl.DefaultEncodeHandler;
+import xzcode.ggserver.core.handler.common.InboundCommonHandler;
+import xzcode.ggserver.core.handler.common.OutboundCommonHandler;
+import xzcode.ggserver.core.handler.tcp.TcpInboundHandler;
+import xzcode.ggserver.core.handler.tcp.TcpOutboundHandler;
 import xzcode.ggserver.core.handler.web.WebSocketInboundFrameHandler;
 import xzcode.ggserver.core.handler.web.WebSocketOutboundFrameHandler;
 
@@ -21,9 +26,9 @@ import xzcode.ggserver.core.handler.web.WebSocketOutboundFrameHandler;
  * @author zai
  * 2019-06-15 14:25:54
  */
-public class TcpSocketSelectHandler extends ByteToMessageDecoder {
+public class SocketSelectHandler extends ByteToMessageDecoder {
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(TcpSocketSelectHandler.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SocketSelectHandler.class);
 	/**
 	 * 数据包长度标识 字节数
 	 */
@@ -46,13 +51,13 @@ public class TcpSocketSelectHandler extends ByteToMessageDecoder {
 	
 	private GGConfig config;
 	
-	public TcpSocketSelectHandler() {
+	public SocketSelectHandler() {
 		
 	}
 	
 	
 
-	public TcpSocketSelectHandler(GGConfig config) {
+	public SocketSelectHandler(GGConfig config) {
 		super();
 		this.config = config;
 	}
@@ -70,19 +75,35 @@ public class TcpSocketSelectHandler extends ByteToMessageDecoder {
 		byte[] bytes = new byte[3];
 		in.readBytes(bytes);
 		String tag = new String(bytes, config.getCharset());
-		
+		ChannelPipeline pipeline = ctx.pipeline();
 		if (tag.equalsIgnoreCase("GET")) {
 			
-			ctx.pipeline().addAfter("TcpSocketSelectHandler","HttpServerCodec", new HttpServerCodec());
-			ctx.pipeline().addAfter("HttpServerCodec","HttpObjectAggregator", new HttpObjectAggregator(config.getHttpMaxContentLength()));
-			ctx.pipeline().addAfter("HttpObjectAggregator","WebSocketInboundFrameHandler", new WebSocketInboundFrameHandler(config));
+			//IN
+			pipeline.addLast(new HttpServerCodec());
+		   	pipeline.addLast(new HttpObjectAggregator(config.getHttpMaxContentLength()));
+		   	pipeline.addLast(new WebSocketInboundFrameHandler(this.config));
+		   	pipeline.addLast(new InboundCommonHandler(this.config));
+		   	
+		   	
+		   	//OUT
+		   	pipeline.addLast(new WebSocketOutboundFrameHandler(this.config ));
+	        pipeline.addLast(new OutboundCommonHandler());
 			
-			ctx.pipeline().addAfter("InboundCommonHandler","WebSocketOutboundFrameHandler", new WebSocketOutboundFrameHandler(config));
+			
 			in.resetReaderIndex();
 			
 		}else {
-			ctx.pipeline().addAfter("TcpSocketSelectHandler","TcpDecodeHandler", new TcpDecodeHandler(config));
-			ctx.pipeline().addAfter("InboundCommonHandler","TcpEncodeHandler", new TcpEncodeHandler(config));
+			//IN
+			pipeline.addLast(new TcpInboundHandler(this.config));
+			pipeline.addLast(new InboundCommonHandler(this.config));
+	        
+			//OUT
+			pipeline.addLast(new TcpOutboundHandler(this.config));
+			pipeline.addLast(new OutboundCommonHandler());
+			
+			
+			
+			
 			if (!"tcp".equalsIgnoreCase(tag)) {
 				in.resetReaderIndex();
 			}else {
@@ -90,7 +111,7 @@ public class TcpSocketSelectHandler extends ByteToMessageDecoder {
 			}
 		}
 		
-		ctx.pipeline().remove("TcpSocketSelectHandler");
+		pipeline.remove("TcpSocketSelectHandler");
 		
 	}
 

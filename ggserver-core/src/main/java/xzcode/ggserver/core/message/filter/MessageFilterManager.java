@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import xzcode.ggserver.core.component.GGComponentManager;
 import xzcode.ggserver.core.message.receive.Request;
 import xzcode.ggserver.core.message.send.Response;
+import xzcode.ggserver.core.session.GGSession;
 
 /**
  * 消息过滤器集合
@@ -122,11 +123,11 @@ public class MessageFilterManager {
 	 * @author zai
 	 * 2017-09-27
 	 */
-	public boolean doResponseFilters(Object userId, Response response) {
+	public boolean doResponseFilters(GGSession session, Response response) {
 		GGResponseFilter filter = null;
 		for (MessageFilterModel filterModel : responseFilters) {
 			filter = filterModel.getResponseFilter();
-			if (!filter.doFilter(userId, response)) {
+			if (!filter.doFilter(session, response)) {
 				if (LOGGER.isDebugEnabled()) {
 					LOGGER.debug("Message filtered by {}, action:{} .", filter.getClass().getName(),response.getAction());					
 				}

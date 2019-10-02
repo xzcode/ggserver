@@ -9,9 +9,10 @@ import org.slf4j.LoggerFactory;
 
 import io.netty.channel.Channel;
 import xzcode.ggserver.core.config.GGConfig;
+import xzcode.ggserver.core.message.PackModel;
 import xzcode.ggserver.core.session.GGSession;
 import xzcode.ggserver.core.session.GGSessionUtil;
-import xzcode.ggserver.core.session.GGUserSessonManager;
+import xzcode.ggserver.core.session.GGSessionManager;
 import xzcode.ggserver.core.utils.json.GGServerJsonUtil;
 
 /**
@@ -33,41 +34,24 @@ public class SendMessageManager implements ISendMessageSupport{
 		this.config = config;
 	}
 
-	public void send(Channel channel, SendModel sendModel) {
+	public void send(Channel channel, PackModel packModel) {
 		if (channel != null && channel.isActive()) {
-			channel.writeAndFlush(sendModel);			
+			channel.writeAndFlush(packModel);			
 		}else {
 			if (logger.isDebugEnabled()) {
-				logger.debug("Channel is inactived! Message will not be send, SendModel:{}", GGServerJsonUtil.toJson(sendModel));
+				logger.debug("Channel is inactived! Message will not be send, SendModel:{}", GGServerJsonUtil.toJson(packModel));
 			}
 		}
 	}
 	
-	/**
-	 * 发送消息
-	 * 
-	 * @param userId
-	 * @param action
-	 * @param message
-	 * 
-	 * @author zai 2017-08-04
-	 */
 	@Override
-	public void send(Object userId, String action, Object message) {
-		send(userId, action, message, 0);
+	public void send(GGSession session, String action, Object message) {
+		send(session, action, message, 0);
 	}
 	
-	/**
-	 * 根据用户id发送消息（无消息体）
-	 * 
-	 * @param userId  用户id
-	 * @param action 发送消息标识
-	 * @author zai 2018-12-29 14:25:27
-	 */
 	@Override
-	public void send(Object userId, String action) {
-		
-		send(userId, action, null, 0);
+	public void send(GGSession session, String action) {
+		send(session, action, null, 0);
 	}
 	
 	/**
@@ -80,10 +64,10 @@ public class SendMessageManager implements ISendMessageSupport{
 	public void send(String action) {
 		GGSession session = GGSessionUtil.getSession();
 		if (session != null) {
-			if (!config.getMessageFilterManager().doResponseFilters(session.getRegisteredUserId(), Response.create(action, null))) {
+			if (!config.getMessageFilterManager().doResponseFilters(session, Response.create(action, null))) {
 				return;
 			}
-			this.send(session.getChannel(),SendModel.create(action.getBytes(), null));
+			this.send(session.getChannel(),PackModel.create(action.getBytes(), null));
 		}
 	}
 	
@@ -101,16 +85,13 @@ public class SendMessageManager implements ISendMessageSupport{
 	}
 
 	@Override
-	public void send(Object userId, String action, Object message, long delayMs) {
-		GGSession session = null;
-		if (userId != null) {
-			session = this.config.getUserSessonManager().get(userId);
-		}else {
+	public void send(GGSession session, String action, Object message, long delayMs) {
+		if (session == null) {
 			session = GGSessionUtil.getSession();
 		}
 		if (session != null) {
 			//发送过滤器
-			if (!config.getMessageFilterManager().doResponseFilters(userId, Response.create(action, message))) {
+			if (!config.getMessageFilterManager().doResponseFilters(session, Response.create(action, message))) {
 				return;
 			}
 			try {
@@ -121,10 +102,10 @@ public class SendMessageManager implements ISendMessageSupport{
 					
 					if (delayMs > 0) {
 						this.config.getTaskExecutor().schedule(() -> {
-							this.send(channel, SendModel.create(actionIdData, messageData));
+							this.send(channel, PackModel.create(actionIdData, messageData));
 						}, delayMs, TimeUnit.MILLISECONDS);
 					}else {
-						this.send(channel, SendModel.create(actionIdData, messageData));
+						this.send(channel, PackModel.create(actionIdData, messageData));
 					}
 				}
 			} catch (Exception e) {
@@ -134,8 +115,8 @@ public class SendMessageManager implements ISendMessageSupport{
 	}
 
 	@Override
-	public void send(Object userId, String action, long delayMs) {
-		send(userId, action, null, delayMs);
+	public void send(GGSession session, String action, long delayMs) {
+		send(session, action, null, delayMs);
 	}
 
 	@Override
@@ -153,20 +134,19 @@ public class SendMessageManager implements ISendMessageSupport{
 	@Override
 	public void sendToAll(String action, Object message) {
 		try {
-			
-			GGUserSessonManager sessonManager = config.getUserSessonManager();
-			Set<Entry<Object, GGSession>> entrySet = sessonManager.getSessionMap().entrySet();
+			Set<Entry<Object, GGSession>> entrySet = config.getSessionManager().getSessionMap().entrySet();
 			Channel channel = null;
 			byte[] actionIdData = action.getBytes();
 			byte[] messageData = message == null ? null : this.config.getSerializer().serialize(message);
 			for (Entry<Object, GGSession> entry : entrySet) {
+				GGSession sesson = entry.getValue();
 				//发送过滤器
-				if (!config.getMessageFilterManager().doResponseFilters(entry.getKey(), Response.create(action, message))) {
+				if (!config.getMessageFilterManager().doResponseFilters(sesson, Response.create(action, message))) {
 					return;
 				}
-				channel = entry.getValue().getChannel();
+				channel = sesson.getChannel();
 				if (channel.isActive()) {
-					channel.writeAndFlush(SendModel.create(actionIdData, messageData));
+					channel.write(PackModel.create(actionIdData, messageData));
 				}
 				
 			}

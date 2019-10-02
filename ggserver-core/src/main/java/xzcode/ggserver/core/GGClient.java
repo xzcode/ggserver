@@ -9,7 +9,7 @@ import xzcode.ggserver.core.executor.IExecutorSupport;
 import xzcode.ggserver.core.message.receive.IRequestMessageSupport;
 import xzcode.ggserver.core.message.send.ISendMessageSupport;
 import xzcode.ggserver.core.message.send.SendMessageManager;
-import xzcode.ggserver.core.session.IGGSessonSupport;
+import xzcode.ggserver.core.session.IGGSessionSupport;
 
 /**
  * 客户端
@@ -23,7 +23,7 @@ implements
 	ISendMessageSupport, 
 	IRequestMessageSupport,
 	IExecutorSupport, 
-	IGGSessonSupport, 
+	IGGSessionSupport, 
 	IEventInvokeSupport,
 	IGGContolSupport
 {

@@ -1,5 +1,6 @@
 package xzcode.ggserver.game.support.player.support;
 
+import xzcode.ggserver.core.session.GGSession;
 import xzcode.ggserver.game.support.interfaces.IGGServerSupport;
 import xzcode.ggserver.game.support.player.Player;
 
@@ -12,13 +13,13 @@ import xzcode.ggserver.game.support.player.Player;
 public interface IPlayerSupport<P extends Player> extends IGGServerSupport{
 	
 	/**
-	 * 获取玩家id
-	 * 
+	 * 获取session
 	 * @return
-	 * @author zzz
-	 * 2019-09-22 10:29:29
+	 * 
+	 * @author zai
+	 * 2019-10-02 23:56:40
 	 */
-	Object getPlayerId();
+	GGSession getSesson();
 	
 	/**
 	 * 发送消息给玩家
@@ -29,7 +30,7 @@ public interface IPlayerSupport<P extends Player> extends IGGServerSupport{
 	 * 2019-09-22 10:29:42
 	 */
 	default void send(String actionId, Object message) {
-		getGGServer().send(getPlayerId(), actionId, message);
+		getGGServer().send(getSesson(), actionId, message);
 	}
 	
 	/**
@@ -40,7 +41,7 @@ public interface IPlayerSupport<P extends Player> extends IGGServerSupport{
 	 * 2019-09-22 10:29:42
 	 */
 	default void send(String actionId) {
-		getGGServer().send(getPlayerId(), actionId);
+		getGGServer().send(getSesson(), actionId);
 	}
 	
 	/**
@@ -50,7 +51,7 @@ public interface IPlayerSupport<P extends Player> extends IGGServerSupport{
 	 * 2019-09-22 10:33:22
 	 */
 	default void disconnect() {
-		getGGServer().disconnect(getPlayerId());
+		getGGServer().disconnect(getSesson());
 	}
 	
 	/**
@@ -60,7 +61,7 @@ public interface IPlayerSupport<P extends Player> extends IGGServerSupport{
 	 * 2019-09-22 10:33:22
 	 */
 	default void disconnect(long delayMs) {
-		getGGServer().disconnect(getPlayerId(), delayMs);
+		getGGServer().disconnect(getSesson(), delayMs);
 	}
 	
 }

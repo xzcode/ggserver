@@ -9,9 +9,7 @@ import xzcode.ggserver.core.executor.IExecutorSupport;
 import xzcode.ggserver.core.message.receive.IRequestMessageSupport;
 import xzcode.ggserver.core.message.send.ISendMessageSupport;
 import xzcode.ggserver.core.message.send.SendMessageManager;
-import xzcode.ggserver.core.session.GGSession;
-import xzcode.ggserver.core.session.GGSessionUtil;
-import xzcode.ggserver.core.session.IGGSessonSupport;
+import xzcode.ggserver.core.session.IGGSessionSupport;
 
 /**
  * socket服务工具
@@ -25,7 +23,7 @@ implements
 	ISendMessageSupport, 
 	IRequestMessageSupport,
 	IExecutorSupport, 
-	IGGSessonSupport, 
+	IGGSessionSupport, 
 	IEventInvokeSupport,
 	IGGContolSupport
 {
@@ -38,51 +36,6 @@ implements
 	}
 	public GGConfig getConfig() {
 		return config;
-	}
-
-
-	/**
-	 * 把用户绑定到当前通信会话
-	 * 
-	 * @param userId
-	 * 
-	 * @author zai 2017-08-04
-	 */
-	public void userRegister(Object userId) {
-		GGSession session = GGSessionUtil.getSession();
-
-		session.register(userId);
-
-		// 已注册会话绑定
-		this.config.getUserSessonManager().put(userId, session);
-	}
-
-	/**
-	 * 判断是否已登录
-	 * 
-	 * @param userId
-	 * @author zai 2018-12-29 10:22:11
-	 */
-	public boolean isRegistered() {
-		GGSession session = GGSessionUtil.getSession();
-		return session.getRegisteredUserId() != null;
-	}
-
-	/**
-	 * 把用户从注册绑定中移除
-	 * 
-	 * @param userId
-	 * @author zai 2017-08-19 01:09:56
-	 */
-	public GGSession userUnregister(Object userId) {
-		GGSession session = GGSessionUtil.getSession();
-
-		session.unregister();
-
-		// 注销会话绑定
-		this.config.getUserSessonManager().remove(userId);
-		
-		return session;
 	}
 
 	@Override

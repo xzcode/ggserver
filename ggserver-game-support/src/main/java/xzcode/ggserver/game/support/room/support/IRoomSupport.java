@@ -176,7 +176,7 @@ public interface IRoomSupport<P extends RoomPlayer<R>, R>  extends IGGServerSupp
 	 */
 	default void bcToAllPlayer(String actionId, Object message) {
 		eachPlayer((player) -> {
-			getGGServer().send(player.getPlayerId(), actionId, message);
+			getGGServer().send(player.getSession(), actionId, message);
 		});
 	}
 	
@@ -195,7 +195,7 @@ public interface IRoomSupport<P extends RoomPlayer<R>, R>  extends IGGServerSupp
 	default void bcToAllPlayer(String actionId, Object message, ICheckCondition<P> condition) {
 		eachPlayer((player) -> {
 			if (condition.check(player)) {
-				getGGServer().send(player.getPlayerId(), actionId, message);				
+				getGGServer().send(player.getSession(), actionId, message);				
 			}
 		});
 	}
@@ -622,7 +622,7 @@ public interface IRoomSupport<P extends RoomPlayer<R>, R>  extends IGGServerSupp
 	 */
 	default void bcToAllPlayer(String actionId) {
 		eachPlayer(player -> {
-			getGGServer().send(player.getPlayerId(), actionId, null);
+			getGGServer().send(player.getSession(), actionId, null);
 		});
 	}
 

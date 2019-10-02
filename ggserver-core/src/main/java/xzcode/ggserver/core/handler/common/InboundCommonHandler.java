@@ -1,7 +1,5 @@
 package xzcode.ggserver.core.handler.common;
 
-import java.net.InetSocketAddress;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,8 +11,7 @@ import xzcode.ggserver.core.channel.DefaultChannelAttributeKeys;
 import xzcode.ggserver.core.config.GGConfig;
 import xzcode.ggserver.core.event.GGEventTask;
 import xzcode.ggserver.core.event.GGEvents;
-import xzcode.ggserver.core.session.GGSession;
-import xzcode.ggserver.core.session.imp.SocketSession;
+import xzcode.ggserver.core.session.imp.DefaultGGSessionImpl;
 
 public class InboundCommonHandler extends ChannelInboundHandlerAdapter{
 	
@@ -54,47 +51,27 @@ public class InboundCommonHandler extends ChannelInboundHandlerAdapter{
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Channel Active:{}", ctx.channel());
 		}
-		InetSocketAddress socketAddress = (InetSocketAddress) ctx.channel().remoteAddress();
-		
+		//InetSocketAddress socketAddress = (InetSocketAddress) ctx.channel().remoteAddress();
+		Channel channel = ctx.channel();
 		//初始化session
-		SocketSession session = new SocketSession(
-				ctx.channel(), 
-				socketAddress.getHostString(), 
-				socketAddress.getPort()
-				);
+		DefaultGGSessionImpl session = new DefaultGGSessionImpl(ctx.channel());
 		
-		ctx.channel().attr(DefaultChannelAttributeKeys.SESSION).set(session);
+		channel.attr(DefaultChannelAttributeKeys.SESSION).set(session);
 		
-		//添加到全局channelgroup绑定
-		//ChannelGroupsManager.getGlobalGroup().add(ctx.channel());
+		config.getSessionManager().put(session.getSessonId(), session);
 		
 		config.getTaskExecutor().submit(new GGEventTask(session, GGEvents.ConnectionState.ACTIVE, null, config));
 		
 		
 		//注册channel关闭事件
-		ctx.channel().closeFuture().addListener((ChannelFuture future) -> {
-			Channel channel = future.channel();
+		channel.closeFuture().addListener((ChannelFuture future) -> {
+			
 			if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug("Channel Close:{}", ctx.channel());
 			}
-			GGSession sezzion = channel.attr(DefaultChannelAttributeKeys.SESSION).getAndSet(null);
 			
-			//sezzion.inActive();
-			
-			config.getTaskExecutor().submit(new GGEventTask(sezzion, GGEvents.ConnectionState.CLOSE, null, config));
-			
-			//移除全局channelgroup绑定
-			//ChannelGroupsManager.getGlobalGroup().remove(ctx.channel());
-			
-			GGSession userSession = config.getUserSessonManager().get(sezzion.getRegisteredUserId());
-			
-			//如果session相同，是断线，可移除session，否则存在被重复登录的情况，不应该移除session关联
-			if (sezzion == userSession) {
-				config.getUserSessonManager().remove(sezzion.getRegisteredUserId());				
-			}
-			
-			
-			//ChannelGroupsManager.getRegisteredGroup().remove(ctx.channel());
+			config.getTaskExecutor().submit(new GGEventTask(session, GGEvents.ConnectionState.CLOSE, null, config));
+			config.getSessionManager().remove(session.getSessonId());
 		});
 		
 		super.channelActive(ctx);

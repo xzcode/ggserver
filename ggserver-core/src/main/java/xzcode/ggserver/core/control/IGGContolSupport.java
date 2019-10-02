@@ -4,9 +4,9 @@ import io.netty.channel.Channel;
 import xzcode.ggserver.core.config.IGGConfigSupport;
 import xzcode.ggserver.core.executor.IExecutorSupport;
 import xzcode.ggserver.core.session.GGSession;
-import xzcode.ggserver.core.session.IGGSessonSupport;
+import xzcode.ggserver.core.session.IGGSessionSupport;
 
-public interface IGGContolSupport extends IGGSessonSupport, IGGConfigSupport, IExecutorSupport{
+public interface IGGContolSupport extends IGGSessionSupport, IGGConfigSupport, IExecutorSupport{
 	
 
 	/**
@@ -33,8 +33,8 @@ public interface IGGContolSupport extends IGGSessonSupport, IGGConfigSupport, IE
 	 * @param userId
 	 * @author zai 2017-08-19 01:12:07
 	 */
-	default void disconnect(Object userId) {
-		disconnect(userId, 0);
+	default void disconnect(GGSession session) {
+		disconnect(session, 0);
 	}
 	
 	/**
@@ -45,14 +45,8 @@ public interface IGGContolSupport extends IGGSessonSupport, IGGConfigSupport, IE
 	 * @author zai
 	 * 2019-04-17 11:18:43
 	 */
-	default void disconnect(Object userId, long delayMs) {
+	default void disconnect(GGSession session, long delayMs) {
 		
-		GGSession session = null;
-		if (userId == null) {
-			session = getSession();
-		}else {
-			session = getConfig().getUserSessonManager().get(userId);			
-		}
 		if (session != null && session.getChannel() != null) {
 			Channel channel = session.getChannel();
 			if (channel != null && channel.isActive()) {

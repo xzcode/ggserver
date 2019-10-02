@@ -16,19 +16,9 @@ public interface GGSession {
 
 	Channel getChannel();
 
-	void setChannel(Channel channel);
-
 	String getHost();
 
 	int getPort();
 
-	Object getRegisteredUserId();
-
-	void setRegisteredUserId(Object registeredUserId);
-
-	void unregister();
-
-	void register(Object registeredUserId);
-
-
+	String getSessonId();
 }

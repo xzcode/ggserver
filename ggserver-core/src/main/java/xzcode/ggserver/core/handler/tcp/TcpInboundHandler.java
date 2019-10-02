@@ -9,6 +9,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
 import xzcode.ggserver.core.config.GGConfig;
+import xzcode.ggserver.core.handler.codec.impl.DefaultDecodeHandler;
 
 /**
  * 数据输入控制器
@@ -16,7 +17,7 @@ import xzcode.ggserver.core.config.GGConfig;
  *
  */
 public class TcpInboundHandler extends ByteToMessageDecoder{
-	private static final Logger LOGGER = LoggerFactory.getLogger(TcpDecodeHandler.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultDecodeHandler.class);
 
 	/**
 	 * 数据包长度标识 字节数
@@ -25,6 +26,15 @@ public class TcpInboundHandler extends ByteToMessageDecoder{
 	
 	private GGConfig config;
 	
+	
+
+
+	public TcpInboundHandler(GGConfig config) {
+		super();
+		this.config = config;
+	}
+
+
 
 
 	@Override
@@ -50,9 +60,8 @@ public class TcpInboundHandler extends ByteToMessageDecoder{
 			return;
 		}
 		
-		byte[] packData = new byte[packLen];
-		
-		in.readBytes(packData);
+		//调用解码处理器
+		config.getDecodeHandler().handle(ctx, in);
 		
 	}
 

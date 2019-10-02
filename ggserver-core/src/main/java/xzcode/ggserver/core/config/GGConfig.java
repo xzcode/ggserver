@@ -1,22 +1,28 @@
 package xzcode.ggserver.core.config;
 
+import java.util.concurrent.ThreadFactory;
+
 import io.netty.channel.nio.NioEventLoopGroup;
 import xzcode.ggserver.core.component.GGComponentManager;
 import xzcode.ggserver.core.constant.GGServerTypeConstants;
 import xzcode.ggserver.core.event.EventInvokerManager;
 import xzcode.ggserver.core.executor.factory.EventLoopGroupThreadFactory;
+import xzcode.ggserver.core.handler.codec.IGGDecodeHandler;
+import xzcode.ggserver.core.handler.codec.IGGEncodeHandler;
+import xzcode.ggserver.core.handler.codec.impl.DefaultDecodeHandler;
+import xzcode.ggserver.core.handler.codec.impl.DefaultEncodeHandler;
 import xzcode.ggserver.core.handler.serializer.ISerializer;
 import xzcode.ggserver.core.handler.serializer.factory.SerializerFactory;
 import xzcode.ggserver.core.message.filter.MessageFilterManager;
 import xzcode.ggserver.core.message.receive.RequestMessageManager;
 import xzcode.ggserver.core.message.send.SendMessageManager;
-import xzcode.ggserver.core.session.GGUserSessonManager;
+import xzcode.ggserver.core.session.GGSessionManager;
 
 /**
- * socket 服务器配置类
- *
+ * GGServer配置类
+ * 
  * @author zai
- * 2017-08-13 19:03:31
+ * 2019-10-02 22:10:07
  */
 public class GGConfig {
 	
@@ -61,17 +67,22 @@ public class GGConfig {
 	
 	private ISerializer serializer;
 	
+	private IGGDecodeHandler decodeHandler;
+	private IGGEncodeHandler encodeHandler;
+	
 	
 	private GGComponentManager 	componentManager;
 	private RequestMessageManager requestMessageManager;
 	private SendMessageManager sendMessageManager;
 	private MessageFilterManager messageFilterManager;
 	private EventInvokerManager eventInvokerManager;
-	private GGUserSessonManager userSessonManager;
+	private GGSessionManager sessionManager;
 	
 	private NioEventLoopGroup bossGroup;
+	private ThreadFactory bossGroupThreadFactory;
     
 	private NioEventLoopGroup workerGroup;
+	private ThreadFactory workerGroupThreadFactory;
 	
 	public void init() {
 		componentManager = new GGComponentManager();
@@ -79,13 +90,26 @@ public class GGConfig {
 		sendMessageManager = new SendMessageManager(this);
 		messageFilterManager = new MessageFilterManager();
 		eventInvokerManager = new EventInvokerManager();
-		userSessonManager = new GGUserSessonManager();
+		sessionManager = new GGSessionManager();
 		
 		if (!isClient()) {
-			bossGroup = new NioEventLoopGroup(getBossThreadSize(),new EventLoopGroupThreadFactory("netty-boss"));
+			if (bossGroupThreadFactory == null) {
+				bossGroupThreadFactory = new EventLoopGroupThreadFactory("netty-boss");
+			}
+			bossGroup = new NioEventLoopGroup(getBossThreadSize(),bossGroupThreadFactory);
 		}
-	    
-		workerGroup = new NioEventLoopGroup(getWorkThreadSize(),new EventLoopGroupThreadFactory("netty-worker"));
+		if (workerGroupThreadFactory == null) {
+			workerGroupThreadFactory = new EventLoopGroupThreadFactory("netty-worker");
+		}
+		workerGroup = new NioEventLoopGroup(getWorkThreadSize(),workerGroupThreadFactory);
+		
+		if (decodeHandler == null) {
+			decodeHandler = new DefaultDecodeHandler(this);
+		}
+		if (encodeHandler == null) {
+			encodeHandler = new DefaultEncodeHandler(this);
+		}
+		
 	}
 	
 	
@@ -276,13 +300,18 @@ public class GGConfig {
 	public void setEventInvokerManager(EventInvokerManager eventInvokerManager) {
 		this.eventInvokerManager = eventInvokerManager;
 	}
-	public GGUserSessonManager getUserSessonManager() {
-		return userSessonManager;
-	}
-	public void setUserSessonManager(GGUserSessonManager userSessonManager) {
-		this.userSessonManager = userSessonManager;
-	}
 	
+	
+	public GGSessionManager getSessionManager() {
+		return sessionManager;
+	}
+
+
+	public void setSessionManager(GGSessionManager sessionManager) {
+		this.sessionManager = sessionManager;
+	}
+
+
 	public MessageFilterManager getMessageFilterManager() {
 		return messageFilterManager;
 	}
@@ -325,4 +354,46 @@ public class GGConfig {
 	public void setCharset(String charset) {
 		this.charset = charset;
 	}
+
+
+	public IGGDecodeHandler getDecodeHandler() {
+		return decodeHandler;
+	}
+
+
+	public void setDecodeHandler(IGGDecodeHandler decodeHandler) {
+		this.decodeHandler = decodeHandler;
+	}
+
+
+	public IGGEncodeHandler getEncodeHandler() {
+		return encodeHandler;
+	}
+
+
+	public void setEncodeHandler(IGGEncodeHandler encodeHandler) {
+		this.encodeHandler = encodeHandler;
+	}
+
+
+	public ThreadFactory getBossGroupThreadFactory() {
+		return bossGroupThreadFactory;
+	}
+
+
+	public void setBossGroupThreadFactory(ThreadFactory bossGroupThreadFactory) {
+		this.bossGroupThreadFactory = bossGroupThreadFactory;
+	}
+
+
+	public ThreadFactory getWorkerGroupThreadFactory() {
+		return workerGroupThreadFactory;
+	}
+
+
+	public void setWorkerGroupThreadFactory(ThreadFactory workerGroupThreadFactory) {
+		this.workerGroupThreadFactory = workerGroupThreadFactory;
+	}
+	
+	
 }

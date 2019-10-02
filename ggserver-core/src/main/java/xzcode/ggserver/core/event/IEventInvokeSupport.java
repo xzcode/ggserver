@@ -1,9 +1,9 @@
 package xzcode.ggserver.core.event;
 
 import xzcode.ggserver.core.config.IGGConfigSupport;
-import xzcode.ggserver.core.session.IGGSessonSupport;
+import xzcode.ggserver.core.session.IGGSessionSupport;
 
-public interface IEventInvokeSupport extends IGGSessonSupport,IGGConfigSupport{
+public interface IEventInvokeSupport extends IGGSessionSupport,IGGConfigSupport{
 	/**
 	 * 动态添加事件监听
 	 * 

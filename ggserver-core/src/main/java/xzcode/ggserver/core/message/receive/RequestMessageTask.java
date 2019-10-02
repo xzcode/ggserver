@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import xzcode.ggserver.core.config.GGConfig;
 import xzcode.ggserver.core.handler.serializer.ISerializer;
+import xzcode.ggserver.core.message.PackModel;
 import xzcode.ggserver.core.message.filter.MessageFilterManager;
 import xzcode.ggserver.core.message.receive.invoker.IOnMessageInvoker;
 import xzcode.ggserver.core.session.GGSession;
@@ -27,14 +28,9 @@ public class RequestMessageTask implements Runnable{
 	private GGConfig config;
 	
 	/**
-	 * 请求标识
+	 * 包体模型
 	 */
-	private byte[] action;
-	
-	/**
-	 * socket消息体对象
-	 */
-	private byte[] message;
+	private PackModel packModel;
 	
 	/**
 	 * session
@@ -49,10 +45,9 @@ public class RequestMessageTask implements Runnable{
 	
 	
 
-	public RequestMessageTask(byte[] action, byte[] message, GGSession session, GGConfig config) {
-		this.message = message;
+	public RequestMessageTask(PackModel packModel, GGSession session, GGConfig config) {
 		this.session = session;
-		this.action = action;
+		this.packModel = packModel;
 		this.config = config;
 	}
 
@@ -68,12 +63,12 @@ public class RequestMessageTask implements Runnable{
 		String oldAction = null;
 		try {
 			
-			request.setAction(new String(action, config.getCharset()));
+			request.setAction(new String(packModel.getAction(), config.getCharset()));
 			oldAction = request.getAction();
-			if (message != null) {
+			if (packModel.getMessage() != null) {
 				IOnMessageInvoker invoker = config.getMessageInvokerManager().get(request.getAction());
 				if (invoker != null) {
-					request.setMessage(serializer.deserialize(message, invoker.getMessageClass()));
+					request.setMessage(serializer.deserialize(packModel.getMessage(), invoker.getMessageClass()));
 				}
 			}
 			
@@ -82,10 +77,10 @@ public class RequestMessageTask implements Runnable{
 			}
 			while (!oldAction.equals(request.getAction())) {
 				oldAction = request.getAction();
-				if (message != null) {
+				if (packModel.getMessage() != null) {
 					IOnMessageInvoker invoker = config.getMessageInvokerManager().get(request.getAction());
 					if (invoker != null) {
-						request.setMessage(serializer.deserialize(message, invoker.getMessageClass()));
+						request.setMessage(serializer.deserialize(packModel.getMessage(), invoker.getMessageClass()));
 					}else {
 						LOGGER.error("Can not invoke action:{}, cause 'invoker' is null!", request.getAction());
 						return;

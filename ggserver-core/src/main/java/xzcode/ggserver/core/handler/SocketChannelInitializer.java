@@ -1,8 +1,10 @@
 package xzcode.ggserver.core.handler;
 
 import java.util.concurrent.TimeUnit;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.timeout.IdleStateHandler;
@@ -10,8 +12,8 @@ import xzcode.ggserver.core.config.GGConfig;
 import xzcode.ggserver.core.handler.common.InboundCommonHandler;
 import xzcode.ggserver.core.handler.common.OutboundCommonHandler;
 import xzcode.ggserver.core.handler.idle.IdleHandler;
-import xzcode.ggserver.core.handler.tcp.TcpDecodeHandler;
-import xzcode.ggserver.core.handler.tcp.TcpEncodeHandler;
+import xzcode.ggserver.core.handler.tcp.TcpInboundHandler;
+import xzcode.ggserver.core.handler.tcp.TcpOutboundHandler;
 
 /**
  * 默认channel初始化处理器
@@ -54,7 +56,7 @@ public class SocketChannelInitializer extends ChannelInitializer<SocketChannel> 
 	   	}
    	 
 	   	 //消息解码器
-        ch.pipeline().addLast(new TcpDecodeHandler(this.config));
+        ch.pipeline().addLast(new TcpInboundHandler(this.config));
         
         //inbound异常处理
         ch.pipeline().addLast(new InboundCommonHandler(this.config));
@@ -62,7 +64,8 @@ public class SocketChannelInitializer extends ChannelInitializer<SocketChannel> 
         //Outbound 是反顺序执行
         
         //消息编码器
-        ch.pipeline().addLast(new TcpEncodeHandler(this.config));
+        ch.pipeline().addLast(new TcpOutboundHandler(this.config));
+        
         //outbound异常处理
         ch.pipeline().addLast(new OutboundCommonHandler());
 	}

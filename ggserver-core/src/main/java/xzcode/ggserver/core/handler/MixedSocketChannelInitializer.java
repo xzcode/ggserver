@@ -12,7 +12,6 @@ import xzcode.ggserver.core.config.GGConfig;
 import xzcode.ggserver.core.handler.common.InboundCommonHandler;
 import xzcode.ggserver.core.handler.common.OutboundCommonHandler;
 import xzcode.ggserver.core.handler.idle.IdleHandler;
-import xzcode.ggserver.core.handler.tcp.TcpSocketSelectHandler;
 
 /**
  * 混合tcp与websocket 初始化处理器
@@ -45,12 +44,8 @@ public class MixedSocketChannelInitializer extends ChannelInitializer<SocketChan
 	   	}
 	   	
 	   	
-	   	ch.pipeline().addLast("TcpSocketSelectHandler", new TcpSocketSelectHandler(config));
+	   	ch.pipeline().addLast(new SocketSelectHandler(config));
 	   	
-	   	//inbound异常处理
-	   	ch.pipeline().addLast("InboundCommonHandler", new InboundCommonHandler(this.config));
-        //outbound异常处理
-        ch.pipeline().addLast("OutboundCommonHandler", new OutboundCommonHandler());
         
         
 		

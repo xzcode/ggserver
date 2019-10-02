@@ -1,5 +1,7 @@
 package xzcode.ggserver.core.message.send;
 
+import xzcode.ggserver.core.session.GGSession;
+
 /**
  * 消息发送接口
  * 
@@ -11,14 +13,12 @@ public interface ISendMessageSupport {
 	
 	SendMessageManager getSendMessageManager();
 	
-	default void send(Object userId, String action, Object message) {
-		getSendMessageManager().send(userId, action, message);;
+	default void send(GGSession session, String action, Object message) {
+		getSendMessageManager().send(session, action, message);;
 	}
 
-
-	default void send(Object userId, String action) {
-		getSendMessageManager().send(userId, action);
-		
+	default void send(GGSession session, String action) {
+		getSendMessageManager().send(session, action);
 	}
 
 	default void send(String action) {
@@ -29,11 +29,11 @@ public interface ISendMessageSupport {
 		getSendMessageManager().send(action, message);
 	}
 	
-	default void send(Object userId, String action, Object message, long delayMs) {
-		getSendMessageManager().send(userId, action, message, delayMs);
+	default void send(GGSession session, String action, Object message, long delayMs) {
+		getSendMessageManager().send(session, action, message, delayMs);
 	}
-	default void send(Object userId, String action, long delayMs) {
-		getSendMessageManager().send(userId, action, delayMs);
+	default void send(GGSession session, String action, long delayMs) {
+		getSendMessageManager().send(session, action, delayMs);
 	}
 	default void send(String action, long delayMs) {
 		getSendMessageManager().send(action, delayMs);
@@ -47,6 +47,7 @@ public interface ISendMessageSupport {
 	default void sendToAll(String action) {
 		getSendMessageManager().sendToAll(action);
 	}
+
 	
 
 }

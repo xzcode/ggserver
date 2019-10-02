@@ -419,35 +419,6 @@ extends
 	};
 	
 	
-
-	@Override
-	public Object getCurrentPlayerId() {
-		return getGGServer().getSession().getRegisteredUserId();
-	};
-
-	@Override
-	public void bcToAllPlayer(R room, String actionId) {
-		eachPlayer(room, (player) -> {
-			getGGServer().send(player.getPlayerId(), actionId, null);
-		});
-	}
-	@Override
-	public void bcToAllPlayer(R room, String actionId, Object message) {
-		eachPlayer(room, (player) -> {
-			getGGServer().send(player.getPlayerId(), actionId, message);
-		});
-	}
-	
-	@Override
-	public void bcToAllPlayer(R room, String actionId, Object message, ICheckCondition<P> condition) {
-		eachPlayer(room, (player) -> {
-			if (condition.check(player)) {
-				getGGServer().send(player.getPlayerId(), actionId, message);				
-			}
-		});
-	}
-	
-
 	@Override
 	public Map<Object, P> getPlayers(R room) {
 		return room.getPlayers();

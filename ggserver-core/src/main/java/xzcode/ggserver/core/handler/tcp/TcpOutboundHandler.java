@@ -8,10 +8,14 @@ import com.google.gson.GsonBuilder;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelOutboundHandlerAdapter;
 import io.netty.channel.ChannelPromise;
+import xzcode.ggserver.core.channel.DefaultChannelAttributeKeys;
 import xzcode.ggserver.core.config.GGConfig;
+import xzcode.ggserver.core.executor.task.ExectionTask;
+import xzcode.ggserver.core.message.PackModel;
 
 /**
  *  
@@ -52,11 +56,38 @@ public class TcpOutboundHandler extends ChannelOutboundHandlerAdapter {
 			return;
 		}
 		
-		byte[] bytes = (byte[]) msg;
-		ByteBuf out = ctx.alloc().buffer(bytes.length);
-		out.writeBytes(bytes);
-		ctx.writeAndFlush(out);
+		ByteBuf out = null;
+		if (msg instanceof byte[]) {
+			byte[] bytes = (byte[]) msg;
+			out = ctx.alloc().buffer(bytes.length);
+			out.writeBytes(bytes);
+			ctx.writeAndFlush(out);
+		}
+		else {
+		
+			//调用编码处理器
+			out = config.getEncodeHandler().handle(ctx, msg,  promise);
 			
+			if(channel.isWritable()){
+				ctx.writeAndFlush(out);
+			}else {
+				try {
+					if (LOGGER.isInfoEnabled()) {
+	                	LOGGER.info("Channel is not writable, change to sync mode! \nchannel:{}", channel);
+	                }
+					channel.writeAndFlush(out).sync();
+	                if (LOGGER.isInfoEnabled()) {
+	                	LOGGER.info("Sync message sended. \nchannel:{}\nmessage:{}", channel, GSON.toJson(msg));
+	                }
+	            } catch (Exception e) {
+	            	if (LOGGER.isInfoEnabled()) {
+	            		LOGGER.info("write and flush msg exception. msg:[{}]", GSON.toJson(msg), e);
+	            	}
+	            }
+			}
+		}
+		
+		
 		
 	}
 

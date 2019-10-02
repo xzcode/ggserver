@@ -1,5 +1,7 @@
 package xzcode.ggserver.game.support.player;
 
+import xzcode.ggserver.core.session.GGSession;
+
 /**
      玩家基类
  * 
@@ -7,6 +9,8 @@ package xzcode.ggserver.game.support.player;
  * 2019-01-21 20:21:20
  */
 public class Player {
+	
+	protected GGSession session; 
 	
 	/**
 	 * 用户id
@@ -69,6 +73,16 @@ public class Player {
 
 	public void setOnline(boolean online) {
 		this.online = online;
+	}
+
+
+	public GGSession getSession() {
+		return session;
+	}
+
+
+	public void setSession(GGSession session) {
+		this.session = session;
 	}
 	
 }
