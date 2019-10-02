@@ -35,7 +35,7 @@ public class GGConfig {
 
 	private int 		bossThreadSize = 0;
 	
-	private int 		workThreadSize = 0;
+	private int 		workThreadSize = 32;
 
 	private boolean 	idleCheckEnabled = true;
 	
