@@ -10,6 +10,11 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
 import xzcode.ggserver.core.config.GGConfig;
 
+/**
+ * 数据输入控制器
+ * @author Administrator
+ *
+ */
 public class TcpInboundHandler extends ByteToMessageDecoder{
 	private static final Logger LOGGER = LoggerFactory.getLogger(TcpDecodeHandler.class);
 
@@ -44,6 +49,10 @@ public class TcpInboundHandler extends ByteToMessageDecoder{
 			in.resetReaderIndex();
 			return;
 		}
+		
+		byte[] packData = new byte[packLen];
+		
+		in.readBytes(packData);
 		
 	}
 
