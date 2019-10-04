@@ -1,6 +1,6 @@
 package xzcode.ggserver.core.message.receive.invoker;
 
-import xzcode.ggserver.core.message.receive.IOnMessageAction;
+import xzcode.ggserver.core.message.receive.IOnMessageHandler;
 
 /**
  * 请求消息调用模型
@@ -26,7 +26,7 @@ public class OnMessagerInvoker<T> implements IOnMessageInvoker{
 	/**
 	 * 消息调用对象
 	 */
-	private IOnMessageAction<T> onMessage;
+	private IOnMessageHandler<T> onMessage;
 
 
 	@SuppressWarnings("unchecked")
@@ -56,12 +56,12 @@ public class OnMessagerInvoker<T> implements IOnMessageInvoker{
 	}
 
 
-	public IOnMessageAction<?> getOnMessage() {
+	public IOnMessageHandler<?> getOnMessage() {
 		return onMessage;
 	}
 
 
-	public void setOnMessage(IOnMessageAction<T> onMessage) {
+	public void setOnMessage(IOnMessageHandler<T> onMessage) {
 		this.onMessage = onMessage;
 	}
 

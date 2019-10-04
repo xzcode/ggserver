@@ -14,17 +14,8 @@ public interface IEventInvoker {
 	 * @author zai
 	 * 2019-03-16 19:06:37
 	 */
-	public String getEventTag();
+	public String getEvent();
 
-	/**
-	 * 调用事件触发
-	 * 
-	 * @throws Exception
-	 * @author zai
-	 * 2019-03-16 19:06:49
-	 */
-	void invoke() throws Exception;
-	
 	/**
 	 * 调用事件触发
 	 * 

@@ -6,6 +6,6 @@ import io.netty.channel.ChannelHandlerContext;
 public interface IGGDecodeHandler {
 	
 	
-	void handle(ChannelHandlerContext ctx, ByteBuf in) throws Exception;
+	void handle(ChannelHandlerContext ctx, ByteBuf in);
 	
 }

@@ -21,15 +21,15 @@ public interface GGEvents {
 		/**
 	     * 读空闲
 	     */
-		String READER_IDLE = "Idle.READER_IDLE";
+		String READER_IDLE = "ggevents.idle.READER_IDLE";
 	    /**
 	     * 写空闲
 	     */
-		String WRITER_IDLE = "Idle.READER_IDLE";
+		String WRITER_IDLE = "ggevents.idle.READER_IDLE";
 	    /**
 	     * 读与写空闲
 	     */
-		String ALL_IDLE = "Idle.ALL_IDLE";
+		String ALL_IDLE = "ggevents.idle.ALL_IDLE";
 
 	}
 	
@@ -46,11 +46,11 @@ public interface GGEvents {
 		/**
 	     * channel 激活
 	     */
-		String ACTIVE = "conn.ACTIVE";
+		String ACTIVE = "ggevents.conn.ACTIVE";
 	    /**
 	     * channel 关闭
 	     */
-		String CLOSE = "conn.CLOSE";
+		String CLOSE = "ggevents.conn.CLOSE";
 
 	}
 

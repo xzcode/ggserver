@@ -28,31 +28,12 @@ public class EventInvokerManager {
 		}
 	}
 
-	/**
-	 * 调用被缓存的方法
-	 * @param requestTag
-	 * @param method
-	 * @param message
-	 * @throws Exception
-	 * 
-	 * @author zai
-	 * 2017-07-29
-	 */
-	public void invoke(String eventTag) throws Exception {
-		this.invoke(eventTag, null);
-	}
 	
 	public void invoke(String eventTag, Object message) throws Exception {
 		List<IEventInvoker> invokers = map.get(eventTag);
 		if (invokers != null) {
-			if (message != null) {
-				for (IEventInvoker invoker : invokers) {
-					invoker.invoke(message);
-				}
-			}else {
-				for (IEventInvoker invoker : invokers) {
-					invoker.invoke();
-				}
+			for (IEventInvoker invoker : invokers) {
+				invoker.invoke(message);
 			}
 		}
 	}
@@ -65,7 +46,7 @@ public class EventInvokerManager {
 	 * 2019-01-03 10:14:47
 	 */
 	public void put(IEventInvoker invoker) {
-		List<IEventInvoker> invokers = map.get(invoker.getEventTag());
+		List<IEventInvoker> invokers = map.get(invoker.getEvent());
 		if (invokers != null) {
 			invokers.add(invoker);
 			return;
@@ -74,7 +55,7 @@ public class EventInvokerManager {
 			invokers.add(invoker);
 		}
 		
-		map.put(invoker.getEventTag(), invokers);
+		map.put(invoker.getEvent(), invokers);
 	}
 	
 	

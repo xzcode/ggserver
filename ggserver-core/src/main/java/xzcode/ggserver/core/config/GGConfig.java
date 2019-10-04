@@ -1,5 +1,6 @@
 package xzcode.ggserver.core.config;
 
+import java.nio.charset.Charset;
 import java.util.concurrent.ThreadFactory;
 
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -11,6 +12,10 @@ import xzcode.ggserver.core.handler.codec.IGGDecodeHandler;
 import xzcode.ggserver.core.handler.codec.IGGEncodeHandler;
 import xzcode.ggserver.core.handler.codec.impl.DefaultDecodeHandler;
 import xzcode.ggserver.core.handler.codec.impl.DefaultEncodeHandler;
+import xzcode.ggserver.core.handler.pack.IGGReceivePackHandler;
+import xzcode.ggserver.core.handler.pack.IGGSendPackHandler;
+import xzcode.ggserver.core.handler.pack.impl.DefaultReceivePackHandler;
+import xzcode.ggserver.core.handler.pack.impl.DefaultSendPackHandler;
 import xzcode.ggserver.core.handler.serializer.ISerializer;
 import xzcode.ggserver.core.handler.serializer.factory.SerializerFactory;
 import xzcode.ggserver.core.message.filter.MessageFilterManager;
@@ -59,7 +64,7 @@ public class GGConfig {
 
 	private String 		websocketPath = "/websocket";
 	
-	private String 		charset = "utf-8";
+	private Charset		charset = Charset.forName("utf-8");
 	
 	private int 		httpMaxContentLength = 65536;
 	
@@ -69,6 +74,9 @@ public class GGConfig {
 	
 	private IGGDecodeHandler decodeHandler;
 	private IGGEncodeHandler encodeHandler;
+	
+	private IGGReceivePackHandler receivePackHandler;
+	private IGGSendPackHandler sendPackHandler;
 	
 	
 	private GGComponentManager 	componentManager;
@@ -96,12 +104,16 @@ public class GGConfig {
 			if (bossGroupThreadFactory == null) {
 				bossGroupThreadFactory = new EventLoopGroupThreadFactory("netty-boss");
 			}
-			bossGroup = new NioEventLoopGroup(getBossThreadSize(),bossGroupThreadFactory);
+			if (bossGroup == null) {
+				bossGroup = new NioEventLoopGroup(getBossThreadSize(),bossGroupThreadFactory);				
+			}
 		}
 		if (workerGroupThreadFactory == null) {
 			workerGroupThreadFactory = new EventLoopGroupThreadFactory("netty-worker");
 		}
-		workerGroup = new NioEventLoopGroup(getWorkThreadSize(),workerGroupThreadFactory);
+		if (workerGroup == null) {
+			workerGroup = new NioEventLoopGroup(getWorkThreadSize(),workerGroupThreadFactory);	
+		}
 		
 		if (decodeHandler == null) {
 			decodeHandler = new DefaultDecodeHandler(this);
@@ -110,16 +122,19 @@ public class GGConfig {
 			encodeHandler = new DefaultEncodeHandler(this);
 		}
 		
+		if (receivePackHandler == null) {
+			receivePackHandler = new DefaultReceivePackHandler(this);
+		}
+		if (sendPackHandler == null) {
+			sendPackHandler = new DefaultSendPackHandler(this);
+		}
+		
 	}
-	
 	
 	public GGConfig() {
 		super();
 		init();
 	}
-	
-	
-
 
 	public GGConfig(boolean client) {
 		super();
@@ -346,15 +361,14 @@ public class GGConfig {
 	public NioEventLoopGroup getTaskExecutor() {
 		return workerGroup;
 	}
-	
-	
-	public String getCharset() {
+
+	public Charset getCharset() {
 		return charset;
 	}
-	public void setCharset(String charset) {
+
+	public void setCharset(Charset charset) {
 		this.charset = charset;
 	}
-
 
 	public IGGDecodeHandler getDecodeHandler() {
 		return decodeHandler;
@@ -393,6 +407,26 @@ public class GGConfig {
 
 	public void setWorkerGroupThreadFactory(ThreadFactory workerGroupThreadFactory) {
 		this.workerGroupThreadFactory = workerGroupThreadFactory;
+	}
+
+
+	public IGGReceivePackHandler getReceivePackHandler() {
+		return receivePackHandler;
+	}
+
+
+	public void setReceivePackHandler(IGGReceivePackHandler receivePackHandler) {
+		this.receivePackHandler = receivePackHandler;
+	}
+
+
+	public IGGSendPackHandler getSendPackHandler() {
+		return sendPackHandler;
+	}
+
+
+	public void setSendPackHandler(IGGSendPackHandler sendPackHandler) {
+		this.sendPackHandler = sendPackHandler;
 	}
 	
 	

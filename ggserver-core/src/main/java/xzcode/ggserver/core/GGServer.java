@@ -10,6 +10,8 @@ import xzcode.ggserver.core.message.receive.IRequestMessageSupport;
 import xzcode.ggserver.core.message.send.ISendMessageSupport;
 import xzcode.ggserver.core.message.send.SendMessageManager;
 import xzcode.ggserver.core.session.IGGSessionSupport;
+import xzcode.ggserver.core.starter.IGGServerStarter;
+import xzcode.ggserver.core.starter.impl.DefaultGGServerStarter;
 
 /**
  * socket服务工具
@@ -30,9 +32,22 @@ implements
 	
 	private GGConfig config;
 	
+	private IGGServerStarter serverStarter;
+	
+	public void init() {
+		if (serverStarter == null) {
+			serverStarter = new DefaultGGServerStarter(config);
+		}
+	}
+	
+	public void start() {
+		this.serverStarter.run();
+	}
+	
 
 	public GGServer(GGConfig serverConfig) {
 		this.config = serverConfig;
+		init();
 	}
 	public GGConfig getConfig() {
 		return config;

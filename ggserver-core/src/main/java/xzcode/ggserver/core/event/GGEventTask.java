@@ -51,16 +51,10 @@ private final static Logger LOGGER = LoggerFactory.getLogger(GGEventTask.class);
 		GGSessionUtil.setSession(this.session);
 		try {
 			
-			LOGGER.debug("Runing  SocketEventTask... tag:{}", eventTag);
-			
-			if (this.message == null) {
-				config.getEventInvokerManager().invoke(eventTag);				
-			}else {
-				config.getEventInvokerManager().invoke(eventTag, message);			
-			}
+			config.getEventInvokerManager().invoke(eventTag, message);			
 			
 		} catch (Exception e) {
-			LOGGER.error("Socket Event Task Error!!", e);
+			LOGGER.error("GGEvent Task Error!!", e);
 		}
 		GGSessionUtil.removeSession();
 	}

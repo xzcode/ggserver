@@ -54,7 +54,7 @@ public class DefaultDecodeHandler implements IGGDecodeHandler{
 	}
 
 
-	public void handle(ChannelHandlerContext ctx, ByteBuf in) throws Exception {
+	public void handle(ChannelHandlerContext ctx, ByteBuf in){
 		
 		int packLen = in.readableBytes();
 		
@@ -76,12 +76,15 @@ public class DefaultDecodeHandler implements IGGDecodeHandler{
 			
 		}
 		
+		//接收包处理
+		config.getReceivePackHandler().handle(PackModel.create(action, message), ctx.channel().attr(DefaultChannelAttributeKeys.SESSION).get());
+		/*
 		config.getTaskExecutor().submit(new RequestMessageTask(PackModel.create(action, message), ctx.channel().attr(DefaultChannelAttributeKeys.SESSION).get(), config));
 		
 		if(LOGGER.isInfoEnabled()){
         	LOGGER.info("\nReceived binary message  <----,\nchannel:{}\ntag:{}\nbytes-length:{}\ndata:{}", ctx.channel(), action == null ? "" : new String(action), packLen + 4, message == null ? "" : new String(message));
         }
-	}
+*/	}
 
 
 

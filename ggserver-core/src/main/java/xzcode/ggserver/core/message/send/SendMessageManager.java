@@ -12,8 +12,6 @@ import xzcode.ggserver.core.config.GGConfig;
 import xzcode.ggserver.core.message.PackModel;
 import xzcode.ggserver.core.session.GGSession;
 import xzcode.ggserver.core.session.GGSessionUtil;
-import xzcode.ggserver.core.session.GGSessionManager;
-import xzcode.ggserver.core.utils.json.GGServerJsonUtil;
 
 /**
  * 消息发送管理器
@@ -34,14 +32,16 @@ public class SendMessageManager implements ISendMessageSupport{
 		this.config = config;
 	}
 
-	public void send(Channel channel, PackModel packModel) {
+	public void send(GGSession session, PackModel packModel) {
+		this.config.getSendPackHandler().handle(packModel, session);
+		/*Channel channel = session.getChannel();
 		if (channel != null && channel.isActive()) {
 			channel.writeAndFlush(packModel);			
 		}else {
 			if (logger.isDebugEnabled()) {
 				logger.debug("Channel is inactived! Message will not be send, SendModel:{}", GGServerJsonUtil.toJson(packModel));
 			}
-		}
+		}*/
 	}
 	
 	@Override
@@ -67,7 +67,7 @@ public class SendMessageManager implements ISendMessageSupport{
 			if (!config.getMessageFilterManager().doResponseFilters(session, Response.create(action, null))) {
 				return;
 			}
-			this.send(session.getChannel(),PackModel.create(action.getBytes(), null));
+			this.send(session,PackModel.create(action.getBytes(), null));
 		}
 	}
 	
@@ -101,11 +101,12 @@ public class SendMessageManager implements ISendMessageSupport{
 					byte[] messageData = message == null ? null : this.config.getSerializer().serialize(message);
 					
 					if (delayMs > 0) {
+						GGSession sezzion = session;
 						this.config.getTaskExecutor().schedule(() -> {
-							this.send(channel, PackModel.create(actionIdData, messageData));
+							this.send(sezzion, PackModel.create(actionIdData, messageData));
 						}, delayMs, TimeUnit.MILLISECONDS);
 					}else {
-						this.send(channel, PackModel.create(actionIdData, messageData));
+						this.send(session, PackModel.create(actionIdData, messageData));
 					}
 				}
 			} catch (Exception e) {

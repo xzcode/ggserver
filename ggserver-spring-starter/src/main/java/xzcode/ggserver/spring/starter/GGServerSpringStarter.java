@@ -19,7 +19,7 @@ import xzcode.ggserver.core.GGServer;
 import xzcode.ggserver.core.config.GGConfig;
 import xzcode.ggserver.core.handler.serializer.factory.SerializerFactory;
 import xzcode.ggserver.core.starter.IGGServerStarter;
-import xzcode.ggserver.core.starter.impl.DefaultSocketServerStarter;
+import xzcode.ggserver.core.starter.impl.DefaultGGServerStarter;
 
 @Configuration
 @ConditionalOnProperty(prefix = GGServerSpringStarter.PROPERTIES_PREFIX, name = "enabled", havingValue = "true")
@@ -42,7 +42,7 @@ public class GGServerSpringStarter implements ApplicationContextAware {
         LOGGER.info(config.toString());
 
 
-        IGGServerStarter starter =  new DefaultSocketServerStarter(config);
+        IGGServerStarter starter =  new DefaultGGServerStarter(config);
 
         
         beanDefinitionRegistry(config);

@@ -11,6 +11,6 @@ import xzcode.ggserver.core.session.GGSession;
  */
 public interface GGResponseFilter {
 	
-	public boolean doFilter(GGSession session, Response sendModel);
+	boolean doFilter(GGSession session, Response response);
 
 }

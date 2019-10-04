@@ -3,19 +3,27 @@ package xzcode.ggserver.core.event;
 import xzcode.ggserver.core.config.IGGConfigSupport;
 import xzcode.ggserver.core.session.IGGSessionSupport;
 
+/**
+ * 事件调用支持接口
+ * 
+ * 
+ * @author zai
+ * 2019-10-03 19:57:02
+ */
 public interface IEventInvokeSupport extends IGGSessionSupport,IGGConfigSupport{
+	
 	/**
 	 * 动态添加事件监听
 	 * 
 	 * @param eventTag
-	 * @param runnable
+	 * @param eventHandler
 	 * @author zai
 	 * 2019-01-02 20:02:37
 	 */
-	default <T> void onEvent(String eventTag, Runnable runnable) {
-		EventRunnableInvoker invoker = new EventRunnableInvoker();
+	default <T> void onEvent(String eventTag, IEventHandler<T> eventHandler) {
+		DefaultEventInvoker invoker = new DefaultEventInvoker();
 		invoker.setEventTag(eventTag);
-		invoker.addRunnable(runnable);
+		invoker.setAction(eventHandler);
 		getConfig().getEventInvokerManager().put(invoker);
 	}
 	

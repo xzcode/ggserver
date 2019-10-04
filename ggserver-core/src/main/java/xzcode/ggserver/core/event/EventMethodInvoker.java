@@ -6,7 +6,7 @@ import java.util.List;
 
 public class EventMethodInvoker implements IEventInvoker {
 	
-	private String eventTag;
+	private String event;
 	
 	/**
 	 * 组件实例对象
@@ -21,16 +21,6 @@ public class EventMethodInvoker implements IEventInvoker {
 	
 	private List<Method> methods = new ArrayList<>(1);
 	
-	
-	
-	@Override
-	public void invoke() throws Exception{
-		Method method = null;
-		for (int i = 0; i < methods.size(); i++) {
-			method = methods.get(i);
-			method.invoke(componentObj);
-		}
-	}
 	
 
 	@Override
@@ -55,12 +45,12 @@ public class EventMethodInvoker implements IEventInvoker {
 	}
 	
 
-	public String getEventTag() {
-		return eventTag;
+	public String getEvent() {
+		return event;
 	}
 
-	public EventMethodInvoker setEventTag(String eventTag) {
-		this.eventTag = eventTag;
+	public EventMethodInvoker setEventTag(String event) {
+		this.event = event;
 		return this;
 	}
 
@@ -80,6 +70,7 @@ public class EventMethodInvoker implements IEventInvoker {
 	public Object getComponentObj() {
 		return componentObj;
 	}
+
 
 	
 }

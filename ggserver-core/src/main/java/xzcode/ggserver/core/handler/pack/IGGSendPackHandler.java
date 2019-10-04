@@ -6,6 +6,6 @@ import xzcode.ggserver.core.session.GGSession;
 public interface IGGSendPackHandler {
 
 	
-	void handle(PackModel packModel, GGSession session) throws Exception;
+	void handle(PackModel packModel, GGSession session);
 	
 }

@@ -1,5 +1,7 @@
 package xzcode.ggserver.core.handler.codec.impl;
 
+import java.nio.charset.Charset;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -8,13 +10,9 @@ import com.google.gson.GsonBuilder;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
-import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelOutboundHandlerAdapter;
 import io.netty.channel.ChannelPromise;
-import xzcode.ggserver.core.channel.DefaultChannelAttributeKeys;
 import xzcode.ggserver.core.config.GGConfig;
-import xzcode.ggserver.core.executor.task.ExectionTask;
 import xzcode.ggserver.core.handler.codec.IGGEncodeHandler;
 import xzcode.ggserver.core.message.PackModel;
 
@@ -51,7 +49,7 @@ public class DefaultEncodeHandler implements IGGEncodeHandler {
 	
 	
 	@Override
-	public ByteBuf handle(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
+	public ByteBuf handle(ChannelHandlerContext ctx, Object msg, ChannelPromise promise){
 		
 		Channel channel = ctx.channel();
 		PackModel packModel = (PackModel) msg;

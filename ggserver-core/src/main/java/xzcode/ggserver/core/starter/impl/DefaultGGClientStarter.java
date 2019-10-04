@@ -22,24 +22,25 @@ import xzcode.ggserver.core.starter.IGGClientStarter;
  * @author zai
  * 2018-12-20 10:17:44
  */
-public class DefaultSocketClientStarter implements IGGClientStarter {
+public class DefaultGGClientStarter implements IGGClientStarter {
 	
-	private static final Logger logger = LoggerFactory.getLogger(DefaultSocketClientStarter.class);
+	private static final Logger logger = LoggerFactory.getLogger(DefaultGGClientStarter.class);
 	
 	private GGConfig config;
 	private Channel channel;
 	
-    public DefaultSocketClientStarter(GGConfig config) {
+    public DefaultGGClientStarter(GGConfig config) {
     	
     	this.config = config;
-    	
-        GGComponentScanner.scan(
-        		config.getComponentObjectManager(),
-        		config.getRequestMessageManager(),
-        		config.getEventInvokerManager(),
-        		config.getMessageFilterManager(),
-        		config.getScanPackage()
-        		);
+    	if (config.getScanPackage() != null && config.getScanPackage().length > 0) {
+    		GGComponentScanner.scan(
+    				config.getComponentObjectManager(),
+    				config.getRequestMessageManager(),
+    				config.getEventInvokerManager(),
+    				config.getMessageFilterManager(),
+    				config.getScanPackage()
+    				);
+		}
     }
     
 

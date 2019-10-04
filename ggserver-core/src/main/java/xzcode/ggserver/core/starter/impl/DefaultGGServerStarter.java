@@ -21,23 +21,24 @@ import xzcode.ggserver.core.starter.IGGServerStarter;
  * @author zai
  * 2018-12-20 10:17:44
  */
-public class DefaultSocketServerStarter implements IGGServerStarter {
+public class DefaultGGServerStarter implements IGGServerStarter {
 	
-	private static final Logger logger = LoggerFactory.getLogger(DefaultSocketServerStarter.class);
+	private static final Logger logger = LoggerFactory.getLogger(DefaultGGServerStarter.class);
 	
 	private GGConfig config;
 	
-    public DefaultSocketServerStarter(GGConfig config) {
+    public DefaultGGServerStarter(GGConfig config) {
     	
     	this.config = config;
-    	
-        GGComponentScanner.scan(
-        		config.getComponentObjectManager(),
-        		config.getRequestMessageManager(),
-        		config.getEventInvokerManager(),
-        		config.getMessageFilterManager(),
-        		config.getScanPackage()
-        		);
+    	if (config.getScanPackage() != null && config.getScanPackage().length > 0) {
+    		GGComponentScanner.scan(
+    				config.getComponentObjectManager(),
+    				config.getRequestMessageManager(),
+    				config.getEventInvokerManager(),
+    				config.getMessageFilterManager(),
+    				config.getScanPackage()
+    				);
+		}
     }
     
     public IGGServerStarter run() {

@@ -1,5 +1,7 @@
 package xzcode.ggserver.core;
 
+import java.util.concurrent.TimeUnit;
+
 import io.netty.channel.nio.NioEventLoopGroup;
 import xzcode.ggserver.core.config.GGConfig;
 import xzcode.ggserver.core.config.IGGConfigSupport;
@@ -10,6 +12,8 @@ import xzcode.ggserver.core.message.receive.IRequestMessageSupport;
 import xzcode.ggserver.core.message.send.ISendMessageSupport;
 import xzcode.ggserver.core.message.send.SendMessageManager;
 import xzcode.ggserver.core.session.IGGSessionSupport;
+import xzcode.ggserver.core.starter.IGGClientStarter;
+import xzcode.ggserver.core.starter.impl.DefaultGGClientStarter;
 
 /**
  * 客户端
@@ -30,9 +34,16 @@ implements
 	
 	private GGConfig config;
 	
+	private IGGClientStarter clientStarter;
+	
+	public void connect(String host, int port) {
+		clientStarter = new DefaultGGClientStarter(config);		
+		clientStarter.connect(host, port);
+	}
+	
 
-	public GGClient(GGConfig serverConfig) {
-		this.config = serverConfig;
+	public GGClient(GGConfig config) {
+		this.config = config;
 	}
 	
 	public GGConfig getConfig() {
@@ -49,6 +60,4 @@ implements
 		return this.config.getTaskExecutor();
 	}
 	
-	
-
 }

@@ -26,7 +26,7 @@ public interface IRequestMessageSupport extends IGGConfigSupport {
 	 * 2019-01-02 09:41:59
 	 * @param <T>
 	 */
-	default <T> void on(String actionId, IOnMessageAction<T> onMessageAction) {
+	default <T> void onMessage(String actionId, IOnMessageHandler<T> onMessageAction) {
 		
 		OnMessagerInvoker<T> invoker = new OnMessagerInvoker<>();
 		invoker.setOnMessage(onMessageAction);

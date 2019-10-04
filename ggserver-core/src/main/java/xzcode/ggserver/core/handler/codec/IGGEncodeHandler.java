@@ -7,6 +7,6 @@ import io.netty.channel.ChannelPromise;
 public interface IGGEncodeHandler {
 
 	
-	ByteBuf handle(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception;
+	ByteBuf handle(ChannelHandlerContext ctx, Object msg, ChannelPromise promise);
 	
 }
