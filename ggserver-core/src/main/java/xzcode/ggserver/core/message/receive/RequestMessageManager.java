@@ -72,6 +72,9 @@ public class RequestMessageManager {
 			throw new RuntimeException("action '"+action+"' is already mapped!");
 		}
 		map.put(action, onMessageInvoker);
+		if (LOGGER.isInfoEnabled()) {
+			LOGGER.info("GGServer Mapped Message Action: {}", action);
+		}
 	}
 
 

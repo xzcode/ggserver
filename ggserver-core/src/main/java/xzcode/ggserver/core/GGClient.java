@@ -44,6 +44,7 @@ implements
 
 	public GGClient(GGConfig config) {
 		this.config = config;
+		config.setClient(true);
 	}
 	
 	public GGConfig getConfig() {

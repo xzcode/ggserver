@@ -133,13 +133,11 @@ public class GGConfig {
 	
 	public GGConfig() {
 		super();
-		init();
 	}
 
 	public GGConfig(boolean client) {
 		super();
 		this.client = client;
-		init();
 	}
 
 
