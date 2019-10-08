@@ -10,12 +10,12 @@ public class CoinsRoomPlayer<R, H> extends RoomPlayer<R, H>{
 	/**
 	 * 当前金币数
 	 */
-	protected Long coins;
+	protected Long coins= 0L;
 	
 	/**
 	 * 游戏进行前金币数
 	 */
-	protected Long beforeCoins;
+	protected Long beforeCoins= 0L;
 	
 	/**
 	 * 抽佣金币数
@@ -25,7 +25,7 @@ public class CoinsRoomPlayer<R, H> extends RoomPlayer<R, H>{
 	/**
 	 * 盈利金币数
 	 */
-	protected Long gainCoins;
+	protected Long gainCoins= 0L;
 	
 	
 	/*
