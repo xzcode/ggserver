@@ -218,4 +218,30 @@ public class SendMessageManager implements ISendMessage{
 			}
 		}
 	}
+	
+	@Override
+	public void sendToProtoStuffAll(String action, byte[] messageData) {
+		try {
+
+			UserSessonManager sessonManager = config.getUserSessonManager();
+			Set<Entry<Object, GGSession>> entrySet = sessonManager.getSessionMap().entrySet();
+			Channel channel = null;
+			byte[] actionIdData = action.getBytes();
+			for (Entry<Object, GGSession> entry : entrySet) {
+				//发送过滤器
+				if (!config.getMessageFilterManager().doResponseFilters(entry.getKey(), Response.create(action, messageData))) {
+					return;
+				}
+				channel = entry.getValue().getChannel();
+				if (channel.isActive()) {
+					channel.writeAndFlush(SendModel.create(actionIdData, messageData));
+				}
+
+			}
+		} catch (Exception e) {
+			logger.error("GGServer sendToAll ERROR!");
+		}
+
+	}
+
 }

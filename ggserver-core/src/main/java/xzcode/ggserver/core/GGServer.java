@@ -56,7 +56,7 @@ public class GGServer implements ISendMessage{
 	 * 2019-01-19 15:50:11
 	 */
 	public GGSession getSession(Object userId) {
-		return this.config.getUserSessonManager().get(userId);
+ 		return this.config.getUserSessonManager().get(userId);
 	}
 
 	/**
@@ -488,6 +488,8 @@ public class GGServer implements ISendMessage{
 	public void sendProtoStuff(String action, byte[] message) {
 		this.config.getSendMessageManager().sendProtoStuff(action, message);
 	}
-
-
+	@Override
+	public void sendToProtoStuffAll(String action, byte[] message) {
+		this.config.getSendMessageManager().sendToProtoStuffAll(action, message);
+	}
 }
