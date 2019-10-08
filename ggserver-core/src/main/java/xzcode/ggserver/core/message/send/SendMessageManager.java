@@ -34,14 +34,6 @@ public class SendMessageManager implements ISendMessageSupport{
 
 	public void send(GGSession session, PackModel packModel) {
 		this.config.getSendPackHandler().handle(packModel, session);
-		/*Channel channel = session.getChannel();
-		if (channel != null && channel.isActive()) {
-			channel.writeAndFlush(packModel);			
-		}else {
-			if (logger.isDebugEnabled()) {
-				logger.debug("Channel is inactived! Message will not be send, SendModel:{}", GGServerJsonUtil.toJson(packModel));
-			}
-		}*/
 	}
 	
 	@Override
@@ -64,7 +56,7 @@ public class SendMessageManager implements ISendMessageSupport{
 	public void send(String action) {
 		GGSession session = GGSessionUtil.getSession();
 		if (session != null) {
-			if (!config.getMessageFilterManager().doResponseFilters(session, Response.create(action, null))) {
+			if (!config.getMessageFilterManager().doResponseFilters(Response.create(action, null))) {
 				return;
 			}
 			this.send(session,PackModel.create(action.getBytes(), null));
@@ -91,7 +83,7 @@ public class SendMessageManager implements ISendMessageSupport{
 		}
 		if (session != null) {
 			//发送过滤器
-			if (!config.getMessageFilterManager().doResponseFilters(session, Response.create(action, message))) {
+			if (!config.getMessageFilterManager().doResponseFilters(Response.create(action, message))) {
 				return;
 			}
 			try {
@@ -142,7 +134,7 @@ public class SendMessageManager implements ISendMessageSupport{
 			for (Entry<Object, GGSession> entry : entrySet) {
 				GGSession sesson = entry.getValue();
 				//发送过滤器
-				if (!config.getMessageFilterManager().doResponseFilters(sesson, Response.create(action, message))) {
+				if (!config.getMessageFilterManager().doResponseFilters(Response.create(action, message))) {
 					return;
 				}
 				channel = sesson.getChannel();

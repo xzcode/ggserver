@@ -12,18 +12,15 @@ public class MessageFilterModel {
 	 */
 	private int order;
 	
+	/**
+	 * 过滤器class
+	 */
 	private Class<?> filterClazz;
 	
 	/**
-	 * 请求过滤器
+	 * 过滤器
 	 */
-	private GGRequestFilter requestFilter;
-	
-	/**
-	 * 响应过滤器
-	 */
-	private GGResponseFilter responseFilter;
-	
+	private IGGFilter<?> filter;
 	
 
 
@@ -42,14 +39,6 @@ public class MessageFilterModel {
 	public void setOrder(int order) {
 		this.order = order;
 	}
-
-	public GGRequestFilter getRequestFilter() {
-		return requestFilter;
-	}
-
-	public void setRequestFilter(GGRequestFilter filter) {
-		this.requestFilter = filter;
-	}
 	
 	public Class<?> getFilterClazz() {
 		return filterClazz;
@@ -58,13 +47,15 @@ public class MessageFilterModel {
 	public void setFilterClazz(Class<?> filterClazz) {
 		this.filterClazz = filterClazz;
 	}
-	
-	public GGResponseFilter getResponseFilter() {
-		return responseFilter;
+
+	public IGGFilter<?> getFilter() {
+		return filter;
+	}
+
+	public void setFilter(IGGFilter<?> filter) {
+		this.filter = filter;
 	}
 	
-	public void setResponseFilter(GGResponseFilter responseFilter) {
-		this.responseFilter = responseFilter;
-	}
+	
 
 }

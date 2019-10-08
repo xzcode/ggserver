@@ -8,9 +8,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import xzcode.ggserver.core.component.GGComponentManager;
+import xzcode.ggserver.core.message.PackModel;
 import xzcode.ggserver.core.message.receive.Request;
 import xzcode.ggserver.core.message.send.Response;
-import xzcode.ggserver.core.session.GGSession;
 
 /**
  * 消息过滤器集合
@@ -21,6 +21,10 @@ import xzcode.ggserver.core.session.GGSession;
 public class MessageFilterManager {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(MessageFilterManager.class);
+	/**
+	 * 反序列化前过滤器
+	 */
+	private final ArrayList<MessageFilterModel> beforeDeserializeFilters = new ArrayList<>(1);
 	/**
 	 * 请求过滤器
 	 */
@@ -49,11 +53,7 @@ public class MessageFilterManager {
 		
 		for (MessageFilterModel filterModel : filters) {
 			Object object = componentObjectMapper.getComponentObject(filterModel.getFilterClazz());
-			if (object instanceof GGRequestFilter ) {
-				filterModel.setRequestFilter((GGRequestFilter) object);				
-			}else if (object instanceof GGResponseFilter ) {
-				filterModel.setResponseFilter((GGResponseFilter) object);	
-			}
+			filterModel.setFilter((IGGFilter<?>) object);				
 		}
 	}
 	
@@ -68,7 +68,13 @@ public class MessageFilterManager {
 		Type[] types = filterModel.getFilterClazz().getGenericInterfaces();
 		
 		for (Type type : types) {
-			if (type == GGRequestFilter.class) {
+			if (type == GGBeforeDeserializeFilter.class) {
+				beforeDeserializeFilters.add(filterModel);
+				if (beforeDeserializeFilters.size() > 1) {
+					sort(beforeDeserializeFilters);
+				}
+				requestFilters.trimToSize();
+			}else if (type == GGRequestFilter.class) {
 				requestFilters.add(filterModel);
 				if (requestFilters.size() > 1) {
 					sort(requestFilters);
@@ -90,6 +96,28 @@ public class MessageFilterManager {
 	}
 	
 	/**
+	 * 顺序执行序列化前过滤器
+	 * 
+	 * @param pack
+	 * @return
+	 * @author zzz
+	 * 2019-10-08 18:56:37
+	 */
+	public boolean doBeforeDeserializeFilter(PackModel pack) {
+		GGBeforeDeserializeFilter filter = null;
+		for (MessageFilterModel filterModel : beforeDeserializeFilters) {
+			filter = (GGBeforeDeserializeFilter) filterModel.getFilter();
+			if (!filter.doFilter(pack)) {
+				if (LOGGER.isDebugEnabled()) {
+					LOGGER.debug("Message filtered by {}, action:{} .", filter.getClass().getName(), new String(pack.getAction()));					
+				}
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	/**
 	 * 顺序执行请求过滤器
 	 * @param action
 	 * @param message
@@ -101,10 +129,10 @@ public class MessageFilterManager {
 	public boolean doRequestFilters(Request request) {
 		GGRequestFilter filter = null;
 		for (MessageFilterModel filterModel : requestFilters) {
-			filter = filterModel.getRequestFilter();
+			filter = (GGRequestFilter) filterModel.getFilter();
 			if (!filter.doFilter(request)) {
 				if (LOGGER.isDebugEnabled()) {
-					LOGGER.debug("Message filtered by {}, action:{} .", filter.getClass().getName(),request.getAction());					
+					LOGGER.debug("Message filtered by {}, action:{} .", filter.getClass().getName(), request.getAction());					
 				}
 				return false;
 			}
@@ -123,11 +151,11 @@ public class MessageFilterManager {
 	 * @author zai
 	 * 2017-09-27
 	 */
-	public boolean doResponseFilters(GGSession session, Response response) {
+	public boolean doResponseFilters(Response response) {
 		GGResponseFilter filter = null;
 		for (MessageFilterModel filterModel : responseFilters) {
-			filter = filterModel.getResponseFilter();
-			if (!filter.doFilter(session, response)) {
+			filter = (GGResponseFilter) filterModel.getFilter();
+			if (!filter.doFilter(response)) {
 				if (LOGGER.isDebugEnabled()) {
 					LOGGER.debug("Message filtered by {}, action:{} .", filter.getClass().getName(),response.getAction());					
 				}

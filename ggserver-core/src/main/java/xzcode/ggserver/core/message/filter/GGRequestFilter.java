@@ -8,8 +8,7 @@ import xzcode.ggserver.core.message.receive.Request;
  * @author zai
  * 2018-12-20 10:16:13
  */
-public interface GGRequestFilter {
+public interface GGRequestFilter extends IGGFilter<Request> {
 	
-	public boolean doFilter(Request request);
 
 }
