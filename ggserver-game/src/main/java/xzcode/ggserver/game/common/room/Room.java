@@ -70,7 +70,7 @@ public abstract class Room<P extends Player, R, H>{
 	/**
 	 * 玩家集合
 	 */
-	protected Map<Object, P> players = new ConcurrentHashMap<>(4);
+	protected Map<Object, P> players = new ConcurrentHashMap<Object, P>();
 	
 	
 	
