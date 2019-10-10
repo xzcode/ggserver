@@ -14,7 +14,6 @@ import xzcode.ggserver.core.config.GGServerConfig;
 import xzcode.ggserver.core.config.scanner.GGComponentScanner;
 import xzcode.ggserver.core.constant.GGServerTypeConstants;
 import xzcode.ggserver.core.handler.MixedSocketChannelInitializer;
-import xzcode.ggserver.core.handler.SocketChannelInitializer;
 import xzcode.ggserver.core.handler.WebSocketChannelInitializer;
 import xzcode.ggserver.core.starter.IGGServerStarter;
 
