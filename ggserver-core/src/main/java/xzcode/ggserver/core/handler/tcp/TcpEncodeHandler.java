@@ -82,8 +82,6 @@ public class TcpEncodeHandler extends ChannelOutboundHandlerAdapter {
 
 				int packLen = 2 + tagBytes.length + bodyBytes.length;
 
-				System.err.println(bodyBytes.length+"返回给客户端协议：----》》"+Arrays.toString(bodyBytes));
-
 				out = ctx.alloc().buffer(packLen);
 
 				out.writeInt(packLen);

@@ -76,7 +76,6 @@ public class SocketSession implements GGSession {
 	
 	@Override
 	public void addAttribute(String key, Object value) {
-		System.err.println("---->>>>>>value>"+key+"==============value>>>>>>>"+value);
 		channel.attr(AttributeKey.valueOf(key)).set(value);
 	}
 
