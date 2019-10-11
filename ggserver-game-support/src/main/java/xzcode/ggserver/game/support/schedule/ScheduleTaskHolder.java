@@ -3,7 +3,7 @@ package xzcode.ggserver.game.support.schedule;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import xzcode.ggserver.core.GGServer;
+import xzcode.ggserver.core.server.GGServer;
 
 /**
  * 计划任务暂存器

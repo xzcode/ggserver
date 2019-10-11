@@ -3,7 +3,7 @@ package xzcode.ggserver.game.common.holder.timeout;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import xzcode.ggserver.core.GGServer;
+import xzcode.ggserver.core.server.GGServer;
 import xzcode.ggserver.game.common.interfaces.timeout.ScheduleTaskAction;
 
 /**

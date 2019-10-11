@@ -1,6 +1,6 @@
 package xzcode.ggserver.game.support.interfaces;
 
-import xzcode.ggserver.core.GGServer;
+import xzcode.ggserver.core.server.GGServer;
 
 /**
  * ggserver支持类

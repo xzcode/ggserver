@@ -12,7 +12,7 @@
   
   <properties>
     <jdk.version>1.8</jdk.version>
-    <spring.boot.version>2.1.7.RELEASE</spring.boot.version>
+    <spring.boot.version>2.1.9.RELEASE</spring.boot.version>
     <netty.version>4.1.33.Final</netty.version>
   </properties>
   
@@ -150,8 +150,8 @@
     </build>
   
   <modules>
-  	<module>ggserver-spring-starter</module>
   	<module>ggserver-core</module>
+  	<module>ggserver-spring-starter</module>
   	<module>ggserver-game</module>
   	<module>ggserver-game-support</module>
   </modules>

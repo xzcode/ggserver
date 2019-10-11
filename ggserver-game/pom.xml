@@ -12,7 +12,8 @@
   
   	<dependency>
 		<groupId>xzcode</groupId>
-		<artifactId>ggserver-core</artifactId>
+		<artifactId>ggserver-core-server</artifactId>
+		<version>${project.version}</version>
 	</dependency>
 	
 	<dependency>

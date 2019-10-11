@@ -3,7 +3,7 @@ package xzcode.ggserver.game.support.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import xzcode.ggserver.core.GGServer;
+import xzcode.ggserver.core.server.GGServer;
 
 /**
  * ggs游戏控制器基类

@@ -3,7 +3,7 @@ package xzcode.ggserver.game.support.player.support;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import xzcode.ggserver.core.executor.future.GGTaskFuture;
+import xzcode.ggserver.core.common.executor.future.GGTaskFuture;
 import xzcode.ggserver.game.support.interfaces.IGGServerSupport;
 import xzcode.ggserver.game.support.player.Player;
 

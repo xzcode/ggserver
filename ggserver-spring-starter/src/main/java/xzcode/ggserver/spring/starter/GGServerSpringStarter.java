@@ -15,11 +15,12 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.StringUtils;
-import xzcode.ggserver.core.GGServer;
-import xzcode.ggserver.core.config.GGConfig;
-import xzcode.ggserver.core.handler.serializer.factory.SerializerFactory;
-import xzcode.ggserver.core.starter.IGGServerStarter;
-import xzcode.ggserver.core.starter.impl.DefaultGGServerStarter;
+
+import xzcode.ggserver.core.common.handler.serializer.factory.SerializerFactory;
+import xzcode.ggserver.core.server.GGServer;
+import xzcode.ggserver.core.server.config.GGServerConfig;
+import xzcode.ggserver.core.server.starter.IGGServerStarter;
+import xzcode.ggserver.core.server.starter.impl.DefaultGGServerStarter;
 
 @Configuration
 @ConditionalOnProperty(prefix = GGServerSpringStarter.PROPERTIES_PREFIX, name = "enabled", havingValue = "true")
@@ -35,7 +36,7 @@ public class GGServerSpringStarter implements ApplicationContextAware {
     @Bean
     public IGGServerStarter iGGServerStarter() {
     	
-        GGConfig config = ggServerConfig();
+        GGServerConfig config = ggServerConfig();
         
         config.setSerializer(SerializerFactory.geSerializer(config.getSerializerType()));
 
@@ -46,11 +47,6 @@ public class GGServerSpringStarter implements ApplicationContextAware {
 
         
         beanDefinitionRegistry(config);
-        
-        //是否自动运行
-        if (config.isAutoRun()) {
-        	starter.run();
-		}
         
         return starter;
     }
@@ -66,8 +62,8 @@ public class GGServerSpringStarter implements ApplicationContextAware {
     
     @Bean
     @ConfigurationProperties(prefix = GGServerSpringStarter.PROPERTIES_PREFIX)
-    public GGConfig ggServerConfig() {
-    	return new GGConfig();
+    public GGServerConfig ggServerConfig() {
+    	return new GGServerConfig();
     }
 
     /**
@@ -76,7 +72,7 @@ public class GGServerSpringStarter implements ApplicationContextAware {
      * @author zai
      * 2017-10-30
      */
-    public void beanDefinitionRegistry(GGConfig config) {
+    public void beanDefinitionRegistry(GGServerConfig config) {
 
         //获取BeanFactory
         DefaultListableBeanFactory defaultListableBeanFactory = (DefaultListableBeanFactory) this.applicationContext.getAutowireCapableBeanFactory();

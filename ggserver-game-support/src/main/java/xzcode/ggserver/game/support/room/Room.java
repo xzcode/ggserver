@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import xzcode.ggserver.core.GGServer;
+import xzcode.ggserver.core.server.GGServer;
 import xzcode.ggserver.game.support.cardgames.player.RoomPlayer;
 import xzcode.ggserver.game.support.room.listener.IRoomAddPlayerListener;
 import xzcode.ggserver.game.support.room.listener.IRoomPlayerListener;

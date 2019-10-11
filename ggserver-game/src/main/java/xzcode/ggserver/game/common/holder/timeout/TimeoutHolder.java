@@ -3,8 +3,8 @@ package xzcode.ggserver.game.common.holder.timeout;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import xzcode.ggserver.core.GGServer;
-import xzcode.ggserver.core.executor.future.GGTaskFuture;
+import xzcode.ggserver.core.common.executor.future.GGTaskFuture;
+import xzcode.ggserver.core.server.GGServer;
 
 /**
  * 超时等待模型

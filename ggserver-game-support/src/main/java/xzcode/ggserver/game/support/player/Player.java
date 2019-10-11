@@ -1,6 +1,6 @@
 package xzcode.ggserver.game.support.player;
 
-import xzcode.ggserver.core.session.GGSession;
+import xzcode.ggserver.core.common.session.GGSession;
 
 /**
      玩家基类
