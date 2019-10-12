@@ -15,10 +15,10 @@ import xzcode.ggserver.core.server.starter.IGGServerStarter;
 import xzcode.ggserver.core.server.starter.impl.DefaultGGServerStarter;
 
 /**
- * socket服务工具
+ * GGServer服务类
  * 
- * 
- * @author zai 2017-08-04
+ * @author zzz
+ * 2019-10-12 10:49:53
  */
 public class GGServer 
 implements 
