@@ -8,8 +8,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.netty.channel.Channel;
+import io.netty.util.concurrent.ScheduledFuture;
 import xzcode.ggserver.core.common.config.GGConfig;
 import xzcode.ggserver.core.common.message.PackModel;
+import xzcode.ggserver.core.common.message.send.future.GGSendFuture;
 import xzcode.ggserver.core.common.session.GGSession;
 import xzcode.ggserver.core.common.session.GGSessionUtil;
 
@@ -32,18 +34,23 @@ public class SendMessageManager implements ISendMessageSupport{
 		this.config = config;
 	}
 
-	public void send(GGSession session, PackModel packModel) {
-		this.config.getSendPackHandler().handle(packModel, session);
+	@Override
+	public GGSendFuture send(GGSession session, PackModel packModel) {
+		return this.config.getSendPackHandler().handle(session, packModel);
+	}
+	@Override
+	public GGSendFuture send(PackModel packModel) {
+		return this.config.getSendPackHandler().handle(null, packModel);
 	}
 	
 	@Override
-	public void send(GGSession session, String action, Object message) {
-		send(session, action, message, 0);
+	public GGSendFuture send(GGSession session, String action, Object message) {
+		return send(session, action, message, 0);
 	}
 	
 	@Override
-	public void send(GGSession session, String action) {
-		send(session, action, null, 0);
+	public GGSendFuture send(GGSession session, String action) {
+		return send(session, action, null, 0);
 	}
 	
 	/**
@@ -53,14 +60,15 @@ public class SendMessageManager implements ISendMessageSupport{
 	 * @author zai 2018-12-29 14:23:54
 	 */
 	@Override
-	public void send(String action) {
+	public GGSendFuture send(String action) {
 		GGSession session = GGSessionUtil.getSession();
 		if (session != null) {
 			if (!config.getMessageFilterManager().doResponseFilters(Response.create(action, null))) {
-				return;
+				return null;
 			}
-			this.send(session,PackModel.create(action.getBytes(), null));
+			return this.send(session,PackModel.create(action.getBytes(), null));
 		}
+		return null;
 	}
 	
 	/**
@@ -72,19 +80,24 @@ public class SendMessageManager implements ISendMessageSupport{
 	 * @author zai 2017-09-18
 	 */
 	@Override
-	public void send(String action, Object message) {
-		send(null, action, message, 0);
+	public GGSendFuture send(String action, Object message) {
+		return send(null, action, message, 0);
 	}
 
 	@Override
-	public void send(GGSession session, String action, Object message, long delayMs) {
+	public GGSendFuture send(GGSession session, String action, Object message, long delayMs) {
+		return send(session, action, message, delayMs, TimeUnit.MILLISECONDS);
+	}
+		
+	@Override
+	public GGSendFuture send(GGSession session, String action, Object message, long delay, TimeUnit timeUnit) {
 		if (session == null) {
 			session = GGSessionUtil.getSession();
 		}
 		if (session != null) {
 			//发送过滤器
 			if (!config.getMessageFilterManager().doResponseFilters(Response.create(action, message))) {
-				return;
+				return null;
 			}
 			try {
 				Channel channel = session.getChannel();
@@ -92,35 +105,29 @@ public class SendMessageManager implements ISendMessageSupport{
 					byte[] actionIdData = action.getBytes(config.getCharset());
 					byte[] messageData = message == null ? null : this.config.getSerializer().serialize(message);
 					
-					if (delayMs > 0) {
-						GGSession sezzion = session;
-						this.config.getTaskExecutor().schedule(() -> {
-							this.send(sezzion, PackModel.create(actionIdData, messageData));
-						}, delayMs, TimeUnit.MILLISECONDS);
-					}else {
-						this.send(session, PackModel.create(actionIdData, messageData));
-					}
+					this.config.getSendPackHandler().handle(session, PackModel.create(actionIdData, messageData), delay, timeUnit);
 				}
 			} catch (Exception e) {
 				logger.error("Send message Error!", e);
 			}
 		}
+		return null;
 	}
 
 	@Override
-	public void send(GGSession session, String action, long delayMs) {
-		send(session, action, null, delayMs);
+	public GGSendFuture send(GGSession session, String action, long delayMs) {
+		return send(session, action, null, delayMs);
 	}
 
 	@Override
-	public void send(String action, long delayMs) {
-		send(null, action, null, delayMs);
+	public GGSendFuture send(String action, long delayMs) {
+		return send(null, action, null, delayMs);
 		
 	}
 
 	@Override
-	public void send(String action, Object message, long delayMs) {
-		send(null, action, message, delayMs);
+	public GGSendFuture send(String action, Object message, long delayMs) {
+		return send(null, action, message, delayMs);
 		
 	}
 

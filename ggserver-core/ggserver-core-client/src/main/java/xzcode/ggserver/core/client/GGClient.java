@@ -9,6 +9,7 @@ import xzcode.ggserver.core.common.config.IGGConfigSupport;
 import xzcode.ggserver.core.common.control.IGGContolSupport;
 import xzcode.ggserver.core.common.event.invoker.IEventInvokeSupport;
 import xzcode.ggserver.core.common.executor.IExecutorSupport;
+import xzcode.ggserver.core.common.message.PackModel;
 import xzcode.ggserver.core.common.message.receive.IRequestMessageSupport;
 import xzcode.ggserver.core.common.message.send.ISendMessageSupport;
 import xzcode.ggserver.core.common.message.send.SendMessageManager;
@@ -58,5 +59,7 @@ implements
 	public NioEventLoopGroup getTaskExecutor() {
 		return this.config.getTaskExecutor();
 	}
+
+
 	
 }
