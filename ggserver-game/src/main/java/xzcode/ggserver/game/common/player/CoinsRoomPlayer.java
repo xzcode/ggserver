@@ -25,7 +25,7 @@ public class CoinsRoomPlayer<R, H> extends RoomPlayer<R, H>{
 	/**
 	 * 盈利金币数
 	 */
-	protected Long gainCoins= 0L;
+	protected Long gainCoins;
 	
 	
 	/*
