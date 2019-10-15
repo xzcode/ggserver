@@ -66,8 +66,16 @@
 				<artifactId>ggserver-game</artifactId>
 				<version>${project.version}</version>
 			</dependency>
-	    
-	    
+			<dependency>
+			    <groupId>javax.validation</groupId>
+			    <artifactId>validation-api</artifactId>
+			    <version>2.0.1.Final</version>
+			</dependency>	    
+	    	<dependency>
+			    <groupId>io.github.classgraph</groupId>
+			    <artifactId>classgraph</artifactId>
+			    <version>4.6.29</version>
+			</dependency>
 			<dependency>
 			    <groupId>com.google.code.gson</groupId>
 			    <artifactId>gson</artifactId>
@@ -151,6 +159,7 @@
   
   <modules>
   	<module>ggserver-core</module>
+  	<module>ggserver-docs</module>
   	<module>ggserver-spring-starter</module>
   	<module>ggserver-game</module>
   	<module>ggserver-game-support</module>
