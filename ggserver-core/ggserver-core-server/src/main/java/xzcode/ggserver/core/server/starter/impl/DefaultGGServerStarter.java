@@ -31,13 +31,7 @@ public class DefaultGGServerStarter implements IGGServerStarter {
     	
     	this.config = config;
     	if (config.getScanPackage() != null && config.getScanPackage().length > 0) {
-    		GGComponentScanner.scan(
-    				config.getComponentObjectManager(),
-    				config.getRequestMessageManager(),
-    				config.getEventInvokerManager(),
-    				config.getMessageFilterManager(),
-    				config.getScanPackage()
-    				);
+    		GGComponentScanner.scan(config);
 		}
     }
     
@@ -62,7 +56,6 @@ public class DefaultGGServerStarter implements IGGServerStarter {
             //设置消息处理器
             boot.childHandler(new MixedSocketChannelInitializer(config));
             
-            
             boot.option(ChannelOption.SO_BACKLOG, config.getSoBacklog()); 
             
             boot.childOption(ChannelOption.SO_KEEPALIVE, true); 
@@ -72,14 +65,9 @@ public class DefaultGGServerStarter implements IGGServerStarter {
             future.channel().closeFuture().sync();
             
         }catch (Exception e) {
-        	
         	throw new RuntimeException("GGServer start failed !! ", e);
-        	
 		} finally {
-			if (config.isAutoShutdown()) {
-				config.getBossGroup().shutdownGracefully();
-				config.getWorkerGroup().shutdownGracefully();
-			}
+			shutdown();
         }
         return this;
     }

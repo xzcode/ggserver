@@ -33,7 +33,7 @@ public class GGConfig {
 	
 	protected boolean 	enabled = false;
 
-	protected boolean autoShutdown = true;
+	protected boolean 	autoShutdown = true;
 
 	protected String[] 	scanPackage;
 

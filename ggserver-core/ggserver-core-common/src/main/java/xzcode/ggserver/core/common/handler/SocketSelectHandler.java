@@ -110,7 +110,7 @@ public class SocketSelectHandler extends ByteToMessageDecoder {
 			}
 		}
 		
-		pipeline.remove("TcpSocketSelectHandler");
+		pipeline.remove(SocketSelectHandler.class);
 		
 	}
 

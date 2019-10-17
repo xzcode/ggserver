@@ -17,6 +17,7 @@ import xzcode.ggserver.core.common.annotation.GGController;
 import xzcode.ggserver.core.common.annotation.GGFilter;
 import xzcode.ggserver.core.common.annotation.GGOnEvent;
 import xzcode.ggserver.core.common.component.GGComponentManager;
+import xzcode.ggserver.core.common.config.GGConfig;
 import xzcode.ggserver.core.common.event.invoker.EventInvokerManager;
 import xzcode.ggserver.core.common.event.invoker.impl.EventMethodInvoker;
 import xzcode.ggserver.core.common.message.filter.MessageFilterManager;
@@ -34,15 +35,9 @@ public class GGComponentScanner {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(GGComponentScanner.class);
 
-	public static void scan(
-			GGComponentManager componentManager,
-			RequestMessageManager requestMessageManager, 
-			EventInvokerManager eventInvokerManager, 
-			MessageFilterManager filterManager, 
-			String... packageName
-			) {
+	public static void scan(GGConfig config) {
 
-		if (packageName == null) {
+		if (config.getScanPackage() == null) {
 			LOGGER.error(" packageName can not be null !! ");
 			return;
 		}
@@ -51,7 +46,7 @@ public class GGComponentScanner {
 		ScanResult scanResult = new ClassGraph()
 			// .verbose() // Log to stderr
 		.enableAllInfo() // Scan classes, methods, fields, annotations
-		.whitelistPackages(packageName)
+		.whitelistPackages(config.getScanPackage())
 		.scan();
 		
 		Class<?> clazz = null;
@@ -66,7 +61,7 @@ public class GGComponentScanner {
 					return;
 				}
 				Object clazzInstance = clazz.newInstance();
-				componentManager.put(clazz, clazzInstance);
+				config.getComponentManager().put(clazz, clazzInstance);
 
 				GGFilter filter = clazz.getAnnotation(GGFilter.class);
 				if (filter != null) {
@@ -78,7 +73,7 @@ public class GGComponentScanner {
 					if (value == 0) {
 						messageFilterModel.setOrder(order);
 					}
-					filterManager.add(messageFilterModel);
+					config.getMessageFilterManager().add(messageFilterModel);
 
 				}
 				Set<Method> methods = new HashSet<>();
@@ -114,17 +109,17 @@ public class GGComponentScanner {
 						String action = prefix + requestMessage.value();
 						
 						methodInvoker.setAction(action);
-						
+						/*
 						if (LOGGER.isInfoEnabled()) {
 							LOGGER.info("GGServer Mapped Message Action: {}", action);
 						}
-						
+						*/
 						Class<?>[] parameterTypes = mtd.getParameterTypes();
 						if (parameterTypes != null && parameterTypes.length > 0) {
 							methodInvoker.setRequestMessageClass(parameterTypes[0]);
 						}
 
-						requestMessageManager.put(action, methodInvoker);
+						config.getRequestMessageManager().put(action, methodInvoker);
 					}
 
 					// 扫描 GGOnEvent
@@ -140,7 +135,7 @@ public class GGComponentScanner {
 						eventMethodInvoker.setEventTag(gGOnEvent.value()).addMethod(mtd);
 						eventMethodInvoker.setComponentClass(clazz);
 
-						eventInvokerManager.put(eventMethodInvoker);
+						config.getEventInvokerManager().put(eventMethodInvoker);
 					}
 
 				}

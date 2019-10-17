@@ -13,16 +13,9 @@ import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import xzcode.ggserver.core.client.config.GGClientConfig;
 import xzcode.ggserver.core.client.starter.IGGClientStarter;
-import xzcode.ggserver.core.common.config.GGConfig;
 import xzcode.ggserver.core.common.config.scanner.GGComponentScanner;
 import xzcode.ggserver.core.common.handler.SocketChannelInitializer;
 
-/**
- * socket 服务启动器
- *
- * @author zai
- * 2018-12-20 10:17:44
- */
 public class DefaultGGClientStarter implements IGGClientStarter {
 	
 	private static final Logger logger = LoggerFactory.getLogger(DefaultGGClientStarter.class);
@@ -34,13 +27,7 @@ public class DefaultGGClientStarter implements IGGClientStarter {
     	
     	this.config = config;
     	if (config.getScanPackage() != null && config.getScanPackage().length > 0) {
-    		GGComponentScanner.scan(
-    				config.getComponentObjectManager(),
-    				config.getRequestMessageManager(),
-    				config.getEventInvokerManager(),
-    				config.getMessageFilterManager(),
-    				config.getScanPackage()
-    				);
+    		GGComponentScanner.scan(config);
 		}
     }
     
