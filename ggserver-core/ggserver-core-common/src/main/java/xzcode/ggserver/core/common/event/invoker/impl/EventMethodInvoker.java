@@ -4,6 +4,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+import xzcode.ggserver.core.common.event.IEventHandler;
 import xzcode.ggserver.core.common.event.invoker.IEventInvoker;
 
 public class EventMethodInvoker implements IEventInvoker {
@@ -71,6 +72,11 @@ public class EventMethodInvoker implements IEventInvoker {
 	
 	public Object getComponentObj() {
 		return componentObj;
+	}
+
+	@Override
+	public IEventHandler<?> getEventHandler() {
+		return null;
 	}
 
 

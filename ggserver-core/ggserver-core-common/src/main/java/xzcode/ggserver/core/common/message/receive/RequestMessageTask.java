@@ -10,6 +10,7 @@ import xzcode.ggserver.core.common.message.filter.MessageFilterManager;
 import xzcode.ggserver.core.common.message.receive.invoker.IOnMessageInvoker;
 import xzcode.ggserver.core.common.session.GGSession;
 import xzcode.ggserver.core.common.session.GGSessionUtil;
+import xzcode.ggserver.core.common.session.filter.GGSessionMessageFilterManager;
 
 /**
  * 请求消息任务
@@ -57,6 +58,7 @@ public class RequestMessageTask implements Runnable{
 	public void run() {
 		
 		GGSessionUtil.setSession(this.session);
+		GGSessionMessageFilterManager sessionMessageFilterManager = session.getGGSessionMessageFilterManager();
 		Request request = new Request();
 		ISerializer serializer = config.getSerializer();
 		MessageFilterManager messageFilterManager = this.config.getMessageFilterManager();
@@ -64,6 +66,11 @@ public class RequestMessageTask implements Runnable{
 		try {
 			//反序列化前过滤器
 			if (!messageFilterManager.doBeforeDeserializeFilter(packModel)) {
+				return;
+			}
+			
+			//会话反序列化前过滤器
+			if (!sessionMessageFilterManager.doBeforeDeserializeFilters(packModel)) {
 				return;
 			}
 			
@@ -80,6 +87,13 @@ public class RequestMessageTask implements Runnable{
 			if (!messageFilterManager.doRequestFilters(request)) {
 				return;
 			}
+			
+			//会话反序列化后的消息过滤器
+			if (!sessionMessageFilterManager.doRequestFilters(request)) {
+				return;
+			}
+			
+			
 			while (!oldAction.equals(request.getAction())) {
 				oldAction = request.getAction();
 				if (packModel.getMessage() != null) {
@@ -93,6 +107,11 @@ public class RequestMessageTask implements Runnable{
 				}
 				//如果action发生了改变，再次调用过滤器
 				if (!messageFilterManager.doRequestFilters(request)) {
+					return;
+				}
+				
+				//如果action发生了改变，再次调用过滤器
+				if (!sessionMessageFilterManager.doRequestFilters(request)) {
 					return;
 				}
 			}

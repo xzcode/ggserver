@@ -2,8 +2,8 @@ package xzcode.ggserver.core.common.executor;
 
 import java.util.concurrent.TimeUnit;
 
-import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.util.concurrent.ScheduledFuture;
+import xzcode.ggserver.core.common.config.IGGConfigSupport;
 import xzcode.ggserver.core.common.executor.future.GGTaskFuture;
 import xzcode.ggserver.core.common.executor.task.GGTask;
 
@@ -13,10 +13,9 @@ import xzcode.ggserver.core.common.executor.task.GGTask;
  * @author zzz
  * 2019-09-24 15:49:41
  */
-public interface IExecutorSupport {
+public interface IExecutorSupport extends IGGConfigSupport{
 	
 	
-	NioEventLoopGroup getTaskExecutor();
 
 	/**
 	 * 计划延迟任务
@@ -60,7 +59,7 @@ public interface IExecutorSupport {
 	default GGTaskFuture schedule(Object syncLock, long delayMs, TimeUnit timeUnit, Runnable runnable) {
 		GGTaskFuture taskFuture = new GGTaskFuture();
 		GGTask syncTask = new GGTask(syncLock, runnable);
-		ScheduledFuture<?> future = getTaskExecutor().schedule(syncTask, delayMs, timeUnit);
+		ScheduledFuture<?> future = getConfig().getTaskExecutor().schedule(syncTask, delayMs, timeUnit);
 		taskFuture.setScheduledFuture(future);
 		return taskFuture;
 	}
@@ -126,7 +125,7 @@ public interface IExecutorSupport {
 		GGTaskFuture taskFuture = new GGTaskFuture();
 		afterFuture.setCompleteAction(() -> {
 			GGTask syncTask = new GGTask(syncLock, runnable);
-			ScheduledFuture<?> future = getTaskExecutor().schedule(syncTask, delay, timeUnit);
+			ScheduledFuture<?> future = getConfig().getTaskExecutor().schedule(syncTask, delay, timeUnit);
 			taskFuture.setScheduledFuture(future);
 		});
 		return taskFuture;
@@ -160,7 +159,7 @@ public interface IExecutorSupport {
 	default GGTaskFuture scheduleWithFixedDelay(long initialDelay, long delay, Runnable runnable, TimeUnit timeUnit) {
 		GGTaskFuture taskFuture = new GGTaskFuture();
 		GGTask syncTask = new GGTask(runnable);
-		ScheduledFuture<?> future = getTaskExecutor().scheduleWithFixedDelay(syncTask, initialDelay, delay, timeUnit);
+		ScheduledFuture<?> future = getConfig().getTaskExecutor().scheduleWithFixedDelay(syncTask, initialDelay, delay, timeUnit);
 		taskFuture.setScheduledFuture(future);
 		return taskFuture;
 	}

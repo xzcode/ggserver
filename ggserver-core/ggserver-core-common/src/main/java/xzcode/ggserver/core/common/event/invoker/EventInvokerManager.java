@@ -2,10 +2,12 @@ package xzcode.ggserver.core.common.event.invoker;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import xzcode.ggserver.core.common.component.GGComponentManager;
+import xzcode.ggserver.core.common.event.IEventHandler;
 import xzcode.ggserver.core.common.event.invoker.impl.EventMethodInvoker;
 
 public class EventInvokerManager {
@@ -35,6 +37,36 @@ public class EventInvokerManager {
 		if (invokers != null) {
 			for (IEventInvoker invoker : invokers) {
 				invoker.invoke(message);
+			}
+		}
+	}
+	
+	/**
+	 * 清除指定事件监听
+	 * 
+	 * @param eventTag
+	 * @author zai
+	 * 2019-10-17 16:47:09
+	 */
+	public void clear(String eventTag) {
+		map.remove(eventTag);
+	}
+	
+	/**
+	 * 移除事件监听
+	 * 
+	 * @param eventTag
+	 * @param eventHandler
+	 * @author zai
+	 * 2019-10-17 16:58:11
+	 */
+	public void remove(String eventTag, IEventHandler<?> eventHandler) {
+		List<IEventInvoker> list = map.get(eventTag);
+		if (list != null) {
+			Iterator<IEventInvoker> it = list.iterator();
+			while (it.hasNext()) {
+				it.remove();
+				
 			}
 		}
 	}

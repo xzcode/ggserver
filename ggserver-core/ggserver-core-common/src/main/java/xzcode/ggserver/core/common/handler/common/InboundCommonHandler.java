@@ -54,7 +54,7 @@ public class InboundCommonHandler extends ChannelInboundHandlerAdapter{
 		//InetSocketAddress socketAddress = (InetSocketAddress) ctx.channel().remoteAddress();
 		Channel channel = ctx.channel();
 		//初始化session
-		DefaultGGSessionImpl session = new DefaultGGSessionImpl(ctx.channel());
+		DefaultGGSessionImpl session = new DefaultGGSessionImpl(config, ctx.channel());
 		
 		channel.attr(DefaultChannelAttributeKeys.SESSION).set(session);
 		

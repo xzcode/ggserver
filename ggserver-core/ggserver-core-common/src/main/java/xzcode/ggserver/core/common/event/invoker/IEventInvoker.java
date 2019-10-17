@@ -1,5 +1,7 @@
 package xzcode.ggserver.core.common.event.invoker;
 
+import xzcode.ggserver.core.common.event.IEventHandler;
+
 /**
  * 事件调用接口
  * 
@@ -15,6 +17,9 @@ public interface IEventInvoker {
 	 * 2019-03-16 19:06:37
 	 */
 	public String getEvent();
+	
+	
+	public IEventHandler<?> getEventHandler();
 
 	/**
 	 * 调用事件触发

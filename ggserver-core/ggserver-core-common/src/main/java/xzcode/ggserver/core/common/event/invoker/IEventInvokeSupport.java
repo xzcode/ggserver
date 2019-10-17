@@ -30,6 +30,14 @@ public interface IEventInvokeSupport extends IGGSessionSupport,IGGConfigSupport{
 		getConfig().getEventInvokerManager().put(invoker);
 	}
 	
+	default <T> void clearEventHandler(String eventTag) {
+		getConfig().getEventInvokerManager().clear(eventTag);
+	}
+	
+	default <T> void removeEventHandler(String eventTag, IEventHandler<T> eventHandler) {
+		getConfig().getEventInvokerManager().remove(eventTag, eventHandler);
+	}
+	
 	/**
 	 * 发送自定义事件
 	 * 

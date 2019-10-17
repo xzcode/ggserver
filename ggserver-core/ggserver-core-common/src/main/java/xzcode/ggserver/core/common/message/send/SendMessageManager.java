@@ -8,12 +8,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.netty.channel.Channel;
-import io.netty.util.concurrent.ScheduledFuture;
 import xzcode.ggserver.core.common.config.GGConfig;
 import xzcode.ggserver.core.common.message.PackModel;
 import xzcode.ggserver.core.common.message.send.future.GGSendFuture;
 import xzcode.ggserver.core.common.session.GGSession;
 import xzcode.ggserver.core.common.session.GGSessionUtil;
+import xzcode.ggserver.core.common.session.filter.GGSessionMessageFilterManager;
 
 /**
  * 消息发送管理器
@@ -140,10 +140,19 @@ public class SendMessageManager implements ISendMessageSupport{
 			byte[] messageData = message == null ? null : this.config.getSerializer().serialize(message);
 			for (Entry<Object, GGSession> entry : entrySet) {
 				GGSession sesson = entry.getValue();
+				GGSessionMessageFilterManager sessionMessageFilterManager = sesson.getGGSessionMessageFilterManager();
+				
+				Response response = Response.create(action, message);
 				//发送过滤器
-				if (!config.getMessageFilterManager().doResponseFilters(Response.create(action, message))) {
+				if (!config.getMessageFilterManager().doResponseFilters(response)) {
 					return;
 				}
+				
+				//会话-发送过滤器
+				if (!sessionMessageFilterManager.doResponseFilters(response)) {
+					return;
+				}
+				
 				channel = sesson.getChannel();
 				if (channel.isActive()) {
 					channel.write(PackModel.create(actionIdData, messageData));
@@ -161,9 +170,10 @@ public class SendMessageManager implements ISendMessageSupport{
 		sendToAll(action, null);
 	}
 
+
 	@Override
-	public SendMessageManager getSendMessageManager() {
-		return this;
+	public GGConfig getConfig() {
+		return getConfig();
 	}
 
 }

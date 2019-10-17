@@ -13,15 +13,18 @@ public class DefaultEventInvoker implements IEventInvoker {
 	
 	private String event;
 	
+	@SuppressWarnings("rawtypes")
 	private IEventHandler action;
 	
 
 	
+	@SuppressWarnings("rawtypes")
 	public void setAction(IEventHandler action) {
 		this.action = action;
 	}
 	
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void invoke(Object message) throws Exception {
 		action.onEvent(message);
@@ -35,6 +38,12 @@ public class DefaultEventInvoker implements IEventInvoker {
 	public DefaultEventInvoker setEventTag(String eventTag) {
 		this.event = eventTag;
 		return this;
+	}
+
+
+	@Override
+	public IEventHandler<?> getEventHandler() {
+		return action;
 	}
 	
 

@@ -54,15 +54,4 @@ implements
 		return config;
 	}
 
-	@Override
-	public SendMessageManager getSendMessageManager() {
-		return this.config.getSendMessageManager();
-	}
-	@Override
-	public NioEventLoopGroup getTaskExecutor() {
-		return this.config.getTaskExecutor();
-	}
-	
-	
-
 }

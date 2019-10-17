@@ -4,7 +4,9 @@ import java.net.InetSocketAddress;
 
 import io.netty.channel.Channel;
 import io.netty.util.AttributeKey;
+import xzcode.ggserver.core.common.config.GGConfig;
 import xzcode.ggserver.core.common.session.GGSession;
+import xzcode.ggserver.core.common.session.filter.GGSessionMessageFilterManager;
 
 /**
  * sesson默认实现
@@ -16,6 +18,10 @@ import xzcode.ggserver.core.common.session.GGSession;
 public class DefaultGGSessionImpl implements GGSession {
 	
 	
+	private GGConfig config;
+	
+	private GGSessionMessageFilterManager sessionMessageFilterManager = new GGSessionMessageFilterManager();;
+	
 	private Channel channel;
 	
 	
@@ -26,6 +32,14 @@ public class DefaultGGSessionImpl implements GGSession {
 		this.channel = channel;
 	}
 	
+	
+	public DefaultGGSessionImpl(GGConfig config, Channel channel) {
+		super();
+		this.config = config;
+		this.channel = channel;
+	}
+
+
 	@Override
 	public void addAttribute(String key, Object value) {
 		channel.attr(AttributeKey.valueOf(key)).set(value);
@@ -80,6 +94,21 @@ public class DefaultGGSessionImpl implements GGSession {
 	public String getSessonId() {
 		return channel.id().asLongText();
 	}
+
+
+	@Override
+	public GGConfig getConfig() {
+		return config;
+	}
 	
+	public void setConfig(GGConfig config) {
+		this.config = config;
+	}
+
+
+	@Override
+	public GGSessionMessageFilterManager getGGSessionMessageFilterManager() {
+		return this.sessionMessageFilterManager;
+	}
 
 }

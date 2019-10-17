@@ -1,8 +1,9 @@
 package xzcode.ggserver.core.common.message.filter;
 
-public interface IGGFilterSupport {
+import xzcode.ggserver.core.common.config.IGGConfigSupport;
+
+public interface IGGFilterSupport extends IGGConfigSupport{
 	
-	MessageFilterManager getMessageFilterManager();
 	
 	/**
 	 * 添加过滤器
@@ -17,7 +18,7 @@ public interface IGGFilterSupport {
 		filterModel.setFilter(filter);
 		filterModel.setOrder(order);
 		filterModel.setFilterClazz(filter.getClass());
-		getMessageFilterManager().add(filterModel );
+		getConfig().getMessageFilterManager().add(filterModel );
 	}
 	
 	/**
