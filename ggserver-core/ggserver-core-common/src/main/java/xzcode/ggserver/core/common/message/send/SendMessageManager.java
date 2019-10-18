@@ -13,7 +13,8 @@ import xzcode.ggserver.core.common.message.PackModel;
 import xzcode.ggserver.core.common.message.send.future.GGSendFuture;
 import xzcode.ggserver.core.common.session.GGSession;
 import xzcode.ggserver.core.common.session.GGSessionUtil;
-import xzcode.ggserver.core.common.session.filter.GGSessionMessageFilterManager;
+import xzcode.ggserver.core.common.session.filter.ISessionFilterManager;
+import xzcode.ggserver.core.common.session.filter.impl.SessionFilterManager;
 
 /**
  * 消息发送管理器
@@ -140,7 +141,7 @@ public class SendMessageManager implements ISendMessageSupport{
 			byte[] messageData = message == null ? null : this.config.getSerializer().serialize(message);
 			for (Entry<Object, GGSession> entry : entrySet) {
 				GGSession sesson = entry.getValue();
-				GGSessionMessageFilterManager sessionMessageFilterManager = sesson.getGGSessionMessageFilterManager();
+				ISessionFilterManager sessionFilterManager = sesson.getSessionFilterManager();
 				
 				Response response = Response.create(action, message);
 				//发送过滤器
@@ -149,7 +150,7 @@ public class SendMessageManager implements ISendMessageSupport{
 				}
 				
 				//会话-发送过滤器
-				if (!sessionMessageFilterManager.doResponseFilters(response)) {
+				if (!sessionFilterManager.doResponseFilters(response)) {
 					return;
 				}
 				

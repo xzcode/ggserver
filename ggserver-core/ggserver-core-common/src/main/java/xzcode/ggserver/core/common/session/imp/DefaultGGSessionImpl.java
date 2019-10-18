@@ -6,7 +6,10 @@ import io.netty.channel.Channel;
 import io.netty.util.AttributeKey;
 import xzcode.ggserver.core.common.config.GGConfig;
 import xzcode.ggserver.core.common.session.GGSession;
-import xzcode.ggserver.core.common.session.filter.GGSessionMessageFilterManager;
+import xzcode.ggserver.core.common.session.event.IGGSessionEventManager;
+import xzcode.ggserver.core.common.session.event.impl.DefaultSessionEventManager;
+import xzcode.ggserver.core.common.session.filter.ISessionFilterManager;
+import xzcode.ggserver.core.common.session.filter.impl.SessionFilterManager;
 
 /**
  * sesson默认实现
@@ -20,23 +23,18 @@ public class DefaultGGSessionImpl implements GGSession {
 	
 	private GGConfig config;
 	
-	private GGSessionMessageFilterManager sessionMessageFilterManager = new GGSessionMessageFilterManager();;
+	private IGGSessionEventManager eventManager;
+	
+	private ISessionFilterManager sessionFilterManager;
 	
 	private Channel channel;
-	
-	
-	public DefaultGGSessionImpl() {}
-	
-
-	public DefaultGGSessionImpl(Channel channel) {
-		this.channel = channel;
-	}
-	
 	
 	public DefaultGGSessionImpl(GGConfig config, Channel channel) {
 		super();
 		this.config = config;
 		this.channel = channel;
+		eventManager = new DefaultSessionEventManager(config, this);
+		sessionFilterManager = new SessionFilterManager(this);
 	}
 
 
@@ -107,8 +105,15 @@ public class DefaultGGSessionImpl implements GGSession {
 
 
 	@Override
-	public GGSessionMessageFilterManager getGGSessionMessageFilterManager() {
-		return this.sessionMessageFilterManager;
+	public ISessionFilterManager getSessionFilterManager() {
+		return this.sessionFilterManager;
 	}
+
+
+	@Override
+	public IGGSessionEventManager getGGSessionEventManager() {
+		return eventManager;
+	}
+
 
 }

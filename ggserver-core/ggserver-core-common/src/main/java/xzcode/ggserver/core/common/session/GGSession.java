@@ -4,14 +4,16 @@ import io.netty.channel.Channel;
 import xzcode.ggserver.core.common.config.IGGConfigSupport;
 import xzcode.ggserver.core.common.executor.IExecutorSupport;
 import xzcode.ggserver.core.common.message.send.ISingleChannelSendMessageSupport;
-import xzcode.ggserver.core.common.session.filter.IGGSessionMessageFilterSupport;
+import xzcode.ggserver.core.common.session.event.ISessionEventSupport;
+import xzcode.ggserver.core.common.session.filter.ISessionFilterSupport;
 
 public interface GGSession 
 extends 
 IGGConfigSupport,
 ISingleChannelSendMessageSupport, 
 IExecutorSupport,
-IGGSessionMessageFilterSupport
+ISessionEventSupport,
+ISessionFilterSupport
 {
 
 	void addAttribute(String key, Object value);

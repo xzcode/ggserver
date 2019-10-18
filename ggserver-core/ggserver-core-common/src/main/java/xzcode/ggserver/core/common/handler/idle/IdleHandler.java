@@ -61,7 +61,6 @@ public class IdleHandler extends ChannelInboundHandlerAdapter{
 		
 		
 		if (evt instanceof IdleStateEvent) {
-			//LOGGER.debug("Socket Event Triggered: {} ", evt);
 			GGSession session = ctx.channel().attr(DefaultChannelAttributeKeys.SESSION).get();
             switch (((IdleStateEvent) evt).state()) {
             	
