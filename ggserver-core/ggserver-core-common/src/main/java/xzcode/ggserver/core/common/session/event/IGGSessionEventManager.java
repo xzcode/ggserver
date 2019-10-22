@@ -10,7 +10,11 @@ public interface IGGSessionEventManager {
 	<T> void removeEventListener(String event, ISessionEventListener<T> listener);
 
 	<T> boolean hasEventListener(String event, ISessionEventListener<T> listener);
+	
+	<T> boolean hasEventListener(String event);
 
 	void clearEventListener(String event);
+	
+	boolean isEmpty();
 
 }

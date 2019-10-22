@@ -14,16 +14,18 @@ import io.netty.handler.logging.LoggingHandler;
 import xzcode.ggserver.core.client.config.GGClientConfig;
 import xzcode.ggserver.core.client.starter.IGGClientStarter;
 import xzcode.ggserver.core.common.config.scanner.GGComponentScanner;
+import xzcode.ggserver.core.common.future.GGFuture;
+import xzcode.ggserver.core.common.future.IGGFuture;
 import xzcode.ggserver.core.common.handler.SocketChannelInitializer;
 
-public class DefaultGGClientStarter implements IGGClientStarter {
+public class DefaultClientStarter implements IGGClientStarter {
 	
-	private static final Logger logger = LoggerFactory.getLogger(DefaultGGClientStarter.class);
+	private static final Logger logger = LoggerFactory.getLogger(DefaultClientStarter.class);
 	
 	private GGClientConfig config;
 	private Channel channel;
 	
-    public DefaultGGClientStarter(GGClientConfig config) {
+    public DefaultClientStarter(GGClientConfig config) {
     	
     	this.config = config;
     	if (config.getScanPackage() != null && config.getScanPackage().length > 0) {
@@ -33,11 +35,11 @@ public class DefaultGGClientStarter implements IGGClientStarter {
     
 
 	@Override
-	public IGGClientStarter connect() {
+	public IGGFuture connect() {
 		return connect(config.getHost(), config.getPort());
 	}
     
-    public IGGClientStarter connect(String host, int port) {
+    public IGGFuture connect(String host, int port) {
     	
         try {
         	
@@ -64,42 +66,31 @@ public class DefaultGGClientStarter implements IGGClientStarter {
             boot.option(ChannelOption.SO_BACKLOG, config.getSoBacklog());         
     
             // 连接服务器
-            ChannelFuture future = boot.connect(config.getHost(), config.getPort()).sync();
+            ChannelFuture future = boot.connect(config.getHost(), config.getPort());
             channel = future.channel();
-            future.addListener((f) -> {
-            	if (f.isSuccess()) {
-            		if (logger.isInfoEnabled()) {
-                    	logger.info("GGClient connected --> [{}] ", (config.getHost() + ":" + config.getPort()));
-                    }
-				}
-            });
+            
             
             //监听关闭事件
-            future.channel().closeFuture().addListener((e) -> {
+            channel.closeFuture().addListener((e) -> {
             	if (config.isAutoShutdown()) {
     				config.getWorkerGroup().shutdownGracefully();				
     			}
             });
+            return new GGFuture(future);
         }catch (Exception e) {
-        	
         	throw new RuntimeException("GGClient connect failed !! ", e);
-        	
-		} finally {
-			if (config.isAutoShutdown()) {
-				config.getWorkerGroup().shutdownGracefully();				
-			}
-        }
-        return this;
+		}
     }
     
 
 	@Override
-	public IGGClientStarter disconnect() {
-		channel.close();
+	public IGGFuture disconnect() {
+		ChannelFuture channelFuture = channel.close();
+		
 		if (config.getWorkerGroup() != null && config.isAutoShutdown()) {
     		config.getWorkerGroup().shutdownGracefully();			
 		}
-		return null;
+		return new GGFuture(channelFuture);
 	}
     
     public void setConfig(GGClientConfig config) {

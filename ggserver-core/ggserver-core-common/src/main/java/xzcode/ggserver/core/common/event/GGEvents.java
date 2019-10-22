@@ -1,11 +1,10 @@
 package xzcode.ggserver.core.common.event;
 
 /**
- * socket 事件标识
- * 
+ * ggserver默认事件
  * 
  * @author zai
- * 2017-08-03
+ * 2019-10-22 15:51:51
  */
 public interface GGEvents {
 	
@@ -16,20 +15,20 @@ public interface GGEvents {
 	 * @author zai
 	 * 2017-08-03
 	 */
-	interface IdleState {
+	interface Idle {
 		
 		/**
 	     * 读空闲
 	     */
-		String READER_IDLE = "ggevents.idle.READER_IDLE";
+		String READE = "ggevents.idle.read";
 	    /**
 	     * 写空闲
 	     */
-		String WRITER_IDLE = "ggevents.idle.READER_IDLE";
+		String WRITE = "ggevents.idle.write";
 	    /**
 	     * 读与写空闲
 	     */
-		String ALL_IDLE = "ggevents.idle.ALL_IDLE";
+		String ALL = "ggevents.idle.all";
 
 	}
 	
@@ -41,16 +40,16 @@ public interface GGEvents {
 	 * @author zai
 	 * 2017-09-25
 	 */
-	interface ConnectionState {
+	interface Connection {
 		
 		/**
-	     * channel 激活
-	     */
-		String ACTIVE = "ggevents.conn.ACTIVE";
+		 * 连接成功
+		 */
+		String OPEN = "ggevents.conn.open";
 	    /**
-	     * channel 关闭
+	     * 连接断开
 	     */
-		String CLOSE = "ggevents.conn.CLOSE";
+		String CLOSE = "ggevents.conn.close";
 
 	}
 

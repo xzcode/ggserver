@@ -13,6 +13,8 @@ public class GGServerConfig extends GGConfig{
 	protected ThreadFactory bossGroupThreadFactory;
 	
 	
+	
+	
 	@Override
 	public void init() {
 		

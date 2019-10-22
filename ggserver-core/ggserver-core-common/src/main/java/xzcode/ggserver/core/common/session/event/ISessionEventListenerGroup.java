@@ -10,4 +10,6 @@ public interface ISessionEventListenerGroup<T> {
 	
 	void onEvent(T e);
 	
+	boolean isEmpty();
+	
 }

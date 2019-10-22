@@ -74,7 +74,7 @@ public class ScheduleTaskHolder{
 	 * 2019-04-22 18:06:06
 	 */
 	public ScheduleTaskHolder startTask() {
-		this.future = gg.scheduleWithFixedDelay(initialDelay, delay, taskAction, timeUnit).getScheduledFuture();
+		this.future = (ScheduledFuture<?>) gg.scheduleWithFixedDelay(initialDelay, delay, taskAction, timeUnit).getNettyFuture();
 		return this;
 	}
 	

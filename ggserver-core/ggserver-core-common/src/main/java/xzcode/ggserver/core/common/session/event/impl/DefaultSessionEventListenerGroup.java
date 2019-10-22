@@ -2,7 +2,6 @@ package xzcode.ggserver.core.common.session.event.impl;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-
 import xzcode.ggserver.core.common.session.GGSession;
 import xzcode.ggserver.core.common.session.event.ISessionEventListener;
 import xzcode.ggserver.core.common.session.event.ISessionEventListenerGroup;
@@ -46,6 +45,11 @@ public class DefaultSessionEventListenerGroup<T> implements ISessionEventListene
 	@Override
 	public boolean hasListener(ISessionEventListener<T> listener) {
 		return listeners.contains(listener);
+	}
+
+	@Override
+	public boolean isEmpty() {
+		return listeners.isEmpty();
 	}
 
 }

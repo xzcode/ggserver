@@ -3,7 +3,6 @@ package xzcode.ggserver.core.common.session.event.impl;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import xzcode.ggserver.core.common.config.GGConfig;
 import xzcode.ggserver.core.common.session.GGSession;
 import xzcode.ggserver.core.common.session.event.IGGSessionEventManager;
 import xzcode.ggserver.core.common.session.event.ISessionEventListener;
@@ -11,18 +10,11 @@ import xzcode.ggserver.core.common.session.event.ISessionEventListenerGroup;
 
 public class DefaultSessionEventManager implements IGGSessionEventManager {
 	
-	private GGConfig config;
-	
 	private GGSession session;
 	
 	private Map<String, ISessionEventListenerGroup<?>> eventMap;
-	
-	
-	
 
-	public DefaultSessionEventManager(GGConfig config, GGSession session) {
-		super();
-		this.config = config;
+	public DefaultSessionEventManager(GGSession session) {
 		this.session = session;
 	}
 
@@ -32,10 +24,7 @@ public class DefaultSessionEventManager implements IGGSessionEventManager {
 		if (eventMap != null) {
 			ISessionEventListenerGroup<T> group = (ISessionEventListenerGroup<T>) eventMap.get(event);
 			if (group != null) {
-				//异步触发事件
-				config.getTaskExecutor().submit(() -> {
-					group.onEvent(eventData);
-				});
+				group.onEvent(eventData);
 			}
 		}
 		
@@ -79,7 +68,7 @@ public class DefaultSessionEventManager implements IGGSessionEventManager {
 	public <T> boolean hasEventListener(String event, ISessionEventListener<T> listener) {
 		ISessionEventListenerGroup<T> group = (ISessionEventListenerGroup<T>) eventMap.get(event);
 		if(group != null) {
-			group.removeListener(listener);
+			return group.hasListener(listener);
 		}
 		return false;
 	}
@@ -87,6 +76,21 @@ public class DefaultSessionEventManager implements IGGSessionEventManager {
 	@Override
 	public void clearEventListener(String event) {
 		eventMap.remove(event);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> boolean hasEventListener(String event) {
+		ISessionEventListenerGroup<T> group = (ISessionEventListenerGroup<T>) eventMap.get(event);
+		if(group != null) {
+			return !group.isEmpty();
+		}
+		return false;
+	}
+
+	@Override
+	public boolean isEmpty() {
+		return eventMap == null || eventMap.size() == 0;
 	}
 
 	

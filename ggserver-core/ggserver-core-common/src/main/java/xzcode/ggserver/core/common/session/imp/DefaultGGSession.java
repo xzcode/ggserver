@@ -18,7 +18,7 @@ import xzcode.ggserver.core.common.session.filter.impl.SessionFilterManager;
  * @author zai
  * 2019-10-02 22:48:34
  */
-public class DefaultGGSessionImpl implements GGSession {
+public class DefaultGGSession implements GGSession {
 	
 	
 	private GGConfig config;
@@ -29,11 +29,11 @@ public class DefaultGGSessionImpl implements GGSession {
 	
 	private Channel channel;
 	
-	public DefaultGGSessionImpl(GGConfig config, Channel channel) {
+	public DefaultGGSession(GGConfig config, Channel channel) {
 		super();
 		this.config = config;
 		this.channel = channel;
-		eventManager = new DefaultSessionEventManager(config, this);
+		eventManager = new DefaultSessionEventManager(this);
 		sessionFilterManager = new SessionFilterManager(this);
 	}
 

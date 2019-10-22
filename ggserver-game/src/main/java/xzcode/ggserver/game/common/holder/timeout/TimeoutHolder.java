@@ -3,7 +3,7 @@ package xzcode.ggserver.game.common.holder.timeout;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import xzcode.ggserver.core.common.executor.future.GGTaskFuture;
+import xzcode.ggserver.core.common.future.IGGFuture;
 import xzcode.ggserver.core.server.GGServer;
 
 /**
@@ -69,13 +69,13 @@ public class TimeoutHolder{
 	 * 2019-04-22 18:06:06
 	 */
 	public TimeoutHolder startTask() {
-		GGTaskFuture taskFuture;
+		IGGFuture taskFuture;
 		if (this.syncLock != null) {
 			taskFuture = gg.schedule(this.syncLock, timeoutMs, timeoutAction);
 		}else {
 			taskFuture = gg.schedule(timeoutMs, timeoutAction);
 		}
-		this.timeoutFuture = taskFuture.getScheduledFuture();
+		this.timeoutFuture = (ScheduledFuture<?>) taskFuture.getNettyFuture();
 		this.startTimeMs = System.currentTimeMillis();
 		return this;
 	}

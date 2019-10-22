@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import xzcode.ggserver.core.common.config.GGConfig;
 import xzcode.ggserver.core.common.session.GGSession;
 import xzcode.ggserver.core.common.session.GGSessionUtil;
+import xzcode.ggserver.core.common.session.event.IGGSessionEventManager;
 
 /**
  * 事件任务
@@ -19,7 +20,6 @@ private final static Logger LOGGER = LoggerFactory.getLogger(GGEventTask.class);
 	
 	private GGConfig config;
 	
-
 	/**
 	 * session对象
 	 */
@@ -28,7 +28,7 @@ private final static Logger LOGGER = LoggerFactory.getLogger(GGEventTask.class);
 	/**
 	 * event标识
 	 */
-	private String eventTag;
+	private String event;
 	
 	/**
 	 * 消息对象
@@ -37,10 +37,10 @@ private final static Logger LOGGER = LoggerFactory.getLogger(GGEventTask.class);
 	
 	
 
-	public GGEventTask(GGSession session, String eventTag, Object message, GGConfig config) {
+	public GGEventTask(GGSession session, String event, Object message, GGConfig config) {
 		super();
 		this.session = session;
-		this.eventTag = eventTag;
+		this.event = event;
 		this.message = message;
 		this.config = config;
 	}
@@ -51,7 +51,12 @@ private final static Logger LOGGER = LoggerFactory.getLogger(GGEventTask.class);
 		GGSessionUtil.setSession(this.session);
 		try {
 			
-			config.getEventInvokerManager().invoke(eventTag, message);			
+			config.getEventInvokerManager().invoke(event, message);	
+			
+			IGGSessionEventManager sessionEventManager = this.session.getGGSessionEventManager();
+			if (!sessionEventManager.isEmpty() && sessionEventManager.hasEventListener(event)) {
+				sessionEventManager.emitEvent(event, message);
+			}
 			
 		} catch (Exception e) {
 			LOGGER.error("GGEvent Task Error!!", e);

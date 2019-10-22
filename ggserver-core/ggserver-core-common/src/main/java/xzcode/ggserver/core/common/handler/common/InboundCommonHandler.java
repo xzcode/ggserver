@@ -11,7 +11,7 @@ import xzcode.ggserver.core.common.channel.DefaultChannelAttributeKeys;
 import xzcode.ggserver.core.common.config.GGConfig;
 import xzcode.ggserver.core.common.event.GGEventTask;
 import xzcode.ggserver.core.common.event.GGEvents;
-import xzcode.ggserver.core.common.session.imp.DefaultGGSessionImpl;
+import xzcode.ggserver.core.common.session.imp.DefaultGGSession;
 
 public class InboundCommonHandler extends ChannelInboundHandlerAdapter{
 	
@@ -54,13 +54,13 @@ public class InboundCommonHandler extends ChannelInboundHandlerAdapter{
 		//InetSocketAddress socketAddress = (InetSocketAddress) ctx.channel().remoteAddress();
 		Channel channel = ctx.channel();
 		//初始化session
-		DefaultGGSessionImpl session = new DefaultGGSessionImpl(config, ctx.channel());
+		DefaultGGSession session = new DefaultGGSession(config, ctx.channel());
 		
 		channel.attr(DefaultChannelAttributeKeys.SESSION).set(session);
 		
 		config.getSessionManager().put(session.getSessonId(), session);
 		
-		config.getTaskExecutor().submit(new GGEventTask(session, GGEvents.ConnectionState.ACTIVE, null, config));
+		config.getTaskExecutor().submit(new GGEventTask(session, GGEvents.Connection.OPEN, null, config));
 		
 		
 		//注册channel关闭事件
@@ -70,7 +70,7 @@ public class InboundCommonHandler extends ChannelInboundHandlerAdapter{
 				LOGGER.debug("Channel Close:{}", ctx.channel());
 			}
 			
-			config.getTaskExecutor().submit(new GGEventTask(session, GGEvents.ConnectionState.CLOSE, null, config));
+			config.getTaskExecutor().submit(new GGEventTask(session, GGEvents.Connection.CLOSE, null, config));
 			config.getSessionManager().remove(session.getSessonId());
 		});
 		
@@ -91,7 +91,6 @@ public class InboundCommonHandler extends ChannelInboundHandlerAdapter{
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("userEventTriggered:{}", evt);			
 		}
-		
 		super.userEventTriggered(ctx, evt);
 	}
 	

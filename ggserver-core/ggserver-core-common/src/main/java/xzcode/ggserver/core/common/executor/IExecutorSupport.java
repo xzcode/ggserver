@@ -4,8 +4,9 @@ import java.util.concurrent.TimeUnit;
 
 import io.netty.util.concurrent.ScheduledFuture;
 import xzcode.ggserver.core.common.config.IGGConfigSupport;
-import xzcode.ggserver.core.common.executor.future.GGTaskFuture;
 import xzcode.ggserver.core.common.executor.task.GGTask;
+import xzcode.ggserver.core.common.future.GGFuture;
+import xzcode.ggserver.core.common.future.IGGFuture;
 
 /**
  * 任务执行器支持接口
@@ -26,7 +27,7 @@ public interface IExecutorSupport extends IGGConfigSupport{
 	 * @author zzz
 	 * 2019-09-10 11:05:24
 	 */
-	default GGTaskFuture schedule(long delayMs, Runnable runnable) {
+	default IGGFuture schedule(long delayMs, Runnable runnable) {
 		return schedule(null, delayMs, TimeUnit.MILLISECONDS, runnable);
 	}
 	
@@ -41,7 +42,7 @@ public interface IExecutorSupport extends IGGConfigSupport{
 	 * @author zzz
 	 * 2019-09-10 11:05:58
 	 */
-	default GGTaskFuture schedule(Object syncLock, long delayMs, Runnable runnable) {
+	default IGGFuture schedule(Object syncLock, long delayMs, Runnable runnable) {
 		return schedule(syncLock, delayMs, TimeUnit.MILLISECONDS, runnable);
 	}
 	
@@ -56,11 +57,11 @@ public interface IExecutorSupport extends IGGConfigSupport{
 	 * @author zzz
 	 * 2019-09-10 11:06:09
 	 */
-	default GGTaskFuture schedule(Object syncLock, long delayMs, TimeUnit timeUnit, Runnable runnable) {
-		GGTaskFuture taskFuture = new GGTaskFuture();
+	default IGGFuture schedule(Object syncLock, long delayMs, TimeUnit timeUnit, Runnable runnable) {
+		IGGFuture taskFuture = new GGFuture();
 		GGTask syncTask = new GGTask(syncLock, runnable);
 		ScheduledFuture<?> future = getConfig().getTaskExecutor().schedule(syncTask, delayMs, timeUnit);
-		taskFuture.setScheduledFuture(future);
+		taskFuture.setNettyFuture(future);
 		return taskFuture;
 	}
 	
@@ -74,7 +75,7 @@ public interface IExecutorSupport extends IGGConfigSupport{
 	 * @author zzz
 	 * 2019-09-11 11:49:50
 	 */
-	default GGTaskFuture scheduleAfter(GGTaskFuture afterFuture, long delay, Runnable runnable) {
+	default IGGFuture scheduleAfter(IGGFuture afterFuture, long delay, Runnable runnable) {
 		return scheduleAfter(afterFuture, null, delay, TimeUnit.MILLISECONDS, runnable);
 	}
 	
@@ -89,7 +90,7 @@ public interface IExecutorSupport extends IGGConfigSupport{
 	 * @author zzz
 	 * 2019-09-11 11:51:13
 	 */
-	default GGTaskFuture scheduleAfter(GGTaskFuture afterFuture, long delay, TimeUnit timeUnit, Runnable runnable) {
+	default IGGFuture scheduleAfter(IGGFuture afterFuture, long delay, TimeUnit timeUnit, Runnable runnable) {
 		return scheduleAfter(afterFuture, null, delay, timeUnit, runnable);
 	}
 	
@@ -104,7 +105,7 @@ public interface IExecutorSupport extends IGGConfigSupport{
 	 * @author zzz
 	 * 2019-09-11 11:54:30
 	 */
-	default GGTaskFuture scheduleAfter(GGTaskFuture afterFuture, Object syncLock, long delay, Runnable runnable) {
+	default IGGFuture scheduleAfter(IGGFuture afterFuture, Object syncLock, long delay, Runnable runnable) {
 		return scheduleAfter(afterFuture, syncLock, delay, TimeUnit.MILLISECONDS, runnable);
 	}
 	
@@ -120,13 +121,13 @@ public interface IExecutorSupport extends IGGConfigSupport{
 	 * @author zzz
 	 * 2019-09-11 11:51:19
 	 */
-	default GGTaskFuture scheduleAfter(GGTaskFuture afterFuture, Object syncLock, long delay, TimeUnit timeUnit, Runnable runnable) {
+	default IGGFuture scheduleAfter(IGGFuture afterFuture, Object syncLock, long delay, TimeUnit timeUnit, Runnable runnable) {
 		
-		GGTaskFuture taskFuture = new GGTaskFuture();
-		afterFuture.setCompleteAction(() -> {
+		IGGFuture taskFuture = new GGFuture();
+		afterFuture.onComplete(() -> {
 			GGTask syncTask = new GGTask(syncLock, runnable);
 			ScheduledFuture<?> future = getConfig().getTaskExecutor().schedule(syncTask, delay, timeUnit);
-			taskFuture.setScheduledFuture(future);
+			taskFuture.setNettyFuture(future);
 		});
 		return taskFuture;
 	}
@@ -141,7 +142,7 @@ public interface IExecutorSupport extends IGGConfigSupport{
 	 * @author zzz
 	 * 2019-09-10 11:06:38
 	 */
-	default GGTaskFuture scheduleWithFixedDelay(long initialDelay, long delayMs, Runnable runnable) {
+	default IGGFuture scheduleWithFixedDelay(long initialDelay, long delayMs, Runnable runnable) {
 		return scheduleWithFixedDelay(initialDelay, delayMs, runnable, TimeUnit.MILLISECONDS);
 	}
 	
@@ -156,11 +157,11 @@ public interface IExecutorSupport extends IGGConfigSupport{
 	 * @author zzz
 	 * 2019-09-10 11:06:09
 	 */
-	default GGTaskFuture scheduleWithFixedDelay(long initialDelay, long delay, Runnable runnable, TimeUnit timeUnit) {
-		GGTaskFuture taskFuture = new GGTaskFuture();
+	default IGGFuture scheduleWithFixedDelay(long initialDelay, long delay, Runnable runnable, TimeUnit timeUnit) {
+		IGGFuture taskFuture = new GGFuture();
 		GGTask syncTask = new GGTask(runnable);
 		ScheduledFuture<?> future = getConfig().getTaskExecutor().scheduleWithFixedDelay(syncTask, initialDelay, delay, timeUnit);
-		taskFuture.setScheduledFuture(future);
+		taskFuture.setNettyFuture(future);
 		return taskFuture;
 	}
 	
@@ -168,7 +169,7 @@ public interface IExecutorSupport extends IGGConfigSupport{
 	/**
 	 * 异步任务
 	 */
-	default GGTaskFuture asyncTask(Runnable task) {
+	default IGGFuture asyncTask(Runnable task) {
 		return this.schedule(0, task);
 	}
 	
@@ -181,7 +182,7 @@ public interface IExecutorSupport extends IGGConfigSupport{
 	 * @author zai
 	 * 2019-07-08 11:56:08
 	 */
-	default GGTaskFuture asyncTask(Object syncLock, Runnable task) {
+	default IGGFuture asyncTask(Object syncLock, Runnable task) {
 		return this.schedule(syncLock, 0, task);
 	}
 }

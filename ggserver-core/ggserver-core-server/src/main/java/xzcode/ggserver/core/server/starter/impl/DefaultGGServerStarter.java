@@ -5,12 +5,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import xzcode.ggserver.core.common.config.scanner.GGComponentScanner;
+import xzcode.ggserver.core.common.future.GGFuture;
+import xzcode.ggserver.core.common.future.IGGFuture;
 import xzcode.ggserver.core.common.handler.MixedSocketChannelInitializer;
 import xzcode.ggserver.core.server.config.GGServerConfig;
 import xzcode.ggserver.core.server.starter.IGGServerStarter;
@@ -23,9 +26,11 @@ import xzcode.ggserver.core.server.starter.IGGServerStarter;
  */
 public class DefaultGGServerStarter implements IGGServerStarter {
 	
-	private static final Logger logger = LoggerFactory.getLogger(DefaultGGServerStarter.class);
+	protected static final Logger logger = LoggerFactory.getLogger(DefaultGGServerStarter.class);
 	
-	private GGServerConfig config;
+	protected GGServerConfig config;
+	
+	protected  Channel serverChannel;
 	
     public DefaultGGServerStarter(GGServerConfig config) {
     	
@@ -35,7 +40,7 @@ public class DefaultGGServerStarter implements IGGServerStarter {
 		}
     }
     
-    public IGGServerStarter run() {
+    public IGGFuture start() {
     	
         try {
         	
@@ -62,14 +67,17 @@ public class DefaultGGServerStarter implements IGGServerStarter {
     
             ChannelFuture future = boot.bind(config.getPort()).sync(); 
             
-            future.channel().closeFuture().sync();
+            serverChannel = future.channel();
+            
+            return new GGFuture(future);
             
         }catch (Exception e) {
         	throw new RuntimeException("GGServer start failed !! ", e);
 		} finally {
-			shutdown();
+			if (config.isAutoShutdown()) {
+				shutdown();				
+			}
         }
-        return this;
     }
     
     /**
@@ -79,14 +87,13 @@ public class DefaultGGServerStarter implements IGGServerStarter {
      * @author zai
      * 2017-07-27
      */
-    public IGGServerStarter shutdown() {
+    public void shutdown() {
     	if (config.getBossGroup() != null) {
     		config.getBossGroup().shutdownGracefully();			
 		}
     	if (config.getWorkerGroup() != null) {
-    		config.getWorkerGroup().shutdownGracefully();			
+    		config.getWorkerGroup().shutdownGracefully();		
 		}
-        return this;
 	}
     
     public void setConfig(GGServerConfig config) {

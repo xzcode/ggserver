@@ -5,6 +5,28 @@ import xzcode.ggserver.core.common.config.IGGConfigSupport;
 public interface IGGFilterSupport extends IGGConfigSupport{
 	
 	
+	default void addBeforeDeserializeFilter(int order, GGBeforeDeserializeFilter filter) {
+		addFilter(order, filter);
+	}
+	default void addBeforeDeserializeFilter(GGBeforeDeserializeFilter filter) {
+		addBeforeDeserializeFilter(10, filter);
+	}
+	
+	default void addRequestFilter(int order, GGRequestFilter filter) {
+		addFilter(order, filter);
+	}
+	default void addRequestFilter(GGRequestFilter filter) {
+		addRequestFilter(10, filter);
+	}
+	
+	default void addResponseFilter(int order, GGResponseFilter filter) {
+		addFilter(order, filter);
+	}
+	default void addResponseFilter(GGResponseFilter filter) {
+		addResponseFilter(10, filter);
+	}
+	
+	
 	/**
 	 * 添加过滤器
 	 * 

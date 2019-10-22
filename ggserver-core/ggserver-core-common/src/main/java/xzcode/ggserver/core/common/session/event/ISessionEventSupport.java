@@ -28,6 +28,16 @@ public interface ISessionEventSupport extends IGGSessionEventManager{
 	default <T> void emitEvent(String event, T eventData) {
 		getGGSessionEventManager().emitEvent(event, eventData);
 	}
+
+	@Override
+	default <T> boolean hasEventListener(String event) {
+		return getGGSessionEventManager().hasEventListener(event);
+	}
+
+	@Override
+	default boolean isEmpty() {
+		return getGGSessionEventManager().isEmpty();
+	}
 	
 	
 	

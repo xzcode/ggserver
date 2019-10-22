@@ -3,6 +3,8 @@ package xzcode.ggserver.core.common.control;
 import io.netty.channel.Channel;
 import xzcode.ggserver.core.common.config.IGGConfigSupport;
 import xzcode.ggserver.core.common.executor.IExecutorSupport;
+import xzcode.ggserver.core.common.future.GGFuture;
+import xzcode.ggserver.core.common.future.IGGFuture;
 import xzcode.ggserver.core.common.session.GGSession;
 import xzcode.ggserver.core.common.session.IGGSessionSupport;
 
@@ -14,8 +16,8 @@ public interface IGGContolSupport extends IGGSessionSupport, IGGConfigSupport, I
 	 * 
 	 * @author zai 2017-09-21
 	 */
-	default void disconnect() {
-		disconnect(null, 0);
+	default IGGFuture disconnect() {
+		return disconnect(null, 0);
 	}
 	
 	/**
@@ -23,8 +25,8 @@ public interface IGGContolSupport extends IGGSessionSupport, IGGConfigSupport, I
 	 * 
 	 * @author zai 2017-09-21
 	 */
-	default void disconnect(long delayMs) {
-		disconnect(null, delayMs);
+	default IGGFuture disconnect(long delayMs) {
+		return disconnect(null, delayMs);
 	}
 
 	/**
@@ -33,8 +35,8 @@ public interface IGGContolSupport extends IGGSessionSupport, IGGConfigSupport, I
 	 * @param userId
 	 * @author zai 2017-08-19 01:12:07
 	 */
-	default void disconnect(GGSession session) {
-		disconnect(session, 0);
+	default IGGFuture disconnect(GGSession session) {
+		return disconnect(session, 0);
 	}
 	
 	/**
@@ -45,20 +47,22 @@ public interface IGGContolSupport extends IGGSessionSupport, IGGConfigSupport, I
 	 * @author zai
 	 * 2019-04-17 11:18:43
 	 */
-	default void disconnect(GGSession session, long delayMs) {
+	default IGGFuture disconnect(GGSession session, long delayMs) {
 		
+		IGGFuture ggFuture = new GGFuture();
 		if (session != null && session.getChannel() != null) {
 			Channel channel = session.getChannel();
 			if (channel != null && channel.isActive()) {
 				if (delayMs <= 0) {
-					channel.close();
+					ggFuture.setNettyFuture(channel.close());
 				}else {
 					schedule(delayMs, () -> {
-						channel.close();
+						ggFuture.setNettyFuture(channel.close());
 					});
 				}
 			}
 		}
+		return ggFuture;
 	}
 	
 	

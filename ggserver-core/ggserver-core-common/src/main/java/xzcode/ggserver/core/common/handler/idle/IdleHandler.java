@@ -42,15 +42,15 @@ public class IdleHandler extends ChannelInboundHandlerAdapter{
 	}
 	
 	public void checkIdleEventMapped() {
-		if(config.getEventInvokerManager().contains(GGEvents.IdleState.WRITER_IDLE)) {
+		if(config.getEventInvokerManager().contains(GGEvents.Idle.WRITE)) {
 			this.writerIdleEnabled = true;
 		}
 		
-		if (config.getEventInvokerManager().contains(GGEvents.IdleState.READER_IDLE)) {
+		if (config.getEventInvokerManager().contains(GGEvents.Idle.READE)) {
 			this.readerIdleEnabled = true;
 		}
 		
-		if (config.getEventInvokerManager().contains(GGEvents.IdleState.ALL_IDLE)) {
+		if (config.getEventInvokerManager().contains(GGEvents.Idle.ALL)) {
 			this.allIdleEnabled = true;
 		}
 		
@@ -69,7 +69,7 @@ public class IdleHandler extends ChannelInboundHandlerAdapter{
 							if (LOGGER.isDebugEnabled()) {
 								LOGGER.debug("...WRITER_IDLE...: channel:{}", ctx.channel());								
 							}
-							config.getTaskExecutor().submit(new GGEventTask(session, GGEvents.IdleState.WRITER_IDLE, null, config));
+							config.getTaskExecutor().submit(new GGEventTask(session, GGEvents.Idle.WRITE, null, config));
 						}
 					break;
 				case READER_IDLE:
@@ -77,7 +77,7 @@ public class IdleHandler extends ChannelInboundHandlerAdapter{
 							if (LOGGER.isDebugEnabled()) {
 								LOGGER.debug("...READER_IDLE...: channel:{}", ctx.channel());								
 							}
-							config.getTaskExecutor().submit(new GGEventTask(session, GGEvents.IdleState.READER_IDLE, null, config));
+							config.getTaskExecutor().submit(new GGEventTask(session, GGEvents.Idle.READE, null, config));
 						}
 					break;
 				case ALL_IDLE:
@@ -85,7 +85,7 @@ public class IdleHandler extends ChannelInboundHandlerAdapter{
 							if (LOGGER.isDebugEnabled()) {
 								LOGGER.debug("...ALL_IDLE...: channel:{}", ctx.channel());								
 							}
-							config.getTaskExecutor().submit(new GGEventTask(session, GGEvents.IdleState.ALL_IDLE, null, config));
+							config.getTaskExecutor().submit(new GGEventTask(session, GGEvents.Idle.ALL, null, config));
 						}
 					break;
 				default:

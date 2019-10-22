@@ -9,12 +9,11 @@ import org.slf4j.LoggerFactory;
 
 import io.netty.channel.Channel;
 import xzcode.ggserver.core.common.config.GGConfig;
+import xzcode.ggserver.core.common.future.IGGFuture;
 import xzcode.ggserver.core.common.message.PackModel;
-import xzcode.ggserver.core.common.message.send.future.GGSendFuture;
 import xzcode.ggserver.core.common.session.GGSession;
 import xzcode.ggserver.core.common.session.GGSessionUtil;
 import xzcode.ggserver.core.common.session.filter.ISessionFilterManager;
-import xzcode.ggserver.core.common.session.filter.impl.SessionFilterManager;
 
 /**
  * 消息发送管理器
@@ -36,21 +35,21 @@ public class SendMessageManager implements ISendMessageSupport{
 	}
 
 	@Override
-	public GGSendFuture send(GGSession session, PackModel packModel) {
+	public IGGFuture send(GGSession session, PackModel packModel) {
 		return this.config.getSendPackHandler().handle(session, packModel);
 	}
 	@Override
-	public GGSendFuture send(PackModel packModel) {
+	public IGGFuture send(PackModel packModel) {
 		return this.config.getSendPackHandler().handle(null, packModel);
 	}
 	
 	@Override
-	public GGSendFuture send(GGSession session, String action, Object message) {
+	public IGGFuture send(GGSession session, String action, Object message) {
 		return send(session, action, message, 0);
 	}
 	
 	@Override
-	public GGSendFuture send(GGSession session, String action) {
+	public IGGFuture send(GGSession session, String action) {
 		return send(session, action, null, 0);
 	}
 	
@@ -61,7 +60,7 @@ public class SendMessageManager implements ISendMessageSupport{
 	 * @author zai 2018-12-29 14:23:54
 	 */
 	@Override
-	public GGSendFuture send(String action) {
+	public IGGFuture send(String action) {
 		GGSession session = GGSessionUtil.getSession();
 		if (session != null) {
 			if (!config.getMessageFilterManager().doResponseFilters(Response.create(action, null))) {
@@ -81,17 +80,17 @@ public class SendMessageManager implements ISendMessageSupport{
 	 * @author zai 2017-09-18
 	 */
 	@Override
-	public GGSendFuture send(String action, Object message) {
+	public IGGFuture send(String action, Object message) {
 		return send(null, action, message, 0);
 	}
 
 	@Override
-	public GGSendFuture send(GGSession session, String action, Object message, long delayMs) {
+	public IGGFuture send(GGSession session, String action, Object message, long delayMs) {
 		return send(session, action, message, delayMs, TimeUnit.MILLISECONDS);
 	}
 		
 	@Override
-	public GGSendFuture send(GGSession session, String action, Object message, long delay, TimeUnit timeUnit) {
+	public IGGFuture send(GGSession session, String action, Object message, long delay, TimeUnit timeUnit) {
 		if (session == null) {
 			session = GGSessionUtil.getSession();
 		}
@@ -116,18 +115,18 @@ public class SendMessageManager implements ISendMessageSupport{
 	}
 
 	@Override
-	public GGSendFuture send(GGSession session, String action, long delayMs) {
+	public IGGFuture send(GGSession session, String action, long delayMs) {
 		return send(session, action, null, delayMs);
 	}
 
 	@Override
-	public GGSendFuture send(String action, long delayMs) {
+	public IGGFuture send(String action, long delayMs) {
 		return send(null, action, null, delayMs);
 		
 	}
 
 	@Override
-	public GGSendFuture send(String action, Object message, long delayMs) {
+	public IGGFuture send(String action, Object message, long delayMs) {
 		return send(null, action, message, delayMs);
 		
 	}

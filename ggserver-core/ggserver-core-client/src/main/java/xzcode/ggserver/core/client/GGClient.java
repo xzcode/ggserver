@@ -2,11 +2,12 @@ package xzcode.ggserver.core.client;
 
 import xzcode.ggserver.core.client.config.GGClientConfig;
 import xzcode.ggserver.core.client.starter.IGGClientStarter;
-import xzcode.ggserver.core.client.starter.impl.DefaultGGClientStarter;
+import xzcode.ggserver.core.client.starter.impl.DefaultClientStarter;
 import xzcode.ggserver.core.common.config.IGGConfigSupport;
 import xzcode.ggserver.core.common.control.IGGContolSupport;
 import xzcode.ggserver.core.common.event.invoker.IEventInvokeSupport;
 import xzcode.ggserver.core.common.executor.IExecutorSupport;
+import xzcode.ggserver.core.common.future.IGGFuture;
 import xzcode.ggserver.core.common.message.filter.IGGFilterSupport;
 import xzcode.ggserver.core.common.message.receive.IRequestMessageSupport;
 import xzcode.ggserver.core.common.message.send.ISendMessageSupport;
@@ -34,9 +35,9 @@ implements
 	
 	private IGGClientStarter clientStarter;
 	
-	public void connect(String host, int port) {
-		clientStarter = new DefaultGGClientStarter(config);		
-		clientStarter.connect(host, port);
+	public IGGFuture connect(String host, int port) {
+		clientStarter = new DefaultClientStarter(config);		
+		return clientStarter.connect(host, port);
 	}
 	
 
