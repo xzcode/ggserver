@@ -1,7 +1,11 @@
 package xzcode.ggserver.core.common.message.receive;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -86,8 +90,30 @@ public class RequestMessageManager {
 	 * @author zai
 	 * 2017-08-02
 	 */
-	public IOnMessageInvoker get(String requestTag){
-		return map.get(requestTag);
+	public IOnMessageInvoker get(String action){
+		return map.get(action);
+	}
+	
+	/**
+	 * 获取已注册的action名称集合
+	 * 
+	 * @return
+	 * @author zai
+	 * 2019-10-23 16:40:34
+	 */
+	public List<String> getMappedActions() {
+		return new ArrayList<>(map.keySet());
+	}
+	
+	/**
+	 * 获取已注册的消息调用器集合
+	 * 
+	 * @return
+	 * @author zai
+	 * 2019-10-23 16:40:34
+	 */
+	public List<IOnMessageInvoker> getMappedInvokers() {
+		return map.entrySet().stream().map(e -> e.getValue()).collect(Collectors.toList());
 	}
 
 

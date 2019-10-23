@@ -5,6 +5,7 @@ import xzcode.ggserver.core.common.config.IGGConfigSupport;
 import xzcode.ggserver.core.common.control.IGGContolSupport;
 import xzcode.ggserver.core.common.event.invoker.IEventInvokeSupport;
 import xzcode.ggserver.core.common.executor.IExecutorSupport;
+import xzcode.ggserver.core.common.message.filter.IGGFilterSupport;
 import xzcode.ggserver.core.common.message.receive.IRequestMessageSupport;
 import xzcode.ggserver.core.common.message.send.ISendMessageSupport;
 import xzcode.ggserver.core.common.session.IGGSessionSupport;
@@ -23,6 +24,7 @@ implements
 	IGGConfigSupport,
 	ISendMessageSupport, 
 	IRequestMessageSupport,
+	IGGFilterSupport,
 	IExecutorSupport, 
 	IGGSessionSupport, 
 	IEventInvokeSupport,
@@ -33,20 +35,19 @@ implements
 	
 	private IGGServerStarter serverStarter;
 	
-	public void init() {
-		if (serverStarter == null) {
-			serverStarter = new DefaultGGServerStarter(config);
-		}
-	}
-	
 	public void start() {
+		this.shutdown();
+		this.serverStarter = new DefaultGGServerStarter(config);
 		this.serverStarter.start();
 	}
-	
+	public void shutdown() {
+		if (this.serverStarter != null) {
+			this.serverStarter.shutdown();
+		}
+	}
 
 	public GGServer(GGServerConfig serverConfig) {
 		this.config = serverConfig;
-		init();
 	}
 	public GGConfig getConfig() {
 		return config;

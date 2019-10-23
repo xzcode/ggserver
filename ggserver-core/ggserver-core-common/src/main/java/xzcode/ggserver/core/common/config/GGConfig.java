@@ -5,6 +5,7 @@ import java.util.concurrent.ThreadFactory;
 
 import io.netty.channel.nio.NioEventLoopGroup;
 import xzcode.ggserver.core.common.component.GGComponentManager;
+import xzcode.ggserver.core.common.config.scanner.GGComponentScanner;
 import xzcode.ggserver.core.common.constant.GGServerTypeConstants;
 import xzcode.ggserver.core.common.event.invoker.EventInvokerManager;
 import xzcode.ggserver.core.common.executor.factory.EventLoopGroupThreadFactory;
@@ -119,6 +120,10 @@ public class GGConfig {
 		
 		if (serializer == null) {
 			serializer = SerializerFactory.geSerializer(serializerType);
+		}
+		
+		if (this.getScanPackage() != null && this.getScanPackage().length > 0) {
+    		GGComponentScanner.scan(this);
 		}
 		
 	}

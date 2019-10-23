@@ -11,7 +11,6 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
-import xzcode.ggserver.core.common.config.scanner.GGComponentScanner;
 import xzcode.ggserver.core.common.future.GGFuture;
 import xzcode.ggserver.core.common.future.IGGFuture;
 import xzcode.ggserver.core.common.handler.MixedSocketChannelInitializer;
@@ -35,9 +34,6 @@ public class DefaultGGServerStarter implements IGGServerStarter {
     public DefaultGGServerStarter(GGServerConfig config) {
     	
     	this.config = config;
-    	if (config.getScanPackage() != null && config.getScanPackage().length > 0) {
-    		GGComponentScanner.scan(config);
-		}
     }
     
     public IGGFuture start() {
@@ -65,7 +61,7 @@ public class DefaultGGServerStarter implements IGGServerStarter {
             
             boot.childOption(ChannelOption.SO_KEEPALIVE, true); 
     
-            ChannelFuture future = boot.bind(config.getPort()).sync(); 
+            ChannelFuture future = boot.bind(config.getPort()); 
             
             serverChannel = future.channel();
             
@@ -73,10 +69,6 @@ public class DefaultGGServerStarter implements IGGServerStarter {
             
         }catch (Exception e) {
         	throw new RuntimeException("GGServer start failed !! ", e);
-		} finally {
-			if (config.isAutoShutdown()) {
-				shutdown();				
-			}
         }
     }
     

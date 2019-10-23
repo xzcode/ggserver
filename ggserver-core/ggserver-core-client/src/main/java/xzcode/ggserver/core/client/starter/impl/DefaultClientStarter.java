@@ -13,7 +13,6 @@ import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import xzcode.ggserver.core.client.config.GGClientConfig;
 import xzcode.ggserver.core.client.starter.IGGClientStarter;
-import xzcode.ggserver.core.common.config.scanner.GGComponentScanner;
 import xzcode.ggserver.core.common.future.GGFuture;
 import xzcode.ggserver.core.common.future.IGGFuture;
 import xzcode.ggserver.core.common.handler.SocketChannelInitializer;
@@ -26,11 +25,7 @@ public class DefaultClientStarter implements IGGClientStarter {
 	private Channel channel;
 	
     public DefaultClientStarter(GGClientConfig config) {
-    	
     	this.config = config;
-    	if (config.getScanPackage() != null && config.getScanPackage().length > 0) {
-    		GGComponentScanner.scan(config);
-		}
     }
     
 
