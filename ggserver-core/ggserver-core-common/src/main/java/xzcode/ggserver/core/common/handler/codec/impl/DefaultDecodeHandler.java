@@ -5,10 +5,12 @@ import org.slf4j.LoggerFactory;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.util.AttributeKey;
 import xzcode.ggserver.core.common.channel.DefaultChannelAttributeKeys;
 import xzcode.ggserver.core.common.config.GGConfig;
 import xzcode.ggserver.core.common.handler.codec.IGGDecodeHandler;
-import xzcode.ggserver.core.common.message.PackModel;
+import xzcode.ggserver.core.common.message.Pack;
+import xzcode.ggserver.core.common.session.GGSession;
 
 /**
  * TCP自定协议解析
@@ -74,9 +76,9 @@ public class DefaultDecodeHandler implements IGGDecodeHandler{
 			in.readBytes(message);
 			
 		}
-		
+		GGSession session = (GGSession) ctx.channel().attr(AttributeKey.valueOf(DefaultChannelAttributeKeys.SESSION)).get();
 		//接收包处理
-		config.getReceivePackHandler().handle(PackModel.create(action, message), ctx.channel().attr(DefaultChannelAttributeKeys.SESSION).get());
+		config.getReceivePackHandler().handle(Pack.create(action, message), session);
 		/*
 		config.getTaskExecutor().submit(new RequestMessageTask(PackModel.create(action, message), ctx.channel().attr(DefaultChannelAttributeKeys.SESSION).get(), config));
 		

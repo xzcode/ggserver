@@ -16,13 +16,7 @@ import xzcode.ggserver.core.common.annotation.GGComponent;
 import xzcode.ggserver.core.common.annotation.GGController;
 import xzcode.ggserver.core.common.annotation.GGFilter;
 import xzcode.ggserver.core.common.annotation.GGOnEvent;
-import xzcode.ggserver.core.common.component.GGComponentManager;
 import xzcode.ggserver.core.common.config.GGConfig;
-import xzcode.ggserver.core.common.event.invoker.EventInvokerManager;
-import xzcode.ggserver.core.common.event.invoker.impl.EventMethodInvoker;
-import xzcode.ggserver.core.common.message.filter.MessageFilterManager;
-import xzcode.ggserver.core.common.message.filter.MessageFilterModel;
-import xzcode.ggserver.core.common.message.receive.RequestMessageManager;
 import xzcode.ggserver.core.common.message.receive.invoker.MethodInvoker;
 
 /**
@@ -63,17 +57,9 @@ public class GGComponentScanner {
 				Object clazzInstance = clazz.newInstance();
 				config.getComponentManager().put(clazz, clazzInstance);
 
+				// 扫描 IGGFilter
 				GGFilter filter = clazz.getAnnotation(GGFilter.class);
 				if (filter != null) {
-					MessageFilterModel messageFilterModel = new MessageFilterModel();
-					messageFilterModel.setFilterClazz(clazz);
-					int value = filter.value();
-					int order = filter.order();
-					messageFilterModel.setOrder(value);
-					if (value == 0) {
-						messageFilterModel.setOrder(order);
-					}
-					config.getMessageFilterManager().add(messageFilterModel);
 
 				}
 				Set<Method> methods = new HashSet<>();
@@ -126,16 +112,7 @@ public class GGComponentScanner {
 					GGOnEvent gGOnEvent = mtd.getAnnotation(GGOnEvent.class);
 					if (gGOnEvent != null) {
 
-						/*if (mtd.getParameterCount() > 0) {
-							throw new RuntimeException("Annotation @" + GGOnEvent.class.getSimpleName()
-									+ " unsupport methods with parameters! ");
-						}*/
-
-						EventMethodInvoker eventMethodInvoker = new EventMethodInvoker();
-						eventMethodInvoker.setEventTag(gGOnEvent.value()).addMethod(mtd);
-						eventMethodInvoker.setComponentClass(clazz);
-
-						config.getEventInvokerManager().put(eventMethodInvoker);
+						
 					}
 
 				}

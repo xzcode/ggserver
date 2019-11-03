@@ -4,13 +4,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import xzcode.ggserver.core.common.config.GGConfig;
+import xzcode.ggserver.core.common.filter.IFilterManager;
 import xzcode.ggserver.core.common.handler.serializer.ISerializer;
-import xzcode.ggserver.core.common.message.PackModel;
-import xzcode.ggserver.core.common.message.filter.MessageFilterManager;
+import xzcode.ggserver.core.common.message.Pack;
 import xzcode.ggserver.core.common.message.receive.invoker.IOnMessageInvoker;
 import xzcode.ggserver.core.common.session.GGSession;
 import xzcode.ggserver.core.common.session.GGSessionUtil;
-import xzcode.ggserver.core.common.session.filter.ISessionFilterManager;
 
 /**
  * 请求消息任务
@@ -31,7 +30,7 @@ public class RequestMessageTask implements Runnable{
 	/**
 	 * 包体模型
 	 */
-	private PackModel packModel;
+	private Pack pack;
 	
 	/**
 	 * session
@@ -46,9 +45,9 @@ public class RequestMessageTask implements Runnable{
 	
 	
 
-	public RequestMessageTask(PackModel packModel, GGSession session, GGConfig config) {
+	public RequestMessageTask(Pack pack, GGSession session, GGConfig config) {
 		this.session = session;
-		this.packModel = packModel;
+		this.pack = pack;
 		this.config = config;
 	}
 
@@ -58,28 +57,28 @@ public class RequestMessageTask implements Runnable{
 	public void run() {
 		
 		GGSessionUtil.setSession(this.session);
-		ISessionFilterManager sessionFilterManager = session.getSessionFilterManager();
+		IFilterManager sessionFilterManager = session.getFilterManager();
 		Request request = new Request();
 		ISerializer serializer = config.getSerializer();
-		MessageFilterManager messageFilterManager = this.config.getMessageFilterManager();
+		IFilterManager messageFilterManager = this.config.getFilterManager();
 		String oldAction = null;
 		try {
 			//反序列化前过滤器
-			if (!messageFilterManager.doBeforeDeserializeFilter(packModel)) {
+			if (!messageFilterManager.doBeforeDeserializeFilters(pack)) {
 				return;
 			}
 			
 			//会话反序列化前过滤器
-			if (!sessionFilterManager.doBeforeDeserializeFilters(packModel)) {
+			if (!sessionFilterManager.doBeforeDeserializeFilters(pack)) {
 				return;
 			}
 			
-			request.setAction(new String(packModel.getAction(), config.getCharset()));
+			request.setAction(new String(pack.getAction(), config.getCharset()));
 			oldAction = request.getAction();
-			if (packModel.getMessage() != null) {
+			if (pack.getMessage() != null) {
 				IOnMessageInvoker invoker = config.getMessageInvokerManager().get(request.getAction());
 				if (invoker != null) {
-					request.setMessage(serializer.deserialize(packModel.getMessage(), invoker.getMessageClass()));
+					request.setMessage(serializer.deserialize(pack.getMessage(), invoker.getMessageClass()));
 				}
 			}
 			
@@ -96,10 +95,10 @@ public class RequestMessageTask implements Runnable{
 			
 			while (!oldAction.equals(request.getAction())) {
 				oldAction = request.getAction();
-				if (packModel.getMessage() != null) {
+				if (pack.getMessage() != null) {
 					IOnMessageInvoker invoker = config.getMessageInvokerManager().get(request.getAction());
 					if (invoker != null) {
-						request.setMessage(serializer.deserialize(packModel.getMessage(), invoker.getMessageClass()));
+						request.setMessage(serializer.deserialize(pack.getMessage(), invoker.getMessageClass()));
 					}else {
 						LOGGER.error("Can not invoke action:{}, cause 'invoker' is null!", request.getAction());
 						return;

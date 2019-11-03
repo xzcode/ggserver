@@ -13,79 +13,71 @@ import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import xzcode.ggserver.core.client.config.GGClientConfig;
 import xzcode.ggserver.core.client.starter.IGGClientStarter;
-import xzcode.ggserver.core.common.future.GGFuture;
 import xzcode.ggserver.core.common.future.IGGFuture;
 import xzcode.ggserver.core.common.handler.SocketChannelInitializer;
+import xzcode.ggserver.core.common.session.GGSession;
+import xzcode.ggserver.core.common.session.imp.DefaultSession;
 
 public class DefaultClientStarter implements IGGClientStarter {
 	
 	private static final Logger logger = LoggerFactory.getLogger(DefaultClientStarter.class);
 	
 	private GGClientConfig config;
-	private Channel channel;
+	
+	private Bootstrap boot;
 	
     public DefaultClientStarter(GGClientConfig config) {
     	this.config = config;
+    	reconfig();
     }
     
+    public void reconfig() {
+    	
+    	 boot = new Bootstrap();
 
-	@Override
-	public IGGFuture connect() {
-		return connect(config.getHost(), config.getPort());
+        //设置工作线程组
+        boot.group(config.getWorkerGroup());
+        
+        if (logger.isDebugEnabled()) {
+        	boot.handler(new LoggingHandler(LogLevel.INFO));				
+		}else {
+			boot.handler(new LoggingHandler(LogLevel.WARN));
+		}
+        
+        //设置channel类型
+        boot.channel(NioSocketChannel.class); 
+        
+        //设置消息处理器
+        boot.handler(new SocketChannelInitializer(config));
+        
+        boot.option(ChannelOption.SO_BACKLOG, config.getSoBacklog());  
 	}
     
-    public IGGFuture connect(String host, int port) {
-    	
-        try {
-        	
-        	config.setHost(host);
-        	config.setPort(port);
-        	
-        	Bootstrap boot = new Bootstrap();
-            
-            //设置工作线程组
-            boot.group(config.getWorkerGroup());
-            
-            if (logger.isDebugEnabled()) {
-            	boot.handler(new LoggingHandler(LogLevel.INFO));				
-			}else {
-				boot.handler(new LoggingHandler(LogLevel.WARN));
-			}
-            
-            //设置channel类型
-            boot.channel(NioSocketChannel.class); 
-            
-            //设置消息处理器
-            boot.handler(new SocketChannelInitializer(config));
-            
-            boot.option(ChannelOption.SO_BACKLOG, config.getSoBacklog());         
     
+    public GGSession connect(String host, int port) {
+        try {
             // 连接服务器
-            ChannelFuture future = boot.connect(config.getHost(), config.getPort());
-            channel = future.channel();
-            
-            
-            //监听关闭事件
-            channel.closeFuture().addListener((e) -> {
-            	if (config.isAutoShutdown()) {
-    				config.getWorkerGroup().shutdownGracefully();				
-    			}
-            });
-            return new GGFuture(future);
+            ChannelFuture future = boot.connect(host, port).sync();
+            Channel channel = future.channel();
+            GGSession session = new DefaultSession(config, channel);
+            return session;
         }catch (Exception e) {
-        	throw new RuntimeException("GGClient connect failed !! ", e);
+        	throw new RuntimeException("GGClient connect error !! ", e);
 		}
     }
     
 
 	@Override
-	public IGGFuture disconnect() {
-		ChannelFuture channelFuture = channel.close();
-		
-		if (config.getWorkerGroup() != null && config.isAutoShutdown()) {
-    		config.getWorkerGroup().shutdownGracefully();			
+	public IGGFuture disconnect(GGSession session) {
+		return session.disconnect();
+	}
+	
+	public void shutdown() {
+		try {
+			config.getWorkerGroup().shutdownGracefully().sync();
+		} catch (Exception e) {
+			logger.error("Shutdown error!", e);
 		}
-		return new GGFuture(channelFuture);
 	}
     
     public void setConfig(GGClientConfig config) {

@@ -7,6 +7,10 @@ import xzcode.ggserver.core.common.config.GGConfig;
 import xzcode.ggserver.core.common.executor.factory.EventLoopGroupThreadFactory;
 
 public class GGServerConfig extends GGConfig{
+	
+	protected String	host = "0.0.0.0";
+
+	protected int 		port = 9999;
 
 	protected NioEventLoopGroup bossGroup;
 	
@@ -39,5 +43,17 @@ public class GGServerConfig extends GGConfig{
 		this.bossGroupThreadFactory = bossGroupThreadFactory;
 	}
 	
+	public String getHost() {
+		return host;
+	}
+	public void setHost(String host) {
+		this.host = host;
+	}
+	public int getPort() {
+		return port;
+	}
+	public void setPort(int port) {
+		this.port = port;
+	}
 	
 }

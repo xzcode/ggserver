@@ -2,14 +2,13 @@ package xzcode.ggserver.core.client.starter;
 
 import xzcode.ggserver.core.client.config.GGClientConfig;
 import xzcode.ggserver.core.common.future.IGGFuture;
+import xzcode.ggserver.core.common.session.GGSession;
 
 public interface IGGClientStarter {
 	
-	IGGFuture connect(String host, int port);
+	GGSession connect(String host, int port);
 	
-	IGGFuture connect();
-	
-	IGGFuture disconnect();
+	IGGFuture disconnect(GGSession session);
 	
 	void setConfig(GGClientConfig config);
 }

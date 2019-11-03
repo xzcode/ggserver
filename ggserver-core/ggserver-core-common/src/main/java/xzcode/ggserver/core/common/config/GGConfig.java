@@ -7,22 +7,23 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import xzcode.ggserver.core.common.component.GGComponentManager;
 import xzcode.ggserver.core.common.config.scanner.GGComponentScanner;
 import xzcode.ggserver.core.common.constant.GGServerTypeConstants;
-import xzcode.ggserver.core.common.event.invoker.EventInvokerManager;
+import xzcode.ggserver.core.common.event.IEventManager;
+import xzcode.ggserver.core.common.event.impl.DefaultEventManager;
 import xzcode.ggserver.core.common.executor.factory.EventLoopGroupThreadFactory;
+import xzcode.ggserver.core.common.filter.IFilterManager;
+import xzcode.ggserver.core.common.filter.impl.DefaultFilterManager;
 import xzcode.ggserver.core.common.handler.codec.IGGDecodeHandler;
 import xzcode.ggserver.core.common.handler.codec.IGGEncodeHandler;
 import xzcode.ggserver.core.common.handler.codec.impl.DefaultDecodeHandler;
 import xzcode.ggserver.core.common.handler.codec.impl.DefaultEncodeHandler;
 import xzcode.ggserver.core.common.handler.pack.IGGReceivePackHandler;
-import xzcode.ggserver.core.common.handler.pack.IGGSendPackHandler;
 import xzcode.ggserver.core.common.handler.pack.impl.DefaultReceivePackHandler;
-import xzcode.ggserver.core.common.handler.pack.impl.DefaultSendPackHandler;
 import xzcode.ggserver.core.common.handler.serializer.ISerializer;
 import xzcode.ggserver.core.common.handler.serializer.factory.SerializerFactory;
-import xzcode.ggserver.core.common.message.filter.MessageFilterManager;
 import xzcode.ggserver.core.common.message.receive.RequestMessageManager;
 import xzcode.ggserver.core.common.message.send.SendMessageManager;
 import xzcode.ggserver.core.common.session.GGSessionManager;
+import xzcode.ggserver.core.common.session.ISessionFactory;
 
 /**
  * GGServer配置类
@@ -38,9 +39,7 @@ public class GGConfig {
 
 	protected String[] 	scanPackage;
 
-	protected String	host = "0.0.0.0";
-
-	protected int 		port = 9999;
+	
 
 	protected int 		bossThreadSize = 0;
 	
@@ -68,20 +67,20 @@ public class GGConfig {
 	
 	protected int 		soBacklog = 1024;
 	
+	protected ISessionFactory sessionFactory;
+	
 	protected ISerializer serializer;
 	
 	protected IGGDecodeHandler decodeHandler;
 	protected IGGEncodeHandler encodeHandler;
 	
 	protected IGGReceivePackHandler receivePackHandler;
-	protected IGGSendPackHandler sendPackHandler;
-	
 	
 	protected GGComponentManager 	componentManager;
 	protected RequestMessageManager requestMessageManager;
 	protected SendMessageManager sendMessageManager;
-	protected MessageFilterManager messageFilterManager;
-	protected EventInvokerManager eventInvokerManager;
+	protected IFilterManager filterManager;
+	protected IEventManager eventManager;
 	protected GGSessionManager sessionManager;
 	
     
@@ -92,8 +91,8 @@ public class GGConfig {
 		componentManager = new GGComponentManager();
 		requestMessageManager = new RequestMessageManager();
 		sendMessageManager = new SendMessageManager(this);
-		messageFilterManager = new MessageFilterManager();
-		eventInvokerManager = new EventInvokerManager();
+		filterManager = new DefaultFilterManager();
+		eventManager = new DefaultEventManager();
 		sessionManager = new GGSessionManager();
 		
 		
@@ -114,10 +113,6 @@ public class GGConfig {
 		if (receivePackHandler == null) {
 			receivePackHandler = new DefaultReceivePackHandler(this);
 		}
-		if (sendPackHandler == null) {
-			sendPackHandler = new DefaultSendPackHandler(this);
-		}
-		
 		if (serializer == null) {
 			serializer = SerializerFactory.geSerializer(serializerType);
 		}
@@ -158,18 +153,7 @@ public class GGConfig {
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
 	}
-	public String getHost() {
-		return host;
-	}
-	public void setHost(String host) {
-		this.host = host;
-	}
-	public int getPort() {
-		return port;
-	}
-	public void setPort(int port) {
-		this.port = port;
-	}
+
 	public int getBossThreadSize() {
 		return bossThreadSize;
 	}
@@ -243,6 +227,16 @@ public class GGConfig {
 		}
 		this.serializerType = serializerType;
 	}
+	
+	
+
+	public IEventManager getEventManager() {
+		return eventManager;
+	}
+
+	public void setEventManager(IEventManager eventManager) {
+		this.eventManager = eventManager;
+	}
 
 	public GGComponentManager getComponentObjectManager() {
 		return componentManager;
@@ -268,13 +262,6 @@ public class GGConfig {
 	public void setMessageInvokerManager(RequestMessageManager requestMessageManager) {
 		this.requestMessageManager = requestMessageManager;
 	}
-	public EventInvokerManager getEventInvokerManager() {
-		return eventInvokerManager;
-	}
-	public void setEventInvokerManager(EventInvokerManager eventInvokerManager) {
-		this.eventInvokerManager = eventInvokerManager;
-	}
-	
 	
 	public GGSessionManager getSessionManager() {
 		return sessionManager;
@@ -285,16 +272,15 @@ public class GGConfig {
 		this.sessionManager = sessionManager;
 	}
 
+	
+	public IFilterManager getFilterManager() {
+		return filterManager;
+	}
 
-	public MessageFilterManager getMessageFilterManager() {
-		return messageFilterManager;
+	public void setFilterManager(IFilterManager filterManager) {
+		this.filterManager = filterManager;
 	}
-	
-	public void setMessageFilterManager(MessageFilterManager messageFilterManager) {
-		this.messageFilterManager = messageFilterManager;
-	}
-	
-	
+
 	public int getMaxDataLength() {
 		return maxDataLength;
 	}
@@ -317,6 +303,7 @@ public class GGConfig {
 	public void setComponentManager(GGComponentManager componentManager) {
 		this.componentManager = componentManager;
 	}
+	
 	public NioEventLoopGroup getTaskExecutor() {
 		return workerGroup;
 	}
@@ -368,15 +355,6 @@ public class GGConfig {
 		this.receivePackHandler = receivePackHandler;
 	}
 
-
-	public IGGSendPackHandler getSendPackHandler() {
-		return sendPackHandler;
-	}
-
-
-	public void setSendPackHandler(IGGSendPackHandler sendPackHandler) {
-		this.sendPackHandler = sendPackHandler;
-	}
 
 	public boolean isAutoShutdown() {
 		return autoShutdown;

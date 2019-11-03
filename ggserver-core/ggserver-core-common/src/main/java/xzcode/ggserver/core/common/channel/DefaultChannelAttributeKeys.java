@@ -1,8 +1,5 @@
 package xzcode.ggserver.core.common.channel;
 
-import io.netty.util.AttributeKey;
-import xzcode.ggserver.core.common.session.GGSession;
-
 /**
  * 默认通道属性key常量
  * 
@@ -15,6 +12,6 @@ public interface DefaultChannelAttributeKeys {
 	/**
 	 * 会话key
 	 */
-	AttributeKey<GGSession> SESSION = AttributeKey.valueOf("SESSION");
+	String SESSION = "SESSION";
 	
 }

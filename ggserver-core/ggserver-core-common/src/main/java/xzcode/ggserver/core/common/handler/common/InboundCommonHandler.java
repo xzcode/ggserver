@@ -7,11 +7,12 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.util.AttributeKey;
 import xzcode.ggserver.core.common.channel.DefaultChannelAttributeKeys;
 import xzcode.ggserver.core.common.config.GGConfig;
-import xzcode.ggserver.core.common.event.GGEventTask;
+import xzcode.ggserver.core.common.event.EventTask;
 import xzcode.ggserver.core.common.event.GGEvents;
-import xzcode.ggserver.core.common.session.imp.DefaultGGSession;
+import xzcode.ggserver.core.common.session.imp.DefaultSession;
 
 public class InboundCommonHandler extends ChannelInboundHandlerAdapter{
 	
@@ -54,13 +55,13 @@ public class InboundCommonHandler extends ChannelInboundHandlerAdapter{
 		//InetSocketAddress socketAddress = (InetSocketAddress) ctx.channel().remoteAddress();
 		Channel channel = ctx.channel();
 		//初始化session
-		DefaultGGSession session = new DefaultGGSession(config, ctx.channel());
+		DefaultSession session = new DefaultSession(config, ctx.channel());
 		
-		channel.attr(DefaultChannelAttributeKeys.SESSION).set(session);
+		channel.attr(AttributeKey.valueOf(DefaultChannelAttributeKeys.SESSION)).set(session);
 		
 		config.getSessionManager().put(session.getSessonId(), session);
 		
-		config.getTaskExecutor().submit(new GGEventTask(session, GGEvents.Connection.OPEN, null, config));
+		config.getTaskExecutor().submit(new EventTask(session, GGEvents.Connection.OPEN, null, config));
 		
 		
 		//注册channel关闭事件
@@ -70,7 +71,7 @@ public class InboundCommonHandler extends ChannelInboundHandlerAdapter{
 				LOGGER.debug("Channel Close:{}", ctx.channel());
 			}
 			
-			config.getTaskExecutor().submit(new GGEventTask(session, GGEvents.Connection.CLOSE, null, config));
+			config.getTaskExecutor().submit(new EventTask(session, GGEvents.Connection.CLOSE, null, config));
 			config.getSessionManager().remove(session.getSessonId());
 		});
 		

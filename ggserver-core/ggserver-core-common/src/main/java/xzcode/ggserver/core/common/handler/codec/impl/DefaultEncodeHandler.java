@@ -12,7 +12,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPromise;
 import xzcode.ggserver.core.common.config.GGConfig;
 import xzcode.ggserver.core.common.handler.codec.IGGEncodeHandler;
-import xzcode.ggserver.core.common.message.PackModel;
+import xzcode.ggserver.core.common.message.Pack;
 
 /**
  * 
@@ -50,13 +50,13 @@ public class DefaultEncodeHandler implements IGGEncodeHandler {
 	public ByteBuf handle(ChannelHandlerContext ctx, Object msg, ChannelPromise promise){
 		
 		Channel channel = ctx.channel();
-		PackModel packModel = (PackModel) msg;
-		byte[] tagBytes = packModel.getAction();
+		Pack pack = (Pack) msg;
+		byte[] tagBytes = pack.getAction();
 		ByteBuf out = null;
 		//如果有消息体
-		if (packModel.getMessage() != null) {
+		if (pack.getMessage() != null) {
 			
-			byte[] bodyBytes = (byte[]) packModel.getMessage();
+			byte[] bodyBytes = (byte[]) pack.getMessage();
 			
 			int packLen = 2 + tagBytes.length + bodyBytes.length;
 			

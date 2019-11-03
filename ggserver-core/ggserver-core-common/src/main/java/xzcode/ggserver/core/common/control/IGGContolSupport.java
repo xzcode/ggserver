@@ -48,21 +48,7 @@ public interface IGGContolSupport extends IGGSessionSupport, IGGConfigSupport, I
 	 * 2019-04-17 11:18:43
 	 */
 	default IGGFuture disconnect(GGSession session, long delayMs) {
-		
-		IGGFuture ggFuture = new GGFuture();
-		if (session != null && session.getChannel() != null) {
-			Channel channel = session.getChannel();
-			if (channel != null && channel.isActive()) {
-				if (delayMs <= 0) {
-					ggFuture.setNettyFuture(channel.close());
-				}else {
-					schedule(delayMs, () -> {
-						ggFuture.setNettyFuture(channel.close());
-					});
-				}
-			}
-		}
-		return ggFuture;
+		return session.disconnect();
 	}
 	
 	

@@ -1,21 +1,25 @@
 package xzcode.ggserver.core.common.session;
 
-import io.netty.channel.Channel;
+import java.util.concurrent.TimeUnit;
+
 import xzcode.ggserver.core.common.config.IGGConfigSupport;
+import xzcode.ggserver.core.common.event.IEventSupport;
 import xzcode.ggserver.core.common.executor.IExecutorSupport;
-import xzcode.ggserver.core.common.message.send.ISingleChannelSendMessageSupport;
-import xzcode.ggserver.core.common.session.event.ISessionEventSupport;
-import xzcode.ggserver.core.common.session.filter.ISessionFilterSupport;
+import xzcode.ggserver.core.common.filter.IFilterSupport;
+import xzcode.ggserver.core.common.future.IGGFuture;
+import xzcode.ggserver.core.common.message.Pack;
+import xzcode.ggserver.core.common.message.send.ICurrentSessionSendMessageSupport;
 
 public interface GGSession 
 extends 
 IGGConfigSupport,
-ISingleChannelSendMessageSupport, 
+ICurrentSessionSendMessageSupport, 
 IExecutorSupport,
-ISessionEventSupport,
-ISessionFilterSupport
+IEventSupport,
+IFilterSupport
 {
-
+	
+	
 	void addAttribute(String key, Object value);
 
 	Object getAttribute(String key);
@@ -24,13 +28,13 @@ ISessionFilterSupport
 
 	<T> T getAttribute(String key, Class<T> t);
 
-	void disconnect();
-
-	Channel getChannel();
+	IGGFuture disconnect();
 
 	String getHost();
 
 	int getPort();
+	
+	boolean isActive();
 
 	String getSessonId();
 }
