@@ -110,7 +110,7 @@ public class GroupedChannelSession implements GGSession {
 
 	@Override
 	public boolean isActive() {
-		return channel.isActive();
+		return channelGroup.isActive();
 	}
 
 
