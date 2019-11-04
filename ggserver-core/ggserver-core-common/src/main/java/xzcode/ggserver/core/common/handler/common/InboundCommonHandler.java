@@ -84,6 +84,8 @@ public class InboundCommonHandler extends ChannelInboundHandlerAdapter{
 	}
 	
 	
+	
+	
 	@Override
 	public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
 		if (LOGGER.isDebugEnabled()) {
