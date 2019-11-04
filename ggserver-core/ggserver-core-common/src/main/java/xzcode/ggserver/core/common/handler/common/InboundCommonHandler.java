@@ -32,20 +32,17 @@ public class InboundCommonHandler extends ChannelInboundHandlerAdapter{
 	}
 	
 	@Override
-	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-		super.channelRead(ctx, msg);
+	public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
+		super.channelRegistered(ctx);
 	}
 
 
 
 	@Override
-	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-		if (cause instanceof java.io.IOException) {
-			LOGGER.error("Inbound ERROR! {}", cause.getMessage());
-			return;
-		}
-		LOGGER.error("Inbound ERROR! ", cause);
+	public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+		super.channelInactive(ctx);
 	}
+
 	
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
@@ -61,7 +58,7 @@ public class InboundCommonHandler extends ChannelInboundHandlerAdapter{
 		
 		config.getSessionManager().put(session.getSessonId(), session);
 		
-		config.getTaskExecutor().submit(new EventTask(session, GGEvents.Connection.OPEN, null, config));
+		config.getTaskExecutor().submit(new EventTask(session, GGEvents.Connection.ACTIVE, null, config));
 		
 		
 		//注册channel关闭事件
@@ -71,7 +68,7 @@ public class InboundCommonHandler extends ChannelInboundHandlerAdapter{
 				LOGGER.debug("Channel Close:{}", ctx.channel());
 			}
 			
-			config.getTaskExecutor().submit(new EventTask(session, GGEvents.Connection.CLOSE, null, config));
+			config.getTaskExecutor().submit(new EventTask(session, GGEvents.Connection.CLOSED, null, config));
 			config.getSessionManager().remove(session.getSessonId());
 		});
 		
@@ -97,6 +94,15 @@ public class InboundCommonHandler extends ChannelInboundHandlerAdapter{
 	
 	
 
+
+	@Override
+	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+		if (cause instanceof java.io.IOException) {
+			LOGGER.error("Inbound ERROR! {}", cause.getMessage());
+			return;
+		}
+		LOGGER.error("Inbound ERROR! ", cause);
+	}
 
 
 	public GGConfig getConfig() {

@@ -43,13 +43,29 @@ public interface GGEvents {
 	interface Connection {
 		
 		/**
-		 * 连接成功
+		 * 已连接
 		 */
-		String OPEN = "ggevents.conn.open";
+		String CONNECTED = "ggevents.conn.connected";
+		
+		/**
+		 * 连接激活
+		 */
+		String ACTIVE = "ggevents.conn.active";
+		
+		/**
+		 * 连接未激活
+		 */
+		String INACTIVE = "ggevents.conn.inactive";
+		
+		/**
+		 * 连接已断开
+		 */
+		String DISCONNECTED = "ggevents.conn.disconnected";
+		
 	    /**
-	     * 连接断开
+	     * 连接已关闭
 	     */
-		String CLOSE = "ggevents.conn.close";
+		String CLOSED = "ggevents.conn.closed";
 
 	}
 

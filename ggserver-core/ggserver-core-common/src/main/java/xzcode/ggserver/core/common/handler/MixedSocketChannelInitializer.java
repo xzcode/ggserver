@@ -9,6 +9,7 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.timeout.IdleStateHandler;
 import xzcode.ggserver.core.common.config.GGConfig;
+import xzcode.ggserver.core.common.handler.exception.ExceptionHandler;
 import xzcode.ggserver.core.common.handler.idle.IdleHandler;
 
 /**
@@ -42,6 +43,7 @@ public class MixedSocketChannelInitializer extends ChannelInitializer<SocketChan
 	   	}
 	   	
 	   	
+	   	ch.pipeline().addLast(new ExceptionHandler());
 	   	ch.pipeline().addLast(new SocketSelectHandler(config));
 	   	
         
