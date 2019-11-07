@@ -1,10 +1,6 @@
 package xzcode.ggserver.core.common.channel.group;
 
-import java.util.concurrent.TimeUnit;
-
 import io.netty.channel.Channel;
-import xzcode.ggserver.core.common.future.IGGFuture;
-import xzcode.ggserver.core.common.message.Pack;
 
 /**
  * 通道组管理器

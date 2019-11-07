@@ -41,14 +41,15 @@ public class InboundCommonHandler extends ChannelInboundHandlerAdapter{
 	@Override
 	public void channelInactive(ChannelHandlerContext ctx) throws Exception {
 		super.channelInactive(ctx);
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("channel Inactive:{}", ctx.channel());
+		}
 	}
 
 	
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
-		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("Channel Active:{}", ctx.channel());
-		}
+		
 		//InetSocketAddress socketAddress = (InetSocketAddress) ctx.channel().remoteAddress();
 		Channel channel = ctx.channel();
 		//初始化session
@@ -58,7 +59,7 @@ public class InboundCommonHandler extends ChannelInboundHandlerAdapter{
 		
 		config.getSessionManager().put(session.getSessonId(), session);
 		
-		config.getTaskExecutor().submit(new EventTask(session, GGEvents.Connection.ACTIVE, null, config));
+		config.getTaskExecutor().submit(new EventTask(session, GGEvents.Connection.OPEN, null, config));
 		
 		
 		//注册channel关闭事件
@@ -68,11 +69,14 @@ public class InboundCommonHandler extends ChannelInboundHandlerAdapter{
 				LOGGER.debug("Channel Close:{}", ctx.channel());
 			}
 			
-			config.getTaskExecutor().submit(new EventTask(session, GGEvents.Connection.CLOSED, null, config));
+			config.getTaskExecutor().submit(new EventTask(session, GGEvents.Connection.CLOSE, null, config));
 			config.getSessionManager().remove(session.getSessonId());
 		});
 		
 		super.channelActive(ctx);
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("Channel Active:{}", ctx.channel());
+		}
 	}
 	
 	@Override

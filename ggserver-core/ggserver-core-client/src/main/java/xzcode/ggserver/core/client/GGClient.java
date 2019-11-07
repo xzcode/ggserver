@@ -10,10 +10,9 @@ import xzcode.ggserver.core.common.event.IEventSupport;
 import xzcode.ggserver.core.common.executor.IExecutorSupport;
 import xzcode.ggserver.core.common.filter.IFilterManager;
 import xzcode.ggserver.core.common.filter.IFilterSupport;
-import xzcode.ggserver.core.common.future.IGGFuture;
 import xzcode.ggserver.core.common.message.receive.IRequestMessageSupport;
 import xzcode.ggserver.core.common.message.send.ISendMessageSupport;
-import xzcode.ggserver.core.common.session.IGGSessionSupport;
+import xzcode.ggserver.core.common.session.GGSession;
 
 /**
  * 客户端
@@ -28,7 +27,6 @@ implements
 	IRequestMessageSupport,
 	IFilterSupport,
 	IExecutorSupport, 
-	IGGSessionSupport, 
 	IEventSupport,
 	IGGContolSupport
 {
@@ -37,18 +35,25 @@ implements
 	
 	private IGGClientStarter clientStarter;
 	
-	public IGGFuture connect(String host, int port) {
+	public GGSession connect(String host, int port) {
 		return clientStarter.connect(host, port);
 	}
 	
 
 	public GGClient(GGClientConfig config) {
 		this.config = config;
+		if (!this.config.isInited()) {
+			this.config.init();
+		}
 		this.clientStarter = new DefaultClientStarter(config);
 	}
 	
 	public GGClientConfig getConfig() {
 		return config;
+	}
+	
+	public void shutdown() {
+		clientStarter.shutdown();
 	}
 
 

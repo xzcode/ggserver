@@ -1,5 +1,7 @@
 package xzcode.ggserver.core.common.message;
 
+import java.nio.charset.Charset;
+
 /**
  * 消息发送模型
  * 
@@ -29,6 +31,13 @@ public class Pack {
 
 	public byte[] getAction() {
 		return action;
+	}
+	
+	public String getActionString() {
+		return new String(action, Charset.forName("utf-8"));
+	}
+	public String getActionString(Charset charset) {
+		return new String(action,charset);
 	}
 
 	public void setAction(byte[] sendTag) {

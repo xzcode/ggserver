@@ -86,7 +86,7 @@ public class SocketSelectHandler extends ByteToMessageDecoder {
 		   	
 		   	//OUT
 		   	pipeline.addLast(new WebSocketOutboundFrameHandler(this.config ));
-	        pipeline.addLast(new OutboundCommonHandler());
+	        pipeline.addLast(new OutboundCommonHandler(this.config));
 			
 			
 			in.resetReaderIndex();
@@ -98,7 +98,7 @@ public class SocketSelectHandler extends ByteToMessageDecoder {
 	        
 			//OUT
 			pipeline.addLast(new TcpOutboundHandler(this.config));
-			pipeline.addLast(new OutboundCommonHandler());
+			pipeline.addLast(new OutboundCommonHandler(this.config));
 			
 			
 			

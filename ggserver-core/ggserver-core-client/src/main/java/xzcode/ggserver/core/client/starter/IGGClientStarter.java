@@ -11,4 +11,6 @@ public interface IGGClientStarter {
 	IGGFuture disconnect(GGSession session);
 	
 	void setConfig(GGClientConfig config);
+	
+	void shutdown();
 }

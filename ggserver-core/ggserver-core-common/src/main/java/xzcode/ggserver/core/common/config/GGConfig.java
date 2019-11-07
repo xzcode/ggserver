@@ -34,6 +34,9 @@ import xzcode.ggserver.core.common.session.ISessionFactory;
 public class GGConfig {
 	
 	protected boolean 	enabled = false;
+	
+	//是否已初始化
+	protected boolean 	inited = false;
 
 	protected boolean 	autoShutdown = true;
 
@@ -120,7 +123,7 @@ public class GGConfig {
 		if (this.getScanPackage() != null && this.getScanPackage().length > 0) {
     		GGComponentScanner.scan(this);
 		}
-		
+		this.inited = true;
 	}
 	
 	public GGConfig() {
@@ -370,6 +373,14 @@ public class GGConfig {
 
 	public void setSoBacklog(int soBacklog) {
 		this.soBacklog = soBacklog;
+	}
+
+	public boolean isInited() {
+		return inited;
+	}
+
+	public void setInited(boolean inited) {
+		this.inited = inited;
 	}
 	
 	

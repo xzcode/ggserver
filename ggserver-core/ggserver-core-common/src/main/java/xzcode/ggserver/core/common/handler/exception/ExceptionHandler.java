@@ -25,6 +25,7 @@ public class ExceptionHandler extends ChannelHandlerAdapter{
 		}
 		if (cause instanceof UnsupportedOperationException) {
 			LOGGER.error("UnsupportedOperationException ! ", cause);
+			ctx.close();
 		}
 		LOGGER.error("Exception Caught! ", cause);
 	}

@@ -28,10 +28,10 @@ public class DefaultClientStarter implements IGGClientStarter {
 	
     public DefaultClientStarter(GGClientConfig config) {
     	this.config = config;
-    	reconfig();
+    	init();
     }
     
-    public void reconfig() {
+    public void init() {
     	
     	 boot = new Bootstrap();
 

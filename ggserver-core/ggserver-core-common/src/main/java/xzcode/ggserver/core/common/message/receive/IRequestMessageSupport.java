@@ -4,6 +4,7 @@ import java.lang.reflect.ParameterizedType;
 import java.util.Map;
 
 import xzcode.ggserver.core.common.config.IGGConfigSupport;
+import xzcode.ggserver.core.common.message.Pack;
 import xzcode.ggserver.core.common.message.receive.invoker.OnMessagerInvoker;
 import xzcode.ggserver.core.common.session.GGSessionUtil;
 
@@ -43,7 +44,6 @@ public interface IRequestMessageSupport extends IGGConfigSupport {
 		
 		getConfig().getMessageInvokerManager().put(actionId, invoker);
 	}
-	
 	
 
 	/**

@@ -52,7 +52,7 @@ public class GGChannelGroup implements IChannelGroup {
 			if (shutdown) {
 				channel.disconnect();
 				return;
-			}
+			}			
 			channels.add(channel);
 		}
 	}
@@ -66,7 +66,6 @@ public class GGChannelGroup implements IChannelGroup {
 	public void shutdown() {
 		for (Channel channel : channels) {
 			channel.disconnect();
-			channel.connect(channel.r);
 		}
 		channels.clear();
 	}

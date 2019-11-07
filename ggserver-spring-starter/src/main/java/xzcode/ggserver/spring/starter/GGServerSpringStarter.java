@@ -96,8 +96,8 @@ public class GGServerSpringStarter implements ApplicationContextAware {
         
         //更新组件对象
         config.getMessageInvokerManager().updateComponentObject(config.getComponentObjectManager());
-        config.getEventInvokerManager().updateComponentObject(config.getComponentObjectManager());
-        config.getMessageFilterManager().updateComponentObject(config.getComponentObjectManager());
+        //config.getEventInvokerManager().updateComponentObject(config.getComponentObjectManager());
+        //config.getMessageFilterManager().updateComponentObject(config.getComponentObjectManager());
 
 
     }

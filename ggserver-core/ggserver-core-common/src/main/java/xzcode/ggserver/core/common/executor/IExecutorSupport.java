@@ -32,6 +32,7 @@ public interface IExecutorSupport extends IGGConfigSupport{
 	}
 	
 	
+	
 	/**
 	 * 计划延迟任务
 	 * 
@@ -143,7 +144,7 @@ public interface IExecutorSupport extends IGGConfigSupport{
 	 * 2019-09-10 11:06:38
 	 */
 	default IGGFuture scheduleWithFixedDelay(long initialDelay, long delayMs, Runnable runnable) {
-		return scheduleWithFixedDelay(initialDelay, delayMs, runnable, TimeUnit.MILLISECONDS);
+		return scheduleWithFixedDelay(initialDelay, delayMs, TimeUnit.MILLISECONDS, runnable);
 	}
 	
 	/**
@@ -157,7 +158,7 @@ public interface IExecutorSupport extends IGGConfigSupport{
 	 * @author zzz
 	 * 2019-09-10 11:06:09
 	 */
-	default IGGFuture scheduleWithFixedDelay(long initialDelay, long delay, Runnable runnable, TimeUnit timeUnit) {
+	default IGGFuture scheduleWithFixedDelay(long initialDelay, long delay, TimeUnit timeUnit, Runnable runnable) {
 		IGGFuture taskFuture = new GGFuture();
 		GGTask syncTask = new GGTask(runnable);
 		ScheduledFuture<?> future = getConfig().getTaskExecutor().scheduleWithFixedDelay(syncTask, initialDelay, delay, timeUnit);

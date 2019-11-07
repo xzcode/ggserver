@@ -11,6 +11,7 @@ import io.netty.handler.timeout.IdleStateHandler;
 import xzcode.ggserver.core.common.config.GGConfig;
 import xzcode.ggserver.core.common.handler.common.InboundCommonHandler;
 import xzcode.ggserver.core.common.handler.common.OutboundCommonHandler;
+import xzcode.ggserver.core.common.handler.exception.ExceptionHandler;
 import xzcode.ggserver.core.common.handler.idle.IdleHandler;
 import xzcode.ggserver.core.common.handler.tcp.TcpInboundHandler;
 import xzcode.ggserver.core.common.handler.tcp.TcpOutboundHandler;
@@ -67,7 +68,9 @@ public class SocketChannelInitializer extends ChannelInitializer<SocketChannel> 
         ch.pipeline().addLast(new TcpOutboundHandler(this.config));
         
         //outbound异常处理
-        ch.pipeline().addLast(new OutboundCommonHandler());
+        ch.pipeline().addLast(new OutboundCommonHandler(this.config));
+        
+        ch.pipeline().addLast(new ExceptionHandler());
 	}
 	
 

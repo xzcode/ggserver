@@ -13,6 +13,7 @@ import io.netty.handler.timeout.IdleStateHandler;
 import xzcode.ggserver.core.common.config.GGConfig;
 import xzcode.ggserver.core.common.handler.common.InboundCommonHandler;
 import xzcode.ggserver.core.common.handler.common.OutboundCommonHandler;
+import xzcode.ggserver.core.common.handler.exception.ExceptionHandler;
 import xzcode.ggserver.core.common.handler.idle.IdleHandler;
 import xzcode.ggserver.core.common.handler.web.WebSocketInboundFrameHandler;
 import xzcode.ggserver.core.common.handler.web.WebSocketOutboundFrameHandler;
@@ -62,7 +63,9 @@ public class WebSocketChannelInitializer extends ChannelInitializer<SocketChanne
 	   	ch.pipeline().addLast(new WebSocketOutboundFrameHandler(this.config ));
         
         //outbound异常处理
-        ch.pipeline().addLast(new OutboundCommonHandler());
+        ch.pipeline().addLast(new OutboundCommonHandler(this.config));
+        
+        ch.pipeline().addLast(new ExceptionHandler());
         
         
 		

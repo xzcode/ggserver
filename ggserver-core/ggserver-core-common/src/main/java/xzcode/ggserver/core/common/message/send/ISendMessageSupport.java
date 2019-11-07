@@ -6,6 +6,7 @@ import xzcode.ggserver.core.common.config.IGGConfigSupport;
 import xzcode.ggserver.core.common.future.IGGFuture;
 import xzcode.ggserver.core.common.message.Pack;
 import xzcode.ggserver.core.common.session.GGSession;
+import xzcode.ggserver.core.common.session.GGSessionUtil;
 
 /**
  * 消息发送接口
@@ -53,6 +54,12 @@ public interface ISendMessageSupport extends ICurrentSessionSendMessageSupport, 
 
 	default IGGFuture send(GGSession session, Pack pack, long delay, TimeUnit timeUnit) {
 		return getConfig().getSendMessageManager().send(session, pack, delay, timeUnit);
+	}
+
+
+	@Override
+	default GGSession getSession() {
+		return GGSessionUtil.getSession();
 	}
 	
 	

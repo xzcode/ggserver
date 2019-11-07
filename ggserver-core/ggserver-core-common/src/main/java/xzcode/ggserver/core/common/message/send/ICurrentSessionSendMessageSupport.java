@@ -11,6 +11,7 @@ import xzcode.ggserver.core.common.future.IGGFuture;
 import xzcode.ggserver.core.common.message.Pack;
 import xzcode.ggserver.core.common.session.GGSession;
 import xzcode.ggserver.core.common.session.GGSessionUtil;
+import xzcode.ggserver.core.common.session.IGGSessionSupport;
 import xzcode.ggserver.core.common.utils.json.GGServerJsonUtil;
 
 /**
@@ -20,10 +21,8 @@ import xzcode.ggserver.core.common.utils.json.GGServerJsonUtil;
  * @author zai
  * 2019-02-09 14:50:27
  */
-public interface ICurrentSessionSendMessageSupport extends IGGConfigSupport{
+public interface ICurrentSessionSendMessageSupport extends IGGConfigSupport, IGGSessionSupport{
 	
-	Channel getSendMessageChannel();
-
 	default IGGFuture send(String action, Object message, long delayMs) {
 		return send(action, message, delayMs);
 		
@@ -61,7 +60,7 @@ public interface ICurrentSessionSendMessageSupport extends IGGConfigSupport{
 	}
 
 	default IGGFuture send(Pack pack, long delay, TimeUnit timeUnit) {
-		Channel channel = getSendMessageChannel();
+		Channel channel = getSession().getChannel();
 		if (channel.isActive()) {
 			IGGFuture future = new GGFuture();	
 			if (delay <= 0) {

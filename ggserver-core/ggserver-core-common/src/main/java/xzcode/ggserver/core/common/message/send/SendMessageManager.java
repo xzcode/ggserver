@@ -7,7 +7,6 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.netty.channel.Channel;
 import xzcode.ggserver.core.common.config.GGConfig;
 import xzcode.ggserver.core.common.filter.IFilterManager;
 import xzcode.ggserver.core.common.future.IGGFuture;
@@ -130,12 +129,8 @@ public class SendMessageManager implements ISendMessageSupport{
 	}
 
 	@Override
-	public Channel getSendMessageChannel() {
-		GGSession session = GGSessionUtil.getSession();
-		if (session != null) {
-			return session.getSendMessageChannel();
-		}
-		return null;
+	public GGSession getSession() {
+		return GGSessionUtil.getSession();
 	}
 
 }

@@ -109,7 +109,12 @@ public class DefaultSession implements GGSession {
 
 
 	@Override
-	public Channel getSendMessageChannel() {
+	public GGSession getSession() {
+		return this;
+	}
+
+	@Override
+	public Channel getChannel() {
 		return channel;
 	}
 

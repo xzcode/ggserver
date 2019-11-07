@@ -1,9 +1,7 @@
 package xzcode.ggserver.core.common.control;
 
-import io.netty.channel.Channel;
 import xzcode.ggserver.core.common.config.IGGConfigSupport;
 import xzcode.ggserver.core.common.executor.IExecutorSupport;
-import xzcode.ggserver.core.common.future.GGFuture;
 import xzcode.ggserver.core.common.future.IGGFuture;
 import xzcode.ggserver.core.common.session.GGSession;
 import xzcode.ggserver.core.common.session.IGGSessionSupport;
