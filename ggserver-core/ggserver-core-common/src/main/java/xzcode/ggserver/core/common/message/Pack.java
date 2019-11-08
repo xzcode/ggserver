@@ -11,21 +11,57 @@ import java.nio.charset.Charset;
 public class Pack {
 	
 
+	/* 压缩类型 */
+	private byte compression;
+	
+	/* 加密类型 */
+	private byte encryption;
+	
+	/* 元数据 */
+	private byte[] metadata;
+
 	/* 消息标识 */
 	private byte[] action;
 
 	/* 消息体 */
 	private byte[] message;
+	
 
 
 	public Pack(byte[] action, byte[] message) {
+		super();
 		this.action = action;
 		this.message = message;
 	}
 
 
-	public static Pack create(byte[] action, byte[] message) {
-		return new Pack(action, message);
+	public Pack(byte compression, byte encryption, byte[] metadata, byte[] action, byte[] message) {
+		super();
+		this.compression = compression;
+		this.encryption = encryption;
+		this.metadata = metadata;
+		this.action = action;
+		this.message = message;
+	}
+
+
+	public byte getCompression() {
+		return compression;
+	}
+
+
+	public void setCompression(byte compression) {
+		this.compression = compression;
+	}
+
+
+	public byte getEncryption() {
+		return encryption;
+	}
+
+
+	public void setEncryption(byte encryption) {
+		this.encryption = encryption;
 	}
 
 
@@ -50,6 +86,12 @@ public class Pack {
 
 	public void setMessage(byte[] message) {
 		this.message = message;
+	}
+	public byte[] getMetadata() {
+		return metadata;
+	}
+	public void setMetadata(byte[] metadata) {
+		this.metadata = metadata;
 	}
 
 }

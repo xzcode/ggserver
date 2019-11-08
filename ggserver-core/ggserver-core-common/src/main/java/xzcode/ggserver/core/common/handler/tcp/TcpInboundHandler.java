@@ -13,7 +13,7 @@ import xzcode.ggserver.core.common.handler.codec.impl.DefaultDecodeHandler;
 
 /**
  * 数据输入控制器
- * @author Administrator
+ * @author sai
  *
  */
 public class TcpInboundHandler extends ByteToMessageDecoder{
@@ -59,9 +59,12 @@ public class TcpInboundHandler extends ByteToMessageDecoder{
 			in.resetReaderIndex();
 			return;
 		}
+		ByteBuf buffer = ctx.alloc().buffer(packLen);
+		buffer.writeBytes(in, packLen);
 		
 		//调用解码处理器
-		config.getDecodeHandler().handle(ctx, in);
+		config.getDecodeHandler().handle(ctx, buffer);
+		buffer.release();
 		
 	}
 

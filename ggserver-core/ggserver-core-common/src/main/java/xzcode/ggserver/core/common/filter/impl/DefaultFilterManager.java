@@ -5,8 +5,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import xzcode.ggserver.core.common.filter.IBeforeDeserializeFilter;
 import xzcode.ggserver.core.common.filter.IFilterManager;
-import xzcode.ggserver.core.common.filter.IReponseFilter;
-import xzcode.ggserver.core.common.filter.IRequestFilter;
+import xzcode.ggserver.core.common.filter.ISendFilter;
+import xzcode.ggserver.core.common.filter.IReceiveFilter;
 import xzcode.ggserver.core.common.message.Pack;
 import xzcode.ggserver.core.common.message.receive.Request;
 import xzcode.ggserver.core.common.message.send.Response;
@@ -15,8 +15,8 @@ import xzcode.ggserver.core.common.session.GGSessionUtil;
 public class DefaultFilterManager implements IFilterManager {
 	
 	private List<IBeforeDeserializeFilter> beforeDeserializeFilters;
-	private List<IRequestFilter> requestFilters;
-	private List<IReponseFilter> responseFilters;
+	private List<IReceiveFilter> requestFilters;
+	private List<ISendFilter> responseFilters;
 	
 	public DefaultFilterManager() {
 		super();
@@ -44,7 +44,7 @@ public class DefaultFilterManager implements IFilterManager {
 	}
 	
 	@Override
-	public void addResponseFilter(IReponseFilter filter) {
+	public void addResponseFilter(ISendFilter filter) {
 		
 		if (responseFilters == null) {
 			synchronized (this) {
@@ -57,7 +57,7 @@ public class DefaultFilterManager implements IFilterManager {
 		return;
 	}
 	@Override
-	public void removeResponseFilter(IReponseFilter filter) {
+	public void removeResponseFilter(ISendFilter filter) {
 		if (responseFilters == null) {
 			return;
 		}
@@ -65,7 +65,7 @@ public class DefaultFilterManager implements IFilterManager {
 	}
 	
 	@Override
-	public void addRequestFilter(IRequestFilter filter) {
+	public void addRequestFilter(IReceiveFilter filter) {
 		if (requestFilters == null) {
 			synchronized (this) {
 				if (requestFilters == null) {
@@ -78,7 +78,7 @@ public class DefaultFilterManager implements IFilterManager {
 	}
 	
 	@Override
-	public void removeRequestFilter(IRequestFilter filter) {
+	public void removeRequestFilter(IReceiveFilter filter) {
 		if (requestFilters == null) {
 			return;
 		}
@@ -101,7 +101,7 @@ public class DefaultFilterManager implements IFilterManager {
 		if (requestFilters == null) {
 			return true;
 		}
-		for (IRequestFilter filter : requestFilters) {
+		for (IReceiveFilter filter : requestFilters) {
 			if (!filter.doFilter(GGSessionUtil.getSession(), request)) {
 				return false;
 			}
@@ -114,7 +114,7 @@ public class DefaultFilterManager implements IFilterManager {
 		if (responseFilters == null) {
 			return true;
 		}
-		for (IReponseFilter filter : responseFilters) {
+		for (ISendFilter filter : responseFilters) {
 			if (!filter.doFilter(GGSessionUtil.getSession(), response)) {
 				return false;
 			}

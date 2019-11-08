@@ -8,10 +8,10 @@ public interface IFilterSupport {
 	default void addBeforeDeserializeFilter(IBeforeDeserializeFilter filter) {
 		getFilterManager().addBeforeDeserializeFilter(filter);
 	}
-	default void addRequestFilter(IRequestFilter filter) {
+	default void addRequestFilter(IReceiveFilter filter) {
 		getFilterManager().addRequestFilter(filter);
 	}
-	default void addResponseFilter(IReponseFilter filter) {
+	default void addResponseFilter(ISendFilter filter) {
 		getFilterManager().addResponseFilter(filter);
 	}
 	
@@ -21,11 +21,11 @@ public interface IFilterSupport {
 		getFilterManager().removeBeforeDeserializeFilter(filter);
 	}
 
-	default void removeResponseFilter(IReponseFilter filter) {
+	default void removeResponseFilter(ISendFilter filter) {
 		getFilterManager().removeResponseFilter(filter);
 	}
 
-	default void removeRequestFilter(IRequestFilter filter) {
+	default void removeRequestFilter(IReceiveFilter filter) {
 		getFilterManager().removeRequestFilter(filter);
 	}
 	
