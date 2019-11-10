@@ -11,7 +11,7 @@ import xzcode.ggserver.core.common.channel.group.IChannelGroup;
  * 默认通道组
  * 
  * 
- * @author sai
+ * @author zai
  * 2019-11-03 20:54:08
  */
 public class GGChannelGroup implements IChannelGroup {

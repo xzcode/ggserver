@@ -16,16 +16,41 @@ import xzcode.ggserver.core.common.message.Pack;
 
 /**
  * 
+ *      包体总长度       压缩类型    加密类型        元数据长度           元数据体         指令长度           指令内容          数据体
+ * +----------+--------+--------+-------------+----------+----------+-----------+------------+
+ * | 4 byte   | 1 byte | 1 byte |    2 byte   | metadata |   1 byte |    tag    |  data body |
+ * +----------+--------+--------+-------------+----------+----------+-----------+------------+
  * @author zai
- * 包体总长度       标识长度      标识内容       数据体
- * +--------+--------+-------+------------+
- * | 4 byte | 2 byte | tag   |  data body |
- * +--------+--------+-------+------------+
  * 2018-12-07 13:38:22
  */
 public class DefaultEncodeHandler implements IGGEncodeHandler {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultEncodeHandler.class);
+	
+	/**
+	 * 压缩标识占用字节数
+	 */
+	public static final int COMPRESSION_TAG_LEN= 1;
+	
+	/**
+	 * 加密类型标识占用字节数
+	 */
+	public static final int ENCRYPTION_TAG_LEN= 1;
+	
+	/**
+	 * 元数据标识占用字节数
+	 */
+	public static final int METADATA_TAG_LEN= 2;
+	
+	/**
+	 * 指令长度标识占用字节数
+	 */
+	public static final int ACTION_TAG_LEN= 1;
+	
+	/**
+	 * 所有标识长度
+	 */
+	public static final int ALL_TAG_LEN = COMPRESSION_TAG_LEN + ENCRYPTION_TAG_LEN + METADATA_TAG_LEN + ACTION_TAG_LEN;
 	    
 
 	private GGConfig config;
@@ -51,41 +76,45 @@ public class DefaultEncodeHandler implements IGGEncodeHandler {
 		
 		Channel channel = ctx.channel();
 		Pack pack = (Pack) msg;
-		byte[] tagBytes = pack.getAction();
-		ByteBuf out = null;
-		//如果有消息体
-		if (pack.getMessage() != null) {
-			
-			byte[] bodyBytes = (byte[]) pack.getMessage();
-			
-			int packLen = 2 + tagBytes.length + bodyBytes.length;
-			
-			out = ctx.alloc().buffer(packLen);
-			
-			out.writeInt(packLen);
-			out.writeShort(tagBytes.length);
-			out.writeBytes(tagBytes);
-			out.writeBytes(bodyBytes);
-			if (LOGGER.isInfoEnabled()) {
-            	LOGGER.info("\nmessage sended ---> \nchannel:{}\ntag:{}\nbytes-length:{}\ndata:{}", channel, new String(tagBytes, config.getCharset()), packLen +4 , new String(bodyBytes));
-            }
-		} else {
 		
-			//如果没消息体
+		ByteBuf out = null;
 			
-			int packLen = 2 + tagBytes.length;
-			
-			out = ctx.alloc().buffer(packLen);
-			
-			out.writeInt(packLen);
-			out.writeShort(tagBytes.length);
-			out.writeBytes(tagBytes);
-			
-			if (LOGGER.isInfoEnabled()) {
-            	LOGGER.info("\nmessage sended ---> \nchannel:{}\ntag:{}\nbytes-length:{}", channel, new String(tagBytes, config.getCharset()), packLen + 4);
-            }
-			
+		
+		byte[] metaBytes = pack.getMetadata();
+		byte[] tagBytes = pack.getAction();
+		byte[] bodyBytes = (byte[]) pack.getMessage();
+		
+		int packLen = ALL_TAG_LEN;
+		if (metaBytes != null) {
+			packLen += metaBytes.length;		
 		}
+		
+		packLen += tagBytes.length;
+		
+		if (bodyBytes != null) {
+			packLen += bodyBytes.length;			
+		}
+		out = ctx.alloc().buffer(packLen);
+		
+		
+		out.writeByte(pack.getCompression());
+		out.writeByte(pack.getEncryption());
+		
+		out.writeShort(metaBytes.length);
+		if (metaBytes != null) {
+			out.writeBytes(metaBytes);			
+		}
+		
+		out.writeByte(tagBytes.length);
+		out.writeBytes(tagBytes);
+		
+		if (bodyBytes != null) {
+			out.writeBytes(bodyBytes);			
+		}
+		
+		if (LOGGER.isInfoEnabled()) {
+        	LOGGER.info("\nmessage sended ---> \nchannel:{}\ntag:{}\nbytes-length:{}\ndata:{}", channel, new String(tagBytes, config.getCharset()), packLen +4 , new String(bodyBytes));
+        }
 		return out;
 		
 	}

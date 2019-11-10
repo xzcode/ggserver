@@ -10,7 +10,7 @@ import io.netty.channel.ChannelHandlerContext;
  * 异常处理器
  * 
  * 
- * @author sai
+ * @author zai
  * 2019-11-05 00:16:51
  */
 public class ExceptionHandler extends ChannelHandlerAdapter{

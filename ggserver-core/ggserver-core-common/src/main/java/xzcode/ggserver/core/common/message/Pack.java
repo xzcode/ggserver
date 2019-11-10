@@ -28,15 +28,9 @@ public class Pack {
 	
 
 
-	public Pack(byte[] action, byte[] message) {
-		super();
-		this.action = action;
-		this.message = message;
-	}
 
 
 	public Pack(byte compression, byte encryption, byte[] metadata, byte[] action, byte[] message) {
-		super();
 		this.compression = compression;
 		this.encryption = encryption;
 		this.metadata = metadata;

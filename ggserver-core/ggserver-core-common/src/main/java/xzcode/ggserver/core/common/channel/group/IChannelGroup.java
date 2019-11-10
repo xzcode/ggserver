@@ -6,7 +6,7 @@ import io.netty.channel.Channel;
  * 通道组
  * 
  * 
- * @author sai
+ * @author zai
  * 2019-11-03 20:42:50
  */
 public interface IChannelGroup{
@@ -15,7 +15,7 @@ public interface IChannelGroup{
 	 * 获取通道组id
 	 * @return
 	 * 
-	 * @author sai
+	 * @author zai
 	 * 2019-11-03 20:42:57
 	 */
 	String getChannelGroupId();
@@ -24,7 +24,7 @@ public interface IChannelGroup{
 	 * 添加通道
 	 * @param channel
 	 * 
-	 * @author sai
+	 * @author zai
 	 * 2019-11-03 20:43:06
 	 */
 	void addChannel(Channel channel);
@@ -33,7 +33,7 @@ public interface IChannelGroup{
 	 * 移除通道
 	 * @param channel
 	 * 
-	 * @author sai
+	 * @author zai
 	 * 2019-11-03 20:43:14
 	 */
 	void removeChannel(Channel channel);
@@ -42,7 +42,7 @@ public interface IChannelGroup{
 	 * 关闭所有通道
 	 * 
 	 * 
-	 * @author sai
+	 * @author zai
 	 * 2019-11-03 20:43:48
 	 */
 	void shutdown();
@@ -51,7 +51,7 @@ public interface IChannelGroup{
 	 * 随机获取一个通道
 	 * @return
 	 * 
-	 * @author sai
+	 * @author zai
 	 * 2019-11-03 22:12:24
 	 */
 	Channel getRandomChannel();
@@ -60,7 +60,7 @@ public interface IChannelGroup{
 	 * 通道组是否可用
 	 * @return
 	 * 
-	 * @author sai
+	 * @author zai
 	 * 2019-11-03 22:23:16
 	 */
 	boolean isActive();

@@ -6,7 +6,7 @@ import io.netty.channel.Channel;
  * 通道组管理器
  * 
  * 
- * @author sai
+ * @author zai
  * 2019-11-03 20:29:40
  */
 public interface IChannelGroupManager {
@@ -16,7 +16,7 @@ public interface IChannelGroupManager {
 	 * @param channelGroupId 组id
 	 * @return
 	 * 
-	 * @author sai
+	 * @author zai
 	 * 2019-11-03 20:26:23
 	 */
 	boolean hasChannelGroup(String channelGroupId);
@@ -26,7 +26,7 @@ public interface IChannelGroupManager {
 	 * @param channelGroupId
 	 * @return
 	 * 
-	 * @author sai
+	 * @author zai
 	 * 2019-11-03 20:39:05
 	 */
 	IChannelGroup getChannelGroup(String channelGroupId);
@@ -36,7 +36,7 @@ public interface IChannelGroupManager {
 	 * @param channelGroupId
 	 * @return
 	 * 
-	 * @author sai
+	 * @author zai
 	 * 2019-11-03 20:39:05
 	 */
 	IChannelGroup removeChannelGroup(String channelGroupId);
@@ -46,7 +46,7 @@ public interface IChannelGroupManager {
 	 * @param channelGroupId
 	 * @param channel
 	 * 
-	 * @author sai
+	 * @author zai
 	 * 2019-11-03 22:21:19
 	 */
 	void addToChannelGroup(String channelGroupId, Channel channel);
@@ -57,7 +57,7 @@ public interface IChannelGroupManager {
 	 * @param channelGroupId
 	 * @param channel
 	 * 
-	 * @author sai
+	 * @author zai
 	 * 2019-11-03 22:21:26
 	 */
 	void removeFromChannelGroup(String channelGroupId, Channel channel);

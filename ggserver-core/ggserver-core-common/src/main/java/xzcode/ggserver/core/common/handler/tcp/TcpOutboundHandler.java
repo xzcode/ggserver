@@ -64,23 +64,18 @@ public class TcpOutboundHandler extends ChannelOutboundHandlerAdapter {
 			//调用编码处理器
 			out = config.getEncodeHandler().handle(ctx, msg,  promise);
 			
+			int packLen = out.readableBytes();
+			ByteBuf buffer = ctx.alloc().buffer(packLen);
+			buffer.writeBytes(out, packLen);
+			
 			if(channel.isWritable()){
-				ctx.writeAndFlush(out);
+				ctx.writeAndFlush(buffer);
 			}else {
-				try {
-					if (LOGGER.isInfoEnabled()) {
-	                	LOGGER.info("Channel is not writable, change to sync mode! \nchannel:{}", channel);
-	                }
-					channel.writeAndFlush(out).sync();
-	                if (LOGGER.isInfoEnabled()) {
-	                	LOGGER.info("Sync message sended. \nchannel:{}\nmessage:{}", channel, GSON.toJson(msg));
-	                }
-	            } catch (Exception e) {
-	            	if (LOGGER.isInfoEnabled()) {
-	            		LOGGER.info("write and flush msg exception. msg:[{}]", GSON.toJson(msg), e);
-	            	}
-	            }
+				if (LOGGER.isInfoEnabled()) {
+            		LOGGER.info("Write And Flush msg ERROR!");
+            	}
 			}
+			out.release();
 		}
 		
 		

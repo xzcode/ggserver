@@ -7,22 +7,23 @@ import org.slf4j.LoggerFactory;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.codec.ByteToMessageDecoder;
 import xzcode.ggserver.core.common.config.GGConfig;
 import xzcode.ggserver.core.common.handler.codec.impl.DefaultDecodeHandler;
 
 /**
  * 数据输入控制器
- * @author sai
+ * @author zai
  *
  */
-public class TcpInboundHandler extends ByteToMessageDecoder{
+public class TcpInboundHandler extends ChannelInboundHandlerAdapter{
 	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultDecodeHandler.class);
 
 	/**
 	 * 数据包长度标识 字节数
 	 */
-	public static final int PACKAGE_LENGTH_BYTES = 4;
+	public static final int PACKAGE_LEN = 4;
 	
 	private GGConfig config;
 	
@@ -38,11 +39,16 @@ public class TcpInboundHandler extends ByteToMessageDecoder{
 
 
 	@Override
-	protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
+	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+		decode(ctx, (ByteBuf) msg);
+		super.channelRead(ctx, msg);
+	}
+
+	protected void decode(ChannelHandlerContext ctx, ByteBuf in) throws Exception {
 		
 		int readableBytes = in.readableBytes();
 		//如果长度不足4位，放弃并等待下次读取
-		if (readableBytes < PACKAGE_LENGTH_BYTES) {
+		if (readableBytes < PACKAGE_LEN) {
 			return;
 		}
 		in.markReaderIndex();
@@ -55,7 +61,7 @@ public class TcpInboundHandler extends ByteToMessageDecoder{
 			return;
 		}
 		
-		if (readableBytes - PACKAGE_LENGTH_BYTES < packLen) {
+		if (readableBytes - PACKAGE_LEN < packLen) {
 			in.resetReaderIndex();
 			return;
 		}
