@@ -33,8 +33,8 @@ public interface ISendMessageSupport extends ICurrentSessionSendMessageSupport, 
 		return getConfig().getSendMessageManager().send(session, action, delayMs);
 	}
 
-	default IGGFuture send(GGSession session, Object metadata, String action, Object message, long delay, TimeUnit timeUnit) {
-		return getConfig().getSendMessageManager().send(session, metadata, action, message, delay, timeUnit);
+	default IGGFuture send(GGSession session, String action, Object message, Object metadata, long delay, TimeUnit timeUnit) {
+		return getConfig().getSendMessageManager().send(session, action, message, metadata, delay, timeUnit);
 	}
 	
 	default void sendToAll(String action, Object message) {

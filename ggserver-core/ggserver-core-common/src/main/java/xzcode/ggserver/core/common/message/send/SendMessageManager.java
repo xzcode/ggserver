@@ -55,7 +55,7 @@ public class SendMessageManager implements ISendMessageSupport{
 	}
 		
 	@Override
-	public IGGFuture send(GGSession session, Object metadata,String action, Object message, long delay, TimeUnit timeUnit) {
+	public IGGFuture send(GGSession session,String action, Object message, Object metadata, long delay, TimeUnit timeUnit) {
 		if (session == null) {
 			session = GGSessionUtil.getSession();
 		}
