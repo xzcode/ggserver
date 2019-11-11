@@ -2,7 +2,6 @@ package xzcode.ggserver.core.common.handler.serializer.factory;
 
 import xzcode.ggserver.core.common.handler.serializer.ISerializer;
 import xzcode.ggserver.core.common.handler.serializer.impl.JsonSerializer;
-import xzcode.ggserver.core.common.handler.serializer.impl.MessagePackSerializer;
 import xzcode.ggserver.core.common.handler.serializer.impl.ProtoStuffSerializer;
 
 /**
@@ -15,8 +14,6 @@ public class SerializerFactory {
 	
 	private static final ISerializer JSON_SERIALIZER = new JsonSerializer();
 	
-	private static final ISerializer MESSAGE_PACK_SERIALIZER = new MessagePackSerializer();
-	
 	private static final ISerializer PROTO_STUFF_SERIALIZER = new ProtoStuffSerializer();
 	
 	/**
@@ -28,8 +25,6 @@ public class SerializerFactory {
 	public static interface SerializerType{
 		
 		String JSON = "json";
-		
-		String MESSAGE_PACK = "msgpack";
 		
 		String PROTO_STUFF = "protostuff";
 		
@@ -47,9 +42,6 @@ public class SerializerFactory {
 		
 		case SerializerType.JSON:
 			return JSON_SERIALIZER;
-			
-		case SerializerType.MESSAGE_PACK:
-			return MESSAGE_PACK_SERIALIZER;
 			
 		case SerializerType.PROTO_STUFF:
 			return PROTO_STUFF_SERIALIZER;

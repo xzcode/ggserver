@@ -15,10 +15,10 @@ import xzcode.ggserver.core.common.session.GGSession;
 /**
  * 自定协议解析
  * 
- *      包体总长度       压缩类型    加密类型        元数据长度           元数据体         指令长度           指令内容          数据体
- * +----------+--------+--------+-------------+----------+----------+-----------+------------+
- * | 4 byte   | 1 byte | 1 byte |    2 byte   | metadata |   1 byte |    tag    |  data body |
- * +----------+--------+--------+-------------+----------+----------+-----------+------------+
+ *   包体总长度           元数据长度           元数据体         指令长度           指令内容                   数据体
+ * +----------+-----------+----------+----------+-----------+------------+
+ * | 4 byte   |  2 byte   | metadata |   1 byte |    tag    |  data body |
+ * +----------+-----------+----------+----------+-----------+------------+
  * @author zai
  *
  */
@@ -67,12 +67,6 @@ public class DefaultDecodeHandler implements IGGDecodeHandler{
 		
 		int packLen = in.readableBytes();
 		
-		//读取压缩类型
-		byte compression = in.readByte();
-				
-		//读取加密类型
-		byte encryption = in.readByte();
-		
 		//读取元数据
 		int metadataLen = in.readUnsignedShort();
 		byte[] metadata = null;
@@ -98,7 +92,7 @@ public class DefaultDecodeHandler implements IGGDecodeHandler{
 		}
 		GGSession session = (GGSession) ctx.channel().attr(AttributeKey.valueOf(DefaultChannelAttributeKeys.SESSION)).get();
 		//接收包处理
-		config.getReceivePackHandler().handle(new Pack(compression, encryption, metadata, action, message), session);
+		config.getReceivePackHandler().handle(new Pack(metadata, action, message), session);
 		/*
 		config.getTaskExecutor().submit(new RequestMessageTask(PackModel.create(action, message), ctx.channel().attr(DefaultChannelAttributeKeys.SESSION).get(), config));
 		

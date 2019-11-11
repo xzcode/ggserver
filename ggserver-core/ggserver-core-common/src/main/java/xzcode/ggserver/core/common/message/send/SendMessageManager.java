@@ -51,11 +51,11 @@ public class SendMessageManager implements ISendMessageSupport{
 
 	@Override
 	public IGGFuture send(GGSession session, String action, Object message, long delayMs) {
-		return send(session, action, message, delayMs, TimeUnit.MILLISECONDS);
+		return send(session, null, action, message, delayMs, TimeUnit.MILLISECONDS);
 	}
 		
 	@Override
-	public IGGFuture send(GGSession session, String action, Object message, long delay, TimeUnit timeUnit) {
+	public IGGFuture send(GGSession session, Object metadata,String action, Object message, long delay, TimeUnit timeUnit) {
 		if (session == null) {
 			session = GGSessionUtil.getSession();
 		}
@@ -66,9 +66,10 @@ public class SendMessageManager implements ISendMessageSupport{
 			}
 			try {
 				if (session.isActive()) {
+					byte[] metadataBytes = metadata == null ? null : this.config.getSerializer().serialize(metadata);
 					byte[] actionIdData = action.getBytes(config.getCharset());
 					byte[] messageData = message == null ? null : this.config.getSerializer().serialize(message);
-					session.send(Pack.create(actionIdData, messageData), delay, timeUnit);
+					session.send(new Pack(metadataBytes, actionIdData, messageData), delay, timeUnit);
 				}
 			} catch (Exception e) {
 				logger.error("Send message Error!", e);
@@ -107,7 +108,7 @@ public class SendMessageManager implements ISendMessageSupport{
 				}
 				
 				if (sesson.isActive()) {
-					sesson.send(Pack.create(actionIdData, messageData));
+					sesson.send(new Pack(null, actionIdData, messageData));
 				}
 				
 			}

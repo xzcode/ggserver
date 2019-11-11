@@ -16,26 +16,16 @@ import xzcode.ggserver.core.common.message.Pack;
 
 /**
  * 
- *      包体总长度       压缩类型    加密类型        元数据长度           元数据体         指令长度           指令内容          数据体
- * +----------+--------+--------+-------------+----------+----------+-----------+------------+
- * | 4 byte   | 1 byte | 1 byte |    2 byte   | metadata |   1 byte |    tag    |  data body |
- * +----------+--------+--------+-------------+----------+----------+-----------+------------+
+ *   包体总长度           元数据长度           元数据体         指令长度           指令内容                   数据体
+ * +----------+-----------+----------+----------+-----------+------------+
+ * | 4 byte   |  2 byte   | metadata |   1 byte |    tag    |  data body |
+ * +----------+-----------+----------+----------+-----------+------------+
  * @author zai
  * 2018-12-07 13:38:22
  */
 public class DefaultEncodeHandler implements IGGEncodeHandler {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultEncodeHandler.class);
-	
-	/**
-	 * 压缩标识占用字节数
-	 */
-	public static final int COMPRESSION_TAG_LEN= 1;
-	
-	/**
-	 * 加密类型标识占用字节数
-	 */
-	public static final int ENCRYPTION_TAG_LEN= 1;
 	
 	/**
 	 * 元数据标识占用字节数
@@ -50,7 +40,7 @@ public class DefaultEncodeHandler implements IGGEncodeHandler {
 	/**
 	 * 所有标识长度
 	 */
-	public static final int ALL_TAG_LEN = COMPRESSION_TAG_LEN + ENCRYPTION_TAG_LEN + METADATA_TAG_LEN + ACTION_TAG_LEN;
+	public static final int ALL_TAG_LEN = METADATA_TAG_LEN + ACTION_TAG_LEN;
 	    
 
 	private GGConfig config;
@@ -96,9 +86,6 @@ public class DefaultEncodeHandler implements IGGEncodeHandler {
 		}
 		out = ctx.alloc().buffer(packLen);
 		
-		
-		out.writeByte(pack.getCompression());
-		out.writeByte(pack.getEncryption());
 		
 		out.writeShort(metaBytes.length);
 		if (metaBytes != null) {

@@ -44,7 +44,7 @@ public interface ICurrentSessionSendMessageSupport extends IGGConfigSupport, IGG
 			if (!getConfig().getFilterManager().doResponseFilters(Response.create(action, null))) {
 				return null;
 			}
-			return this.send(Pack.create(action.getBytes(), null));
+			return this.send(new Pack(null,action.getBytes(), null));
 		}
 		return null;
 	}
