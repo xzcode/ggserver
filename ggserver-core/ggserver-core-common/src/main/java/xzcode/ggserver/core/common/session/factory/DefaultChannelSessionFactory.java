@@ -8,7 +8,7 @@ import xzcode.ggserver.core.common.config.GGConfig;
 import xzcode.ggserver.core.common.event.EventTask;
 import xzcode.ggserver.core.common.event.GGEvents;
 import xzcode.ggserver.core.common.message.Pack;
-import xzcode.ggserver.core.common.session.DefaultSession;
+import xzcode.ggserver.core.common.session.DefaultChannelSession;
 import xzcode.ggserver.core.common.session.GGSession;
 import xzcode.ggserver.core.common.utils.logger.GGLoggerUtil;
 
@@ -33,21 +33,23 @@ public class DefaultChannelSessionFactory implements ISessionFactory{
 
 	@Override
 	public GGSession getSession(Channel channel, Pack pack) {
-		return channel.attr(sessAttributeKey).get();
+		GGSession session = channel.attr(sessAttributeKey).get();
+		session.updateExpire();
+		return session;
 	}
 	@Override
 	public GGSession getSession(Channel channel) {
-		return channel.attr(sessAttributeKey).get();
+		return getSession(channel, null);
 	}
 
 	@Override
 	public GGSession channelActive(Channel channel) {
 		//初始化session
-		DefaultSession session = new DefaultSession(config, channel);
+		DefaultChannelSession session = new DefaultChannelSession(config, channel);
 		
 		channel.attr(AttributeKey.valueOf(DefaultChannelAttributeKeys.SESSION)).set(session);
 		
-		config.getSessionManager().addSession(session);
+		config.getSessionManager().addSessionIfAbsent(session);
 		
 		config.getTaskExecutor().submit(new EventTask(session, GGEvents.Connection.OPEN, null, config));
 		

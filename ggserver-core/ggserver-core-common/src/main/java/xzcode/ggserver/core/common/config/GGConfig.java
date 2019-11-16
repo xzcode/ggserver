@@ -4,6 +4,8 @@ import java.nio.charset.Charset;
 import java.util.concurrent.ThreadFactory;
 
 import io.netty.channel.nio.NioEventLoopGroup;
+import xzcode.ggserver.core.common.channel.group.IChannelGroupManager;
+import xzcode.ggserver.core.common.channel.group.impl.GGChannelGroupManager;
 import xzcode.ggserver.core.common.component.GGComponentManager;
 import xzcode.ggserver.core.common.config.scanner.GGComponentScanner;
 import xzcode.ggserver.core.common.constant.GGServerTypeConstants;
@@ -72,6 +74,10 @@ public class GGConfig {
 	
 	protected int 		soBacklog = 1024;
 	
+	protected long 		sessionExpireMs = 2L * 60L * 1000L;
+	
+	protected IChannelGroupManager channelGroupManager;
+	
 	protected ISessionFactory sessionFactory;
 	
 	protected ISerializer serializer;
@@ -98,10 +104,16 @@ public class GGConfig {
 		sendMessageManager = new SendMessageManager(this);
 		filterManager = new DefaultFilterManager();
 		eventManager = new DefaultEventManager();
-		sessionManager = new DefaultSessionManager();
+		if (sessionManager == null) {
+			sessionManager = new DefaultSessionManager(this);			
+		}
 		
 		if (sessionFactory == null) {
 			sessionFactory = new DefaultChannelSessionFactory(this);
+		}
+		
+		if (channelGroupManager == null) {
+			channelGroupManager = new GGChannelGroupManager(this);
 		}
 		
 		if (workerGroupThreadFactory == null) {
@@ -395,4 +407,22 @@ public class GGConfig {
 	public void setSessionFactory(ISessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
 	}
+
+	public IChannelGroupManager getChannelGroupManager() {
+		return channelGroupManager;
+	}
+
+	public void setChannelGroupManager(IChannelGroupManager channelGroupManager) {
+		this.channelGroupManager = channelGroupManager;
+	}
+
+	public long getSessionExpireMs() {
+		return sessionExpireMs;
+	}
+
+	public void setSessionExpireMs(long sessionExpireMs) {
+		this.sessionExpireMs = sessionExpireMs;
+	}
+	
+	
 }

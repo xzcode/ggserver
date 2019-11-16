@@ -18,7 +18,7 @@ import xzcode.ggserver.core.common.future.GGFuture;
  * @author zai
  * 2019-10-02 22:48:34
  */
-public class DefaultSession implements GGSession {
+public class DefaultChannelSession implements GGSession {
 	
 	private GGConfig config;
 	/*
@@ -26,9 +26,11 @@ public class DefaultSession implements GGSession {
 	 * 
 	 * private IFilterManager filterManager;
 	 */
+	private long expireMs;
+	
 	private Channel channel;
 	
-	public DefaultSession(GGConfig config, Channel channel) {
+	public DefaultChannelSession(GGConfig config, Channel channel) {
 		super();
 		this.config = config;
 		this.channel = channel;
@@ -113,6 +115,18 @@ public class DefaultSession implements GGSession {
 	@Override
 	public Channel getChannel() {
 		return channel;
+	}
+
+	@Override
+	public boolean isExpired() {
+		return expireMs < System.currentTimeMillis();
+	}
+
+
+	@Override
+	public void updateExpire() {
+		this.expireMs = System.currentTimeMillis() + config.getSessionExpireMs();
+		
 	}
 
 

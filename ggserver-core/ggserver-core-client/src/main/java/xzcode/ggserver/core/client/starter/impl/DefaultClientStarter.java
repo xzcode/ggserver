@@ -15,7 +15,7 @@ import xzcode.ggserver.core.client.config.GGClientConfig;
 import xzcode.ggserver.core.client.starter.IGGClientStarter;
 import xzcode.ggserver.core.common.future.IGGFuture;
 import xzcode.ggserver.core.common.handler.SocketChannelInitializer;
-import xzcode.ggserver.core.common.session.DefaultSession;
+import xzcode.ggserver.core.common.session.DefaultChannelSession;
 import xzcode.ggserver.core.common.session.GGSession;
 
 public class DefaultClientStarter implements IGGClientStarter {
@@ -59,7 +59,7 @@ public class DefaultClientStarter implements IGGClientStarter {
             // 连接服务器
             ChannelFuture future = boot.connect(host, port).sync();
             Channel channel = future.channel();
-            GGSession session = new DefaultSession(config, channel);
+            GGSession session = new DefaultChannelSession(config, channel);
             return session;
         }catch (Exception e) {
         	throw new RuntimeException("GGClient connect error !! ", e);

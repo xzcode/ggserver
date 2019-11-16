@@ -12,7 +12,7 @@ import xzcode.ggserver.core.common.channel.DefaultChannelAttributeKeys;
 import xzcode.ggserver.core.common.config.GGConfig;
 import xzcode.ggserver.core.common.event.EventTask;
 import xzcode.ggserver.core.common.event.GGEvents;
-import xzcode.ggserver.core.common.session.DefaultSession;
+import xzcode.ggserver.core.common.session.DefaultChannelSession;
 
 public class InboundCommonHandler extends ChannelInboundHandlerAdapter{
 	

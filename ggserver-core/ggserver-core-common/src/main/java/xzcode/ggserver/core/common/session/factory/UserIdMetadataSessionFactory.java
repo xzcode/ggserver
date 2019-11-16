@@ -1,16 +1,14 @@
 package xzcode.ggserver.core.common.session.factory;
 
 import io.netty.channel.Channel;
-import io.netty.channel.ChannelFuture;
-import io.netty.util.AttributeKey;
-import xzcode.ggserver.core.common.channel.DefaultChannelAttributeKeys;
+import xzcode.ggserver.core.common.channel.group.IChannelGroup;
+import xzcode.ggserver.core.common.channel.group.impl.GGChannelGroup;
 import xzcode.ggserver.core.common.config.GGConfig;
-import xzcode.ggserver.core.common.event.EventTask;
-import xzcode.ggserver.core.common.event.GGEvents;
 import xzcode.ggserver.core.common.message.Pack;
-import xzcode.ggserver.core.common.message.meta.UserIdMetadata;
-import xzcode.ggserver.core.common.session.DefaultSession;
+import xzcode.ggserver.core.common.message.meta.UserMetadata;
+import xzcode.ggserver.core.common.session.ChannelGroupSession;
 import xzcode.ggserver.core.common.session.GGSession;
+import xzcode.ggserver.core.common.session.manager.ISessionManager;
 import xzcode.ggserver.core.common.utils.logger.GGLoggerUtil;
 
 /**
@@ -24,29 +22,34 @@ public class UserIdMetadataSessionFactory implements ISessionFactory{
 	
 	private GGConfig config; 
 	
-	private AttributeKey<GGSession> sessAttributeKey = AttributeKey.valueOf(DefaultChannelAttributeKeys.SESSION);
-	
+	private String channelGroupId = "default";
+	private IChannelGroup channelGroup = new GGChannelGroup(channelGroupId);
 	
 	public UserIdMetadataSessionFactory(GGConfig config) {
 		super();
 		this.config = config;
+		config.getChannelGroupManager().addChannelGroupIfAbsent(channelGroup);
 	}
 
 	@Override
 	public GGSession getSession(Channel channel, Pack pack) {
 		byte[] metadata = pack.getMetadata();
-		GGSession session = null;
+		ChannelGroupSession session = null;
 		try {
-			UserIdMetadata userIdMetadata = config.getSerializer().deserialize(metadata, UserIdMetadata.class);
-			if (userIdMetadata == null) {
+			UserMetadata userMetadata = config.getSerializer().deserialize(metadata, UserMetadata.class);
+			if (userMetadata == null) {
 				return null;
 			}
-			String userId = userIdMetadata.getUserId();
-			session = config.getSessionManager().getSession(userId);
+			String userId = userMetadata.getUserId();
+			ISessionManager sessionManager = config.getSessionManager();
+			session = (ChannelGroupSession) sessionManager.getSession(userId);
 			if (session == null) {
-				session = new 
+				session = new ChannelGroupSession(config, channelGroup);
+				session.setHost(userMetadata.getHost());
+				session.setPort(userMetadata.getPort());
+				session = (ChannelGroupSession) sessionManager.addSessionIfAbsent(session);
 			}
-			
+			session.updateExpire();
 		} catch (Exception e) {
 			GGLoggerUtil.getLogger().error("UserIdMetadataSessionFactory.getSession Error!", e);
 		}
@@ -54,31 +57,11 @@ public class UserIdMetadataSessionFactory implements ISessionFactory{
 	}
 	@Override
 	public GGSession getSession(Channel channel) {
-		return channel.attr(sessAttributeKey).get();
+		return null;
 	}
 
 	@Override
 	public GGSession channelActive(Channel channel) {
-		//初始化session
-		DefaultSession session = new DefaultSession(config, channel);
-		
-		channel.attr(AttributeKey.valueOf(DefaultChannelAttributeKeys.SESSION)).set(session);
-		
-		config.getSessionManager().addSession(session);
-		
-		config.getTaskExecutor().submit(new EventTask(session, GGEvents.Connection.OPEN, null, config));
-		
-		//注册channel关闭事件
-		channel.closeFuture().addListener((ChannelFuture future) -> {
-			
-			if (GGLoggerUtil.getLogger().isDebugEnabled()) {
-				GGLoggerUtil.getLogger().debug("Channel Close:{}",channel);
-			}
-			
-			config.getTaskExecutor().submit(new EventTask(session, GGEvents.Connection.CLOSE, null, config));
-			config.getSessionManager().remove(session.getSessonId());
-		});
-		
 		return null;
 	}
 

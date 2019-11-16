@@ -6,6 +6,13 @@ import xzcode.ggserver.core.common.executor.IExecutorSupport;
 import xzcode.ggserver.core.common.future.IGGFuture;
 import xzcode.ggserver.core.common.message.send.ICurrentSessionSendMessageSupport;
 
+/**
+ * 统一会话接口
+ * 
+ * 
+ * @author zai
+ * 2019-11-16 23:35:39
+ */
 public interface GGSession 
 extends 
 IGGConfigSupport,
@@ -37,4 +44,8 @@ IFilterSupport
 	String getSessonId();
 	
 	Channel getChannel();
+	
+	boolean isExpired();
+	
+	void updateExpire();
 }

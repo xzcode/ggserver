@@ -109,7 +109,6 @@ public class RequestMessageTask implements Runnable{
 				 * { return; }
 				 */
 			}
-			
 			config.getRequestMessageManager().invoke(request.getAction(), request.getMessage());
 			
 		} catch (Exception e) {

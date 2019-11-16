@@ -18,7 +18,7 @@ public interface ISessionManager{
 	 * @author zai
 	 * 2019-11-16 11:07:21
 	 */
-	void addSession(GGSession session);
+	GGSession addSessionIfAbsent(GGSession session);
 
 	/**
 	 * 获取会话

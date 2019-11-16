@@ -61,5 +61,15 @@ public interface IChannelGroupManager {
 	 * 2019-11-03 22:21:26
 	 */
 	void removeFromChannelGroup(String channelGroupId, Channel channel);
+
+	/**
+	 * 添加通道组
+	 * @param ggChannelGroup
+	 * @return
+	 * 
+	 * @author zai
+	 * 2019-11-16 21:50:53
+	 */
+	IChannelGroup addChannelGroupIfAbsent(IChannelGroup ggChannelGroup);
 	
 }
