@@ -63,7 +63,7 @@ public class IdleHandler extends ChannelInboundHandlerAdapter{
 		
 		
 		if (evt instanceof IdleStateEvent) {
-			GGSession session = (GGSession) ctx.channel().attr(AttributeKey.valueOf(DefaultChannelAttributeKeys.SESSION)).get();
+			GGSession session = config.getSessionFactory().getSession(ctx.channel());
             switch (((IdleStateEvent) evt).state()) {
             	
 				case WRITER_IDLE:

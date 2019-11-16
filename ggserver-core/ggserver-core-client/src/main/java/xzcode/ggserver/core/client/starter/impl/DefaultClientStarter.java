@@ -15,8 +15,8 @@ import xzcode.ggserver.core.client.config.GGClientConfig;
 import xzcode.ggserver.core.client.starter.IGGClientStarter;
 import xzcode.ggserver.core.common.future.IGGFuture;
 import xzcode.ggserver.core.common.handler.SocketChannelInitializer;
+import xzcode.ggserver.core.common.session.DefaultSession;
 import xzcode.ggserver.core.common.session.GGSession;
-import xzcode.ggserver.core.common.session.imp.DefaultSession;
 
 public class DefaultClientStarter implements IGGClientStarter {
 	

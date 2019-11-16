@@ -21,7 +21,9 @@ public class GGSessionUtil {
 	}
 	
 	public static void setSession(GGSession session) {
-		THREAD_LOCAL.set(session);
+		if (session != null) {
+			THREAD_LOCAL.set(session);			
+		}
 	}
 
 }

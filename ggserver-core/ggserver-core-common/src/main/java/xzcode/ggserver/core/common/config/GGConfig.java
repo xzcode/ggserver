@@ -22,8 +22,10 @@ import xzcode.ggserver.core.common.handler.serializer.ISerializer;
 import xzcode.ggserver.core.common.handler.serializer.factory.SerializerFactory;
 import xzcode.ggserver.core.common.message.receive.RequestMessageManager;
 import xzcode.ggserver.core.common.message.send.SendMessageManager;
-import xzcode.ggserver.core.common.session.GGSessionManager;
-import xzcode.ggserver.core.common.session.ISessionFactory;
+import xzcode.ggserver.core.common.session.factory.DefaultChannelSessionFactory;
+import xzcode.ggserver.core.common.session.factory.ISessionFactory;
+import xzcode.ggserver.core.common.session.manager.DefaultSessionManager;
+import xzcode.ggserver.core.common.session.manager.ISessionManager;
 
 /**
  * GGServer配置类
@@ -84,7 +86,7 @@ public class GGConfig {
 	protected SendMessageManager sendMessageManager;
 	protected IFilterManager filterManager;
 	protected IEventManager eventManager;
-	protected GGSessionManager sessionManager;
+	protected ISessionManager sessionManager;
 	
     
 	protected NioEventLoopGroup workerGroup;
@@ -96,8 +98,11 @@ public class GGConfig {
 		sendMessageManager = new SendMessageManager(this);
 		filterManager = new DefaultFilterManager();
 		eventManager = new DefaultEventManager();
-		sessionManager = new GGSessionManager();
+		sessionManager = new DefaultSessionManager();
 		
+		if (sessionFactory == null) {
+			sessionFactory = new DefaultChannelSessionFactory(this);
+		}
 		
 		if (workerGroupThreadFactory == null) {
 			workerGroupThreadFactory = new EventLoopGroupThreadFactory("netty-worker");
@@ -266,12 +271,12 @@ public class GGConfig {
 		this.requestMessageManager = requestMessageManager;
 	}
 	
-	public GGSessionManager getSessionManager() {
+	public ISessionManager getSessionManager() {
 		return sessionManager;
 	}
 
 
-	public void setSessionManager(GGSessionManager sessionManager) {
+	public void setSessionManager(ISessionManager sessionManager) {
 		this.sessionManager = sessionManager;
 	}
 
@@ -383,5 +388,11 @@ public class GGConfig {
 		this.inited = inited;
 	}
 	
+	public ISessionFactory getSessionFactory() {
+		return sessionFactory;
+	}
 	
+	public void setSessionFactory(ISessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
 }

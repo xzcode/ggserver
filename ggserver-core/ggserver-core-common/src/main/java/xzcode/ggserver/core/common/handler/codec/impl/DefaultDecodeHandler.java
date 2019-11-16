@@ -90,16 +90,18 @@ public class DefaultDecodeHandler implements IGGDecodeHandler{
 			in.readBytes(message);
 			
 		}
-		GGSession session = (GGSession) ctx.channel().attr(AttributeKey.valueOf(DefaultChannelAttributeKeys.SESSION)).get();
-		//接收包处理
-		config.getReceivePackHandler().handle(new Pack(metadata, action, message), session);
-		/*
-		config.getTaskExecutor().submit(new RequestMessageTask(PackModel.create(action, message), ctx.channel().attr(DefaultChannelAttributeKeys.SESSION).get(), config));
 		
-		if(LOGGER.isInfoEnabled()){
-        	LOGGER.info("\nReceived binary message  <----,\nchannel:{}\ntag:{}\nbytes-length:{}\ndata:{}", ctx.channel(), action == null ? "" : new String(action), packLen + 4, message == null ? "" : new String(message));
-        }
-*/	}
+		Pack pack = new Pack(metadata, action, message);
+		
+		//获取session
+		GGSession session = config.getSessionFactory().getSession(ctx.channel(), pack);
+		
+		//接收包处理
+		config.getReceivePackHandler().handle(pack, session);
+		
+		
+		
+		}
 
 
 

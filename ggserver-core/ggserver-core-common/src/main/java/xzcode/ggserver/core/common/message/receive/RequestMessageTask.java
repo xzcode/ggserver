@@ -57,7 +57,7 @@ public class RequestMessageTask implements Runnable{
 	public void run() {
 		
 		GGSessionUtil.setSession(this.session);
-		IFilterManager sessionFilterManager = session.getFilterManager();
+		//IFilterManager sessionFilterManager = session.getFilterManager();
 		Request request = new Request();
 		ISerializer serializer = config.getSerializer();
 		IFilterManager messageFilterManager = this.config.getFilterManager();
@@ -67,12 +67,10 @@ public class RequestMessageTask implements Runnable{
 			if (!messageFilterManager.doBeforeDeserializeFilters(pack)) {
 				return;
 			}
-			
-			//会话反序列化前过滤器
-			if (!sessionFilterManager.doBeforeDeserializeFilters(pack)) {
-				return;
-			}
-			
+			/*
+			 * //会话反序列化前过滤器 if (!sessionFilterManager.doBeforeDeserializeFilters(pack)) {
+			 * return; }
+			 */
 			request.setAction(new String(pack.getAction(), config.getCharset()));
 			oldAction = request.getAction();
 			if (pack.getMessage() != null) {
@@ -86,13 +84,11 @@ public class RequestMessageTask implements Runnable{
 			if (!messageFilterManager.doRequestFilters(request)) {
 				return;
 			}
-			
-			//会话反序列化后的消息过滤器
-			if (!sessionFilterManager.doRequestFilters(request)) {
-				return;
-			}
-			
-			
+			/*
+			 * //会话反序列化后的消息过滤器 if (!sessionFilterManager.doRequestFilters(request)) {
+			 * return; }
+			 * 
+			 */
 			while (!oldAction.equals(request.getAction())) {
 				oldAction = request.getAction();
 				if (pack.getMessage() != null) {
@@ -108,11 +104,10 @@ public class RequestMessageTask implements Runnable{
 				if (!messageFilterManager.doRequestFilters(request)) {
 					return;
 				}
-				
-				//如果action发生了改变，再次调用过滤器
-				if (!sessionFilterManager.doRequestFilters(request)) {
-					return;
-				}
+				/*
+				 * //如果action发生了改变，再次调用过滤器 if (!sessionFilterManager.doRequestFilters(request))
+				 * { return; }
+				 */
 			}
 			
 			config.getRequestMessageManager().invoke(request.getAction(), request.getMessage());

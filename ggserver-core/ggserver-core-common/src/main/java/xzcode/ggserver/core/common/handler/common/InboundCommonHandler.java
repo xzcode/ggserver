@@ -12,7 +12,7 @@ import xzcode.ggserver.core.common.channel.DefaultChannelAttributeKeys;
 import xzcode.ggserver.core.common.config.GGConfig;
 import xzcode.ggserver.core.common.event.EventTask;
 import xzcode.ggserver.core.common.event.GGEvents;
-import xzcode.ggserver.core.common.session.imp.DefaultSession;
+import xzcode.ggserver.core.common.session.DefaultSession;
 
 public class InboundCommonHandler extends ChannelInboundHandlerAdapter{
 	
@@ -52,26 +52,6 @@ public class InboundCommonHandler extends ChannelInboundHandlerAdapter{
 		
 		//InetSocketAddress socketAddress = (InetSocketAddress) ctx.channel().remoteAddress();
 		Channel channel = ctx.channel();
-		//初始化session
-		DefaultSession session = new DefaultSession(config, ctx.channel());
-		
-		channel.attr(AttributeKey.valueOf(DefaultChannelAttributeKeys.SESSION)).set(session);
-		
-		config.getSessionManager().put(session.getSessonId(), session);
-		
-		config.getTaskExecutor().submit(new EventTask(session, GGEvents.Connection.OPEN, null, config));
-		
-		
-		//注册channel关闭事件
-		channel.closeFuture().addListener((ChannelFuture future) -> {
-			
-			if (LOGGER.isDebugEnabled()) {
-				LOGGER.debug("Channel Close:{}", ctx.channel());
-			}
-			
-			config.getTaskExecutor().submit(new EventTask(session, GGEvents.Connection.CLOSE, null, config));
-			config.getSessionManager().remove(session.getSessonId());
-		});
 		
 		super.channelActive(ctx);
 		if (LOGGER.isDebugEnabled()) {

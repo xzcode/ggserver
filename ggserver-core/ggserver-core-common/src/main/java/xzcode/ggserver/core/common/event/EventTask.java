@@ -51,12 +51,12 @@ private final static Logger LOGGER = LoggerFactory.getLogger(EventTask.class);
 		try {
 			
 			config.getEventManager().emitEvent(event, message);	
-			
-			IEventManager sessionEventManager = this.session.getEventManager();
-			if (!sessionEventManager.isEmpty() && sessionEventManager.hasEventListener(event)) {
-				sessionEventManager.emitEvent(event, message);
-			}
-			
+			/*
+			 * IEventManager sessionEventManager = this.session.getEventManager(); if
+			 * (!sessionEventManager.isEmpty() &&
+			 * sessionEventManager.hasEventListener(event)) {
+			 * sessionEventManager.emitEvent(event, message); }
+			 */
 		} catch (Exception e) {
 			LOGGER.error("GGEvent Task Error!!", e);
 		}

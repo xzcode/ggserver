@@ -77,6 +77,21 @@ public class GGFuture implements IGGFuture {
 		return this.nettyFuture;
 	}
 
+	@Override
+	public boolean cancel() {
+		if (this.nettyFuture != null) {
+			return this.nettyFuture.cancel(false);
+		}
+		return true;
+	}
+	@Override
+	public boolean cancel(boolean mayInterruptIfRunning) {
+		if (this.nettyFuture != null) {
+			return this.nettyFuture.cancel(mayInterruptIfRunning);
+		}
+		return true;
+	}
+
 
 
 }

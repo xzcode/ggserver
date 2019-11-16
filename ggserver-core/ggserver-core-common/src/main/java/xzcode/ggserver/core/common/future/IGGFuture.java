@@ -11,5 +11,9 @@ public interface IGGFuture {
 	void onComplete(Runnable completeAction);
 
 	boolean isCompleted();
+	
+	boolean cancel();
+
+	boolean cancel(boolean mayInterruptIfRunning);
 
 }

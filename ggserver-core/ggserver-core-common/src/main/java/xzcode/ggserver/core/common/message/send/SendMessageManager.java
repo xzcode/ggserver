@@ -13,6 +13,7 @@ import xzcode.ggserver.core.common.future.IGGFuture;
 import xzcode.ggserver.core.common.message.Pack;
 import xzcode.ggserver.core.common.session.GGSession;
 import xzcode.ggserver.core.common.session.GGSessionUtil;
+import xzcode.ggserver.core.common.session.manager.ISessionManager;
 
 /**
  * 消息发送管理器
@@ -89,29 +90,27 @@ public class SendMessageManager implements ISendMessageSupport{
 	@Override
 	public void sendToAll(String action, Object message) {
 		try {
-			Set<Entry<Object, GGSession>> entrySet = config.getSessionManager().getSessionMap().entrySet();
+			ISessionManager sessionManager = config.getSessionManager();
 			byte[] actionIdData = action.getBytes();
 			byte[] messageData = message == null ? null : this.config.getSerializer().serialize(message);
-			for (Entry<Object, GGSession> entry : entrySet) {
-				GGSession sesson = entry.getValue();
-				IFilterManager filterManager = sesson.getFilterManager();
+			
+			sessionManager.eachSession(session -> {
+				//IFilterManager filterManager = session.getFilterManager();
 				
 				Response response = Response.create(action, message);
 				//发送过滤器
 				if (!config.getFilterManager().doResponseFilters(response)) {
-					return;
+					return false;
 				}
-				
-				//会话-发送过滤器
-				if (!filterManager.doResponseFilters(response)) {
-					return;
+				/*
+				 * //会话-发送过滤器 if (!filterManager.doResponseFilters(response)) { return false; }
+				 */
+				if (session.isActive()) {
+					session.send(new Pack(null, actionIdData, messageData));
 				}
-				
-				if (sesson.isActive()) {
-					sesson.send(new Pack(null, actionIdData, messageData));
-				}
-				
-			}
+				return true;
+			});
+			
 		} catch (Exception e) {
 			logger.error("GGServer sendToAll ERROR!");
 		}

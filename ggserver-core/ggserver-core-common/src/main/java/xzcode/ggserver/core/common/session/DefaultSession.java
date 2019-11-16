@@ -1,4 +1,4 @@
-package xzcode.ggserver.core.common.session.imp;
+package xzcode.ggserver.core.common.session;
 
 import java.net.InetSocketAddress;
 
@@ -10,7 +10,6 @@ import xzcode.ggserver.core.common.event.impl.DefaultSessionEventManager;
 import xzcode.ggserver.core.common.filter.IFilterManager;
 import xzcode.ggserver.core.common.filter.impl.SessionFilterManager;
 import xzcode.ggserver.core.common.future.GGFuture;
-import xzcode.ggserver.core.common.session.GGSession;
 
 /**
  * sesson默认实现
@@ -22,31 +21,29 @@ import xzcode.ggserver.core.common.session.GGSession;
 public class DefaultSession implements GGSession {
 	
 	private GGConfig config;
-	
-	private IEventManager eventManager;
-	
-	private IFilterManager filterManager;
-	
+	/*
+	 * private IEventManager eventManager;
+	 * 
+	 * private IFilterManager filterManager;
+	 */
 	private Channel channel;
 	
 	public DefaultSession(GGConfig config, Channel channel) {
 		super();
 		this.config = config;
 		this.channel = channel;
-		eventManager = new DefaultSessionEventManager(this);
-		filterManager = new SessionFilterManager(this);
+		/*
+		 * eventManager = new DefaultSessionEventManager(this); filterManager = new
+		 * SessionFilterManager(this);
+		 */
 	}
 
-	@Override
-	public IFilterManager getFilterManager() {
-		return this.filterManager;
-	}
-
-	@Override
-	public IEventManager getEventManager() {
-		return eventManager;
-	}
-
+	/*
+	 * @Override public IFilterManager getFilterManager() { return
+	 * this.filterManager; }
+	 * 
+	 * @Override public IEventManager getEventManager() { return eventManager; }
+	 */
 	@Override
 	public void addAttribute(String key, Object value) {
 		channel.attr(AttributeKey.valueOf(key)).set(value);
