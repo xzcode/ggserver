@@ -14,11 +14,11 @@ import xzcode.ggserver.core.common.event.impl.DefaultEventManager;
 import xzcode.ggserver.core.common.executor.factory.EventLoopGroupThreadFactory;
 import xzcode.ggserver.core.common.filter.IFilterManager;
 import xzcode.ggserver.core.common.filter.impl.DefaultFilterManager;
-import xzcode.ggserver.core.common.handler.codec.IGGDecodeHandler;
-import xzcode.ggserver.core.common.handler.codec.IGGEncodeHandler;
+import xzcode.ggserver.core.common.handler.codec.IDecodeHandler;
+import xzcode.ggserver.core.common.handler.codec.IEncodeHandler;
 import xzcode.ggserver.core.common.handler.codec.impl.DefaultDecodeHandler;
 import xzcode.ggserver.core.common.handler.codec.impl.DefaultEncodeHandler;
-import xzcode.ggserver.core.common.handler.pack.IGGReceivePackHandler;
+import xzcode.ggserver.core.common.handler.pack.IReceivePackHandler;
 import xzcode.ggserver.core.common.handler.pack.impl.DefaultReceivePackHandler;
 import xzcode.ggserver.core.common.handler.serializer.ISerializer;
 import xzcode.ggserver.core.common.handler.serializer.factory.SerializerFactory;
@@ -82,10 +82,10 @@ public class GGConfig {
 	
 	protected ISerializer serializer;
 	
-	protected IGGDecodeHandler decodeHandler;
-	protected IGGEncodeHandler encodeHandler;
+	protected IDecodeHandler decodeHandler;
+	protected IEncodeHandler encodeHandler;
 	
-	protected IGGReceivePackHandler receivePackHandler;
+	protected IReceivePackHandler receivePackHandler;
 	
 	protected GGComponentManager 	componentManager;
 	protected RequestMessageManager requestMessageManager;
@@ -336,22 +336,22 @@ public class GGConfig {
 		this.charset = charset;
 	}
 
-	public IGGDecodeHandler getDecodeHandler() {
+	public IDecodeHandler getDecodeHandler() {
 		return decodeHandler;
 	}
 
 
-	public void setDecodeHandler(IGGDecodeHandler decodeHandler) {
+	public void setDecodeHandler(IDecodeHandler decodeHandler) {
 		this.decodeHandler = decodeHandler;
 	}
 
 
-	public IGGEncodeHandler getEncodeHandler() {
+	public IEncodeHandler getEncodeHandler() {
 		return encodeHandler;
 	}
 
 
-	public void setEncodeHandler(IGGEncodeHandler encodeHandler) {
+	public void setEncodeHandler(IEncodeHandler encodeHandler) {
 		this.encodeHandler = encodeHandler;
 	}
 
@@ -366,12 +366,12 @@ public class GGConfig {
 	}
 
 
-	public IGGReceivePackHandler getReceivePackHandler() {
+	public IReceivePackHandler getReceivePackHandler() {
 		return receivePackHandler;
 	}
 
 
-	public void setReceivePackHandler(IGGReceivePackHandler receivePackHandler) {
+	public void setReceivePackHandler(IReceivePackHandler receivePackHandler) {
 		this.receivePackHandler = receivePackHandler;
 	}
 

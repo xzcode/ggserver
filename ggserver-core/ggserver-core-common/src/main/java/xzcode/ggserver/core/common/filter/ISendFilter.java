@@ -8,6 +8,6 @@ import xzcode.ggserver.core.common.message.send.Response;
  * @author zai
  * 2019-11-08 10:43:53
  */
-public interface ISendFilter extends IGGFilter<Response>{
+public interface ISendFilter extends IFilter<Response>{
 
 }

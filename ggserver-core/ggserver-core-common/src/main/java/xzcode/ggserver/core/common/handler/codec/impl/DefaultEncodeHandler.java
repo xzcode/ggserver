@@ -11,7 +11,7 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPromise;
 import xzcode.ggserver.core.common.config.GGConfig;
-import xzcode.ggserver.core.common.handler.codec.IGGEncodeHandler;
+import xzcode.ggserver.core.common.handler.codec.IEncodeHandler;
 import xzcode.ggserver.core.common.message.Pack;
 
 /**
@@ -23,7 +23,7 @@ import xzcode.ggserver.core.common.message.Pack;
  * @author zai
  * 2018-12-07 13:38:22
  */
-public class DefaultEncodeHandler implements IGGEncodeHandler {
+public class DefaultEncodeHandler implements IEncodeHandler {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultEncodeHandler.class);
 	

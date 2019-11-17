@@ -3,6 +3,7 @@ package xzcode.ggserver.core.common.filter.impl;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import xzcode.ggserver.core.common.filter.IAfterSerializeFilter;
 import xzcode.ggserver.core.common.filter.IBeforeDeserializeFilter;
 import xzcode.ggserver.core.common.filter.IFilterManager;
 import xzcode.ggserver.core.common.filter.ISendFilter;
@@ -17,6 +18,7 @@ public class DefaultFilterManager implements IFilterManager {
 	private List<IBeforeDeserializeFilter> beforeDeserializeFilters;
 	private List<IReceiveFilter> requestFilters;
 	private List<ISendFilter> responseFilters;
+	private List<IAfterSerializeFilter> afterSerializeFilters;
 	
 	public DefaultFilterManager() {
 		super();
@@ -34,6 +36,7 @@ public class DefaultFilterManager implements IFilterManager {
 		beforeDeserializeFilters.add(filter);
 		return;
 	}
+	
 	@Override
 	public void removeBeforeDeserializeFilter(IBeforeDeserializeFilter filter) {
 		
@@ -41,6 +44,29 @@ public class DefaultFilterManager implements IFilterManager {
 			return;
 		}
 		beforeDeserializeFilters.remove(filter);
+	}
+	
+	@Override
+	public void addAfterSerializeFilter(IAfterSerializeFilter filter) {
+		
+		if (afterSerializeFilters == null) {
+			synchronized (this) {
+				if (afterSerializeFilters == null) {
+					afterSerializeFilters = new CopyOnWriteArrayList<>();		
+				}
+			}
+		}
+		afterSerializeFilters.add(filter);
+		return;
+	}
+	
+	@Override
+	public void removeAfterSerializeFilter(IAfterSerializeFilter filter) {
+		
+		if (afterSerializeFilters == null) {
+			return;
+		}
+		afterSerializeFilters.remove(filter);
 	}
 	
 	@Override
@@ -84,7 +110,7 @@ public class DefaultFilterManager implements IFilterManager {
 		}
 		requestFilters.remove(filter);
 	}
-	
+	@Override
 	public boolean doBeforeDeserializeFilters(Pack pack) {
 		if (beforeDeserializeFilters == null) {
 			return true;
@@ -96,7 +122,19 @@ public class DefaultFilterManager implements IFilterManager {
 		}
 		return true;
 	}
-	
+	@Override
+	public boolean doAfterSerializeFilters(Pack pack) {
+		if (beforeDeserializeFilters == null) {
+			return true;
+		}
+		for (IBeforeDeserializeFilter filter : beforeDeserializeFilters) {
+			if (!filter.doFilter(GGSessionUtil.getSession(), pack)) {
+				return false;
+			}
+		}
+		return true;
+	}
+	@Override
 	public boolean doRequestFilters(Request request) {
 		if (requestFilters == null) {
 			return true;
@@ -109,7 +147,7 @@ public class DefaultFilterManager implements IFilterManager {
 		return true;
 	}
 	
-	
+	@Override
 	public boolean doResponseFilters(Response response) {
 		if (responseFilters == null) {
 			return true;

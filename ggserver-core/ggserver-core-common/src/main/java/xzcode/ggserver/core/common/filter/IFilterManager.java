@@ -13,4 +13,6 @@ public interface IFilterManager extends IFilterSupport{
 	
 	boolean doResponseFilters(Response response);
 
+	boolean doAfterSerializeFilters(Pack pack);
+
 }

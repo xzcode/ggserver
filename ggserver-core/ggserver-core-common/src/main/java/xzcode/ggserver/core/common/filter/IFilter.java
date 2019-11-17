@@ -9,7 +9,7 @@ import xzcode.ggserver.core.common.session.GGSession;
  * @author zzz
  * 2019-10-08 18:20:21
  */
-public interface IGGFilter<T> {
+public interface IFilter<T> {
 	
 	boolean doFilter(GGSession session, T data);
 

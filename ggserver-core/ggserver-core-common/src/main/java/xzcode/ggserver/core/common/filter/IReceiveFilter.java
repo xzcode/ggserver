@@ -8,6 +8,6 @@ import xzcode.ggserver.core.common.message.receive.Request;
  * @author zai
  * 2019-11-08 10:44:15
  */
-public interface IReceiveFilter extends IGGFilter<Request>{
+public interface IReceiveFilter extends IFilter<Request>{
 
 }

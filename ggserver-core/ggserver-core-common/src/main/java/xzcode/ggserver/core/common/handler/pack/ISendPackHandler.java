@@ -6,7 +6,7 @@ import xzcode.ggserver.core.common.future.IGGFuture;
 import xzcode.ggserver.core.common.message.Pack;
 import xzcode.ggserver.core.common.session.GGSession;
 
-public interface IGGSendPackHandler {
+public interface ISendPackHandler {
 
 	
 

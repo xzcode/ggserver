@@ -90,23 +90,30 @@ public class SendMessageManager implements ISendMessageSupport{
 	@Override
 	public void sendToAll(String action, Object message) {
 		try {
+			
+			Response response = Response.create(action, message);
+			
+			//发送过滤器
+			if (!config.getFilterManager().doResponseFilters(response)) {
+				return;
+			}
+			
 			ISessionManager sessionManager = config.getSessionManager();
 			byte[] actionIdData = action.getBytes();
 			byte[] messageData = message == null ? null : this.config.getSerializer().serialize(message);
 			
+			
+			Pack pack = new Pack(null, actionIdData, messageData);
+			
 			sessionManager.eachSession(session -> {
 				//IFilterManager filterManager = session.getFilterManager();
 				
-				Response response = Response.create(action, message);
-				//发送过滤器
-				if (!config.getFilterManager().doResponseFilters(response)) {
-					return false;
-				}
+				
 				/*
 				 * //会话-发送过滤器 if (!filterManager.doResponseFilters(response)) { return false; }
 				 */
 				if (session.isActive()) {
-					session.send(new Pack(null, actionIdData, messageData));
+					session.send(pack);
 				}
 				return true;
 			});

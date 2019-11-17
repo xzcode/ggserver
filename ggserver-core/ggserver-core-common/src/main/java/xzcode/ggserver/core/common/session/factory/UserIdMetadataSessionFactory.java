@@ -45,8 +45,6 @@ public class UserIdMetadataSessionFactory implements ISessionFactory{
 			session = (ChannelGroupSession) sessionManager.getSession(userId);
 			if (session == null) {
 				session = new ChannelGroupSession(config, channelGroup);
-				session.setHost(userMetadata.getHost());
-				session.setPort(userMetadata.getPort());
 				session = (ChannelGroupSession) sessionManager.addSessionIfAbsent(session);
 			}
 			session.updateExpire();

@@ -3,16 +3,9 @@ package xzcode.ggserver.core.common.handler.common;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import io.netty.util.AttributeKey;
-import xzcode.ggserver.core.common.channel.DefaultChannelAttributeKeys;
 import xzcode.ggserver.core.common.config.GGConfig;
-import xzcode.ggserver.core.common.event.EventTask;
-import xzcode.ggserver.core.common.event.GGEvents;
-import xzcode.ggserver.core.common.session.DefaultChannelSession;
 
 public class InboundCommonHandler extends ChannelInboundHandlerAdapter{
 	
@@ -50,9 +43,7 @@ public class InboundCommonHandler extends ChannelInboundHandlerAdapter{
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
 		
-		//InetSocketAddress socketAddress = (InetSocketAddress) ctx.channel().remoteAddress();
-		Channel channel = ctx.channel();
-		
+		config.getSessionFactory().channelActive(ctx.channel());
 		super.channelActive(ctx);
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Channel Active:{}", ctx.channel());

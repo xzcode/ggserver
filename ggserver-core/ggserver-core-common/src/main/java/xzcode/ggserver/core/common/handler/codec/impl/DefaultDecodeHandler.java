@@ -8,7 +8,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.util.AttributeKey;
 import xzcode.ggserver.core.common.channel.DefaultChannelAttributeKeys;
 import xzcode.ggserver.core.common.config.GGConfig;
-import xzcode.ggserver.core.common.handler.codec.IGGDecodeHandler;
+import xzcode.ggserver.core.common.handler.codec.IDecodeHandler;
 import xzcode.ggserver.core.common.message.Pack;
 import xzcode.ggserver.core.common.session.GGSession;
 
@@ -22,7 +22,7 @@ import xzcode.ggserver.core.common.session.GGSession;
  * @author zai
  *
  */
-public class DefaultDecodeHandler implements IGGDecodeHandler{
+public class DefaultDecodeHandler implements IDecodeHandler{
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultDecodeHandler.class);
 

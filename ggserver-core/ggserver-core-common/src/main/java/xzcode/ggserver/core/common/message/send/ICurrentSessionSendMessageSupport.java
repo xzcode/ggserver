@@ -61,6 +61,11 @@ public interface ICurrentSessionSendMessageSupport extends IGGConfigSupport, IGG
 
 	default IGGFuture send(Pack pack, long delay, TimeUnit timeUnit) {
 		Channel channel = getSession().getChannel();
+
+		//序列化后发送过滤器
+		if (!getConfig().getFilterManager().doAfterSerializeFilters(pack)) {
+			return null;
+		}
 		if (channel.isActive()) {
 			IGGFuture future = new GGFuture();	
 			if (delay <= 0) {
