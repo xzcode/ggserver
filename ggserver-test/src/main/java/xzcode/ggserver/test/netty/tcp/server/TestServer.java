@@ -1,4 +1,4 @@
-package xzcode.ggserver.test.netty.server;
+package xzcode.ggserver.test.netty.tcp.server;
 
 import java.util.concurrent.TimeUnit;
 
@@ -10,8 +10,8 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import xzcode.ggserver.test.netty.server.handler.TestInboundHandler;
-import xzcode.ggserver.test.netty.server.handler.TestOutboundHandler;
+import xzcode.ggserver.test.netty.tcp.server.handler.TestInboundHandler;
+import xzcode.ggserver.test.netty.tcp.server.handler.TestOutboundHandler;
 
 public class TestServer {
 	private int port;

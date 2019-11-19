@@ -74,6 +74,8 @@ public class GGConfig {
 	
 	protected int 		soBacklog = 1024;
 	
+	protected boolean 	soReuseaddr = false;
+	
 	protected long 		sessionExpireMs = 2L * 60L * 1000L;
 	
 	protected IChannelGroupManager channelGroupManager;
@@ -422,6 +424,14 @@ public class GGConfig {
 
 	public void setSessionExpireMs(long sessionExpireMs) {
 		this.sessionExpireMs = sessionExpireMs;
+	}
+
+	public boolean isSoReuseaddr() {
+		return soReuseaddr;
+	}
+
+	public void setSoReuseaddr(boolean soReuseaddr) {
+		this.soReuseaddr = soReuseaddr;
 	}
 	
 	

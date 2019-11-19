@@ -1,4 +1,4 @@
-package xzcode.ggserver.test.netty.client;
+package xzcode.ggserver.test.netty.tcp.client;
 
 import java.io.UnsupportedEncodingException;
 import java.net.SocketAddress;
@@ -14,8 +14,8 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import xzcode.ggserver.test.netty.server.handler.TestInboundHandler;
-import xzcode.ggserver.test.netty.server.handler.TestOutboundHandler;
+import xzcode.ggserver.test.netty.tcp.server.handler.TestInboundHandler;
+import xzcode.ggserver.test.netty.tcp.server.handler.TestOutboundHandler;
 
 public class TestClient {
 	// 要请求的服务器的ip地址

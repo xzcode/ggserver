@@ -58,6 +58,8 @@ public class DefaultGGServerStarter implements IGGServerStarter {
             boot.childHandler(new MixedSocketChannelInitializer(config));
             
             boot.option(ChannelOption.SO_BACKLOG, config.getSoBacklog()); 
+            boot.option(ChannelOption.SO_REUSEADDR, config.isSoReuseaddr()); 
+            boot.option(ChannelOption.TCP_NODELAY, true); 
             
             boot.childOption(ChannelOption.SO_KEEPALIVE, true); 
     

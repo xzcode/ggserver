@@ -1,4 +1,4 @@
-package xzcode.ggserver.test.netty.server.handler;
+package xzcode.ggserver.test.netty.tcp.server.handler;
 
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicInteger;
