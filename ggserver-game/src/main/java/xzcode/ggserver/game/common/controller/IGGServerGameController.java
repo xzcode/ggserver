@@ -1,6 +1,6 @@
 package xzcode.ggserver.game.common.controller;
 
-import xzcode.ggserver.core.GGServer;
+import xzcode.ggserver.core.server.GGServer;
 
 public interface IGGServerGameController {
 

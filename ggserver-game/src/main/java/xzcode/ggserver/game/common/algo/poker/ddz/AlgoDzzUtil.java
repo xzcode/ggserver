@@ -23,12 +23,12 @@ import xzcode.ggserver.game.common.algo.poker.BasicPokerAlgoUtil;
 public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 	
 	/**
-	 * 小王牌值
+	 * 大王牌值
 	 */
 	public static int DA_WANG = 532;
 	
 	/**
-	 * 大王牌值
+	 * 小王牌值
 	 */
 	public static int XIAO_WANG = 531;
 	
@@ -97,7 +97,13 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
             else return false;
         }
 	}
-	
+	public int checkCardType(List<Integer> cards) {
+		int[] arr = new int[cards.size()];
+		for (int i = 0; i < arr.length; i++) {
+			arr[i] = cards.get(i);
+		}
+		return checkCardType(arr);
+	}
 	/**
 	 * 检查牌型
 	 * 
@@ -117,6 +123,24 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
          return result;
 	}
 	
+	public List<List<Integer>> checkFollowOptions(List<Integer> cards, List<Integer> followCards) {
+		int[] cardsArr = listToIntArr(cards);
+		int[] followCardsArr = listToIntArr(followCards);
+		
+		List<List<Integer>> list = new ArrayList<>();
+		List<int[]> checkFollowOptions = checkFollowOptions(cardsArr, followCardsArr);
+		if (checkFollowOptions != null) {
+			for (int[] arr : checkFollowOptions) {
+				List<Integer> ll = new ArrayList<>();
+				for (int i = 0; i < arr.length; i++) {
+					ll.add(arr[i]);
+				}
+				list.add(ll);
+			}
+		}
+		return list;
+	}
+	
 	/**
 	 * 获取跟牌选项
 	 * 
@@ -126,7 +150,14 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
 	 * 2019-07-02 16:16:45
 	 */
 	public List<int[]> checkFollowOptions(int[] cards, int[] followCards) {
-		if (followCards == null || cards == null) return null;
+		if (cards == null) return null;
+		if(followCards==null)
+		{
+			List<int[]> result = new ArrayList<int[]>();
+			int[] get=getFirstRemind(cards);
+			result.add(get);
+			return result;
+		}
         int[] catchNumList = getNumList(followCards);
         int[] sortType = new int[1];
         int catchType = checkNumListType(catchNumList,  sortType); //内部实现catchNumList排序
@@ -329,7 +360,7 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
         */
        public boolean isStraight(int[] numList, int singleNum) //**事先排序
        {
-           int minTypeNum = singleNum == 1 ? 5 : 2;
+           int minTypeNum = singleNum == 1 ? 5:singleNum==2?3: 2;
            if (numList.length % singleNum != 0 || numList.length < singleNum * minTypeNum) return false;
            return straight(numList, singleNum, numList.length / singleNum, 0);
        }
@@ -524,6 +555,38 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
            }
            return AlgoDzzCardType.NONE;
        }
+       public int[] getFirstRemind(int[] cards)
+       {
+           //最小张的优先提示，单张，对子，三条不带。
+           //仅仅剩余炸弹和王炸的情况，提示炸弹  simple功能。
+           if (cards.length == 0) return null;
+           int[] numList = getNumList(cards);
+           sort(numList);
+           if (numList.length == 2 && numList[0] == 31 && numList[1] == 32) return cards;
+           List<List<Integer>> getSort = getSortCell(numList);
+           List<Integer> findMin = new ArrayList<Integer>();
+           int startIndex = -1;
+           for (int i=0;i<getSort.size();i++ )
+           {
+               if (getSort.get(i).size() == 0) continue;
+               if(startIndex==-1||getSort.get(i).get(0)<getSort.get(startIndex).get(0))
+               {
+                   startIndex = i;
+               }
+           }
+           int[] result = new int[startIndex+1];
+           int start = 0;
+           for (int i = 0; i < cards.length; i++)
+           {
+               if (cards[i] % 100 == getSort.get(startIndex).get(0))
+               {
+                   result[start] = cards[i];
+                   start++;
+                   if (start == result.length) break;
+               }
+           }
+           return result;
+       }
        public int compareCardsType(int[] cardsOne,int[] cardsTwo)
        {
            int[] oneList = getNumList(cardsOne);
@@ -541,7 +604,7 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
                if (oneType == AlgoDzzCardType.ZHA_DAN) return 1;
                if (twoType == AlgoDzzCardType.ZHA_DAN) return -1;
            }
-           return 1000;
+           return -1000;
        }
        /**按元素个数特性获取分类数组。
         * 
@@ -556,6 +619,7 @@ public class AlgoDzzUtil extends BasicPokerAlgoUtil{
                result.add(new  ArrayList<Integer>());
            }
            int startIndex = 0;
+           if(numList.length==1) result.get(0).add(numList[0]);
            for (int i = 0; i < numList.length-1; i++)
            {
                if(numList[i]!=numList[i+1])

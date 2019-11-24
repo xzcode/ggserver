@@ -3,9 +3,8 @@ package xzcode.ggserver.game.common.holder.timeout;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import xzcode.ggserver.core.GGServer;
-import xzcode.ggserver.core.executor.task.TimeoutRunnable;
-import xzcode.ggserver.game.common.interfaces.timeout.TimeoutAction;
+import xzcode.ggserver.core.common.future.IGGFuture;
+import xzcode.ggserver.core.server.GGServer;
 
 /**
  * 超时等待模型
@@ -13,11 +12,11 @@ import xzcode.ggserver.game.common.interfaces.timeout.TimeoutAction;
  * @author zai
  * 2019-01-21 11:59:37
  */
-public class TimeoutHolder implements TimeoutRunnable{
+public class TimeoutHolder{
 	
 	
 	
-	protected TimeoutAction timeoutAction;
+	protected Runnable timeoutAction;
 	
 	
 	/**
@@ -40,14 +39,14 @@ public class TimeoutHolder implements TimeoutRunnable{
 	protected long startTimeMs;
 	
 	
-	public static TimeoutHolder create(GGServer gg, TimeoutAction timeoutAction, long timeoutMs) {
+	public static TimeoutHolder create(GGServer gg, Runnable timeoutAction, long timeoutMs) {
 		TimeoutHolder timeoutHolder = new TimeoutHolder();
 		timeoutHolder.onTimeout(timeoutAction);
 		timeoutHolder.setGg(gg);
 		timeoutHolder.setTimeoutMs(timeoutMs);
 		return timeoutHolder;
 	}
-	public static TimeoutHolder create(GGServer gg, long timeoutMs, Object syncLock, TimeoutAction timeoutAction) {
+	public static TimeoutHolder create(GGServer gg, long timeoutMs, Object syncLock, Runnable timeoutAction) {
 		TimeoutHolder timeoutHolder = new TimeoutHolder();
 		timeoutHolder.onTimeout(timeoutAction);
 		timeoutHolder.setGg(gg);
@@ -55,7 +54,7 @@ public class TimeoutHolder implements TimeoutRunnable{
 		timeoutHolder.setSyncLock(syncLock);
 		return timeoutHolder;
 	}
-	public static TimeoutHolder create(GGServer gg, long timeoutMs, TimeoutAction timeoutAction) {
+	public static TimeoutHolder create(GGServer gg, long timeoutMs, Runnable timeoutAction) {
 		TimeoutHolder timeoutHolder = new TimeoutHolder();
 		timeoutHolder.onTimeout(timeoutAction);
 		timeoutHolder.setGg(gg);
@@ -70,12 +69,13 @@ public class TimeoutHolder implements TimeoutRunnable{
 	 * 2019-04-22 18:06:06
 	 */
 	public TimeoutHolder startTask() {
+		IGGFuture taskFuture;
 		if (this.syncLock != null) {
-			gg.schedule(this.syncLock, timeoutMs, this);
-			this.startTimeMs = System.currentTimeMillis();
-			return this;
+			taskFuture = gg.schedule(this.syncLock, timeoutMs, timeoutAction);
+		}else {
+			taskFuture = gg.schedule(timeoutMs, timeoutAction);
 		}
-		gg.schedule(timeoutMs, this);
+		this.timeoutFuture = (ScheduledFuture<?>) taskFuture.getNettyFuture();
 		this.startTimeMs = System.currentTimeMillis();
 		return this;
 	}
@@ -144,14 +144,10 @@ public class TimeoutHolder implements TimeoutRunnable{
 		super();
 	}
 	
-	public TimeoutAction getTimeoutAction() {
+	public Runnable getTimeoutAction() {
 		return timeoutAction;
 	}
 	
-	@Override
-	public void run() {
-		this.getTimeoutAction().run();
-	}
 
 
 	/**
@@ -161,7 +157,7 @@ public class TimeoutHolder implements TimeoutRunnable{
 	 * @author zai
 	 * 2019-01-29 11:20:36
 	 */
-	public void onTimeout(TimeoutAction timeoutAction) {
+	public void onTimeout(Runnable timeoutAction) {
 		this.timeoutAction = timeoutAction;
 		
 	}
@@ -224,7 +220,7 @@ public class TimeoutHolder implements TimeoutRunnable{
 	public void setSyncLock(Object syncLock) {
 		this.syncLock = syncLock;
 	}
-	public void setTimeoutAction(TimeoutAction timeoutAction) {
+	public void setTimeoutAction(Runnable timeoutAction) {
 		this.timeoutAction = timeoutAction;
 	}
 	public long getStartTimeMs() {

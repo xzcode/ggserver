@@ -153,13 +153,24 @@ H extends House<P, R, H>
 
 	
 	/**
-	 * 获取指定条件下，首个满足条件的玩家(多个玩家的时候)
+	 * 获取下一个位置的玩家
 	 * @param room
 	 * @param curplayer
 	 * @param condition
 	 * @return
 	 */
 	P getNextPlayer(R room ,int seatNum ,ICheckCondition<P> condition );
+	
+	/**
+	 * 获取下一个位置的玩家
+	 * 
+	 * @param room
+	 * @param startSeatNum
+	 * @return
+	 * @author zzz
+	 * 2019-09-12 15:58:40
+	 */
+	P getNextPlayer(R room, int startSeatNum);
 
 	/**
 	 * 根据条件获取玩家
@@ -384,15 +395,26 @@ H extends House<P, R, H>
 	 */
 	void bcToAllPlayer(R room, String actionId);
 
-
-
-
 	
+	/**
+	 * 双循环玩家遍历
+	 * 
+	 * @param room
+	 * @param eachPlayer
+	 * @author zzz
+	 * 2019-09-10 12:16:44
+	 */
+	void doubleEachPlayer(R room, DoubleEachPlayer<P> eachPlayer);
 
-	
+	/**
+	 * 双循环玩家遍历
+	 * 
+	 * @param room
+	 * @param eachPlayer
+	 * @author zzz
+	 * 2019-09-10 12:28:39
+	 */
+	void doubleEachInGamePlayer(R room, DoubleEachPlayer<P> eachPlayer);
 
-	
-
-	
 	
 }

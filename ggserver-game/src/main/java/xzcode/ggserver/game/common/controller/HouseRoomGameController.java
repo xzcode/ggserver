@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
@@ -108,12 +109,43 @@ extends
 			}
 		}
 	}
+	
+	@Override
+	public void doubleEachInGamePlayer(R room, DoubleEachPlayer<P> eachPlayer) {
+		synchronized (room) {
+			P player = null;
+			P player2 = null;
+			Set<Entry<Object, P>> entrySet = room.getPlayers().entrySet();
+			for (Entry<Object, P> e : entrySet) {
+				player = e.getValue();
+				if (player.isInGame()) {
+					for (Entry<Object, P> e2 : entrySet) {
+						player2 = e2.getValue();
+						if (player2.isInGame()) {
+							eachPlayer.each(player, player2);							
+						}
+					}
+				}
+			}
+		}
+	}
 
 	@Override
 	public void eachPlayer(R room, ForEachPlayer<P> eachPlayer) {
 		synchronized (room) {
 			for (Entry<Object, P> e : room.getPlayers().entrySet()) {
 				eachPlayer.each(e.getValue());
+			}
+		}
+	}
+	@Override
+	public void doubleEachPlayer(R room, DoubleEachPlayer<P> eachPlayer) {
+		synchronized (room) {
+			Set<Entry<Object, P>> entrySet = room.getPlayers().entrySet();
+			for (Entry<Object, P> e : entrySet) {
+				for (Entry<Object, P> e2 : entrySet) {
+					eachPlayer.each(e.getValue(), e2.getValue());
+				}
 			}
 		}
 	}
@@ -200,6 +232,7 @@ extends
 			return null;
 		}
 	}
+	
 	@Override
 	public P getInGamePlayer(R room, ICheckCondition<P> condition) {
 		synchronized (room) {
@@ -334,7 +367,11 @@ extends
 			//获取排序后的玩家
 			List<P> pList = getSortedInGamePlayerList(room);
 			//排除起始座位号
-			pList = pList.stream().filter(o -> o.getSeatNum() != startSeatNum && condition.check(o)).collect(Collectors.toList());
+			if (condition != null) {
+				pList = pList.stream().filter(o -> o.getSeatNum() != startSeatNum && condition.check(o)).collect(Collectors.toList());
+			}else {
+				pList = pList.stream().filter(o -> o.getSeatNum() != startSeatNum).collect(Collectors.toList());
+			}
 			
 			if (pList.size() == 0) {
 				return null;
@@ -359,6 +396,12 @@ extends
 	}
 	
 	@Override
+	public P getNextPlayer(R room, int startSeatNum) {
+		return getNextPlayer(room, startSeatNum, null);
+		
+	}
+	
+	@Override
 	public int getSeatNum(R room) {
 		
 		int maxPlayerNum = getMaxPlayerNum();
@@ -376,35 +419,6 @@ extends
 	};
 	
 	
-
-	@Override
-	public Object getCurrentPlayerId() {
-		return getGGServer().getSession().getRegisteredUserId();
-	};
-
-	@Override
-	public void bcToAllPlayer(R room, String actionId) {
-		eachPlayer(room, (player) -> {
-			getGGServer().send(player.getPlayerId(), actionId, null);
-		});
-	}
-	@Override
-	public void bcToAllPlayer(R room, String actionId, Object message) {
-		eachPlayer(room, (player) -> {
-			getGGServer().send(player.getPlayerId(), actionId, message);
-		});
-	}
-	
-	@Override
-	public void bcToAllPlayer(R room, String actionId, Object message, ICheckCondition<P> condition) {
-		eachPlayer(room, (player) -> {
-			if (condition.check(player)) {
-				getGGServer().send(player.getPlayerId(), actionId, message);				
-			}
-		});
-	}
-	
-
 	@Override
 	public Map<Object, P> getPlayers(R room) {
 		return room.getPlayers();

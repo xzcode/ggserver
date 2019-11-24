@@ -3,7 +3,7 @@ package xzcode.ggserver.game.common.holder.timeout;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import xzcode.ggserver.core.GGServer;
+import xzcode.ggserver.core.server.GGServer;
 import xzcode.ggserver.game.common.interfaces.timeout.ScheduleTaskAction;
 
 /**
@@ -74,7 +74,7 @@ public class ScheduleTaskHolder{
 	 * 2019-04-22 18:06:06
 	 */
 	public ScheduleTaskHolder startTask() {
-		this.future = gg.scheduleWithFixedDelay(initialDelay, delay, taskAction, timeUnit);
+		this.future = (ScheduledFuture<?>) gg.scheduleWithFixedDelay(initialDelay, delay, timeUnit, taskAction ).getNettyFuture();
 		return this;
 	}
 	

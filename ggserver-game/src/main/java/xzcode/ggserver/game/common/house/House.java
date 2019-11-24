@@ -6,7 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import xzcode.ggserver.core.GGServer;
+import xzcode.ggserver.core.server.GGServer;
 import xzcode.ggserver.game.common.player.Player;
 import xzcode.ggserver.game.common.room.Room;
 
