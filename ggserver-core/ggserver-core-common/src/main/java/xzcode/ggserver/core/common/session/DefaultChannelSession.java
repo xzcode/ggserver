@@ -5,11 +5,8 @@ import java.net.InetSocketAddress;
 import io.netty.channel.Channel;
 import io.netty.util.AttributeKey;
 import xzcode.ggserver.core.common.config.GGConfig;
-import xzcode.ggserver.core.common.event.IEventManager;
-import xzcode.ggserver.core.common.event.impl.DefaultSessionEventManager;
-import xzcode.ggserver.core.common.filter.IFilterManager;
-import xzcode.ggserver.core.common.filter.impl.SessionFilterManager;
-import xzcode.ggserver.core.common.future.GGFuture;
+import xzcode.ggserver.core.common.future.GGNettyFacadeFuture;
+import xzcode.ggserver.core.common.future.IGGFuture;
 
 /**
  * sesson默认实现
@@ -21,31 +18,15 @@ import xzcode.ggserver.core.common.future.GGFuture;
 public class DefaultChannelSession implements GGSession {
 	
 	private GGConfig config;
-	/*
-	 * private IEventManager eventManager;
-	 * 
-	 * private IFilterManager filterManager;
-	 */
 	private long expireMs;
-	
 	private Channel channel;
 	
 	public DefaultChannelSession(GGConfig config, Channel channel) {
 		super();
 		this.config = config;
 		this.channel = channel;
-		/*
-		 * eventManager = new DefaultSessionEventManager(this); filterManager = new
-		 * SessionFilterManager(this);
-		 */
 	}
 
-	/*
-	 * @Override public IFilterManager getFilterManager() { return
-	 * this.filterManager; }
-	 * 
-	 * @Override public IEventManager getEventManager() { return eventManager; }
-	 */
 	@Override
 	public void addAttribute(String key, Object value) {
 		channel.attr(AttributeKey.valueOf(key)).set(value);
@@ -68,8 +49,8 @@ public class DefaultChannelSession implements GGSession {
 	}
 
 	@Override
-	public GGFuture disconnect() {
-		return new GGFuture(this.channel.close());
+	public IGGFuture<?> disconnect() {
+		return new GGNettyFacadeFuture<>(this.channel.close());
 
 	}
 

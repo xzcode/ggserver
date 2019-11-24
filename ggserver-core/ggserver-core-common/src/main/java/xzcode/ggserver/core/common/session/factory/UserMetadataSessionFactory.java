@@ -18,14 +18,14 @@ import xzcode.ggserver.core.common.utils.logger.GGLoggerUtil;
  * @author zai
  * 2019-11-16 11:02:22
  */
-public class UserIdMetadataSessionFactory implements ISessionFactory{
+public class UserMetadataSessionFactory implements ISessionFactory{
 	
 	private GGConfig config; 
 	
 	private String channelGroupId = "default";
 	private IChannelGroup channelGroup = new GGChannelGroup(channelGroupId);
 	
-	public UserIdMetadataSessionFactory(GGConfig config) {
+	public UserMetadataSessionFactory(GGConfig config) {
 		super();
 		this.config = config;
 		config.getChannelGroupManager().addChannelGroupIfAbsent(channelGroup);
@@ -36,7 +36,8 @@ public class UserIdMetadataSessionFactory implements ISessionFactory{
 		byte[] metadata = pack.getMetadata();
 		ChannelGroupSession session = null;
 		try {
-			UserMetadata userMetadata = config.getSerializer().deserialize(metadata, UserMetadata.class);
+			
+			UserMetadata userMetadata = (UserMetadata) config.getMetadataResolver().resolve(metadata);
 			if (userMetadata == null) {
 				return null;
 			}
@@ -49,7 +50,7 @@ public class UserIdMetadataSessionFactory implements ISessionFactory{
 			}
 			session.updateExpire();
 		} catch (Exception e) {
-			GGLoggerUtil.getLogger().error("UserIdMetadataSessionFactory.getSession Error!", e);
+			GGLoggerUtil.getLogger().error("UserMetadataSessionFactory.getSession Error!", e);
 		}
 		return session;
 	}
@@ -59,8 +60,13 @@ public class UserIdMetadataSessionFactory implements ISessionFactory{
 	}
 
 	@Override
-	public GGSession channelActive(Channel channel) {
-		return null;
+	public void channelActive(Channel channel) {
+		
+	}
+
+	@Override
+	public void channelInActive(Channel channel) {
+		config.getSessionManager().clearAllSession();
 	}
 
 }

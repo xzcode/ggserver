@@ -2,6 +2,8 @@ package xzcode.ggserver.core.common.message;
 
 import java.nio.charset.Charset;
 
+import xzcode.ggserver.core.common.session.GGSession;
+
 /**
  * 消息发送模型
  * 
@@ -9,8 +11,6 @@ import java.nio.charset.Charset;
  * 2019-03-12 19:20:01
  */
 public class Pack {
-	
-
 	
 	/* 元数据 */
 	private byte[] metadata;

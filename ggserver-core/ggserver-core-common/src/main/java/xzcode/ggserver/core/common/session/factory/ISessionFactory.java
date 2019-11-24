@@ -13,10 +13,43 @@ import xzcode.ggserver.core.common.session.GGSession;
  */
 public interface ISessionFactory {
 	
+	/**
+	 * 获取会话
+	 * @param channel 通道
+	 * @param pack 数据包
+	 * @return
+	 * 
+	 * @author zai
+	 * 2019-11-24 21:50:36
+	 */
 	GGSession getSession(Channel channel, Pack pack);
 	
+	/**
+	 * 获取会话
+	 * @param channel 通道
+	 * @return
+	 * 
+	 * @author zai
+	 * 2019-11-24 21:51:00
+	 */
 	GGSession getSession(Channel channel);
 	
-	GGSession channelActive(Channel channel);
+	/**
+	 * 通道激活
+	 * @param channel
+	 * 
+	 * @author zai
+	 * 2019-11-24 21:51:12
+	 */
+	void channelActive(Channel channel);
+	
+	/**
+	 * 通道失效
+	 * @param channel
+	 * 
+	 * @author zai
+	 * 2019-11-24 21:51:21
+	 */
+	void channelInActive(Channel channel);
 	
 }

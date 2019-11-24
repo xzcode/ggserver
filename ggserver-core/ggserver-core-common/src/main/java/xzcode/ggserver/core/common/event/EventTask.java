@@ -4,8 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import xzcode.ggserver.core.common.config.GGConfig;
+import xzcode.ggserver.core.common.event.model.EventData;
 import xzcode.ggserver.core.common.session.GGSession;
-import xzcode.ggserver.core.common.session.GGSessionUtil;
 
 /**
  * 事件任务
@@ -44,23 +44,16 @@ private final static Logger LOGGER = LoggerFactory.getLogger(EventTask.class);
 		this.config = config;
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void run() {
 		
-		GGSessionUtil.setSession(this.session);
 		try {
 			
-			config.getEventManager().emitEvent(event, message);	
-			/*
-			 * IEventManager sessionEventManager = this.session.getEventManager(); if
-			 * (!sessionEventManager.isEmpty() &&
-			 * sessionEventManager.hasEventListener(event)) {
-			 * sessionEventManager.emitEvent(event, message); }
-			 */
+			config.getEventManager().emitEvent(event, new EventData(session, message));	
 		} catch (Exception e) {
 			LOGGER.error("GGEvent Task Error!!", e);
 		}
-		GGSessionUtil.removeSession();
 	}
 
 }

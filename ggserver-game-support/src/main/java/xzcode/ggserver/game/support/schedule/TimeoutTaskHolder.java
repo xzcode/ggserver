@@ -75,7 +75,7 @@ public class TimeoutTaskHolder{
 		}else {
 			taskFuture = gg.schedule(timeoutMs, timeoutAction);
 		}
-		this.timeoutFuture = (ScheduledFuture<?>) taskFuture.getNettyFuture();
+		this.timeoutFuture = (ScheduledFuture<?>) taskFuture.getFuture();
 		this.startTimeMs = System.currentTimeMillis();
 		return this;
 	}

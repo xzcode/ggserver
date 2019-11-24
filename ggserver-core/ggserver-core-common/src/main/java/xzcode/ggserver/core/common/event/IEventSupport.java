@@ -24,7 +24,6 @@ public interface IEventSupport extends IEventManager{
 		getEventManager().clearEventListener(event);
 	}
 
-	@Override
 	default <T> void emitEvent(String event, T eventData) {
 		getEventManager().emitEvent(event, eventData);
 	}

@@ -22,7 +22,7 @@ public interface IPlayerSchduleTaskSupport<P extends Player> extends IGGServerSu
 	 * @author zzz
 	 * 2019-09-22 11:42:55
 	 */
-	Map<Object, IGGFuture> getScheduleTaskFutures();
+	Map<Object, IGGFuture<?>> getScheduleTaskFutures();
 	
 	/**
 	 * 执行计划任务
@@ -36,9 +36,9 @@ public interface IPlayerSchduleTaskSupport<P extends Player> extends IGGServerSu
 	 * 2019-09-22 11:48:29
 	 */
 	default void schedule(Object taskKey,Object syncLock, long delayMs, TimeUnit timeUnit, Runnable runnable) {
-		IGGFuture taskFuture = getGGServer().schedule(syncLock, delayMs, timeUnit, runnable);
+		IGGFuture<?> taskFuture = getGGServer().schedule(syncLock, delayMs, timeUnit, runnable);
 		getScheduleTaskFutures().put(taskKey, taskFuture);
-		taskFuture.getNettyFuture().addListener((e) -> {
+		taskFuture.addListener((e) -> {
 			getScheduleTaskFutures().remove(taskKey);
 		});
 	}
@@ -71,9 +71,9 @@ public interface IPlayerSchduleTaskSupport<P extends Player> extends IGGServerSu
 	}
 	
 	default void cancelScheduleTask(Object taskKey) {
-		IGGFuture taskFuture = getScheduleTaskFutures().get(taskKey);
+		IGGFuture<?> taskFuture = getScheduleTaskFutures().get(taskKey);
 		if (taskFuture != null) {
-			taskFuture.getNettyFuture().cancel(false);
+			taskFuture.cancel(false);
 		}
 	}
 	

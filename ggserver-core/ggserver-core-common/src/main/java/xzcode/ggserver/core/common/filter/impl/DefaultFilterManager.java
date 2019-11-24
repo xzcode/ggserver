@@ -6,12 +6,12 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import xzcode.ggserver.core.common.filter.IAfterSerializeFilter;
 import xzcode.ggserver.core.common.filter.IBeforeDeserializeFilter;
 import xzcode.ggserver.core.common.filter.IFilterManager;
-import xzcode.ggserver.core.common.filter.ISendFilter;
 import xzcode.ggserver.core.common.filter.IReceiveFilter;
+import xzcode.ggserver.core.common.filter.ISendFilter;
 import xzcode.ggserver.core.common.message.Pack;
 import xzcode.ggserver.core.common.message.receive.Request;
 import xzcode.ggserver.core.common.message.send.Response;
-import xzcode.ggserver.core.common.session.GGSessionUtil;
+import xzcode.ggserver.core.common.session.GGSession;
 
 public class DefaultFilterManager implements IFilterManager {
 	
@@ -111,24 +111,24 @@ public class DefaultFilterManager implements IFilterManager {
 		requestFilters.remove(filter);
 	}
 	@Override
-	public boolean doBeforeDeserializeFilters(Pack pack) {
+	public boolean doBeforeDeserializeFilters(GGSession session, Pack pack) {
 		if (beforeDeserializeFilters == null) {
 			return true;
 		}
 		for (IBeforeDeserializeFilter filter : beforeDeserializeFilters) {
-			if (!filter.doFilter(GGSessionUtil.getSession(), pack)) {
+			if (!filter.doFilter(session, pack)) {
 				return false;
 			}
 		}
 		return true;
 	}
 	@Override
-	public boolean doAfterSerializeFilters(Pack pack) {
+	public boolean doAfterSerializeFilters(GGSession session, Pack pack) {
 		if (beforeDeserializeFilters == null) {
 			return true;
 		}
 		for (IBeforeDeserializeFilter filter : beforeDeserializeFilters) {
-			if (!filter.doFilter(GGSessionUtil.getSession(), pack)) {
+			if (!filter.doFilter(session, pack)) {
 				return false;
 			}
 		}
@@ -140,7 +140,7 @@ public class DefaultFilterManager implements IFilterManager {
 			return true;
 		}
 		for (IReceiveFilter filter : requestFilters) {
-			if (!filter.doFilter(GGSessionUtil.getSession(), request)) {
+			if (!filter.doFilter(request.getSession(), request)) {
 				return false;
 			}
 		}
@@ -153,7 +153,7 @@ public class DefaultFilterManager implements IFilterManager {
 			return true;
 		}
 		for (ISendFilter filter : responseFilters) {
-			if (!filter.doFilter(GGSessionUtil.getSession(), response)) {
+			if (!filter.doFilter(response.getSession(), response)) {
 				return false;
 			}
 		}

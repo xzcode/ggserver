@@ -8,7 +8,7 @@ import io.netty.channel.Channel;
 import io.netty.util.AttributeKey;
 import xzcode.ggserver.core.common.channel.group.IChannelGroup;
 import xzcode.ggserver.core.common.config.GGConfig;
-import xzcode.ggserver.core.common.future.GGFuture;
+import xzcode.ggserver.core.common.future.GGNettyFacadeFuture;
 import xzcode.ggserver.core.common.future.IGGFuture;
 
 /**

@@ -4,7 +4,7 @@ import xzcode.ggserver.core.common.config.IGGConfigSupport;
 import xzcode.ggserver.core.common.executor.IExecutorSupport;
 import xzcode.ggserver.core.common.future.IGGFuture;
 import xzcode.ggserver.core.common.session.GGSession;
-import xzcode.ggserver.core.common.session.IGGSessionSupport;
+import xzcode.ggserver.core.common.session.support.IGGSessionSupport;
 
 public interface IGGContolSupport extends IGGSessionSupport, IGGConfigSupport, IExecutorSupport{
 	

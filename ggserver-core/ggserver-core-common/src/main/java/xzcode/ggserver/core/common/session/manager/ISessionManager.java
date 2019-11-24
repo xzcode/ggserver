@@ -41,6 +41,15 @@ public interface ISessionManager{
 	 */
 	GGSession remove(String sessionId);
 	
+	/**
+	 * 清除所有session
+	 * @return
+	 * 
+	 * @author zai
+	 * 2019-11-24 21:49:51
+	 */
+	void clearAllSession();
+	
 	
 	/**
 	 * 遍历每个session对象

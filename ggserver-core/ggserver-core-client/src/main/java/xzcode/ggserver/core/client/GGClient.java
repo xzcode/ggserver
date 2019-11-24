@@ -10,8 +10,8 @@ import xzcode.ggserver.core.common.event.IEventSupport;
 import xzcode.ggserver.core.common.executor.IExecutorSupport;
 import xzcode.ggserver.core.common.filter.IFilterManager;
 import xzcode.ggserver.core.common.filter.IFilterSupport;
-import xzcode.ggserver.core.common.message.receive.IRequestMessageSupport;
-import xzcode.ggserver.core.common.message.send.ISendMessageSupport;
+import xzcode.ggserver.core.common.message.receive.support.IRequestMessageSupport;
+import xzcode.ggserver.core.common.message.send.support.ISendMessageSupport;
 import xzcode.ggserver.core.common.session.GGSession;
 
 /**

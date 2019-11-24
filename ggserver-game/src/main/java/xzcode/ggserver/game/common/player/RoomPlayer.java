@@ -1,7 +1,5 @@
 package xzcode.ggserver.game.common.player;
 
-import xzcode.ggserver.game.common.holder.timeout.TimeoutHolder;
-
 /**
      玩家基类
  * 
@@ -48,23 +46,6 @@ public class RoomPlayer<R, H> extends Player{
 	 */
 	private int maxPlayRounds = 0;
 	
-	/**
-	 * 自动准备超时容器
-	 */
-	protected TimeoutHolder autoReadyHolder;
-	
-	/**
-	 * 空闲超时容器
-	 */
-	protected TimeoutHolder idleTimeoutHolder;
-	
-	public TimeoutHolder getIdleTimeoutHolder() {
-		return idleTimeoutHolder;
-	}
-	
-	public void setIdleTimeoutHolder(TimeoutHolder idleTimeoutHolder) {
-		this.idleTimeoutHolder = idleTimeoutHolder;
-	}
 	
 	public int getPlayedRounds() {
 		return playedRounds;
@@ -134,13 +115,5 @@ public class RoomPlayer<R, H> extends Player{
 	}
 	public void setReady(boolean ready) {
 		this.ready = ready;
-	}
-	
-	public TimeoutHolder getAutoReadyHolder() {
-		return autoReadyHolder;
-	}
-	
-	public void setAutoReadyHolder(TimeoutHolder autoReadyHolder) {
-		this.autoReadyHolder = autoReadyHolder;
 	}
 }

@@ -33,6 +33,7 @@ public class InboundCommonHandler extends ChannelInboundHandlerAdapter{
 
 	@Override
 	public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+		config.getSessionFactory().channelInActive(ctx.channel());
 		super.channelInactive(ctx);
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("channel Inactive:{}", ctx.channel());

@@ -1,19 +1,19 @@
 package xzcode.ggserver.core.common.future;
 
-import io.netty.util.concurrent.Future;
+import java.util.concurrent.Future;
 
-public interface IGGFuture {
+/**
+ * 未来对象
+ * @param <V>
+ * 
+ * @author zai
+ * 2019-11-24 17:35:47
+ */
+public interface IGGFuture<V> extends Future<V>{
 
-	void setNettyFuture(Future<?> nettyFuture);
 
-	Future<?> getNettyFuture();
+	void addListener(IGGFutureListener<IGGFuture<?>> listener);
 
-	void onComplete(Runnable completeAction);
-
-	boolean isCompleted();
-	
 	boolean cancel();
-
-	boolean cancel(boolean mayInterruptIfRunning);
 
 }

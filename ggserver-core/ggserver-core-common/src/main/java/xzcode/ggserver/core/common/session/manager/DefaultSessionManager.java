@@ -84,4 +84,11 @@ public class DefaultSessionManager implements ISessionManager {
 		}
 	}
 
+	@Override
+	public void clearAllSession() {
+		if (sessionMap != null) {
+			sessionMap.clear();
+		}
+	}
+
 }

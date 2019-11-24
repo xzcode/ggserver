@@ -26,12 +26,6 @@ public abstract class CoinsCardPlayer<C extends Card, R, H> extends CoinsRoomPla
 		this.waterCoins = 0L;
 		this.beforeCoins = this.coins;
 
-		if (this.idleTimeoutHolder != null) {
-			this.idleTimeoutHolder.cancelTask();
-		}
-		if (this.autoReadyHolder != null) {
-			this.autoReadyHolder.cancelTask();
-		}
 	}
 	
 	

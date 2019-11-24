@@ -43,7 +43,7 @@ public class DefaultChannelSessionFactory implements ISessionFactory{
 	}
 
 	@Override
-	public GGSession channelActive(Channel channel) {
+	public void channelActive(Channel channel) {
 		//初始化session
 		DefaultChannelSession session = new DefaultChannelSession(config, channel);
 		
@@ -52,19 +52,18 @@ public class DefaultChannelSessionFactory implements ISessionFactory{
 		config.getSessionManager().addSessionIfAbsent(session);
 		
 		config.getTaskExecutor().submit(new EventTask(session, GGEvents.Connection.OPEN, null, config));
-		
-		//注册channel关闭事件
-		channel.closeFuture().addListener((ChannelFuture future) -> {
-			
-			if (GGLoggerUtil.getLogger().isDebugEnabled()) {
-				GGLoggerUtil.getLogger().debug("Channel Close:{}",channel);
-			}
-			
-			config.getTaskExecutor().submit(new EventTask(session, GGEvents.Connection.CLOSE, null, config));
-			config.getSessionManager().remove(session.getSessonId());
-		});
-		
-		return null;
 	}
+
+	@Override
+	public void channelInActive(Channel channel) {
+		GGSession session = getSession(channel);
+		if (GGLoggerUtil.getLogger().isDebugEnabled()) {
+			GGLoggerUtil.getLogger().debug("Channel Close:{}",channel);
+		}
+		config.getTaskExecutor().submit(new EventTask(session, GGEvents.Connection.CLOSE, null, config));
+		config.getSessionManager().remove(session.getSessonId());
+	}
+	
+	
 
 }

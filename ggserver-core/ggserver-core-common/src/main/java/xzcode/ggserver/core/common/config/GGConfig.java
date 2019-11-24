@@ -6,8 +6,6 @@ import java.util.concurrent.ThreadFactory;
 import io.netty.channel.nio.NioEventLoopGroup;
 import xzcode.ggserver.core.common.channel.group.IChannelGroupManager;
 import xzcode.ggserver.core.common.channel.group.impl.GGChannelGroupManager;
-import xzcode.ggserver.core.common.component.GGComponentManager;
-import xzcode.ggserver.core.common.config.scanner.GGComponentScanner;
 import xzcode.ggserver.core.common.constant.GGServerTypeConstants;
 import xzcode.ggserver.core.common.event.IEventManager;
 import xzcode.ggserver.core.common.event.impl.DefaultEventManager;
@@ -22,8 +20,10 @@ import xzcode.ggserver.core.common.handler.pack.IReceivePackHandler;
 import xzcode.ggserver.core.common.handler.pack.impl.DefaultReceivePackHandler;
 import xzcode.ggserver.core.common.handler.serializer.ISerializer;
 import xzcode.ggserver.core.common.handler.serializer.factory.SerializerFactory;
-import xzcode.ggserver.core.common.message.receive.RequestMessageManager;
-import xzcode.ggserver.core.common.message.send.SendMessageManager;
+import xzcode.ggserver.core.common.message.meta.IMetadataResolver;
+import xzcode.ggserver.core.common.message.meta.VoidMetadataResolver;
+import xzcode.ggserver.core.common.message.receive.manager.IRequestMessageManager;
+import xzcode.ggserver.core.common.message.receive.manager.RequestMessageManager;
 import xzcode.ggserver.core.common.session.factory.DefaultChannelSessionFactory;
 import xzcode.ggserver.core.common.session.factory.ISessionFactory;
 import xzcode.ggserver.core.common.session.manager.DefaultSessionManager;
@@ -43,10 +43,6 @@ public class GGConfig {
 	protected boolean 	inited = false;
 
 	protected boolean 	autoShutdown = true;
-
-	protected String[] 	scanPackage;
-
-	
 
 	protected int 		bossThreadSize = 0;
 	
@@ -89,21 +85,19 @@ public class GGConfig {
 	
 	protected IReceivePackHandler receivePackHandler;
 	
-	protected GGComponentManager 	componentManager;
-	protected RequestMessageManager requestMessageManager;
-	protected SendMessageManager sendMessageManager;
+	protected IRequestMessageManager requestMessageManager;
 	protected IFilterManager filterManager;
 	protected IEventManager eventManager;
 	protected ISessionManager sessionManager;
+	
+	protected IMetadataResolver<?> metadataResolver;
 	
     
 	protected NioEventLoopGroup workerGroup;
 	protected ThreadFactory workerGroupThreadFactory;
 	
 	public void init() {
-		componentManager = new GGComponentManager();
 		requestMessageManager = new RequestMessageManager();
-		sendMessageManager = new SendMessageManager(this);
 		filterManager = new DefaultFilterManager();
 		eventManager = new DefaultEventManager();
 		if (sessionManager == null) {
@@ -132,6 +126,10 @@ public class GGConfig {
 			encodeHandler = new DefaultEncodeHandler(this);
 		}
 		
+		if (metadataResolver == null) {
+			metadataResolver = new VoidMetadataResolver();
+		}
+		
 		if (receivePackHandler == null) {
 			receivePackHandler = new DefaultReceivePackHandler(this);
 		}
@@ -139,9 +137,6 @@ public class GGConfig {
 			serializer = SerializerFactory.geSerializer(serializerType);
 		}
 		
-		if (this.getScanPackage() != null && this.getScanPackage().length > 0) {
-    		GGComponentScanner.scan(this);
-		}
 		this.inited = true;
 	}
 	
@@ -187,12 +182,6 @@ public class GGConfig {
 	}
 	public void setWorkThreadSize(int workThreadSize) {
 		this.workThreadSize = workThreadSize;
-	}
-	public String[] getScanPackage() {
-		return scanPackage;
-	}
-	public void setScanPackage(String...scanPackage) {
-		this.scanPackage = scanPackage;
 	}
 	public long getReaderIdleTime() {
 		return readerIdleTime;
@@ -259,17 +248,10 @@ public class GGConfig {
 	public void setEventManager(IEventManager eventManager) {
 		this.eventManager = eventManager;
 	}
-
-	public GGComponentManager getComponentObjectManager() {
-		return componentManager;
-	}
-	public void setComponentObjectMapper(GGComponentManager componentObjectMapper) {
-		this.componentManager = componentObjectMapper;
-	}
-	public RequestMessageManager getRequestMessageManager() {
+	public IRequestMessageManager getRequestMessageManager() {
 		return requestMessageManager;
 	}
-	public void setRequestMessageManager(RequestMessageManager requestMessageManager) {
+	public void setRequestMessageManager(IRequestMessageManager requestMessageManager) {
 		this.requestMessageManager = requestMessageManager;
 	}
 	public boolean isUseSSL() {
@@ -277,12 +259,6 @@ public class GGConfig {
 	}
 	public void setUseSSL(boolean useSSL) {
 		this.useSSL = useSSL;
-	}
-	public RequestMessageManager getMessageInvokerManager() {
-		return requestMessageManager;
-	}
-	public void setMessageInvokerManager(RequestMessageManager requestMessageManager) {
-		this.requestMessageManager = requestMessageManager;
 	}
 	
 	public ISessionManager getSessionManager() {
@@ -310,22 +286,7 @@ public class GGConfig {
 	public void setMaxDataLength(int maxDataLength) {
 		this.maxDataLength = maxDataLength;
 	}
-	public SendMessageManager getSendMessageManager() {
-		return sendMessageManager;
-	}
-	
-	public void setSendMessageManager(SendMessageManager sendMessageManager) {
-		this.sendMessageManager = sendMessageManager;
-	}
 
-	public GGComponentManager getComponentManager() {
-		return componentManager;
-	}
-	
-	public void setComponentManager(GGComponentManager componentManager) {
-		this.componentManager = componentManager;
-	}
-	
 	public NioEventLoopGroup getTaskExecutor() {
 		return workerGroup;
 	}
@@ -433,6 +394,12 @@ public class GGConfig {
 	public void setSoReuseaddr(boolean soReuseaddr) {
 		this.soReuseaddr = soReuseaddr;
 	}
+	public IMetadataResolver<?> getMetadataResolver() {
+		return metadataResolver;
+	}
 	
+	public void setMetadataResolver(IMetadataResolver<?> metadataResolver) {
+		this.metadataResolver = metadataResolver;
+	}
 	
 }

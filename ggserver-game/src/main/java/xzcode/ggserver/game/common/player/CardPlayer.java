@@ -26,12 +26,6 @@ public abstract class CardPlayer<C extends Card, R, H> extends RoomPlayer<R, H> 
 		this.ready = false;
 		this.inGame = false;
 
-		if (this.idleTimeoutHolder != null) {
-			this.idleTimeoutHolder.cancelTask();
-		}
-		if (this.autoReadyHolder != null) {
-			this.autoReadyHolder.cancelTask();
-		}
 	}
 	
 	

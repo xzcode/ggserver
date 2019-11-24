@@ -11,7 +11,7 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
-import xzcode.ggserver.core.common.future.GGFuture;
+import xzcode.ggserver.core.common.future.GGNettyFacadeFuture;
 import xzcode.ggserver.core.common.future.IGGFuture;
 import xzcode.ggserver.core.common.handler.MixedSocketChannelInitializer;
 import xzcode.ggserver.core.server.config.GGServerConfig;
@@ -67,7 +67,7 @@ public class DefaultGGServerStarter implements IGGServerStarter {
             
             serverChannel = future.channel();
             
-            return new GGFuture(future);
+            return new GGNettyFacadeFuture(future);
             
         }catch (Exception e) {
         	throw new RuntimeException("GGServer start failed !! ", e);

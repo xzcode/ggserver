@@ -1,5 +1,7 @@
 package xzcode.ggserver.core.common.message.receive;
 
+import xzcode.ggserver.core.common.session.GGSession;
+
 /**
  * 消息接收模型
  * 
@@ -8,47 +10,41 @@ package xzcode.ggserver.core.common.message.receive;
  */
 public class Request {
 	
+	//会话对象
+	private GGSession session;
 
-	/* 发送消息标识 */
+	//消息体
+	private Object metadata;
+
+	//发送消息标识
 	private String action;
-
-	/* 消息体 */
+	
+	//消息体
 	private Object message;
 	
 	
-
-	public Request() {
-		super();
-	}
-	public Request(String action, Object message) {
+	
+	public Request(GGSession session, Object metadata, String action, Object message) {
+		this.session = session;
+		this.metadata = metadata;
 		this.action = action;
 		this.message = message;
 	}
-	public Request(String action, Object message, int sendType) {
-		this.action = action;
-		this.message = message;
-	}
-
-
-	public static Request create(String action, Object message) {
-		return new Request(action, message);
-	}
-
 
 	public String getAction() {
 		return action;
-	}
-
-	public void setAction(String action) {
-		this.action = action;
 	}
 
 	public Object getMessage() {
 		return message;
 	}
 
-	public void setMessage(Object message) {
-		this.message = message;
+	public GGSession getSession() {
+		return session;
+	}
+	
+	public Object getMetadata() {
+		return metadata;
 	}
 
 }
