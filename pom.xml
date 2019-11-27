@@ -161,7 +161,6 @@
   	<module>ggserver-core</module>
   	<module>ggserver-docs</module>
   	<module>ggserver-spring-starter</module>
-  	<module>ggserver-game</module>
   	<module>ggserver-game-support</module>
   	<module>ggserver-test</module>
   </modules>
