@@ -7,6 +7,7 @@ import xzcode.ggserver.core.common.config.IGGConfigSupport;
 import xzcode.ggserver.core.common.control.IGGContolSupport;
 import xzcode.ggserver.core.common.event.IEventManager;
 import xzcode.ggserver.core.common.event.IEventSupport;
+import xzcode.ggserver.core.common.event.model.EventData;
 import xzcode.ggserver.core.common.executor.IExecutorSupport;
 import xzcode.ggserver.core.common.filter.IFilterManager;
 import xzcode.ggserver.core.common.filter.IFilterSupport;
@@ -66,6 +67,15 @@ implements
 	@Override
 	public IFilterManager getFilterManager() {
 		return config.getFilterManager();
+	}
+
+
+
+
+	@Override
+	public void emitEvent(String event, EventData<?> eventData) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

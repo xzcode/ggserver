@@ -30,6 +30,12 @@ public class Request {
 		this.action = action;
 		this.message = message;
 	}
+	
+	public Request(Object metadata, String action, Object message) {
+		this.metadata = metadata;
+		this.action = action;
+		this.message = message;
+	}
 
 	public String getAction() {
 		return action;

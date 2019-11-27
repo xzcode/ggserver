@@ -20,15 +20,15 @@ public interface GGEvents {
 		/**
 	     * 读空闲
 	     */
-		String READE = "ggevents.idle.read";
+		String READE = "GG.idle.read";
 	    /**
 	     * 写空闲
 	     */
-		String WRITE = "ggevents.idle.write";
+		String WRITE = "GG.idle.write";
 	    /**
 	     * 读与写空闲
 	     */
-		String ALL = "ggevents.idle.all";
+		String ALL = "GG.idle.all";
 
 	}
 	
@@ -45,12 +45,12 @@ public interface GGEvents {
 		/**
 		 * 连接打开
 		 */
-		String OPEN = "ggevents.conn.open";
+		String OPENED = "GG.conn.opened";
 		
 		/**
 		 * 连接关闭
 		 */
-		String CLOSE = "ggevents.conn.close";
+		String CLOSED = "GG.conn.closed";
 		
 
 	}

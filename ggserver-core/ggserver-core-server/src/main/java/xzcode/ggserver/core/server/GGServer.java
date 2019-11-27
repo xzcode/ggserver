@@ -10,7 +10,7 @@ import xzcode.ggserver.core.common.filter.IFilterManager;
 import xzcode.ggserver.core.common.filter.IFilterSupport;
 import xzcode.ggserver.core.common.message.receive.support.IRequestMessageSupport;
 import xzcode.ggserver.core.common.message.send.support.ISendMessageSupport;
-import xzcode.ggserver.core.common.session.support.IGGSessionSupport;
+import xzcode.ggserver.core.common.session.GGSession;
 import xzcode.ggserver.core.server.config.GGServerConfig;
 import xzcode.ggserver.core.server.starter.IGGServerStarter;
 import xzcode.ggserver.core.server.starter.impl.DefaultGGServerStarter;
@@ -28,7 +28,6 @@ implements
 	IRequestMessageSupport,
 	IFilterSupport,
 	IExecutorSupport, 
-	IGGSessionSupport, 
 	IEventSupport,
 	IGGContolSupport
 {

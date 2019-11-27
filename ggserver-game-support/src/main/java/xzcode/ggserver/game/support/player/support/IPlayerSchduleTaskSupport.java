@@ -35,26 +35,12 @@ public interface IPlayerSchduleTaskSupport<P extends Player> extends IGGServerSu
 	 * @author zzz
 	 * 2019-09-22 11:48:29
 	 */
-	default void schedule(Object taskKey,Object syncLock, long delayMs, TimeUnit timeUnit, Runnable runnable) {
-		IGGFuture<?> taskFuture = getGGServer().schedule(syncLock, delayMs, timeUnit, runnable);
+	default void schedule(Object taskKey, long delayMs, TimeUnit timeUnit, Runnable runnable) {
+		IGGFuture<?> taskFuture = getGGServer().schedule(delayMs, timeUnit, runnable);
 		getScheduleTaskFutures().put(taskKey, taskFuture);
 		taskFuture.addListener((e) -> {
 			getScheduleTaskFutures().remove(taskKey);
 		});
-	}
-	
-	/**
-	 * 执行计划任务
-	 * 
-	 * @param taskKey 任务key
-	 * @param syncLock 同步锁，非必要可以填写null
-	 * @param delayMs 时间，毫秒 ms
-	 * @param runnable 任务对象
-	 * @author zzz
-	 * 2019-09-22 11:48:29
-	 */
-	default void schedule(Object taskKey,Object syncLock, long delayMs, Runnable runnable) {
-		schedule(taskKey, syncLock, delayMs, TimeUnit.MILLISECONDS, runnable);
 	}
 	
 	/**
@@ -67,7 +53,7 @@ public interface IPlayerSchduleTaskSupport<P extends Player> extends IGGServerSu
 	 * 2019-09-22 11:48:29
 	 */
 	default void schedule(Object taskKey, long delayMs, Runnable runnable) {
-		schedule(taskKey, null, delayMs, TimeUnit.MILLISECONDS, runnable);
+		schedule(taskKey, delayMs, TimeUnit.MILLISECONDS, runnable);
 	}
 	
 	default void cancelScheduleTask(Object taskKey) {

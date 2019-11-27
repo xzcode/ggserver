@@ -1,5 +1,7 @@
 package xzcode.ggserver.core.common.event;
 
+import xzcode.ggserver.core.common.event.model.EventData;
+
 public interface IEventSupport extends IEventManager{
 	
 	IEventManager getEventManager();
@@ -24,7 +26,7 @@ public interface IEventSupport extends IEventManager{
 		getEventManager().clearEventListener(event);
 	}
 
-	default <T> void emitEvent(String event, T eventData) {
+	default void emitEvent(String event, EventData<?> eventData) {
 		getEventManager().emitEvent(event, eventData);
 	}
 

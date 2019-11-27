@@ -6,18 +6,26 @@ import java.util.concurrent.ConcurrentHashMap;
 import xzcode.ggserver.core.common.event.IEventListener;
 import xzcode.ggserver.core.common.event.IEventListenerGroup;
 import xzcode.ggserver.core.common.event.IEventManager;
+import xzcode.ggserver.core.common.event.model.EventData;
 
+/**
+ * 默认事件管理器
+ * 
+ * 
+ * @author zai
+ * 2019-11-27 21:36:17
+ */
 public class DefaultEventManager implements IEventManager {
 	
 	
 	protected Map<String, IEventListenerGroup<?>> eventMap;
 
 
-	@SuppressWarnings("unchecked")
+
 	@Override
-	public <T> void emitEvent(String event, T eventData) {
+	public void emitEvent(String event, EventData<?> eventData) {
 		if (eventMap != null) {
-			IEventListenerGroup<T> group = (IEventListenerGroup<T>) eventMap.get(event);
+			IEventListenerGroup<?> group = (IEventListenerGroup<?>) eventMap.get(event);
 			if (group != null) {
 				group.onEvent(eventData);
 			}
@@ -92,6 +100,7 @@ public class DefaultEventManager implements IEventManager {
 	public <T> IEventListenerGroup<T> createEventListenerGroup() {
 		return new DefaultEventListenerGroup<>();
 	}
+
 
 	
 }

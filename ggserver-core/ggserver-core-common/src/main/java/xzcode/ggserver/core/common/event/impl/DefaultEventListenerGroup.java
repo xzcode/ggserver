@@ -6,7 +6,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import xzcode.ggserver.core.common.event.IEventListener;
 import xzcode.ggserver.core.common.event.IEventListenerGroup;
 import xzcode.ggserver.core.common.event.model.EventData;
-import xzcode.ggserver.core.common.session.GGSessionUtil;
 
 /**
  * 默认事件监听组
@@ -31,12 +30,7 @@ public class DefaultEventListenerGroup<T> implements IEventListenerGroup<T>{
 		listeners.remove(listener);
 	}
 
-	@Override
-	public void onEvent(T e) {
-		for (IEventListener<T> li : listeners) {
-			li.onEvent(new EventData<T>(GGSessionUtil.getSession(), e));
-		}
-	}
+	
 
 	@Override
 	public boolean hasListener(IEventListener<T> listener) {
@@ -46,6 +40,14 @@ public class DefaultEventListenerGroup<T> implements IEventListenerGroup<T>{
 	@Override
 	public boolean isEmpty() {
 		return listeners.isEmpty();
+	}
+
+	@Override
+	public void onEvent(EventData<?> eventData) {
+		for (IEventListener<?> li : listeners) {
+			li.onEvent(eventData);
+		}
+		
 	}
 
 }

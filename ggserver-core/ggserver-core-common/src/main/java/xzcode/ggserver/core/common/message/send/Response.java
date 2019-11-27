@@ -14,5 +14,11 @@ public class Response extends Request{
 	public Response(GGSession session, Object metadata, String action, Object message) {
 		super(session, metadata, action, message);
 	}
+
+	public Response(Object metadata, String action, Object message) {
+		super(metadata, action, message);
+	}
+	
+	
 	
 }

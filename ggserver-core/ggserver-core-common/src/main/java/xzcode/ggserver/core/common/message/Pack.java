@@ -2,8 +2,6 @@ package xzcode.ggserver.core.common.message;
 
 import java.nio.charset.Charset;
 
-import xzcode.ggserver.core.common.session.GGSession;
-
 /**
  * 消息发送模型
  * 

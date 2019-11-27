@@ -51,7 +51,7 @@ public class DefaultChannelSessionFactory implements ISessionFactory{
 		
 		config.getSessionManager().addSessionIfAbsent(session);
 		
-		config.getTaskExecutor().submit(new EventTask(session, GGEvents.Connection.OPEN, null, config));
+		config.getTaskExecutor().submit(new EventTask(session, GGEvents.Connection.OPENED, null, config));
 	}
 
 	@Override
@@ -60,7 +60,7 @@ public class DefaultChannelSessionFactory implements ISessionFactory{
 		if (GGLoggerUtil.getLogger().isDebugEnabled()) {
 			GGLoggerUtil.getLogger().debug("Channel Close:{}",channel);
 		}
-		config.getTaskExecutor().submit(new EventTask(session, GGEvents.Connection.CLOSE, null, config));
+		config.getTaskExecutor().submit(new EventTask(session, GGEvents.Connection.CLOSED, null, config));
 		config.getSessionManager().remove(session.getSessonId());
 	}
 	

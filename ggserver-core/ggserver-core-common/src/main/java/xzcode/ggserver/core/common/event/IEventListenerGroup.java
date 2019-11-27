@@ -1,5 +1,7 @@
 package xzcode.ggserver.core.common.event;
 
+import xzcode.ggserver.core.common.event.model.EventData;
+
 public interface IEventListenerGroup<T> {
 	
 	void addListener(IEventListener<T> listener);
@@ -8,7 +10,7 @@ public interface IEventListenerGroup<T> {
 	
 	boolean hasListener(IEventListener<T> listener);
 	
-	void onEvent(T e);
+	void onEvent(EventData<?> eventData);
 	
 	boolean isEmpty();
 	

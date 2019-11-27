@@ -2,6 +2,13 @@ package xzcode.ggserver.core.common.event;
 
 import xzcode.ggserver.core.common.event.model.EventData;
 
+/**
+ * 事件管理器接口
+ * 
+ * 
+ * @author zai
+ * 2019-11-27 21:49:33
+ */
 public interface IEventManager {
 	
 	

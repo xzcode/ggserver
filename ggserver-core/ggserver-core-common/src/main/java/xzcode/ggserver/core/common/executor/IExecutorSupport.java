@@ -47,6 +47,25 @@ public interface IExecutorSupport extends IGGConfigSupport{
 		return schedule(syncLock, delayMs, TimeUnit.MILLISECONDS, runnable);
 	}
 	
+	
+	/**
+	 * 计划延迟任务
+	 * @param delayMs
+	 * @param timeUnit
+	 * @param runnable
+	 * @return
+	 * 
+	 * @author zai
+	 * 2019-11-27 22:16:26
+	 */
+	default IGGFuture<?> schedule(long delayMs, TimeUnit timeUnit, Runnable runnable) {
+		GGNettyFacadeFuture<?> taskFuture = new GGNettyFacadeFuture<>();
+		GGTask syncTask = new GGTask(null, runnable);
+		ScheduledFuture<?> future = getConfig().getTaskExecutor().schedule(syncTask, delayMs, timeUnit);
+		taskFuture.setFuture(future);
+		return taskFuture;
+	}
+	
 	/**
 	 * 计划延迟任务
 	 * 

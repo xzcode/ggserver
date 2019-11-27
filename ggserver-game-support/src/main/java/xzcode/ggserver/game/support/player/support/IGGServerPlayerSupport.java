@@ -1,5 +1,8 @@
 package xzcode.ggserver.game.support.player.support;
 
+import java.util.concurrent.TimeUnit;
+
+import xzcode.ggserver.core.common.message.send.Response;
 import xzcode.ggserver.core.common.session.GGSession;
 import xzcode.ggserver.game.support.interfaces.IGGServerSupport;
 import xzcode.ggserver.game.support.player.Player;
@@ -10,7 +13,7 @@ import xzcode.ggserver.game.support.player.Player;
  * @author zzz
  * 2019-09-22 10:23:19
  */
-public interface IPlayerSupport<P extends Player> extends IGGServerSupport{
+public interface IGGServerPlayerSupport<P extends Player> extends IGGServerSupport{
 	
 	/**
 	 * 获取session
@@ -30,7 +33,7 @@ public interface IPlayerSupport<P extends Player> extends IGGServerSupport{
 	 * 2019-09-22 10:29:42
 	 */
 	default void send(String actionId, Object message) {
-		getGGServer().send(getSesson(), actionId, message);
+		getGGServer().send(new Response(getSesson(), null, actionId, message), 0, TimeUnit.MILLISECONDS);
 	}
 	
 	/**
@@ -41,7 +44,7 @@ public interface IPlayerSupport<P extends Player> extends IGGServerSupport{
 	 * 2019-09-22 10:29:42
 	 */
 	default void send(String actionId) {
-		getGGServer().send(getSesson(), actionId);
+		getGGServer().send(new Response(getSesson(), null, actionId, null), 0, TimeUnit.MILLISECONDS);
 	}
 	
 	/**

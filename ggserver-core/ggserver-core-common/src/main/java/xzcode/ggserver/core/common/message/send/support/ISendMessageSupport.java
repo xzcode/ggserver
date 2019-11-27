@@ -17,9 +17,16 @@ import xzcode.ggserver.core.common.utils.logger.GGLoggerUtil;
  * 
  * @author zai 2019-02-09 14:50:27
  */
-public interface ISendMessageSupport extends ISessionSendMessageSupport, IGGConfigSupport {
+public interface ISendMessageSupport extends IMakePackSupport, IGGConfigSupport {
 
 
+	/**
+	 * 发送给所有会话
+	 * @param response
+	 * 
+	 * @author zai
+	 * 2019-11-27 22:09:14
+	 */
 	default void sendToAll(Response response) {
 		try {
 			GGConfig config = getConfig();
@@ -41,12 +48,35 @@ public interface ISendMessageSupport extends ISessionSendMessageSupport, IGGConf
 		}
 
 	}
-
+	
+	/**
+	 * 发送给指定会话
+	 * @param session
+	 * @param pack
+	 * @param delay
+	 * @param timeUnit
+	 * @return
+	 * 
+	 * @author zai
+	 * 2019-11-27 22:09:31
+	 */
 	default IGGFuture<?> send(GGSession session, Pack pack, long delay, TimeUnit timeUnit) {
 		return session.send(pack, delay, timeUnit);
 	}
 
-	default IGGFuture<?> send(GGSession session, Response response, long delay, TimeUnit timeUnit) {
+	/**
+	 * 发送消息
+	 * @param session
+	 * @param response
+	 * @param delay
+	 * @param timeUnit
+	 * @return
+	 * 
+	 * @author zai
+	 * 2019-11-27 21:53:08
+	 */
+	default IGGFuture<?> send(Response response, long delay, TimeUnit timeUnit) {
+		GGSession session = response.getSession();
 		if (session != null) {
 			GGConfig config = getConfig();
 			// 发送过滤器

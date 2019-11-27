@@ -73,33 +73,36 @@ public class GGServerSpringStarter implements ApplicationContextAware {
      * 2017-10-30
      */
     public void beanDefinitionRegistry(GGServerConfig config) {
-
-        //获取BeanFactory
-        DefaultListableBeanFactory defaultListableBeanFactory = (DefaultListableBeanFactory) this.applicationContext.getAutowireCapableBeanFactory();
-
-        Map<Class<?>, Object> map = config.getComponentObjectManager().getComponentMap();
-        for (Class<?> key : map.keySet()) {
-
-            String beanName = StringUtils.uncapitalize(key.getSimpleName());
-
-
-            //创建bean信息.
-            BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(key);
-
-            //动态注册bean.
-            defaultListableBeanFactory.registerBeanDefinition(beanName, beanDefinitionBuilder.getBeanDefinition());
-            Object bean = applicationContext.getBean(beanName);
-            LOGGER.info("GGServer bean defind:{}", bean);
-            map.put(key, bean);
-            
-        }
-        
-        //更新组件对象
-        config.getRequestMessageManager().updateComponentObject(config.getComponentObjectManager());
-        //config.getEventInvokerManager().updateComponentObject(config.getComponentObjectManager());
-        //config.getMessageFilterManager().updateComponentObject(config.getComponentObjectManager());
-
-
+		/*
+		 * //获取BeanFactory DefaultListableBeanFactory defaultListableBeanFactory =
+		 * (DefaultListableBeanFactory)
+		 * this.applicationContext.getAutowireCapableBeanFactory();
+		 * 
+		 * Map<Class<?>, Object> map =
+		 * config.getComponentObjectManager().getComponentMap(); for (Class<?> key :
+		 * map.keySet()) {
+		 * 
+		 * String beanName = StringUtils.uncapitalize(key.getSimpleName());
+		 * 
+		 * 
+		 * //创建bean信息. BeanDefinitionBuilder beanDefinitionBuilder =
+		 * BeanDefinitionBuilder.genericBeanDefinition(key);
+		 * 
+		 * //动态注册bean. defaultListableBeanFactory.registerBeanDefinition(beanName,
+		 * beanDefinitionBuilder.getBeanDefinition()); Object bean =
+		 * applicationContext.getBean(beanName); LOGGER.info("GGServer bean defind:{}",
+		 * bean); map.put(key, bean);
+		 * 
+		 * }
+		 * 
+		 * //更新组件对象 config.getRequestMessageManager().updateComponentObject(config.
+		 * getComponentObjectManager());
+		 * //config.getEventInvokerManager().updateComponentObject(config.
+		 * getComponentObjectManager());
+		 * //config.getMessageFilterManager().updateComponentObject(config.
+		 * getComponentObjectManager());
+		 * 
+		 */
     }
 
     @Override
