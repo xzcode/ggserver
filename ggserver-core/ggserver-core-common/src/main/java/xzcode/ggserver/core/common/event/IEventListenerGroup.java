@@ -10,7 +10,7 @@ public interface IEventListenerGroup<T> {
 	
 	boolean hasListener(IEventListener<T> listener);
 	
-	void onEvent(EventData<?> eventData);
+	void onEvent(EventData<T> eventData);
 	
 	boolean isEmpty();
 	

@@ -12,7 +12,7 @@ import xzcode.ggserver.core.common.event.model.EventData;
 public interface IEventManager {
 	
 	
-	void emitEvent(String event, EventData<?> eventData);
+	<T> void emitEvent(String event, EventData<T> eventData);
 	
 	<T> void addEventListener(String event, IEventListener<T> listener);
 

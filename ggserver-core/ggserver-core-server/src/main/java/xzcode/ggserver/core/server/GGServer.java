@@ -54,7 +54,7 @@ implements
 		return config;
 	}
 	@Override
-	public IEventManager getEventManager() {
+	public IEventManager getEventManagerImpl() {
 		return config.getEventManager();
 	}
 	@Override

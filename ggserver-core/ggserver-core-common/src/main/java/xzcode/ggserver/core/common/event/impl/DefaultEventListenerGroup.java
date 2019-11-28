@@ -43,8 +43,8 @@ public class DefaultEventListenerGroup<T> implements IEventListenerGroup<T>{
 	}
 
 	@Override
-	public void onEvent(EventData<?> eventData) {
-		for (IEventListener<?> li : listeners) {
+	public void onEvent(EventData<T> eventData) {
+		for (IEventListener<T> li : listeners) {
 			li.onEvent(eventData);
 		}
 		
