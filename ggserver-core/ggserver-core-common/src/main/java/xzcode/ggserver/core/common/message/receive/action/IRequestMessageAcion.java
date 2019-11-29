@@ -19,6 +19,6 @@ public interface IRequestMessageAcion<T> {
 	 * @author zai
 	 * 2019-11-24 22:35:17
 	 */
-	void action(GGSession session, T t);
+	void action(GGSession session, T req);
 	
 }

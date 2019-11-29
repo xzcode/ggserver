@@ -24,6 +24,37 @@ import xzcode.ggserver.core.common.utils.json.GGServerJsonUtil;
  */
 public interface ISessionSendMessageSupport extends IMakePackSupport, IGGConfigSupport {
 
+	
+	/**
+	 * 发送消息
+	 * 
+	 * @param session
+	 * @param action
+	 * @param message
+	 * @return
+	 * @author zai
+	 * 2019-11-29 15:26:11
+	 */
+	default IGGFuture<?> send(GGSession session, String action, Object message) {
+		return send(new Response(session, null, action, message), 0L, TimeUnit.MILLISECONDS);
+	}
+	
+	/**
+	 * 发送消息
+	 * 
+	 * @param session
+	 * @param action
+	 * @param message
+	 * @param delay
+	 * @param timeUnit
+	 * @return
+	 * @author zai
+	 * 2019-11-29 15:26:18
+	 */
+	default IGGFuture<?> send(GGSession session, String action, Object message, long delay, TimeUnit timeUnit) {
+		return send(new Response(session, null, action, message), delay, timeUnit);
+	}
+	
 	/**
 	 * 发送消息
 	 * 

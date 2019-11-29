@@ -63,6 +63,36 @@ public interface ISendMessageSupport extends IMakePackSupport, IGGConfigSupport 
 	default IGGFuture<?> send(GGSession session, Pack pack, long delay, TimeUnit timeUnit) {
 		return session.send(pack, delay, timeUnit);
 	}
+	
+	/**
+	 * 发送消息
+	 * 
+	 * @param session
+	 * @param action
+	 * @param message
+	 * @return
+	 * @author zai
+	 * 2019-11-29 15:24:23
+	 */
+	default IGGFuture<?> send(GGSession session, String action, Object message) {
+		return send(new Response(session, null, action, message), 0L, TimeUnit.MILLISECONDS);
+	}
+	
+	/**
+	 * 发送消息
+	 * 
+	 * @param session
+	 * @param action
+	 * @param message
+	 * @param delay
+	 * @param timeUnit
+	 * @return
+	 * @author zai
+	 * 2019-11-29 15:23:47
+	 */
+	default IGGFuture<?> send(GGSession session, String action, Object message, long delay, TimeUnit timeUnit) {
+		return send(new Response(session, null, action, message), delay, timeUnit);
+	}
 
 	/**
 	 * 发送消息
@@ -93,4 +123,6 @@ public interface ISendMessageSupport extends IMakePackSupport, IGGConfigSupport 
 		}
 		return null;
 	}
+	
+	
 }

@@ -10,5 +10,9 @@ public class GGLoggerUtil {
 		return LOGGER;
 		 
 	}
+	public static Logger getLogger(Object object) {
+		return LoggerFactory.getLogger(object.getClass());
+		
+	}
 	
 }
