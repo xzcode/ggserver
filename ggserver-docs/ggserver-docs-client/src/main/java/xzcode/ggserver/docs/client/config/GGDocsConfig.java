@@ -1,4 +1,4 @@
-package xzcode.ggserver.docs.config;
+package xzcode.ggserver.docs.client.config;
 
 /**
  * 文档配置

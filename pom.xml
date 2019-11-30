@@ -87,9 +87,6 @@
 				<artifactId>spring-boot-autoconfigure</artifactId>
 				<version>${spring.boot.version}</version>
 			</dependency>
-			
-			
-			
 			<dependency>
 			    <groupId>commons-codec</groupId>
 			    <artifactId>commons-codec</artifactId>
@@ -159,9 +156,9 @@
   
   <modules>
   	<module>ggserver-core</module>
-  	<module>ggserver-docs</module>
   	<module>ggserver-spring-starter</module>
   	<module>ggserver-game</module>
+  	<module>ggserver-docs</module>
   	<module>ggserver-test</module>
   </modules>
 </project>

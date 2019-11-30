@@ -1,4 +1,4 @@
-package xzcode.ggserver.docs.model;
+package xzcode.ggserver.docs.client.model;
 
 import java.util.ArrayList;
 import java.util.List;

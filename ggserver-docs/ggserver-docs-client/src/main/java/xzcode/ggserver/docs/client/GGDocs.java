@@ -1,4 +1,4 @@
-package xzcode.ggserver.docs;
+package xzcode.ggserver.docs.client;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -25,11 +25,11 @@ import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ClassInfoList;
 import io.github.classgraph.ScanResult;
-import xzcode.ggserver.docs.annotation.DocsModel;
-import xzcode.ggserver.docs.annotation.DocsModelProperty;
-import xzcode.ggserver.docs.config.GGDocsConfig;
-import xzcode.ggserver.docs.model.Model;
-import xzcode.ggserver.docs.model.ModelProperty;
+import xzcode.ggserver.docs.client.annotation.DocsModel;
+import xzcode.ggserver.docs.client.annotation.DocsModelProperty;
+import xzcode.ggserver.docs.client.config.GGDocsConfig;
+import xzcode.ggserver.docs.client.model.Model;
+import xzcode.ggserver.docs.client.model.ModelProperty;
 
 /**
  * 文档数据生成工具

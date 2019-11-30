@@ -1,4 +1,4 @@
-package xzcode.ggserver.docs.model;
+package xzcode.ggserver.docs.server.model;
 
 /**
  * 扫描到的注解的模型
