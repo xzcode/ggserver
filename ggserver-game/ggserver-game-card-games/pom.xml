@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>xzcode</groupId>
-    <artifactId>ggserver</artifactId>
+    <artifactId>ggserver-game</artifactId>
     <version>0.1.0-SNAPSHOT</version>
   </parent>
   <artifactId>ggserver-game-card-games</artifactId>
@@ -11,7 +11,7 @@
   
   	<dependency>
 		<groupId>xzcode</groupId>
-		<artifactId>ggserver-core-server</artifactId>
+		<artifactId>ggserver-game-core</artifactId>
 		<version>${project.version}</version>
 	</dependency>
 	

@@ -8,7 +8,7 @@ import xzcode.ggserver.game.core.interfaces.IGGServerSupport;
 import xzcode.ggserver.game.core.player.Player;
 
 /**
- * 玩家支持接口
+ * 玩家计划任务支持接口
  * 
  * @author zzz
  * 2019-09-22 10:23:19
@@ -56,6 +56,13 @@ public interface IPlayerSchduleTaskSupport<P extends Player> extends IGGServerSu
 		schedule(taskKey, delayMs, TimeUnit.MILLISECONDS, runnable);
 	}
 	
+	/**
+	 * 取消计划任务
+	 * @param taskKey
+	 * 
+	 * @author zai
+	 * 2019-11-30 12:37:27
+	 */
 	default void cancelScheduleTask(Object taskKey) {
 		IGGFuture<?> taskFuture = getScheduleTaskFutures().get(taskKey);
 		if (taskFuture != null) {

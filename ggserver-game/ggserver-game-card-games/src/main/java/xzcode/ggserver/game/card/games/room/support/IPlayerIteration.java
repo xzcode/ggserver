@@ -3,7 +3,7 @@ package xzcode.ggserver.game.card.games.room.support;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
-import xzcode.ggserver.game.card.games.player.Player;
+import xzcode.ggserver.game.core.player.Player;
 
 /**
  * 遍历玩家接口

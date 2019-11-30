@@ -13,7 +13,7 @@ public class Player {
 	protected GGSession session; 
 	
 	/**
-	 * 用户id
+	 * 玩家id
 	 */
 	protected Object playerId; 
 	

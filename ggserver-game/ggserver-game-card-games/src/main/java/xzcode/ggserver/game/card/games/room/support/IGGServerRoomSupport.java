@@ -13,9 +13,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import xzcode.ggserver.core.common.message.send.Response;
-import xzcode.ggserver.game.card.games.cardgames.player.RoomPlayer;
 import xzcode.ggserver.game.card.games.interfaces.IGGServerSupport;
 import xzcode.ggserver.game.card.games.interfaces.condition.ICheckCondition;
+import xzcode.ggserver.game.card.games.player.RoomPlayer;
 
 /**
  * 房间游戏控制器接口
