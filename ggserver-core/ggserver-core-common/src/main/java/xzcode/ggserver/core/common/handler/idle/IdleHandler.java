@@ -6,8 +6,6 @@ import org.slf4j.LoggerFactory;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.timeout.IdleStateEvent;
-import io.netty.util.AttributeKey;
-import xzcode.ggserver.core.common.channel.DefaultChannelAttributeKeys;
 import xzcode.ggserver.core.common.config.GGConfig;
 import xzcode.ggserver.core.common.event.EventTask;
 import xzcode.ggserver.core.common.event.GGEvents;
@@ -71,7 +69,7 @@ public class IdleHandler extends ChannelInboundHandlerAdapter{
 							if (LOGGER.isDebugEnabled()) {
 								LOGGER.debug("...WRITER_IDLE...: channel:{}", ctx.channel());								
 							}
-							config.getTaskExecutor().submit(new EventTask(session, GGEvents.Idle.WRITE, null, config));
+							config.getTaskExecutor().submitTask(new EventTask(session, GGEvents.Idle.WRITE, null, config));
 						}
 					break;
 				case READER_IDLE:
@@ -79,7 +77,7 @@ public class IdleHandler extends ChannelInboundHandlerAdapter{
 							if (LOGGER.isDebugEnabled()) {
 								LOGGER.debug("...READER_IDLE...: channel:{}", ctx.channel());								
 							}
-							config.getTaskExecutor().submit(new EventTask(session, GGEvents.Idle.READE, null, config));
+							config.getTaskExecutor().submitTask(new EventTask(session, GGEvents.Idle.READE, null, config));
 						}
 					break;
 				case ALL_IDLE:
@@ -87,7 +85,7 @@ public class IdleHandler extends ChannelInboundHandlerAdapter{
 							if (LOGGER.isDebugEnabled()) {
 								LOGGER.debug("...ALL_IDLE...: channel:{}", ctx.channel());								
 							}
-							config.getTaskExecutor().submit(new EventTask(session, GGEvents.Idle.ALL, null, config));
+							config.getTaskExecutor().submitTask(new EventTask(session, GGEvents.Idle.ALL, null, config));
 						}
 					break;
 				default:

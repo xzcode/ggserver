@@ -2,7 +2,7 @@ package xzcode.ggserver.game.core.player.support;
 
 import java.util.concurrent.TimeUnit;
 
-import xzcode.ggserver.core.common.message.send.Response;
+import xzcode.ggserver.core.common.message.response.Response;
 import xzcode.ggserver.core.common.session.GGSession;
 import xzcode.ggserver.game.core.interfaces.IGGServerSupport;
 import xzcode.ggserver.game.core.player.Player;

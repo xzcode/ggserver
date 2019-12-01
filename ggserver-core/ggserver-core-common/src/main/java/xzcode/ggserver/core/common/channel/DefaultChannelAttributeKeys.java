@@ -13,5 +13,9 @@ public interface DefaultChannelAttributeKeys {
 	 * 会话key
 	 */
 	String SESSION = "SESSION";
+	/**
+	 * 通道组id
+	 */
+	String CHANNEL_GROUP_ID = "CHANNEL_GROUP_ID";
 	
 }

@@ -7,8 +7,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import xzcode.ggserver.core.server.GGServer;
 import xzcode.ggserver.game.card.games.player.RoomPlayer;
-import xzcode.ggserver.game.card.games.room.listener.IRoomAddPlayerListener;
-import xzcode.ggserver.game.card.games.room.listener.IRoomPlayerListener;
+import xzcode.ggserver.game.card.games.room.listener.IPlayerEnterListener;
+import xzcode.ggserver.game.card.games.room.listener.IPlayerLeaveListener;
 
 /**
  * 游戏房间
@@ -18,7 +18,11 @@ import xzcode.ggserver.game.card.games.room.listener.IRoomPlayerListener;
  */
 public abstract class Room<P extends RoomPlayer<R>, R>{	
 	
-	protected GGServer ggServer;
+	
+	/**
+	 * ggserver对象
+	 */
+	protected GGServer server;
 	
 	/**
 	 * 房间id
@@ -51,12 +55,12 @@ public abstract class Room<P extends RoomPlayer<R>, R>{
 	/**
 	 * 添加玩家监听器
 	 */
-	protected List<IRoomAddPlayerListener<P>> afterAddPlayerListeners = new ArrayList<>(1);
+	protected List<IPlayerEnterListener<P>> playerEnterListeners = new ArrayList<>(1);
 	
 	/**
 	 * 移除玩家监听器
 	 */
-	protected List<IRoomPlayerListener<P>> afterRemovePlayerListeners = new ArrayList<>(1);
+	protected List<IPlayerLeaveListener<P>> playerLeaveListeners = new ArrayList<>(1);
 	
 	
 	/**
@@ -80,17 +84,13 @@ public abstract class Room<P extends RoomPlayer<R>, R>{
 	 * 2019-02-20 19:10:19
 	 */
 	public P removePlayer(Object playerId) {
-		synchronized (this) {
-			P player = players.remove(playerId);
-			if (player != null ) {
-				if (player != null && afterAddPlayerListeners.size() > 0) {
-					for (IRoomPlayerListener<P> listener : afterRemovePlayerListeners) {
-						listener.onRemove(player);
-					}
-				}
+		P player = players.remove(playerId);
+		if (player != null && playerEnterListeners.size() > 0) {
+			for (IPlayerLeaveListener<P> listener : playerLeaveListeners) {
+				listener.leave(player);
 			}
-			return player;
 		}
+		return player;
 	}
 	
 	/**
@@ -100,13 +100,11 @@ public abstract class Room<P extends RoomPlayer<R>, R>{
 	 * @author zai 2019-01-24 19:42:15
 	 */
 	public void addPlayer(P player) {
-		synchronized (this) {
-			if (player != null) {
-				this.players.put(player.getPlayerId(), player);
-				if (afterRemovePlayerListeners.size() > 0) {
-					for (IRoomAddPlayerListener<P> listener : afterAddPlayerListeners) {
-						listener.onAdd(player);
-					}
+		if (player != null) {
+			this.players.put(player.getPlayerId(), player);
+			if (playerLeaveListeners.size() > 0) {
+				for (IPlayerEnterListener<P> listener : playerEnterListeners) {
+					listener.enter(player);
 				}
 			}
 		}
@@ -118,8 +116,8 @@ public abstract class Room<P extends RoomPlayer<R>, R>{
 	 * @author zai
 	 * 2019-04-13 15:31:37
 	 */
-	public void addAfterAddPlayerListener(IRoomAddPlayerListener<P> listener) {
-		this.afterAddPlayerListeners.add(listener);
+	public void addPlayerEnterListener(IPlayerEnterListener<P> listener) {
+		this.playerEnterListeners.add(listener);
 	}
 	/**
 	 * 添加移除玩家监听器
@@ -128,8 +126,8 @@ public abstract class Room<P extends RoomPlayer<R>, R>{
 	 * @author zai
 	 * 2019-04-13 15:32:03
 	 */
-	public void addAfterRemovePlayerListener(IRoomPlayerListener<P> listener) {
-		this.afterRemovePlayerListeners.add(listener);
+	public void addPlayerLeaveListener(IPlayerLeaveListener<P> listener) {
+		this.playerLeaveListeners.add(listener);
 	}
 
 	
@@ -174,35 +172,35 @@ public abstract class Room<P extends RoomPlayer<R>, R>{
 		this.players = players;
 	}
 
-	public List<IRoomAddPlayerListener<P>> getAfterAddPlayerListeners() {
-		return afterAddPlayerListeners;
+	public List<IPlayerEnterListener<P>> getAfterAddPlayerListeners() {
+		return playerEnterListeners;
 	}
 
 
-	public void setAfterAddPlayerListeners(List<IRoomAddPlayerListener<P>> afterAddPlayerListeners) {
-		this.afterAddPlayerListeners = afterAddPlayerListeners;
+	public void setAfterAddPlayerListeners(List<IPlayerEnterListener<P>> afterAddPlayerListeners) {
+		this.playerEnterListeners = afterAddPlayerListeners;
 	}
 
 
-	public List<IRoomPlayerListener<P>> getAfterRemovePlayerListeners() {
-		return afterRemovePlayerListeners;
+	public List<IPlayerLeaveListener<P>> getAfterRemovePlayerListeners() {
+		return playerLeaveListeners;
 	}
 
 
-	public void setAfterRemovePlayerListeners(List<IRoomPlayerListener<P>> afterRemovePlayerListeners) {
-		this.afterRemovePlayerListeners = afterRemovePlayerListeners;
+	public void setAfterRemovePlayerListeners(List<IPlayerLeaveListener<P>> afterRemovePlayerListeners) {
+		this.playerLeaveListeners = afterRemovePlayerListeners;
 	}
 
 
 	
 	
-	public GGServer getGgServer() {
-		return ggServer;
+	public GGServer getServer() {
+		return server;
 	}
 
 
-	public void setGgServer(GGServer ggServer) {
-		this.ggServer = ggServer;
+	public void setServer(GGServer server) {
+		this.server = server;
 	}
 	
 }

@@ -1,15 +1,14 @@
 package xzcode.ggserver.core.common.session;
 
-import java.net.InetSocketAddress;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import io.netty.channel.Channel;
-import io.netty.util.AttributeKey;
 import xzcode.ggserver.core.common.channel.group.IChannelGroup;
 import xzcode.ggserver.core.common.config.GGConfig;
-import xzcode.ggserver.core.common.future.GGNettyFacadeFuture;
+import xzcode.ggserver.core.common.future.GGSuccessFuture;
 import xzcode.ggserver.core.common.future.IGGFuture;
+import xzcode.ggserver.core.common.message.meta.IMetadata;
 
 /**
  * 通道组会话实现
@@ -31,6 +30,8 @@ public class ChannelGroupSession implements GGSession {
 	private long expireMs;
 	
 	private IChannelGroup channelGroup;
+	
+	private IMetadata metadata;
 	
 	private Map<String, Object> attrMap = new ConcurrentHashMap<>(6);
 	
@@ -62,9 +63,9 @@ public class ChannelGroupSession implements GGSession {
 	}
 
 	@Override
-	public IGGFuture disconnect() {
-		return null;
-
+	public IGGFuture<?> disconnect() {
+		config.getSessionManager().remove(getSessonId());
+		return GGSuccessFuture.DEFAULT_SUCCESS_FUTURE;
 	}
 
 	@Override
@@ -128,5 +129,14 @@ public class ChannelGroupSession implements GGSession {
 	public void updateExpire() {
 		this.expireMs = System.currentTimeMillis() + config.getSessionExpireMs();
 		
+	}
+
+	@Override
+	public IMetadata getMetadata() {
+		return this.metadata;
+	}
+	
+	public void setMetadata(IMetadata metadata) {
+		this.metadata = metadata;
 	}
 }

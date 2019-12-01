@@ -1,17 +1,57 @@
 package xzcode.ggserver.core.common.filter;
 
-public interface IFilterSupport {
+import xzcode.ggserver.core.common.config.IGGConfigSupport;
+import xzcode.ggserver.core.common.message.Pack;
+import xzcode.ggserver.core.common.message.request.Request;
+import xzcode.ggserver.core.common.message.response.Response;
+
+/**
+ * 过滤器支持接口
+ * 
+ * 
+ * @author zai
+ * 2019-12-01 16:56:07
+ */
+public interface IFilterSupport extends IFilterManager, IGGConfigSupport{
 	
+	/**
+	 * 获取过滤器管理器
+	 * @return
+	 * 
+	 * @author zai
+	 * 2019-12-01 16:56:15
+	 */
+	default IFilterManager getFilterManager() {
+		return getConfig().getFilterManager();
+	}
 	
-	IFilterManager getFilterManager();
-	
+	@Override
+	default boolean doBeforeDeserializeFilters(Pack pack) {
+		return getFilterManager().doBeforeDeserializeFilters(pack);
+	}
+
+	@Override
+	default boolean doRequestFilters(Request<?> request) {
+		return getFilterManager().doRequestFilters(request);
+	}
+
+	@Override
+	default boolean doResponseFilters(Response response) {
+		return getFilterManager().doResponseFilters(response);
+	}
+
+	@Override
+	default boolean doAfterSerializeFilters(Pack pack) {
+		return getFilterManager().doAfterSerializeFilters(pack);
+	}
+
 	default void addBeforeDeserializeFilter(IBeforeDeserializeFilter filter) {
 		getFilterManager().addBeforeDeserializeFilter(filter);
 	}
-	default void addRequestFilter(IReceiveFilter filter) {
+	default void addRequestFilter(IRequestFilter filter) {
 		getFilterManager().addRequestFilter(filter);
 	}
-	default void addResponseFilter(ISendFilter filter) {
+	default void addResponseFilter(IResponseFilter filter) {
 		getFilterManager().addResponseFilter(filter);
 	}
 	
@@ -19,11 +59,11 @@ public interface IFilterSupport {
 		getFilterManager().removeBeforeDeserializeFilter(filter);
 	}
 
-	default void removeResponseFilter(ISendFilter filter) {
+	default void removeResponseFilter(IResponseFilter filter) {
 		getFilterManager().removeResponseFilter(filter);
 	}
 
-	default void removeRequestFilter(IReceiveFilter filter) {
+	default void removeRequestFilter(IRequestFilter filter) {
 		getFilterManager().removeRequestFilter(filter);
 	}
 

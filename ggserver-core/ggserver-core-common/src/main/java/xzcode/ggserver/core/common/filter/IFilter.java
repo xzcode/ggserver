@@ -1,7 +1,5 @@
 package xzcode.ggserver.core.common.filter;
 
-import xzcode.ggserver.core.common.session.GGSession;
-
 /**
  * 会话消息过滤器统一接口
  * 
@@ -11,6 +9,6 @@ import xzcode.ggserver.core.common.session.GGSession;
  */
 public interface IFilter<T> {
 	
-	boolean doFilter(GGSession session, T data);
+	boolean doFilter(T data);
 
 }

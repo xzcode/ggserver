@@ -40,10 +40,8 @@ public class GGNettyFacadeFuture<V> implements IGGFuture<V> {
 		this.nettyFuture = (io.netty.util.concurrent.Future<V>) future;
 		if (this.futureListeners != null) {
 			nettyFuture.addListener((f) -> {
-				synchronized (this) {
-					for (IGGFutureListener<IGGFuture<?>> listener : futureListeners) {
-						listener.operationComplete(new GGNettyFacadeFuture<V>((Future<V>) f));
-					}
+				for (IGGFutureListener<IGGFuture<?>> listener : futureListeners) {
+					listener.operationComplete(new GGNettyFacadeFuture<V>((Future<V>) f));
 				}
 			});
 		}
@@ -51,7 +49,8 @@ public class GGNettyFacadeFuture<V> implements IGGFuture<V> {
 
 	@Override
 	public void addListener(IGGFutureListener<IGGFuture<?>> listener) {
-		synchronized (this) {
+			
+		try {
 			if (this.futureListeners == null) {
 				this.futureListeners = new ArrayList<>();
 			}
@@ -61,8 +60,6 @@ public class GGNettyFacadeFuture<V> implements IGGFuture<V> {
 				return;
 			}
 			this.futureListeners.add(listener);	
-		}
-		try {
 			listener.operationComplete(new GGNettyFacadeFuture<V>(this.nettyFuture));
 		} catch (Exception e) {
 			GGLoggerUtil.getLogger().error("IGGFuture 'operationComplete' Error!", e);

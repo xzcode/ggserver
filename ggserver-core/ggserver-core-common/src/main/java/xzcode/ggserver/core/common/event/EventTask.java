@@ -15,7 +15,7 @@ import xzcode.ggserver.core.common.session.GGSession;
  */
 public class EventTask implements Runnable{
 	
-private final static Logger LOGGER = LoggerFactory.getLogger(EventTask.class);
+	private final static Logger LOGGER = LoggerFactory.getLogger(EventTask.class);
 	
 	private GGConfig config;
 	
@@ -49,10 +49,9 @@ private final static Logger LOGGER = LoggerFactory.getLogger(EventTask.class);
 	public void run() {
 		
 		try {
-			
 			config.getEventManager().emitEvent(event, new EventData(session, message));	
 		} catch (Exception e) {
-			LOGGER.error("GGEvent Task Error!!", e);
+			LOGGER.error("EventTask Error!!", e);
 		}
 	}
 

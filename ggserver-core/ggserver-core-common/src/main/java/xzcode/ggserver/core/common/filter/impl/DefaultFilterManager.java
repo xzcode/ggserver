@@ -6,162 +6,109 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import xzcode.ggserver.core.common.filter.IAfterSerializeFilter;
 import xzcode.ggserver.core.common.filter.IBeforeDeserializeFilter;
 import xzcode.ggserver.core.common.filter.IFilterManager;
-import xzcode.ggserver.core.common.filter.IReceiveFilter;
-import xzcode.ggserver.core.common.filter.ISendFilter;
+import xzcode.ggserver.core.common.filter.IRequestFilter;
+import xzcode.ggserver.core.common.filter.IResponseFilter;
 import xzcode.ggserver.core.common.message.Pack;
-import xzcode.ggserver.core.common.message.receive.Request;
-import xzcode.ggserver.core.common.message.send.Response;
-import xzcode.ggserver.core.common.session.GGSession;
+import xzcode.ggserver.core.common.message.request.Request;
+import xzcode.ggserver.core.common.message.response.Response;
 
+/**
+ * 默认过滤器管理器
+ * 
+ * 
+ * @author zai
+ * 2019-12-01 17:09:34
+ */
 public class DefaultFilterManager implements IFilterManager {
-	
-	private List<IBeforeDeserializeFilter> beforeDeserializeFilters;
-	private List<IReceiveFilter> requestFilters;
-	private List<ISendFilter> responseFilters;
-	private List<IAfterSerializeFilter> afterSerializeFilters;
-	
+
+	private List<IBeforeDeserializeFilter> beforeDeserializeFilters = new CopyOnWriteArrayList<>();;
+	private List<IRequestFilter> requestFilters = new CopyOnWriteArrayList<>();;
+	private List<IResponseFilter> responseFilters = new CopyOnWriteArrayList<>();;
+	private List<IAfterSerializeFilter> afterSerializeFilters = new CopyOnWriteArrayList<>();;
+
 	public DefaultFilterManager() {
 		super();
 	}
+
 	@Override
 	public void addBeforeDeserializeFilter(IBeforeDeserializeFilter filter) {
-		
-		if (beforeDeserializeFilters == null) {
-			synchronized (this) {
-				if (beforeDeserializeFilters == null) {
-					beforeDeserializeFilters = new CopyOnWriteArrayList<>();		
-				}
-			}
-		}
 		beforeDeserializeFilters.add(filter);
-		return;
 	}
-	
+
 	@Override
 	public void removeBeforeDeserializeFilter(IBeforeDeserializeFilter filter) {
-		
-		if (beforeDeserializeFilters == null) {
-			return;
-		}
 		beforeDeserializeFilters.remove(filter);
 	}
-	
+
 	@Override
 	public void addAfterSerializeFilter(IAfterSerializeFilter filter) {
-		
-		if (afterSerializeFilters == null) {
-			synchronized (this) {
-				if (afterSerializeFilters == null) {
-					afterSerializeFilters = new CopyOnWriteArrayList<>();		
-				}
-			}
-		}
 		afterSerializeFilters.add(filter);
-		return;
 	}
-	
+
 	@Override
 	public void removeAfterSerializeFilter(IAfterSerializeFilter filter) {
-		
-		if (afterSerializeFilters == null) {
-			return;
-		}
 		afterSerializeFilters.remove(filter);
 	}
-	
+
 	@Override
-	public void addResponseFilter(ISendFilter filter) {
-		
-		if (responseFilters == null) {
-			synchronized (this) {
-				if (responseFilters == null) {
-					responseFilters = new CopyOnWriteArrayList<>();		
-				}
-			}
-		}
-		responseFilters.add( filter);
-		return;
+	public void addResponseFilter(IResponseFilter filter) {
+
+		responseFilters.add(filter);
 	}
+
 	@Override
-	public void removeResponseFilter(ISendFilter filter) {
-		if (responseFilters == null) {
-			return;
-		}
+	public void removeResponseFilter(IResponseFilter filter) {
 		responseFilters.remove(filter);
 	}
-	
+
 	@Override
-	public void addRequestFilter(IReceiveFilter filter) {
-		if (requestFilters == null) {
-			synchronized (this) {
-				if (requestFilters == null) {
-					requestFilters = new CopyOnWriteArrayList<>();		
-				}
-			}
-		}
-		requestFilters.add( filter);
-		return;
+	public void addRequestFilter(IRequestFilter filter) {
+		requestFilters.add(filter);
 	}
-	
+
 	@Override
-	public void removeRequestFilter(IReceiveFilter filter) {
-		if (requestFilters == null) {
-			return;
-		}
+	public void removeRequestFilter(IRequestFilter filter) {
 		requestFilters.remove(filter);
 	}
+
 	@Override
-	public boolean doBeforeDeserializeFilters(GGSession session, Pack pack) {
-		if (beforeDeserializeFilters == null) {
-			return true;
-		}
+	public boolean doBeforeDeserializeFilters(Pack pack) {
 		for (IBeforeDeserializeFilter filter : beforeDeserializeFilters) {
-			if (!filter.doFilter(session, pack)) {
+			if (!filter.doFilter(pack)) {
 				return false;
 			}
 		}
 		return true;
 	}
+
 	@Override
-	public boolean doAfterSerializeFilters(GGSession session, Pack pack) {
-		if (beforeDeserializeFilters == null) {
-			return true;
-		}
+	public boolean doAfterSerializeFilters(Pack pack) {
 		for (IBeforeDeserializeFilter filter : beforeDeserializeFilters) {
-			if (!filter.doFilter(session, pack)) {
+			if (!filter.doFilter(pack)) {
 				return false;
 			}
 		}
 		return true;
 	}
+
 	@Override
-	public boolean doRequestFilters(Request request) {
-		if (requestFilters == null) {
-			return true;
-		}
-		for (IReceiveFilter filter : requestFilters) {
-			if (!filter.doFilter(request.getSession(), request)) {
+	public boolean doRequestFilters(Request<?> request) {
+		for (IRequestFilter filter : requestFilters) {
+			if (!filter.doFilter(request)) {
 				return false;
 			}
 		}
 		return true;
 	}
-	
+
 	@Override
 	public boolean doResponseFilters(Response response) {
-		if (responseFilters == null) {
-			return true;
-		}
-		for (ISendFilter filter : responseFilters) {
-			if (!filter.doFilter(response.getSession(), response)) {
+		for (IResponseFilter filter : responseFilters) {
+			if (!filter.doFilter(response)) {
 				return false;
 			}
 		}
 		return true;
 	}
-	@Override
-	public IFilterManager getFilterManager() {
-		return this;
-	}
-	
+
 }

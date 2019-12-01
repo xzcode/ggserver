@@ -2,9 +2,10 @@ package xzcode.ggserver.core.common.session;
 
 import io.netty.channel.Channel;
 import xzcode.ggserver.core.common.config.IGGConfigSupport;
-import xzcode.ggserver.core.common.executor.IExecutorSupport;
+import xzcode.ggserver.core.common.executor.support.IExecutorSupport;
 import xzcode.ggserver.core.common.future.IGGFuture;
-import xzcode.ggserver.core.common.message.send.support.ISessionSendMessageSupport;
+import xzcode.ggserver.core.common.message.meta.IMetadata;
+import xzcode.ggserver.core.common.message.response.support.ISessionSendMessageSupport;
 
 /**
  * 统一会话接口
@@ -23,6 +24,8 @@ public interface GGSession extends IGGConfigSupport, ISessionSendMessageSupport,
 	<T> T getAttribute(String key, Class<T> t);
 
 	IGGFuture<?> disconnect();
+	
+	IMetadata getMetadata();
 
 	String getHost();
 

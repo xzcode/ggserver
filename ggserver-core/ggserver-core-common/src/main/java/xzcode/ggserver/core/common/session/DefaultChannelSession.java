@@ -7,6 +7,7 @@ import io.netty.util.AttributeKey;
 import xzcode.ggserver.core.common.config.GGConfig;
 import xzcode.ggserver.core.common.future.GGNettyFacadeFuture;
 import xzcode.ggserver.core.common.future.IGGFuture;
+import xzcode.ggserver.core.common.message.meta.IMetadata;
 
 /**
  * sesson默认实现
@@ -108,6 +109,11 @@ public class DefaultChannelSession implements GGSession {
 	public void updateExpire() {
 		this.expireMs = System.currentTimeMillis() + config.getSessionExpireMs();
 		
+	}
+
+	@Override
+	public IMetadata getMetadata() {
+		return null;
 	}
 
 

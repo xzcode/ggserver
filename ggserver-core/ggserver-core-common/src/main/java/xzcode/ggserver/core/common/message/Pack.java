@@ -2,6 +2,8 @@ package xzcode.ggserver.core.common.message;
 
 import java.nio.charset.Charset;
 
+import xzcode.ggserver.core.common.session.GGSession;
+
 /**
  * 消息发送模型
  * 
@@ -9,6 +11,9 @@ import java.nio.charset.Charset;
  * 2019-03-12 19:20:01
  */
 public class Pack {
+	
+	/* 会话 */
+	private GGSession session;
 	
 	/* 元数据 */
 	private byte[] metadata;
@@ -25,6 +30,16 @@ public class Pack {
 		this.action = action;
 		this.message = message;
 	}
+	
+
+	public Pack(GGSession session, byte[] metadata, byte[] action, byte[] message) {
+		super();
+		this.session = session;
+		this.metadata = metadata;
+		this.action = action;
+		this.message = message;
+	}
+
 
 	public byte[] getAction() {
 		return action;
@@ -54,5 +69,17 @@ public class Pack {
 	public void setMetadata(byte[] metadata) {
 		this.metadata = metadata;
 	}
+
+
+	public GGSession getSession() {
+		return session;
+	}
+
+
+	public void setSession(GGSession session) {
+		this.session = session;
+	}
+	
+	
 
 }

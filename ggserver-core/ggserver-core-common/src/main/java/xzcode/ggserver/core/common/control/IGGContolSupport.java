@@ -1,7 +1,7 @@
 package xzcode.ggserver.core.common.control;
 
 import xzcode.ggserver.core.common.config.IGGConfigSupport;
-import xzcode.ggserver.core.common.executor.IExecutorSupport;
+import xzcode.ggserver.core.common.executor.support.IExecutorSupport;
 import xzcode.ggserver.core.common.future.IGGFuture;
 import xzcode.ggserver.core.common.session.GGSession;
 

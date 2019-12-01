@@ -1,7 +1,6 @@
 package xzcode.ggserver.core.common.session.factory;
 
 import io.netty.channel.Channel;
-import io.netty.channel.ChannelFuture;
 import io.netty.util.AttributeKey;
 import xzcode.ggserver.core.common.channel.DefaultChannelAttributeKeys;
 import xzcode.ggserver.core.common.config.GGConfig;
@@ -51,7 +50,7 @@ public class DefaultChannelSessionFactory implements ISessionFactory{
 		
 		config.getSessionManager().addSessionIfAbsent(session);
 		
-		config.getTaskExecutor().submit(new EventTask(session, GGEvents.Connection.OPENED, null, config));
+		config.getTaskExecutor().submitTask(new EventTask(session, GGEvents.Connection.OPENED, null, config));
 	}
 
 	@Override
@@ -60,7 +59,7 @@ public class DefaultChannelSessionFactory implements ISessionFactory{
 		if (GGLoggerUtil.getLogger().isDebugEnabled()) {
 			GGLoggerUtil.getLogger().debug("Channel Close:{}",channel);
 		}
-		config.getTaskExecutor().submit(new EventTask(session, GGEvents.Connection.CLOSED, null, config));
+		config.getTaskExecutor().submitTask(new EventTask(session, GGEvents.Connection.CLOSED, null, config));
 		config.getSessionManager().remove(session.getSessonId());
 	}
 	

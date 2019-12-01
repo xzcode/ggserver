@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import xzcode.ggserver.core.common.config.GGConfig;
 import xzcode.ggserver.core.common.handler.pack.IReceivePackHandler;
 import xzcode.ggserver.core.common.message.Pack;
-import xzcode.ggserver.core.common.message.receive.task.RequestMessageTask;
+import xzcode.ggserver.core.common.message.request.task.RequestMessageTask;
 import xzcode.ggserver.core.common.session.GGSession;
 
 public class DefaultReceivePackHandler implements IReceivePackHandler {
@@ -23,7 +23,7 @@ public class DefaultReceivePackHandler implements IReceivePackHandler {
 	@Override
 	public void handle(Pack pack, GGSession session) {
 
-		config.getTaskExecutor().submit(new RequestMessageTask(pack, session, config));
+		config.getTaskExecutor().submitTask(new RequestMessageTask(pack, config));
 		
 		if(LOGGER.isInfoEnabled()){
         	LOGGER.info("\nReceived binary message  <----,\nfrom:{}\ntag:{}\nbytes-length:{}\ndata:{}", (session.getHost() + ":" +session.getPort()), pack.getAction() == null ? "" : new String(pack.getAction()), pack.getAction().length + (pack.getMessage() == null ? 0 : pack.getMessage().length) + 4, pack.getMessage() == null ? "" : new String(pack.getMessage()));

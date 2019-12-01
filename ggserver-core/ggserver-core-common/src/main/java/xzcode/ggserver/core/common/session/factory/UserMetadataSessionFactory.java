@@ -1,8 +1,9 @@
 package xzcode.ggserver.core.common.session.factory;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 import io.netty.channel.Channel;
 import xzcode.ggserver.core.common.channel.group.IChannelGroup;
-import xzcode.ggserver.core.common.channel.group.impl.GGChannelGroup;
 import xzcode.ggserver.core.common.config.GGConfig;
 import xzcode.ggserver.core.common.message.Pack;
 import xzcode.ggserver.core.common.message.meta.UserMetadata;
@@ -21,20 +22,20 @@ import xzcode.ggserver.core.common.utils.logger.GGLoggerUtil;
 public class UserMetadataSessionFactory implements ISessionFactory{
 	
 	private GGConfig config; 
+	private AtomicInteger counter = new AtomicInteger(0); 
 	
-	private String channelGroupId = "default";
-	private IChannelGroup channelGroup = new GGChannelGroup(channelGroupId);
+	private String channelGroupIdPrefix = "default-";
 	
 	public UserMetadataSessionFactory(GGConfig config) {
 		super();
 		this.config = config;
-		config.getChannelGroupManager().addChannelGroupIfAbsent(channelGroup);
 	}
 
 	@Override
 	public GGSession getSession(Channel channel, Pack pack) {
 		byte[] metadata = pack.getMetadata();
 		ChannelGroupSession session = null;
+		IChannelGroup channelGroup = config.getChannelGroupManager().getChannelGroup(channel);
 		try {
 			
 			UserMetadata userMetadata = (UserMetadata) config.getMetadataResolver().resolve(metadata);
@@ -62,11 +63,16 @@ public class UserMetadataSessionFactory implements ISessionFactory{
 	@Override
 	public void channelActive(Channel channel) {
 		
+		//绑定通道组id到channel attrmap
+		String channelGroupId = channelGroupIdPrefix + counter.incrementAndGet();
+		config.getChannelGroupManager().addToChannelGroup(channelGroupId, channel);
 	}
 
 	@Override
 	public void channelInActive(Channel channel) {
 		config.getSessionManager().clearAllSession();
+		config.getChannelGroupManager().removeChannelGroup(channel);
+		
 	}
 
 }

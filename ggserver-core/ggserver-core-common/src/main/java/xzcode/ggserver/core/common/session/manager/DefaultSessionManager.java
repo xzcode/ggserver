@@ -36,7 +36,7 @@ public class DefaultSessionManager implements ISessionManager {
 	 * 2019-11-17 00:40:04
 	 */
 	private void startSessionExpireTask() {
-		this.config.getTaskExecutor().scheduleWithFixedDelay(() -> {
+		this.config.getTaskExecutor().scheduleWithFixedDelay( 100L, 100L, TimeUnit.MILLISECONDS,() -> {
 			
 			Iterator<Entry<String, GGSession>> it = sessionMap.entrySet().iterator();
 			while (it.hasNext()) {
@@ -49,8 +49,7 @@ public class DefaultSessionManager implements ISessionManager {
 				}
 				session.disconnect();
 			}
-			
-		}, 100L, 100L, TimeUnit.MILLISECONDS);
+		});
 	}
 	
 	@Override

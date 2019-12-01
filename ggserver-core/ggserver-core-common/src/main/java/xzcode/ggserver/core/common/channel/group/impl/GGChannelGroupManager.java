@@ -4,6 +4,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import io.netty.channel.Channel;
+import io.netty.util.AttributeKey;
+import xzcode.ggserver.core.common.channel.DefaultChannelAttributeKeys;
 import xzcode.ggserver.core.common.channel.group.IChannelGroup;
 import xzcode.ggserver.core.common.channel.group.IChannelGroupManager;
 import xzcode.ggserver.core.common.config.GGConfig;
@@ -65,6 +67,18 @@ public class GGChannelGroupManager implements IChannelGroupManager{
 	@Override
 	public IChannelGroup removeChannelGroup(String channelGroupId) {
 		return groups.remove(channelGroupId);
+	}
+
+	@Override
+	public void removeChannelGroup(Channel channel) {
+		String channelGroupId = (String) channel.attr(AttributeKey.valueOf(DefaultChannelAttributeKeys.CHANNEL_GROUP_ID)).get();
+		groups.remove(channelGroupId);
+	}
+	
+	@Override
+	public IChannelGroup getChannelGroup(Channel channel) {
+		String channelGroupId = (String) channel.attr(AttributeKey.valueOf(DefaultChannelAttributeKeys.CHANNEL_GROUP_ID)).get();
+		return groups.get(channelGroupId);
 	}
 
 

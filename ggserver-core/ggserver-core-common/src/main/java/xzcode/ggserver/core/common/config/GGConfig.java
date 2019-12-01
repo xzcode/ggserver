@@ -4,12 +4,14 @@ import java.nio.charset.Charset;
 import java.util.concurrent.ThreadFactory;
 
 import io.netty.channel.nio.NioEventLoopGroup;
+import nonapi.io.github.classgraph.concurrency.SimpleThreadFactory;
 import xzcode.ggserver.core.common.channel.group.IChannelGroupManager;
 import xzcode.ggserver.core.common.channel.group.impl.GGChannelGroupManager;
 import xzcode.ggserver.core.common.constant.GGServerTypeConstants;
 import xzcode.ggserver.core.common.event.IEventManager;
 import xzcode.ggserver.core.common.event.impl.DefaultEventManager;
-import xzcode.ggserver.core.common.executor.factory.EventLoopGroupThreadFactory;
+import xzcode.ggserver.core.common.executor.ITaskExecutor;
+import xzcode.ggserver.core.common.executor.NioEventLoopGroupTaskExecutor;
 import xzcode.ggserver.core.common.filter.IFilterManager;
 import xzcode.ggserver.core.common.filter.impl.DefaultFilterManager;
 import xzcode.ggserver.core.common.handler.codec.IDecodeHandler;
@@ -20,10 +22,10 @@ import xzcode.ggserver.core.common.handler.pack.IReceivePackHandler;
 import xzcode.ggserver.core.common.handler.pack.impl.DefaultReceivePackHandler;
 import xzcode.ggserver.core.common.handler.serializer.ISerializer;
 import xzcode.ggserver.core.common.handler.serializer.factory.SerializerFactory;
-import xzcode.ggserver.core.common.message.meta.IMetadataResolver;
-import xzcode.ggserver.core.common.message.meta.VoidMetadataResolver;
-import xzcode.ggserver.core.common.message.receive.manager.IRequestMessageManager;
-import xzcode.ggserver.core.common.message.receive.manager.RequestMessageManager;
+import xzcode.ggserver.core.common.message.meta.resolver.IMetadataResolver;
+import xzcode.ggserver.core.common.message.meta.resolver.VoidMetadataResolver;
+import xzcode.ggserver.core.common.message.request.manager.IRequestMessageManager;
+import xzcode.ggserver.core.common.message.request.manager.RequestMessageManager;
 import xzcode.ggserver.core.common.session.factory.DefaultChannelSessionFactory;
 import xzcode.ggserver.core.common.session.factory.ISessionFactory;
 import xzcode.ggserver.core.common.session.manager.DefaultSessionManager;
@@ -94,6 +96,11 @@ public class GGConfig {
 	
     
 	protected NioEventLoopGroup workerGroup;
+	
+	
+	protected ITaskExecutor taskExecutor;
+	
+	
 	protected ThreadFactory workerGroupThreadFactory;
 	
 	public void init() {
@@ -113,10 +120,14 @@ public class GGConfig {
 		}
 		
 		if (workerGroupThreadFactory == null) {
-			workerGroupThreadFactory = new EventLoopGroupThreadFactory("netty-worker");
+			workerGroupThreadFactory = new SimpleThreadFactory("netty-worker-", false);
 		}
 		if (workerGroup == null) {
 			workerGroup = new NioEventLoopGroup(getWorkThreadSize(),workerGroupThreadFactory);	
+		}
+		
+		if (taskExecutor == null) {
+			taskExecutor = new NioEventLoopGroupTaskExecutor(workerGroup);
 		}
 		
 		if (decodeHandler == null) {
@@ -287,8 +298,12 @@ public class GGConfig {
 		this.maxDataLength = maxDataLength;
 	}
 
-	public NioEventLoopGroup getTaskExecutor() {
-		return workerGroup;
+	public ITaskExecutor getTaskExecutor() {
+		return taskExecutor;
+	}
+	
+	public void setTaskExecutor(ITaskExecutor taskExecutor) {
+		this.taskExecutor = taskExecutor;
 	}
 
 	public Charset getCharset() {
