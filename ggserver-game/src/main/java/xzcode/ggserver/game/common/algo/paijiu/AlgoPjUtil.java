@@ -181,7 +181,7 @@ public class AlgoPjUtil extends BasicAlgoUtil{
 		
 		PAIR_TYPES.put(ZA_QI_1 + "" + TIAN_PAI, AlgoPjCardType.TIAN_GAO_JIU);
 		
-		PAIR_TYPES.put(ZA_QI_2 + "" + DI_PAI, AlgoPjCardType.DI_GAO_JIU);
+		PAIR_TYPES.put(GAO_JIAO_QI + "" + DI_PAI, AlgoPjCardType.DI_GAO_JIU);
 		
 	}
 	
