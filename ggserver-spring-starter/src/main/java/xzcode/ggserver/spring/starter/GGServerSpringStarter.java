@@ -1,12 +1,8 @@
 package xzcode.ggserver.spring.starter;
 
-import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.support.BeanDefinitionBuilder;
-import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -14,11 +10,11 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.util.StringUtils;
 
 import xzcode.ggserver.core.common.handler.serializer.factory.SerializerFactory;
 import xzcode.ggserver.core.server.GGServer;
 import xzcode.ggserver.core.server.config.GGServerConfig;
+import xzcode.ggserver.core.server.impl.DefaultServer;
 import xzcode.ggserver.core.server.starter.IGGServerStarter;
 import xzcode.ggserver.core.server.starter.impl.DefaultGGServerStarter;
 
@@ -56,7 +52,7 @@ public class GGServerSpringStarter implements ApplicationContextAware {
     @Bean
     @ConfigurationProperties(prefix = GGServerSpringStarter.PROPERTIES_PREFIX)
     public GGServer ggServer() {
-        return new GGServer(ggServerConfig());
+        return new DefaultServer(ggServerConfig());
     }
     
     

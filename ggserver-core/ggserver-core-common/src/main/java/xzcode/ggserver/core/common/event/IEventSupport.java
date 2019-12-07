@@ -1,10 +1,19 @@
 package xzcode.ggserver.core.common.event;
 
+import xzcode.ggserver.core.common.config.IGGConfigSupport;
 import xzcode.ggserver.core.common.event.model.EventData;
 
-public interface IEventSupport extends IEventManager{
+/**
+ * 事件支持
+ * 
+ * @author zai
+ * 2019-12-05 10:50:19
+ */
+public interface IEventSupport extends IEventManager, IGGConfigSupport{
 	
-	IEventManager getEventManagerImpl();
+	default IEventManager getEventManagerImpl() {
+		return getConfig().getEventManager();
+	}
 
 	@Override
 	default <T> void addEventListener(String event, IEventListener<T> listener) {

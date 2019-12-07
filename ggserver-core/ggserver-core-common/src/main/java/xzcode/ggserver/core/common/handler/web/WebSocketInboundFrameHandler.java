@@ -21,6 +21,9 @@ import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.HttpUtil;
 import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.CloseWebSocketFrame;
+import io.netty.handler.codec.http.websocketx.PingWebSocketFrame;
+import io.netty.handler.codec.http.websocketx.PongWebSocketFrame;
+import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketHandshakeException;
 import io.netty.handler.codec.http.websocketx.WebSocketServerHandshaker;
@@ -113,30 +116,27 @@ public class WebSocketInboundFrameHandler extends SimpleChannelInboundHandler<Ob
     	
     	if (frame instanceof BinaryWebSocketFrame) {
     		ByteBuf in = ((BinaryWebSocketFrame) frame).content();
-            
     		//调用解码处理器
     		config.getDecodeHandler().handle(ctx, in);
-    		
     		return;
     	}
     	if (frame instanceof CloseWebSocketFrame) {
-            //handshaker.close(ctx.channel(), (CloseWebSocketFrame) frame.retain());
     		ctx.close();
             return;
         }
-        /*
         if (frame instanceof TextWebSocketFrame) {
         	if(LOGGER.isDebugEnabled()){
         		LOGGER.debug("\nReceived string message:\nchannel{}\ntext:{} ; Channel Close!!", ctx.channel(), ((TextWebSocketFrame) frame).text());        		
         	}
-        	ctx.close();
+        	ctx.writeAndFlush("Unsupport Text Messages!").addListener(e -> {
+        		ctx.close();        		
+        	});
         	return;
         }
         if (frame instanceof PingWebSocketFrame) {
             ctx.write(new PongWebSocketFrame(frame.content().retain()));
             return;
         }
-        */
         
         ctx.close();
         
