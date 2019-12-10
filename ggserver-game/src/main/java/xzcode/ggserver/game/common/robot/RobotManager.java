@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentHashMap.KeySetView;
+import java.util.concurrent.ThreadLocalRandom;
 
 import xzcode.ggserver.game.common.player.Player;
 
@@ -70,7 +71,7 @@ public class RobotManager<P extends Player> {
 		}
 		list = new ArrayList<>(size);
 		
-		Random random = new Random();
+		Random random = ThreadLocalRandom.current();
 		for (int i = 0; i < size; i++) {
 			KeySetView<Object,P> keySetView = robotMap.keySet();
 			Object[] keys = keySetView.toArray();
@@ -92,7 +93,7 @@ public class RobotManager<P extends Player> {
 			return null;
 		}
 		
-		Random random = new Random();
+		Random random = ThreadLocalRandom.current();
 		KeySetView<Object,P> keySetView = robotMap.keySet();
 		Object[] keys = keySetView.toArray();
 		Object randomKey = keys[random.nextInt(keys.length)];
