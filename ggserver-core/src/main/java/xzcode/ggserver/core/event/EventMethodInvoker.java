@@ -39,9 +39,9 @@ public class EventMethodInvoker implements IEventInvoker {
 		for (int i = 0; i < methods.size(); i++) {
 			method = methods.get(i);
 			if (message != null) {
-				method.invoke(componentObj);				
-			}else {
 				method.invoke(componentObj, message);
+			}else {
+				method.invoke(componentObj);				
 			}
 		}
 	}
