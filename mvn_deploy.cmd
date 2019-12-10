@@ -1,1 +1,1 @@
-mvn deploy
+mvn clean package deploy
