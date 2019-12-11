@@ -6,12 +6,7 @@ import xzcode.ggserver.core.client.starter.impl.DefaultClientStarter;
 import xzcode.ggserver.core.common.config.IGGConfigSupport;
 import xzcode.ggserver.core.common.control.IGGContolSupport;
 import xzcode.ggserver.core.common.event.IEventManager;
-import xzcode.ggserver.core.common.event.IEventSupport;
-import xzcode.ggserver.core.common.executor.support.IExecutorSupport;
 import xzcode.ggserver.core.common.filter.IFilterManager;
-import xzcode.ggserver.core.common.filter.IFilterSupport;
-import xzcode.ggserver.core.common.message.request.support.IRequestMessageSupport;
-import xzcode.ggserver.core.common.message.response.support.ISendMessageSupport;
 import xzcode.ggserver.core.common.session.GGSession;
 
 /**
@@ -22,12 +17,7 @@ import xzcode.ggserver.core.common.session.GGSession;
  */
 public class GGClient 
 implements 
-	IGGConfigSupport,
-	ISendMessageSupport, 
-	IRequestMessageSupport,
-	IFilterSupport,
-	IExecutorSupport, 
-	IEventSupport,
+	IGGConfigSupport<GGClientConfig>,
 	IGGContolSupport
 {
 	
@@ -67,6 +57,5 @@ implements
 	public IFilterManager getFilterManager() {
 		return config.getFilterManager();
 	}
-
 
 }

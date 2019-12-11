@@ -1,7 +1,7 @@
 package xzcode.ggserver.core.common.message.response.support;
 
-import xzcode.ggserver.core.common.config.GGConfig;
-import xzcode.ggserver.core.common.config.IGGConfigSupport;
+import java.nio.charset.Charset;
+
 import xzcode.ggserver.core.common.handler.serializer.ISerializer;
 import xzcode.ggserver.core.common.message.Pack;
 import xzcode.ggserver.core.common.message.response.Response;
@@ -14,7 +14,26 @@ import xzcode.ggserver.core.common.utils.logger.GGLoggerUtil;
  * @author zai
  * 2019-11-27 21:59:29
  */
-public interface IMakePackSupport extends IGGConfigSupport {
+public interface IMakePackSupport{
+	
+	/**
+	 * 获取字符串编码对象
+	 * 
+	 * @return
+	 * @author zai
+	 * 2019-12-11 14:24:30
+	 */
+	Charset getCharset();
+	
+	/**
+	 * 获取序列化器
+	 * 
+	 * @return
+	 * @author zai
+	 * 2019-12-11 14:24:23
+	 */
+	ISerializer getSerializer();
+	
 	/**
 	 * 生成字节码数据包
 	 * 
@@ -25,10 +44,9 @@ public interface IMakePackSupport extends IGGConfigSupport {
 	 */
 	default Pack makePack(Response response) {
 		try {
-			GGConfig config = getConfig();
-			ISerializer serializer = config.getSerializer();
+			ISerializer serializer = getSerializer();
 			byte[] metadataBytes = response.getMetadata() == null ? null : serializer.serialize(response.getMetadata());
-			byte[] actionIdData = response.getAction().getBytes(config.getCharset());
+			byte[] actionIdData = response.getAction().getBytes(getCharset());
 			byte[] messageData = response.getMessage() == null ? null : serializer.serialize(response.getMessage());
 			return new Pack(metadataBytes, actionIdData, messageData);
 		} catch (Exception e) {

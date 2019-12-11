@@ -1,6 +1,5 @@
 package xzcode.ggserver.core.common.filter;
 
-import xzcode.ggserver.core.common.config.IGGConfigSupport;
 import xzcode.ggserver.core.common.message.Pack;
 import xzcode.ggserver.core.common.message.request.Request;
 import xzcode.ggserver.core.common.message.response.Response;
@@ -12,7 +11,7 @@ import xzcode.ggserver.core.common.message.response.Response;
  * @author zai
  * 2019-12-01 16:56:07
  */
-public interface IFilterSupport extends IFilterManager, IGGConfigSupport{
+public interface IFilterSupport extends IFilterManager{
 	
 	/**
 	 * 获取过滤器管理器
@@ -21,9 +20,7 @@ public interface IFilterSupport extends IFilterManager, IGGConfigSupport{
 	 * @author zai
 	 * 2019-12-01 16:56:15
 	 */
-	default IFilterManager getFilterManager() {
-		return getConfig().getFilterManager();
-	}
+	IFilterManager getFilterManager();
 	
 	@Override
 	default boolean doBeforeDeserializeFilters(Pack pack) {

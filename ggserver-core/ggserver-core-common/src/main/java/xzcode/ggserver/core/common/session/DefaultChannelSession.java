@@ -1,12 +1,16 @@
 package xzcode.ggserver.core.common.session;
 
 import java.net.InetSocketAddress;
+import java.nio.charset.Charset;
 
 import io.netty.channel.Channel;
 import io.netty.util.AttributeKey;
 import xzcode.ggserver.core.common.config.GGConfig;
+import xzcode.ggserver.core.common.executor.support.IExecutorSupport;
+import xzcode.ggserver.core.common.filter.IFilterManager;
 import xzcode.ggserver.core.common.future.GGNettyFacadeFuture;
 import xzcode.ggserver.core.common.future.IGGFuture;
+import xzcode.ggserver.core.common.handler.serializer.ISerializer;
 import xzcode.ggserver.core.common.message.meta.IMetadata;
 
 /**
@@ -115,6 +119,5 @@ public class DefaultChannelSession implements GGSession {
 	public IMetadata getMetadata() {
 		return null;
 	}
-
 
 }

@@ -8,7 +8,8 @@ import org.slf4j.LoggerFactory;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
-import xzcode.ggserver.core.common.config.IGGConfigSupport;
+import xzcode.ggserver.core.common.executor.support.IExecutorSupport;
+import xzcode.ggserver.core.common.filter.IFilterManager;
 import xzcode.ggserver.core.common.future.GGFailedFuture;
 import xzcode.ggserver.core.common.future.GGNettyFacadeFuture;
 import xzcode.ggserver.core.common.future.IGGFuture;
@@ -23,8 +24,34 @@ import xzcode.ggserver.core.common.utils.json.GGServerJsonUtil;
  * 
  * @author zai 2019-02-09 14:50:27
  */
-public interface ISessionSendMessageSupport extends IMakePackSupport, IGGConfigSupport {
+public interface ISessionSendMessageSupport extends IMakePackSupport {
+	
+	/**
+	 * 获取过滤器管理器
+	 * 
+	 * @return
+	 * @author zai
+	 * 2019-12-11 16:35:06
+	 */
+	IFilterManager getFilterManager();
 
+	/**
+	 * 获取计划任务执行器
+	 * 
+	 * @return
+	 * @author zai
+	 * 2019-12-11 16:35:12
+	 */
+	IExecutorSupport getTaskExecutor();
+
+	/**
+	 * 获取会话
+	 * 
+	 * @return
+	 * @author zai
+	 * 2019-12-11 16:35:24
+	 */
+	GGSession getSession();
 	
 	/**
 	 * 发送消息
@@ -100,7 +127,7 @@ public interface ISessionSendMessageSupport extends IMakePackSupport, IGGConfigS
 		Channel channel = getSession().getChannel();
 
 		// 序列化后发送过滤器
-		if (!getConfig().getFilterManager().doAfterSerializeFilters(pack)) {
+		if (!getFilterManager().doAfterSerializeFilters(pack)) {
 			return GGFailedFuture.DEFAULT_FAILED_FUTURE;
 		}
 		if (channel.isActive()) {
@@ -110,7 +137,7 @@ public interface ISessionSendMessageSupport extends IMakePackSupport, IGGConfigS
 				future.setFuture((Future<?>) channelFuture);
 
 			} else {
-				getConfig().getTaskExecutor().schedule(delay, timeUnit, () -> {
+				getTaskExecutor().schedule(delay, timeUnit, () -> {
 					ChannelFuture channelFuture = channel.writeAndFlush(pack);
 					future.setFuture((Future<?>) channelFuture);
 				});
@@ -124,6 +151,5 @@ public interface ISessionSendMessageSupport extends IMakePackSupport, IGGConfigS
 		return GGFailedFuture.DEFAULT_FAILED_FUTURE;
 	}
 
-	GGSession getSession();
 
 }

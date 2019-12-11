@@ -3,7 +3,6 @@ package xzcode.ggserver.core.common.executor.support;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
-import xzcode.ggserver.core.common.config.IGGConfigSupport;
 import xzcode.ggserver.core.common.executor.ITaskExecutor;
 import xzcode.ggserver.core.common.future.IGGFuture;
 
@@ -14,11 +13,9 @@ import xzcode.ggserver.core.common.future.IGGFuture;
  * @author zai
  * 2019-12-01 16:15:52
  */
-public interface IExecutorSupport extends ITaskExecutor, IGGConfigSupport {
+public interface IExecutorSupport extends ITaskExecutor {
 	
-	default ITaskExecutor getTaskExecutor() {
-		return getConfig().getTaskExecutor();
-	}
+	ITaskExecutor getTaskExecutor();
 
 	@Override
 	default IGGFuture<?> submitTask(Runnable runnable) {

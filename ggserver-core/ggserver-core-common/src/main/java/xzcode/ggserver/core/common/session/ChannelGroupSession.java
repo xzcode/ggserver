@@ -1,13 +1,19 @@
 package xzcode.ggserver.core.common.session;
 
+import java.nio.charset.Charset;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import io.netty.channel.Channel;
 import xzcode.ggserver.core.common.channel.group.IChannelGroup;
 import xzcode.ggserver.core.common.config.GGConfig;
+import xzcode.ggserver.core.common.config.IGGConfigSupport;
+import xzcode.ggserver.core.common.executor.ITaskExecutor;
+import xzcode.ggserver.core.common.executor.support.IExecutorSupport;
+import xzcode.ggserver.core.common.filter.IFilterManager;
 import xzcode.ggserver.core.common.future.GGSuccessFuture;
 import xzcode.ggserver.core.common.future.IGGFuture;
+import xzcode.ggserver.core.common.handler.serializer.ISerializer;
 import xzcode.ggserver.core.common.message.meta.IMetadata;
 
 /**
@@ -17,9 +23,9 @@ import xzcode.ggserver.core.common.message.meta.IMetadata;
  * @author zai
  * 2019-11-16 23:35:14
  */
-public class ChannelGroupSession implements GGSession {
+public class ChannelGroupSession<C extends GGConfig> implements GGSession, IGGConfigSupport<C> {
 	
-	private GGConfig config;
+	private C config;
 	
 	private String sessionId;
 	
@@ -35,7 +41,7 @@ public class ChannelGroupSession implements GGSession {
 	
 	private Map<String, Object> attrMap = new ConcurrentHashMap<>(6);
 	
-	public ChannelGroupSession(GGConfig config, IChannelGroup channelGroup) {
+	public ChannelGroupSession(C config, IChannelGroup channelGroup) {
 		super();
 		this.config = config;
 		this.channelGroup = channelGroup;
@@ -93,11 +99,11 @@ public class ChannelGroupSession implements GGSession {
 
 
 	@Override
-	public GGConfig getConfig() {
+	public C getConfig() {
 		return config;
 	}
 	
-	public void setConfig(GGConfig config) {
+	public void setConfig(C config) {
 		this.config = config;
 	}
 
@@ -139,4 +145,5 @@ public class ChannelGroupSession implements GGSession {
 	public void setMetadata(IMetadata metadata) {
 		this.metadata = metadata;
 	}
+
 }

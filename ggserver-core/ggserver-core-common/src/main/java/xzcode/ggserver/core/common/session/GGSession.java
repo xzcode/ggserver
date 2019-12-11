@@ -1,7 +1,6 @@
 package xzcode.ggserver.core.common.session;
 
 import io.netty.channel.Channel;
-import xzcode.ggserver.core.common.config.IGGConfigSupport;
 import xzcode.ggserver.core.common.executor.support.IExecutorSupport;
 import xzcode.ggserver.core.common.future.IGGFuture;
 import xzcode.ggserver.core.common.message.meta.IMetadata;
@@ -13,7 +12,7 @@ import xzcode.ggserver.core.common.message.response.support.ISessionSendMessageS
  * 
  * @author zai 2019-11-16 23:35:39
  */
-public interface GGSession extends IGGConfigSupport, ISessionSendMessageSupport, IExecutorSupport {
+public interface GGSession extends ISessionSendMessageSupport, IExecutorSupport {
 
 	void addAttribute(String key, Object value);
 
@@ -40,4 +39,5 @@ public interface GGSession extends IGGConfigSupport, ISessionSendMessageSupport,
 	boolean isExpired();
 
 	void updateExpire();
+
 }

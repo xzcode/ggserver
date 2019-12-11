@@ -2,8 +2,7 @@ package xzcode.ggserver.core.common.message.response.support;
 
 import java.util.concurrent.TimeUnit;
 
-import xzcode.ggserver.core.common.config.GGConfig;
-import xzcode.ggserver.core.common.config.IGGConfigSupport;
+import xzcode.ggserver.core.common.filter.IFilterManager;
 import xzcode.ggserver.core.common.future.IGGFuture;
 import xzcode.ggserver.core.common.message.Pack;
 import xzcode.ggserver.core.common.message.response.Response;
@@ -17,7 +16,25 @@ import xzcode.ggserver.core.common.utils.logger.GGLoggerUtil;
  * 
  * @author zai 2019-02-09 14:50:27
  */
-public interface ISendMessageSupport extends IMakePackSupport, IGGConfigSupport {
+public interface ISendMessageSupport extends IMakePackSupport {
+	
+	/**
+	 * 获取会话管理器
+	 * 
+	 * @return
+	 * @author zai
+	 * 2019-12-11 16:33:54
+	 */
+	ISessionManager getSessionManager();
+	
+	/**
+	 * 获取过滤器管理器
+	 * 
+	 * @return
+	 * @author zai
+	 * 2019-12-11 16:34:01
+	 */
+	IFilterManager getFilterManager();
 
 
 	/**
@@ -29,14 +46,13 @@ public interface ISendMessageSupport extends IMakePackSupport, IGGConfigSupport 
 	 */
 	default void sendToAll(Response response) {
 		try {
-			GGConfig config = getConfig();
 			// 发送过滤器
-			if (!config.getFilterManager().doResponseFilters(response)) {
+			if (!getFilterManager().doResponseFilters(response)) {
 				return;
 			}
 
 			Pack pack = makePack(response);
-			ISessionManager sessionManager = config.getSessionManager();
+			ISessionManager sessionManager = getSessionManager();
 			sessionManager.eachSession(session -> {
 				if (session.isActive()) {
 					session.send(pack, 0L, TimeUnit.MILLISECONDS);
@@ -108,9 +124,8 @@ public interface ISendMessageSupport extends IMakePackSupport, IGGConfigSupport 
 	default IGGFuture<?> send(Response response, long delay, TimeUnit timeUnit) {
 		GGSession session = response.getSession();
 		if (session != null) {
-			GGConfig config = getConfig();
 			// 发送过滤器
-			if (!config.getFilterManager().doResponseFilters(response)) {
+			if (!getFilterManager().doResponseFilters(response)) {
 				return null;
 			}
 			try {
