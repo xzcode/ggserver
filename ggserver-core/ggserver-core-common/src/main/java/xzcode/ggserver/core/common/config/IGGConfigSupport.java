@@ -35,18 +35,19 @@ public interface IGGConfigSupport<C extends GGConfig> extends
 	 */
 	C getConfig();
 
+	@Override
 	default ISerializer getSerializer() {
 		return getConfig().getSerializer();
 	}
-
+	@Override
 	default IEventManager getEventManagerImpl() {
 		return getConfig().getEventManager();
 	}
-
+	@Override
 	default ITaskExecutor getTaskExecutor() {
 		return getConfig().getTaskExecutor();
 	}
-
+	@Override
 	default IRequestMessageManager getRequestMessageManager() {
 		return getConfig().getRequestMessageManager();
 	}
@@ -54,15 +55,13 @@ public interface IGGConfigSupport<C extends GGConfig> extends
 	default ISessionManager getSessionManager() {
 		return getConfig().getSessionManager();
 	}
-
+	@Override
 	default IFilterManager getFilterManager() {
 		return getConfig().getFilterManager();
 	}
-
+	@Override
 	default Charset getCharset() {
 		return getConfig().getCharset();
 	}
-	
-	
 
 }

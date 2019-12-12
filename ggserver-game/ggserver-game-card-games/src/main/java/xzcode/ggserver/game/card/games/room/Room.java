@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import xzcode.ggserver.core.server.GGServer;
+import xzcode.ggserver.core.server.IGGServer;
 import xzcode.ggserver.game.card.games.player.RoomPlayer;
 import xzcode.ggserver.game.card.games.room.listener.IPlayerEnterListener;
 import xzcode.ggserver.game.card.games.room.listener.IPlayerLeaveListener;
@@ -22,7 +22,7 @@ public abstract class Room<P extends RoomPlayer<R>, R>{
 	/**
 	 * ggserver对象
 	 */
-	protected GGServer server;
+	protected IGGServer server;
 	
 	/**
 	 * 房间id
@@ -194,12 +194,12 @@ public abstract class Room<P extends RoomPlayer<R>, R>{
 
 	
 	
-	public GGServer getServer() {
+	public IGGServer getServer() {
 		return server;
 	}
 
 
-	public void setServer(GGServer server) {
+	public void setServer(IGGServer server) {
 		this.server = server;
 	}
 	

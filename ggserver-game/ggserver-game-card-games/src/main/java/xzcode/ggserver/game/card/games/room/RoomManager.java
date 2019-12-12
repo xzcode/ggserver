@@ -3,13 +3,13 @@ package xzcode.ggserver.game.card.games.room;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import xzcode.ggserver.core.server.GGServer;
+import xzcode.ggserver.core.server.IGGServer;
 
 public class RoomManager<R> {
 	/**
 	 * ggserver对象
 	 */
-	protected GGServer server;
+	protected IGGServer server;
 	
 	/**
 	 * 房间集合

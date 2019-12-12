@@ -8,6 +8,7 @@ import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelOption;
+import io.netty.channel.pool.FixedChannelPool;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
@@ -24,7 +25,7 @@ public class DefaultClientStarter implements IGGClientStarter {
 	
 	private GGClientConfig config;
 	
-	private Bootstrap boot;
+	
 	
     public DefaultClientStarter(GGClientConfig config) {
     	this.config = config;
@@ -33,7 +34,7 @@ public class DefaultClientStarter implements IGGClientStarter {
     
     public void init() {
     	
-    	 boot = new Bootstrap();
+    	Bootstrap boot = config.getBootstrap();
 
         //设置工作线程组
         boot.group(config.getWorkerGroup());
@@ -56,10 +57,11 @@ public class DefaultClientStarter implements IGGClientStarter {
     
     public GGSession connect(String host, int port) {
         try {
+        	Bootstrap boot = config.getBootstrap();
             // 连接服务器
             ChannelFuture future = boot.connect(host, port).sync();
             Channel channel = future.channel();
-            GGSession session = new DefaultChannelSession(config, channel);
+            GGSession session = new DefaultChannelSession(channel, channel.id().asLongText(), config);
             return session;
         }catch (Exception e) {
         	throw new RuntimeException("GGClient connect error !! ", e);
@@ -68,7 +70,7 @@ public class DefaultClientStarter implements IGGClientStarter {
     
 
 	@Override
-	public IGGFuture disconnect(GGSession session) {
+	public IGGFuture<?> disconnect(GGSession session) {
 		return session.disconnect();
 	}
 	

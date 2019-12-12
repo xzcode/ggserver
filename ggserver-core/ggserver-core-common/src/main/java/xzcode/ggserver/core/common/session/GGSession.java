@@ -3,7 +3,6 @@ package xzcode.ggserver.core.common.session;
 import io.netty.channel.Channel;
 import xzcode.ggserver.core.common.executor.support.IExecutorSupport;
 import xzcode.ggserver.core.common.future.IGGFuture;
-import xzcode.ggserver.core.common.message.meta.IMetadata;
 import xzcode.ggserver.core.common.message.response.support.ISessionSendMessageSupport;
 
 /**
@@ -24,20 +23,25 @@ public interface GGSession extends ISessionSendMessageSupport, IExecutorSupport 
 
 	IGGFuture<?> disconnect();
 	
-	IMetadata getMetadata();
-
 	String getHost();
+	
+	void setHost(String host);
 
 	int getPort();
+	
+	void setPort(int port);
 
 	boolean isActive();
 
 	String getSessonId();
 
 	Channel getChannel();
+	
+	void setChannel(Channel channel);
 
 	boolean isExpired();
 
 	void updateExpire();
+	
 
 }

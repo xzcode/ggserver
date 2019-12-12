@@ -1,5 +1,6 @@
 package xzcode.ggserver.core.common.message.request;
 
+import xzcode.ggserver.core.common.message.meta.IMetadata;
 import xzcode.ggserver.core.common.session.GGSession;
 
 /**
@@ -15,7 +16,7 @@ public class Request<T> {
 	private GGSession session;
 
 	//消息体
-	private Object metadata;
+	private IMetadata metadata;
 
 	//发送消息标识
 	private String action;
@@ -25,14 +26,14 @@ public class Request<T> {
 	
 	
 	
-	public Request(GGSession session, Object metadata, String action, T message) {
+	public Request(GGSession session, IMetadata metadata, String action, T message) {
 		this.session = session;
 		this.metadata = metadata;
 		this.action = action;
 		this.message = message;
 	}
 	
-	public Request(Object metadata, String action, T message) {
+	public Request(IMetadata metadata, String action, T message) {
 		this.metadata = metadata;
 		this.action = action;
 		this.message = message;
@@ -50,8 +51,13 @@ public class Request<T> {
 		return session;
 	}
 	
-	public Object getMetadata() {
+	public IMetadata getMetadata() {
 		return metadata;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public T getMetadata(Class<T> clazz) {
+		return (T) metadata;
 	}
 
 }

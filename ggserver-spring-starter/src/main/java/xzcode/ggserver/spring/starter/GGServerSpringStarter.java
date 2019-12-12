@@ -12,9 +12,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import xzcode.ggserver.core.common.handler.serializer.factory.SerializerFactory;
-import xzcode.ggserver.core.server.GGServer;
+import xzcode.ggserver.core.server.IGGServer;
 import xzcode.ggserver.core.server.config.GGServerConfig;
-import xzcode.ggserver.core.server.impl.DefaultServer;
+import xzcode.ggserver.core.server.impl.GGServer;
 import xzcode.ggserver.core.server.starter.IGGServerStarter;
 import xzcode.ggserver.core.server.starter.impl.DefaultGGServerStarter;
 
@@ -51,8 +51,8 @@ public class GGServerSpringStarter implements ApplicationContextAware {
 
     @Bean
     @ConfigurationProperties(prefix = GGServerSpringStarter.PROPERTIES_PREFIX)
-    public GGServer ggServer() {
-        return new DefaultServer(ggServerConfig());
+    public IGGServer ggServer() {
+        return new GGServer(ggServerConfig());
     }
     
     

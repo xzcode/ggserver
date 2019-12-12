@@ -44,7 +44,7 @@ public class DefaultChannelSessionFactory implements ISessionFactory{
 	@Override
 	public void channelActive(Channel channel) {
 		//初始化session
-		DefaultChannelSession session = new DefaultChannelSession(config, channel);
+		DefaultChannelSession session = new DefaultChannelSession(channel, channel.id().asLongText(),config);
 		
 		channel.attr(AttributeKey.valueOf(DefaultChannelAttributeKeys.SESSION)).set(session);
 		

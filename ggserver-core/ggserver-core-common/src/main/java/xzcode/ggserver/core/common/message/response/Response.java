@@ -32,7 +32,11 @@ public class Response {
 			this.metadata = metadata;
 			this.action = action;
 			this.message = message;
-		}
+	}
+	public Response(String action, Object message) {
+		this.action = action;
+		this.message = message;
+	}
 
 	public String getAction() {
 		return action;
@@ -48,6 +52,10 @@ public class Response {
 
 	public Object getMetadata() {
 		return metadata;
+	}
+	
+	public void setMetadata(Object metadata) {
+		this.metadata = metadata;
 	}
 
 }

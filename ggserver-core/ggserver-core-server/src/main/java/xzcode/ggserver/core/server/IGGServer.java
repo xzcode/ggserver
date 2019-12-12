@@ -9,7 +9,7 @@ import xzcode.ggserver.core.server.config.GGServerConfig;
  * 
  * @author zai 2019-12-05 10:41:22
  */
-public interface GGServer<C extends GGServerConfig> extends IGGConfigSupport<C> , IGGContolSupport{
+public interface IGGServer<C extends GGServerConfig> extends IGGConfigSupport<GGServerConfig> , IGGContolSupport{
 
 	/**
 	 * 启动服务器

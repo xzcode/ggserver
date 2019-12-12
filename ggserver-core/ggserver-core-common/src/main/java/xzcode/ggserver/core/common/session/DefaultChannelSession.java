@@ -1,17 +1,11 @@
 package xzcode.ggserver.core.common.session;
 
-import java.net.InetSocketAddress;
-import java.nio.charset.Charset;
-
 import io.netty.channel.Channel;
 import io.netty.util.AttributeKey;
 import xzcode.ggserver.core.common.config.GGConfig;
-import xzcode.ggserver.core.common.executor.support.IExecutorSupport;
-import xzcode.ggserver.core.common.filter.IFilterManager;
 import xzcode.ggserver.core.common.future.GGNettyFacadeFuture;
 import xzcode.ggserver.core.common.future.IGGFuture;
-import xzcode.ggserver.core.common.handler.serializer.ISerializer;
-import xzcode.ggserver.core.common.message.meta.IMetadata;
+import xzcode.ggserver.core.common.message.meta.provider.IMetadataProvider;
 
 /**
  * sesson默认实现
@@ -20,15 +14,12 @@ import xzcode.ggserver.core.common.message.meta.IMetadata;
  * @author zai
  * 2019-10-02 22:48:34
  */
-public class DefaultChannelSession implements GGSession {
+public class DefaultChannelSession extends AbstractSession<GGConfig> {
 	
-	private GGConfig config;
-	private long expireMs;
 	private Channel channel;
 	
-	public DefaultChannelSession(GGConfig config, Channel channel) {
-		super();
-		this.config = config;
+	public DefaultChannelSession(Channel channel, String sessionId, GGConfig config) {
+		super(sessionId, config);
 		this.channel = channel;
 	}
 
@@ -56,36 +47,7 @@ public class DefaultChannelSession implements GGSession {
 	@Override
 	public IGGFuture<?> disconnect() {
 		return new GGNettyFacadeFuture<>(this.channel.close());
-
 	}
-
-	@Override
-	public String getHost() {
-		return ((InetSocketAddress)channel.remoteAddress()).getHostString();
-	}
-
-
-	@Override
-	public int getPort() {
-		return ((InetSocketAddress)channel.remoteAddress()).getPort();
-	}
-
-	@Override
-	public String getSessonId() {
-		return channel.id().asLongText();
-	}
-
-
-	@Override
-	public GGConfig getConfig() {
-		return config;
-	}
-	
-	public void setConfig(GGConfig config) {
-		this.config = config;
-	}
-
-
 
 	@Override
 	public boolean isActive() {
@@ -94,30 +56,13 @@ public class DefaultChannelSession implements GGSession {
 
 
 	@Override
-	public GGSession getSession() {
-		return this;
-	}
-
-	@Override
 	public Channel getChannel() {
 		return channel;
 	}
 
 	@Override
-	public boolean isExpired() {
-		return expireMs < System.currentTimeMillis();
+	public void setChannel(Channel channel) {
+		this.channel = channel;
 	}
-
-
-	@Override
-	public void updateExpire() {
-		this.expireMs = System.currentTimeMillis() + config.getSessionExpireMs();
-		
-	}
-
-	@Override
-	public IMetadata getMetadata() {
-		return null;
-	}
-
+	
 }

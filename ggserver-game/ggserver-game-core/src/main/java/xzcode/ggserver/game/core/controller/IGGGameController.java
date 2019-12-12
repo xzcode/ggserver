@@ -1,6 +1,6 @@
 package xzcode.ggserver.game.core.controller;
 
-import xzcode.ggserver.core.server.GGServer;
+import xzcode.ggserver.core.server.IGGServer;
 
 public interface IGGGameController {
 
@@ -10,6 +10,6 @@ public interface IGGGameController {
 	 * @return
 	 * @author zai 2019-01-22 18:06:30
 	 */
-	GGServer getGGServer();
+	IGGServer getGGServer();
 
 }

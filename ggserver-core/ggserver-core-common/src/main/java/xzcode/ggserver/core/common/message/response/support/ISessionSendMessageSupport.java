@@ -8,12 +8,13 @@ import org.slf4j.LoggerFactory;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
-import xzcode.ggserver.core.common.executor.support.IExecutorSupport;
+import xzcode.ggserver.core.common.executor.ITaskExecutor;
 import xzcode.ggserver.core.common.filter.IFilterManager;
 import xzcode.ggserver.core.common.future.GGFailedFuture;
 import xzcode.ggserver.core.common.future.GGNettyFacadeFuture;
 import xzcode.ggserver.core.common.future.IGGFuture;
 import xzcode.ggserver.core.common.message.Pack;
+import xzcode.ggserver.core.common.message.meta.provider.IMetadataProvider;
 import xzcode.ggserver.core.common.message.response.Response;
 import xzcode.ggserver.core.common.session.GGSession;
 import xzcode.ggserver.core.common.utils.json.GGServerJsonUtil;
@@ -42,7 +43,7 @@ public interface ISessionSendMessageSupport extends IMakePackSupport {
 	 * @author zai
 	 * 2019-12-11 16:35:12
 	 */
-	IExecutorSupport getTaskExecutor();
+	ITaskExecutor getTaskExecutor();
 
 	/**
 	 * 获取会话
@@ -52,6 +53,15 @@ public interface ISessionSendMessageSupport extends IMakePackSupport {
 	 * 2019-12-11 16:35:24
 	 */
 	GGSession getSession();
+	
+	/**
+	 * 获取元数据提供者
+	 * 
+	 * @return
+	 * @author zai
+	 * 2019-12-12 16:10:38
+	 */
+	IMetadataProvider<?> getMetadataProvider();
 	
 	/**
 	 * 发送消息
@@ -99,6 +109,23 @@ public interface ISessionSendMessageSupport extends IMakePackSupport {
 	
 	/**
 	 * 发送消息
+	 * 
+	 * @param response
+	 * @return
+	 * @author zai
+	 * 2019-12-12 15:57:08
+	 */
+	default IGGFuture<?> send(Response response) {
+		if (response.getMetadata() != null) {
+			IMetadataProvider<?> metadataProvider = getMetadataProvider();
+			Object metadata = metadataProvider.provide(response.getSession());
+			response.setMetadata(metadata);			
+		}
+		return send(response, 0L, TimeUnit.MILLISECONDS);
+	}
+	
+	/**
+	 * 发送消息
 	 * @param pack
 	 * @return
 	 * 
@@ -124,8 +151,8 @@ public interface ISessionSendMessageSupport extends IMakePackSupport {
 		if (!session.isActive()) {
 			return GGFailedFuture.DEFAULT_FAILED_FUTURE;
 		}
-		Channel channel = getSession().getChannel();
-
+		Channel channel = session.getChannel();
+		
 		// 序列化后发送过滤器
 		if (!getFilterManager().doAfterSerializeFilters(pack)) {
 			return GGFailedFuture.DEFAULT_FAILED_FUTURE;

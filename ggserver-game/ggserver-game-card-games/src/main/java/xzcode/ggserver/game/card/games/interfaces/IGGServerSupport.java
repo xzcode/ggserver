@@ -1,6 +1,6 @@
 package xzcode.ggserver.game.card.games.interfaces;
 
-import xzcode.ggserver.core.server.GGServer;
+import xzcode.ggserver.core.server.IGGServer;
 
 /**
  * ggserver支持类
@@ -16,5 +16,5 @@ public interface IGGServerSupport {
 	 * @author zzz
 	 * 2019-09-21 14:01:28
 	 */
-	GGServer getGGServer();
+	IGGServer getGGServer();
 }

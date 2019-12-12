@@ -22,6 +22,8 @@ import xzcode.ggserver.core.common.handler.pack.IReceivePackHandler;
 import xzcode.ggserver.core.common.handler.pack.impl.DefaultReceivePackHandler;
 import xzcode.ggserver.core.common.handler.serializer.ISerializer;
 import xzcode.ggserver.core.common.handler.serializer.factory.SerializerFactory;
+import xzcode.ggserver.core.common.message.meta.provider.IMetadataProvider;
+import xzcode.ggserver.core.common.message.meta.provider.VoidMetadataProvider;
 import xzcode.ggserver.core.common.message.meta.resolver.IMetadataResolver;
 import xzcode.ggserver.core.common.message.meta.resolver.VoidMetadataResolver;
 import xzcode.ggserver.core.common.message.request.manager.IRequestMessageManager;
@@ -94,6 +96,8 @@ public class GGConfig {
 	
 	protected IMetadataResolver<?> metadataResolver;
 	
+	protected IMetadataProvider<?> metadataProvider;
+	
     
 	protected NioEventLoopGroup workerGroup;
 	
@@ -139,6 +143,10 @@ public class GGConfig {
 		
 		if (metadataResolver == null) {
 			metadataResolver = new VoidMetadataResolver();
+		}
+		
+		if (metadataProvider == null) {
+			metadataProvider = new VoidMetadataProvider();
 		}
 		
 		if (receivePackHandler == null) {
@@ -409,12 +417,21 @@ public class GGConfig {
 	public void setSoReuseaddr(boolean soReuseaddr) {
 		this.soReuseaddr = soReuseaddr;
 	}
+	
 	public IMetadataResolver<?> getMetadataResolver() {
 		return metadataResolver;
 	}
 	
 	public void setMetadataResolver(IMetadataResolver<?> metadataResolver) {
 		this.metadataResolver = metadataResolver;
+	}
+	
+	public IMetadataProvider<?> getMetadataProvider() {
+		return metadataProvider;
+	}
+	
+	public void setMetadataProvider(IMetadataProvider<?> metadataProvider) {
+		this.metadataProvider = metadataProvider;
 	}
 	
 }

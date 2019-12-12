@@ -3,7 +3,7 @@ package xzcode.ggserver.game.core.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import xzcode.ggserver.core.server.GGServer;
+import xzcode.ggserver.core.server.IGGServer;
 
 /**
  * ggs游戏控制器基类
@@ -19,7 +19,7 @@ public abstract class GGGameController implements IGGGameController{
 	/**
 	 * GGServer对象
 	 */
-	protected GGServer gg;
+	protected IGGServer gg;
 	
 	public GGGameController() {
 		this.gg = getGGServer();

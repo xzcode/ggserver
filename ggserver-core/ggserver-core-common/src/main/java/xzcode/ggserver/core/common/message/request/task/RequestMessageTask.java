@@ -4,6 +4,7 @@ import xzcode.ggserver.core.common.config.GGConfig;
 import xzcode.ggserver.core.common.filter.IFilterManager;
 import xzcode.ggserver.core.common.handler.serializer.ISerializer;
 import xzcode.ggserver.core.common.message.Pack;
+import xzcode.ggserver.core.common.message.meta.IMetadata;
 import xzcode.ggserver.core.common.message.meta.resolver.IMetadataResolver;
 import xzcode.ggserver.core.common.message.request.Request;
 import xzcode.ggserver.core.common.message.request.handler.IRequestMessageHandler;
@@ -33,8 +34,6 @@ public class RequestMessageTask implements Runnable{
 	public RequestMessageTask() {
 		
 	}
-	
-	
 
 	public RequestMessageTask(Pack pack, GGConfig config) {
 		this.pack = pack;
@@ -48,7 +47,7 @@ public class RequestMessageTask implements Runnable{
 		
 		ISerializer serializer = config.getSerializer();
 		IFilterManager messageFilterManager = this.config.getFilterManager();
-		Object metadata = null;
+		IMetadata metadata = null;
 		String action = new String(pack.getAction(), config.getCharset());
 		Object message = null;
 		GGSession session = pack.getSession();
@@ -60,7 +59,7 @@ public class RequestMessageTask implements Runnable{
 			
 			if (pack.getMetadata() != null) {
 				IMetadataResolver<?> metadataResolver = config.getMetadataResolver();
-				metadata = metadataResolver.resolve(pack.getMetadata());
+				metadata = (IMetadata) metadataResolver.resolve(pack.getMetadata());
 			}
 			
 			if (pack.getMessage() != null) {
