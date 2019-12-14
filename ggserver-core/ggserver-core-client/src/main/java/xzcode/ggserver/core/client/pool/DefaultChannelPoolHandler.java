@@ -23,7 +23,7 @@ public class DefaultChannelPoolHandler implements ChannelPoolHandler {
 
 	@Override
 	public void channelCreated(Channel ch) throws Exception {
-
+		
 	}
 
 }
