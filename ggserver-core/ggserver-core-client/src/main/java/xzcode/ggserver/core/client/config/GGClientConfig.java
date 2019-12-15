@@ -5,6 +5,7 @@ import io.netty.channel.pool.ChannelPool;
 import io.netty.channel.pool.ChannelPoolHandler;
 import io.netty.channel.pool.FixedChannelPool;
 import xzcode.ggserver.core.client.pool.DefaultChannelPoolHandler;
+import xzcode.ggserver.core.client.session.ClientChannelSessionFactory;
 import xzcode.ggserver.core.common.config.GGConfig;
 
 /**
@@ -31,6 +32,8 @@ public class GGClientConfig extends GGConfig{
 	
 	@Override
 	public void init() {
+		
+		this.sessionFactory = new ClientChannelSessionFactory(this);
 		
 		if (bootstrap == null) {
 			bootstrap = new Bootstrap();
