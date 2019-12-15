@@ -20,9 +20,9 @@ import xzcode.ggserver.core.common.utils.logger.GGLoggerUtil;
  */
 public class DefaultChannelSessionFactory implements ISessionFactory{
 	
-	private GGConfig config; 
+	protected GGConfig config; 
 	
-	private AttributeKey<GGSession> sessAttributeKey = AttributeKey.valueOf(DefaultChannelAttributeKeys.SESSION);
+	protected AttributeKey<GGSession> sessAttributeKey = AttributeKey.valueOf(DefaultChannelAttributeKeys.SESSION);
 	
 	
 	public DefaultChannelSessionFactory(GGConfig config) {
@@ -44,7 +44,7 @@ public class DefaultChannelSessionFactory implements ISessionFactory{
 	@Override
 	public void channelActive(Channel channel) {
 		//初始化session
-		DefaultChannelSession session = new DefaultChannelSession(channel, channel.id().asLongText(),config);
+		DefaultChannelSession session = new DefaultChannelSession(channel, channel.id().asLongText(), config);
 		
 		channel.attr(AttributeKey.valueOf(DefaultChannelAttributeKeys.SESSION)).set(session);
 		

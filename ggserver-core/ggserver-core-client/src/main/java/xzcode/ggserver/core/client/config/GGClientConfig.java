@@ -34,10 +34,10 @@ public class GGClientConfig extends GGConfig{
 		
 		if (bootstrap == null) {
 			bootstrap = new Bootstrap();
-			bootstrap.bind(host, port);
 		}
 		
 		if (channelPoolEnabled) {
+			bootstrap.bind(host, port);
 			if (channelPoolHandler == null) {
 				channelPoolHandler = new DefaultChannelPoolHandler();
 			}

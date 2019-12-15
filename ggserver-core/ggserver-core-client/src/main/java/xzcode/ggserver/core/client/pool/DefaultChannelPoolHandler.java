@@ -13,17 +13,17 @@ public class DefaultChannelPoolHandler implements ChannelPoolHandler {
 
 	@Override
 	public void channelReleased(Channel ch) throws Exception {
-
+		System.out.println("channelReleased----->");
 	}
 
 	@Override
 	public void channelAcquired(Channel ch) throws Exception {
-
+		System.out.println("channelAcquired----->");
 	}
 
 	@Override
 	public void channelCreated(Channel ch) throws Exception {
-		
+		System.out.println("channelCreated----->");
 	}
 
 }

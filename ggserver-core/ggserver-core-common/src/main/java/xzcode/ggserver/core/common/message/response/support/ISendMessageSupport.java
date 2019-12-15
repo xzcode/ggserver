@@ -80,6 +80,7 @@ public interface ISendMessageSupport extends IMakePackSupport {
 		return session.send(pack, delay, timeUnit);
 	}
 	
+	
 	/**
 	 * 发送消息
 	 * 
@@ -124,11 +125,11 @@ public interface ISendMessageSupport extends IMakePackSupport {
 	default IGGFuture send(Response response, long delay, TimeUnit timeUnit) {
 		GGSession session = response.getSession();
 		if (session != null) {
-			// 发送过滤器
-			if (!getFilterManager().doResponseFilters(response)) {
-				return null;
-			}
 			try {
+			// 发送过滤器
+				if (!getFilterManager().doResponseFilters(response)) {
+					return null;
+				}
 				if (session.isActive()) {
 					session.send(makePack(response), delay, timeUnit);
 				}

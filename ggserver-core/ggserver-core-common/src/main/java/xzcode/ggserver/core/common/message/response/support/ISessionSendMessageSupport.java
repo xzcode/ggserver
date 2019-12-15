@@ -4,7 +4,6 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -18,6 +17,7 @@ import xzcode.ggserver.core.common.message.meta.provider.IMetadataProvider;
 import xzcode.ggserver.core.common.message.response.Response;
 import xzcode.ggserver.core.common.session.GGSession;
 import xzcode.ggserver.core.common.utils.json.GGServerJsonUtil;
+import xzcode.ggserver.core.common.utils.logger.GGLoggerUtil;
 
 /**
  * 消息发送接口
@@ -171,9 +171,9 @@ public interface ISessionSendMessageSupport extends IMakePackSupport {
 			}
 			return future;
 		}
-		Logger logger = LoggerFactory.getLogger(ISessionSendMessageSupport.class);
+		Logger logger = GGLoggerUtil.getLogger();
 		if (logger.isDebugEnabled()) {
-			logger.debug("Channel is inactived! Message will not be send, SendModel:{}", GGServerJsonUtil.toJson(pack));
+			logger.debug("Channel is inactived! Message will not be send, Pack:{}", GGServerJsonUtil.toJson(pack));
 		}
 		return GGFailedFuture.DEFAULT_FAILED_FUTURE;
 	}
