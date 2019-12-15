@@ -13,42 +13,40 @@ import xzcode.ggserver.core.common.utils.logger.GGLoggerUtil;
 
 /**
  * 基于Netty Future进行外观的实现
- * @param <V>
  * 
  * @author zai
  * 2019-11-24 17:54:50
  */
-public class GGNettyFacadeFuture<V> implements IGGFuture<V> {
+public class GGNettyFacadeFuture implements IGGFuture {
 	
-	private io.netty.util.concurrent.Future<V> nettyFuture;
+	private io.netty.util.concurrent.Future<?> nettyFuture;
 	
 	
-	private List<IGGFutureListener<IGGFuture<?>>> futureListeners;
+	private List<IGGFutureListener<IGGFuture>> futureListeners;
 	
 	public GGNettyFacadeFuture() {
 	}
 	
-	public GGNettyFacadeFuture(Future<V> nettyFuture) {
+	public GGNettyFacadeFuture(Future<?> nettyFuture) {
 		this.setFuture(nettyFuture);
 	}
 
-	@SuppressWarnings("unchecked")
 	public void setFuture(Future<?> future) {
 		if (this.nettyFuture != null) {
 			return;
 		}
-		this.nettyFuture = (io.netty.util.concurrent.Future<V>) future;
+		this.nettyFuture = (io.netty.util.concurrent.Future<?>) future;
 		if (this.futureListeners != null) {
 			nettyFuture.addListener((f) -> {
-				for (IGGFutureListener<IGGFuture<?>> listener : futureListeners) {
-					listener.operationComplete(new GGNettyFacadeFuture<V>((Future<V>) f));
+				for (IGGFutureListener<IGGFuture> listener : futureListeners) {
+					listener.operationComplete(new GGNettyFacadeFuture((Future<?>) f));
 				}
 			});
 		}
 	}
 
 	@Override
-	public void addListener(IGGFutureListener<IGGFuture<?>> listener) {
+	public void addListener(IGGFutureListener<IGGFuture> listener) {
 			
 		try {
 			if (this.futureListeners == null) {
@@ -60,7 +58,7 @@ public class GGNettyFacadeFuture<V> implements IGGFuture<V> {
 				return;
 			}
 			this.futureListeners.add(listener);	
-			listener.operationComplete(new GGNettyFacadeFuture<V>(this.nettyFuture));
+			listener.operationComplete(new GGNettyFacadeFuture(this.nettyFuture));
 		} catch (Exception e) {
 			GGLoggerUtil.getLogger().error("IGGFuture 'operationComplete' Error!", e);
 		}
@@ -94,12 +92,12 @@ public class GGNettyFacadeFuture<V> implements IGGFuture<V> {
 	}
 
 	@Override
-	public V get() throws InterruptedException, ExecutionException {
+	public Object get() throws InterruptedException, ExecutionException {
 		return this.nettyFuture.get();
 	}
 
 	@Override
-	public V get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
+	public Object get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
 		return this.nettyFuture.get(timeout, unit);
 	}
 

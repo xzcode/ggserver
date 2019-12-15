@@ -22,7 +22,7 @@ public interface ITaskExecutor {
 	 * @author zai
 	 * 2019-12-01 15:55:00
 	 */
-	IGGFuture<?> submitTask(Runnable runnable);
+	IGGFuture submitTask(Runnable runnable);
 	
 	
 	/**
@@ -34,7 +34,7 @@ public interface ITaskExecutor {
 	 * @author zai
 	 * 2019-12-01 15:56:05
 	 */
-	<V> IGGFuture<V> submitTask(Callable<V> callable);
+	<V> IGGFuture submitTask(Callable<V> callable);
 	
 	/**
 	 * 执行计划任务
@@ -46,7 +46,7 @@ public interface ITaskExecutor {
 	 * @author zai
 	 * 2019-12-01 15:46:16
 	 */
-	IGGFuture<?> schedule(long delay, TimeUnit timeUnit, Runnable runnable);
+	IGGFuture schedule(long delay, TimeUnit timeUnit, Runnable runnable);
 	
 	/**
 	 * 计划任务
@@ -59,7 +59,7 @@ public interface ITaskExecutor {
 	 * @author zai
 	 * 2019-12-01 15:47:11
 	 */
-	<V> IGGFuture<V> schedule(long delay, TimeUnit timeUnit, Callable<V> callable);
+	<V> IGGFuture schedule(long delay, TimeUnit timeUnit, Callable<V> callable);
 	
 	/**
 	 * 等待指定future执行完成后再进行计划任务的执行
@@ -72,7 +72,7 @@ public interface ITaskExecutor {
 	 * @author zai
 	 * 2019-12-01 15:46:16
 	 */
-	IGGFuture<?> scheduleAfter(IGGFuture<?> afterFuture, long delay, TimeUnit timeUnit, Runnable runnable);
+	IGGFuture scheduleAfter(IGGFuture afterFuture, long delay, TimeUnit timeUnit, Runnable runnable);
 	/**
 	 * 等待指定future执行完成后再进行计划任务的执行
 	 * @param <V> callable回调类型
@@ -85,7 +85,7 @@ public interface ITaskExecutor {
 	 * @author zai
 	 * 2019-12-01 15:46:16
 	 */
-	<V> IGGFuture<V> scheduleAfter(IGGFuture<?> afterFuture, long delay, TimeUnit timeUnit, Callable<V> callable);
+	<V> IGGFuture scheduleAfter(IGGFuture afterFuture, long delay, TimeUnit timeUnit, Callable<V> callable);
 
 	/**
 	 * 固定延迟计划任务
@@ -98,7 +98,7 @@ public interface ITaskExecutor {
 	 * @author zai
 	 * 2019-12-01 15:48:27
 	 */
-	IGGFuture<?> scheduleWithFixedDelay(long initialDelay, long delay, TimeUnit timeUnit, Runnable runnable);
+	IGGFuture scheduleWithFixedDelay(long initialDelay, long delay, TimeUnit timeUnit, Runnable runnable);
 	
 	
 	

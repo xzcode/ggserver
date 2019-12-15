@@ -9,10 +9,10 @@ import java.util.concurrent.Future;
  * @author zai
  * 2019-11-24 17:35:47
  */
-public interface IGGFuture<V> extends Future<V>{
+public interface IGGFuture extends Future<Object>{
 
 
-	void addListener(IGGFutureListener<IGGFuture<?>> listener);
+	void addListener(IGGFutureListener<IGGFuture> listener);
 
 	boolean cancel();
 

@@ -5,7 +5,6 @@ import io.netty.util.AttributeKey;
 import xzcode.ggserver.core.common.config.GGConfig;
 import xzcode.ggserver.core.common.future.GGNettyFacadeFuture;
 import xzcode.ggserver.core.common.future.IGGFuture;
-import xzcode.ggserver.core.common.message.meta.provider.IMetadataProvider;
 
 /**
  * sesson默认实现
@@ -45,8 +44,8 @@ public class DefaultChannelSession extends AbstractSession<GGConfig> {
 	}
 
 	@Override
-	public IGGFuture<?> disconnect() {
-		return new GGNettyFacadeFuture<>(this.channel.close());
+	public IGGFuture disconnect() {
+		return new GGNettyFacadeFuture(this.channel.close());
 	}
 
 	@Override

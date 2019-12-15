@@ -18,38 +18,38 @@ public interface IExecutorSupport extends ITaskExecutor {
 	ITaskExecutor getTaskExecutor();
 
 	@Override
-	default IGGFuture<?> submitTask(Runnable runnable) {
+	default IGGFuture submitTask(Runnable runnable) {
 		return getTaskExecutor().submitTask(runnable);
 	}
 
 	@Override
-	default <V> IGGFuture<V> submitTask(Callable<V> callable) {
+	default <V> IGGFuture submitTask(Callable<V> callable) {
 		return getTaskExecutor().submitTask(callable);
 	}
 
 	@Override
-	default IGGFuture<?> schedule(long delay, TimeUnit timeUnit, Runnable runnable) {
+	default IGGFuture schedule(long delay, TimeUnit timeUnit, Runnable runnable) {
 		return  getTaskExecutor().schedule(delay, timeUnit, runnable);
 	}
 
 	@Override
-	default <V> IGGFuture<V> schedule(long delay, TimeUnit timeUnit, Callable<V> callable) {
+	default <V> IGGFuture schedule(long delay, TimeUnit timeUnit, Callable<V> callable) {
 		return  getTaskExecutor().schedule(delay, timeUnit, callable);
 	}
 
 	@Override
-	default IGGFuture<?> scheduleAfter(IGGFuture<?> afterFuture, long delay, TimeUnit timeUnit, Runnable runnable) {
+	default IGGFuture scheduleAfter(IGGFuture afterFuture, long delay, TimeUnit timeUnit, Runnable runnable) {
 		return  getTaskExecutor().scheduleAfter(afterFuture, delay, timeUnit, runnable);
 	}
 
 	@Override
-	default <V> IGGFuture<V> scheduleAfter(IGGFuture<?> afterFuture, long delay, TimeUnit timeUnit,
+	default <V> IGGFuture scheduleAfter(IGGFuture afterFuture, long delay, TimeUnit timeUnit,
 			Callable<V> callable) {
 		return  getTaskExecutor().scheduleAfter(afterFuture, delay, timeUnit, callable);
 	}
 
 	@Override
-	default IGGFuture<?> scheduleWithFixedDelay(long initialDelay, long delay, TimeUnit timeUnit, Runnable runnable) {
+	default IGGFuture scheduleWithFixedDelay(long initialDelay, long delay, TimeUnit timeUnit, Runnable runnable) {
 		return getTaskExecutor().scheduleWithFixedDelay(initialDelay, delay, timeUnit, runnable);
 	}
 	

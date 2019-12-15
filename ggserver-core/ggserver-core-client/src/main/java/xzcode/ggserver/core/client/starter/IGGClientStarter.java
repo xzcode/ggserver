@@ -8,7 +8,7 @@ public interface IGGClientStarter {
 	
 	GGSession connect(String host, int port);
 	
-	IGGFuture<?> disconnect(GGSession session);
+	IGGFuture disconnect(GGSession session);
 	
 	void setConfig(GGClientConfig config);
 	

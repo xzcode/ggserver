@@ -22,7 +22,7 @@ public abstract class OperQueuedRoom<R> extends Room<RoomPlayer<R>, R>{
 	
 	
 	
-	protected IGGFuture<?> operactionTaskFuture;
+	protected IGGFuture operactionTaskFuture;
 	
 	/**
 	 * 添加操作到队列
