@@ -139,6 +139,18 @@ public interface ISendMessageSupport extends IMakePackSupport {
 		}
 		return null;
 	}
+
+	/**
+	 * 发送包
+	 * 
+	 * @param pack
+	 * @return
+	 * @author zai
+	 * 2019-12-16 10:20:47
+	 */
+	default IGGFuture send(Pack pack) {
+		return send(null, pack, 0L, TimeUnit.MILLISECONDS);
+	}
 	
 	
 }

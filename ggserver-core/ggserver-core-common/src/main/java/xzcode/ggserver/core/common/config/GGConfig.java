@@ -111,13 +111,7 @@ public class GGConfig {
 		requestMessageManager = new RequestMessageManager();
 		filterManager = new DefaultFilterManager();
 		eventManager = new DefaultEventManager();
-		if (sessionManager == null) {
-			sessionManager = new DefaultSessionManager(this);			
-		}
 		
-		if (sessionFactory == null) {
-			sessionFactory = new DefaultChannelSessionFactory(this);
-		}
 		
 		if (channelGroupManager == null) {
 			channelGroupManager = new GGChannelGroupManager(this);
@@ -154,6 +148,14 @@ public class GGConfig {
 		}
 		if (serializer == null) {
 			serializer = SerializerFactory.geSerializer(serializerType);
+		}
+		
+		if (sessionManager == null) {
+			sessionManager = new DefaultSessionManager(this);			
+		}
+		
+		if (sessionFactory == null) {
+			sessionFactory = new DefaultChannelSessionFactory(this);
 		}
 		
 		this.inited = true;

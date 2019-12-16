@@ -3,8 +3,6 @@ package xzcode.ggserver.core.client.config;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.pool.ChannelPool;
 import io.netty.channel.pool.ChannelPoolHandler;
-import io.netty.channel.pool.FixedChannelPool;
-import xzcode.ggserver.core.client.pool.DefaultChannelPoolHandler;
 import xzcode.ggserver.core.client.session.ClientChannelSessionFactory;
 import xzcode.ggserver.core.common.config.GGConfig;
 
@@ -34,20 +32,6 @@ public class GGClientConfig extends GGConfig{
 	public void init() {
 		
 		this.sessionFactory = new ClientChannelSessionFactory(this);
-		
-		if (bootstrap == null) {
-			bootstrap = new Bootstrap();
-		}
-		
-		if (channelPoolEnabled) {
-			bootstrap.bind(host, port);
-			if (channelPoolHandler == null) {
-				channelPoolHandler = new DefaultChannelPoolHandler();
-			}
-			if (channelPool == null) {
-				channelPool = new FixedChannelPool(bootstrap, channelPoolHandler, channelMaxConnections);
-			}
-		}
 		super.init();
 	}
 

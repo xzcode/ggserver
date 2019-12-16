@@ -8,10 +8,13 @@ import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelOption;
+import io.netty.channel.pool.FixedChannelPool;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
+import io.netty.util.concurrent.Future;
 import xzcode.ggserver.core.client.config.GGClientConfig;
+import xzcode.ggserver.core.client.pool.DefaultChannelPoolHandler;
 import xzcode.ggserver.core.client.starter.IGGClientStarter;
 import xzcode.ggserver.core.common.future.IGGFuture;
 import xzcode.ggserver.core.common.handler.SocketChannelInitializer;
@@ -33,10 +36,12 @@ public class DefaultClientStarter implements IGGClientStarter {
     
     public void init() {
     	
-    	Bootstrap boot = config.getBootstrap();
+    	Bootstrap boot = new Bootstrap();
 
         //设置工作线程组
         boot.group(config.getWorkerGroup());
+        
+        
         
         if (logger.isDebugEnabled()) {
         	boot.handler(new LoggingHandler(LogLevel.INFO));				
@@ -51,6 +56,27 @@ public class DefaultClientStarter implements IGGClientStarter {
         boot.handler(new SocketChannelInitializer(config));
         
         boot.option(ChannelOption.SO_BACKLOG, config.getSoBacklog());  
+        boot.option(ChannelOption.TCP_NODELAY, true);  
+        
+      //判断是否开启通道池
+        if (config.isChannelPoolEnabled()) {
+        	
+        	boot.remoteAddress(config.getHost(), config.getPort());
+        	
+			if (config.getChannelPoolHandler() == null) {
+				config.setChannelPoolHandler(new DefaultChannelPoolHandler());
+			}
+			if (config.getChannelPool() == null) {
+				config.setChannelPool(new FixedChannelPool(boot, config.getChannelPoolHandler(), config.getChannelMaxConnections()));
+				/*
+				Future<Channel> acquire = config.getChannelPool().acquire();
+				acquire.addListener((Future<Channel> f) -> {
+					Channel channel = f.getNow();
+					System.out.println(channel);
+				});
+				*/
+			}
+		}
 	}
     
     

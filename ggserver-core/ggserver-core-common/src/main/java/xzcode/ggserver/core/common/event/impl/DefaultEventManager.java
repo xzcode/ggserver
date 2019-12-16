@@ -18,33 +18,22 @@ import xzcode.ggserver.core.common.event.model.EventData;
 public class DefaultEventManager implements IEventManager {
 	
 	
-	protected Map<String, IEventListenerGroup<?>> eventMap;
+	protected Map<String, IEventListenerGroup<?>> eventMap = new ConcurrentHashMap<>(4);
 
 
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> void emitEvent(String event, EventData<T> eventData) {
-		if (eventMap != null) {
-			IEventListenerGroup<T> group = (IEventListenerGroup<T>) eventMap.get(event);
-			if (group != null) {
-				group.onEvent(eventData);
-			}
+		IEventListenerGroup<T> group = (IEventListenerGroup<T>) eventMap.get(event);
+		if (group != null) {
+			group.onEvent(eventData);
 		}
-		
 	}
 	
 	@Override
 	@SuppressWarnings("unchecked")
 	public <T> void addEventListener(String event, IEventListener<T> listener) {
-		if (eventMap == null) {
-			synchronized (this) {
-				if (eventMap == null) {
-					eventMap = new ConcurrentHashMap<>(4);
-				}
-			}
-			
-		}
 		IEventListenerGroup<T> group = null;
 		group = (IEventListenerGroup<T>) eventMap.get(event);
 		if (group == null) {
