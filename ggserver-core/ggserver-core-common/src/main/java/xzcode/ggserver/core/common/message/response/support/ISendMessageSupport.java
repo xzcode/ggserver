@@ -76,9 +76,10 @@ public interface ISendMessageSupport extends IMakePackSupport {
 	 * @author zai
 	 * 2019-11-27 22:09:31
 	 */
-	default IGGFuture<?> send(GGSession session, Pack pack, long delay, TimeUnit timeUnit) {
+	default IGGFuture send(GGSession session, Pack pack, long delay, TimeUnit timeUnit) {
 		return session.send(pack, delay, timeUnit);
 	}
+	
 	
 	/**
 	 * 发送消息
@@ -90,7 +91,7 @@ public interface ISendMessageSupport extends IMakePackSupport {
 	 * @author zai
 	 * 2019-11-29 15:24:23
 	 */
-	default IGGFuture<?> send(GGSession session, String action, Object message) {
+	default IGGFuture send(GGSession session, String action, Object message) {
 		return send(new Response(session, null, action, message), 0L, TimeUnit.MILLISECONDS);
 	}
 	
@@ -106,7 +107,7 @@ public interface ISendMessageSupport extends IMakePackSupport {
 	 * @author zai
 	 * 2019-11-29 15:23:47
 	 */
-	default IGGFuture<?> send(GGSession session, String action, Object message, long delay, TimeUnit timeUnit) {
+	default IGGFuture send(GGSession session, String action, Object message, long delay, TimeUnit timeUnit) {
 		return send(new Response(session, null, action, message), delay, timeUnit);
 	}
 
@@ -121,14 +122,14 @@ public interface ISendMessageSupport extends IMakePackSupport {
 	 * @author zai
 	 * 2019-11-27 21:53:08
 	 */
-	default IGGFuture<?> send(Response response, long delay, TimeUnit timeUnit) {
+	default IGGFuture send(Response response, long delay, TimeUnit timeUnit) {
 		GGSession session = response.getSession();
 		if (session != null) {
-			// 发送过滤器
-			if (!getFilterManager().doResponseFilters(response)) {
-				return null;
-			}
 			try {
+			// 发送过滤器
+				if (!getFilterManager().doResponseFilters(response)) {
+					return null;
+				}
 				if (session.isActive()) {
 					session.send(makePack(response), delay, timeUnit);
 				}

@@ -12,7 +12,7 @@ public interface IGGContolSupport extends  IExecutorSupport{
 	 * 
 	 * @author zai 2017-09-21
 	 */
-	default IGGFuture<?> disconnect() {
+	default IGGFuture disconnect() {
 		return disconnect(null, 0);
 	}
 	
@@ -21,7 +21,7 @@ public interface IGGContolSupport extends  IExecutorSupport{
 	 * 
 	 * @author zai 2017-09-21
 	 */
-	default IGGFuture<?>  disconnect(long delayMs) {
+	default IGGFuture  disconnect(long delayMs) {
 		return disconnect(null, delayMs);
 	}
 
@@ -31,7 +31,7 @@ public interface IGGContolSupport extends  IExecutorSupport{
 	 * @param userId
 	 * @author zai 2017-08-19 01:12:07
 	 */
-	default IGGFuture<?>  disconnect(GGSession session) {
+	default IGGFuture  disconnect(GGSession session) {
 		return disconnect(session, 0);
 	}
 	
@@ -43,7 +43,7 @@ public interface IGGContolSupport extends  IExecutorSupport{
 	 * @author zai
 	 * 2019-04-17 11:18:43
 	 */
-	default IGGFuture<?>  disconnect(GGSession session, long delayMs) {
+	default IGGFuture  disconnect(GGSession session, long delayMs) {
 		return session.disconnect();
 	}
 	

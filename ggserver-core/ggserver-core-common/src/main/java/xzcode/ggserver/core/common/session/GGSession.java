@@ -21,7 +21,7 @@ public interface GGSession extends ISessionSendMessageSupport, IExecutorSupport 
 
 	<T> T getAttribute(String key, Class<T> t);
 
-	IGGFuture<?> disconnect();
+	IGGFuture disconnect();
 	
 	String getHost();
 	

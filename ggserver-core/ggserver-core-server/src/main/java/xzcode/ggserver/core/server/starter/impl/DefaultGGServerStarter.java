@@ -36,7 +36,7 @@ public class DefaultGGServerStarter implements IGGServerStarter {
     	this.config = config;
     }
     
-    public IGGFuture<?> start() {
+    public IGGFuture start() {
     	
         try {
         	
@@ -67,7 +67,7 @@ public class DefaultGGServerStarter implements IGGServerStarter {
             
             serverChannel = future.channel();
             
-            return new GGNettyFacadeFuture<>(future);
+            return new GGNettyFacadeFuture(future);
             
         }catch (Exception e) {
         	throw new RuntimeException("GGServer start failed !! ", e);

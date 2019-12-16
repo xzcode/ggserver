@@ -4,7 +4,6 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -18,6 +17,7 @@ import xzcode.ggserver.core.common.message.meta.provider.IMetadataProvider;
 import xzcode.ggserver.core.common.message.response.Response;
 import xzcode.ggserver.core.common.session.GGSession;
 import xzcode.ggserver.core.common.utils.json.GGServerJsonUtil;
+import xzcode.ggserver.core.common.utils.logger.GGLoggerUtil;
 
 /**
  * 消息发送接口
@@ -73,7 +73,7 @@ public interface ISessionSendMessageSupport extends IMakePackSupport {
 	 * @author zai
 	 * 2019-11-29 15:26:11
 	 */
-	default IGGFuture<?> send(GGSession session, String action, Object message) {
+	default IGGFuture send(GGSession session, String action, Object message) {
 		return send(new Response(session, null, action, message), 0L, TimeUnit.MILLISECONDS);
 	}
 	
@@ -89,7 +89,7 @@ public interface ISessionSendMessageSupport extends IMakePackSupport {
 	 * @author zai
 	 * 2019-11-29 15:26:18
 	 */
-	default IGGFuture<?> send(GGSession session, String action, Object message, long delay, TimeUnit timeUnit) {
+	default IGGFuture send(GGSession session, String action, Object message, long delay, TimeUnit timeUnit) {
 		return send(new Response(session, null, action, message), delay, timeUnit);
 	}
 	
@@ -103,7 +103,7 @@ public interface ISessionSendMessageSupport extends IMakePackSupport {
 	 * 
 	 * @author zai 2019-11-24 17:29:24
 	 */
-	default IGGFuture<?> send(Response response, long delay, TimeUnit timeUnit) {
+	default IGGFuture send(Response response, long delay, TimeUnit timeUnit) {
 		return send(makePack(response), delay, timeUnit);
 	}
 	
@@ -115,7 +115,7 @@ public interface ISessionSendMessageSupport extends IMakePackSupport {
 	 * @author zai
 	 * 2019-12-12 15:57:08
 	 */
-	default IGGFuture<?> send(Response response) {
+	default IGGFuture send(Response response) {
 		if (response.getMetadata() != null) {
 			IMetadataProvider<?> metadataProvider = getMetadataProvider();
 			Object metadata = metadataProvider.provide(response.getSession());
@@ -132,7 +132,7 @@ public interface ISessionSendMessageSupport extends IMakePackSupport {
 	 * @author zai
 	 * 2019-12-01 16:45:12
 	 */
-	default IGGFuture<?> send(Pack pack) {
+	default IGGFuture send(Pack pack) {
 		return send(pack, 0, TimeUnit.MILLISECONDS);
 	}
 
@@ -146,7 +146,7 @@ public interface ISessionSendMessageSupport extends IMakePackSupport {
 	 * 
 	 * @author zai 2019-11-24 23:08:36
 	 */
-	default IGGFuture<?> send(Pack pack, long delay, TimeUnit timeUnit) {
+	default IGGFuture send(Pack pack, long delay, TimeUnit timeUnit) {
 		GGSession session = pack.getSession();
 		if (!session.isActive()) {
 			return GGFailedFuture.DEFAULT_FAILED_FUTURE;
@@ -158,7 +158,7 @@ public interface ISessionSendMessageSupport extends IMakePackSupport {
 			return GGFailedFuture.DEFAULT_FAILED_FUTURE;
 		}
 		if (channel.isActive()) {
-			GGNettyFacadeFuture<?> future = new GGNettyFacadeFuture<>();
+			GGNettyFacadeFuture future = new GGNettyFacadeFuture();
 			if (delay <= 0) {
 				ChannelFuture channelFuture = channel.writeAndFlush(pack);
 				future.setFuture((Future<?>) channelFuture);
@@ -171,9 +171,9 @@ public interface ISessionSendMessageSupport extends IMakePackSupport {
 			}
 			return future;
 		}
-		Logger logger = LoggerFactory.getLogger(ISessionSendMessageSupport.class);
+		Logger logger = GGLoggerUtil.getLogger();
 		if (logger.isDebugEnabled()) {
-			logger.debug("Channel is inactived! Message will not be send, SendModel:{}", GGServerJsonUtil.toJson(pack));
+			logger.debug("Channel is inactived! Message will not be send, Pack:{}", GGServerJsonUtil.toJson(pack));
 		}
 		return GGFailedFuture.DEFAULT_FAILED_FUTURE;
 	}

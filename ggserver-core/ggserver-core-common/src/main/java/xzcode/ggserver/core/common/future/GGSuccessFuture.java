@@ -15,7 +15,7 @@ import xzcode.ggserver.core.common.utils.logger.GGLoggerUtil;
  * @author zai
  * 2019-12-01 16:28:44
  */
-public class GGSuccessFuture<V> implements IGGFuture<V> {
+public class GGSuccessFuture<V> implements IGGFuture {
 	
 	public static final GGSuccessFuture<?> DEFAULT_SUCCESS_FUTURE = new GGSuccessFuture<>();
 	
@@ -45,7 +45,7 @@ public class GGSuccessFuture<V> implements IGGFuture<V> {
 	}
 
 	@Override
-	public void addListener(IGGFutureListener<IGGFuture<?>> listener) {
+	public void addListener(IGGFutureListener<IGGFuture> listener) {
 		try {
 			listener.operationComplete(DEFAULT_SUCCESS_FUTURE);
 		} catch (Exception e) {

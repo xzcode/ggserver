@@ -10,14 +10,14 @@ import xzcode.ggserver.core.common.utils.logger.GGLoggerUtil;
 
 /**
  * 默认失败future
- * @param <V>
+ * @param 
  * 
  * @author zai
  * 2019-12-01 16:28:44
  */
-public class GGFailedFuture<V> implements IGGFuture<V> {
+public class GGFailedFuture implements IGGFuture {
 	
-	public static final GGFailedFuture<?> DEFAULT_FAILED_FUTURE = new GGFailedFuture<>();
+	public static final GGFailedFuture DEFAULT_FAILED_FUTURE = new GGFailedFuture();
 	
 	@Override
 	public boolean cancel(boolean mayInterruptIfRunning) {
@@ -35,17 +35,17 @@ public class GGFailedFuture<V> implements IGGFuture<V> {
 	}
 
 	@Override
-	public V get() throws InterruptedException, ExecutionException {
+	public Object get() throws InterruptedException, ExecutionException {
 		return null;
 	}
 
 	@Override
-	public V get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
+	public Object get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
 		return null;
 	}
 
 	@Override
-	public void addListener(IGGFutureListener<IGGFuture<?>> listener) {
+	public void addListener(IGGFutureListener<IGGFuture> listener) {
 		try {
 			listener.operationComplete(DEFAULT_FAILED_FUTURE);
 		} catch (Exception e) {

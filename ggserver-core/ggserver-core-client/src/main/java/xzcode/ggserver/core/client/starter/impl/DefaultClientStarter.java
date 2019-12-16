@@ -69,7 +69,7 @@ public class DefaultClientStarter implements IGGClientStarter {
     
 
 	@Override
-	public IGGFuture<?> disconnect(GGSession session) {
+	public IGGFuture disconnect(GGSession session) {
 		return session.disconnect();
 	}
 	

@@ -9,7 +9,7 @@ import java.util.EventListener;
  * @author zai
  * 2019-11-24 17:49:22
  */
-public interface IGGFutureListener<F extends IGGFuture<?>> extends EventListener{
+public interface IGGFutureListener<F extends IGGFuture> extends EventListener{
 
 	/**
 	 * 操作完成调用
