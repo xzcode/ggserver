@@ -55,8 +55,8 @@ public class Request<T> {
 		return metadata;
 	}
 	
-	@SuppressWarnings("unchecked")
-	public T getMetadata(Class<T> clazz) {
+	@SuppressWarnings({ "unchecked", "hiding" })
+	public <T> T getMetadata(Class<T> clazz) {
 		return (T) metadata;
 	}
 

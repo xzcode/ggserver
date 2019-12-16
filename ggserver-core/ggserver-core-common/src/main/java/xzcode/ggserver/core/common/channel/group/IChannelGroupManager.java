@@ -32,16 +32,6 @@ public interface IChannelGroupManager {
 	IChannelGroup getChannelGroup(String channelGroupId);
 	
 	/**
-	 * 获取通道组
-	 * @param channel 通道
-	 * @return
-	 * 
-	 * @author zai
-	 * 2019-12-01 20:24:35
-	 */
-	IChannelGroup getChannelGroup(Channel channel);
-	
-	/**
 	 * 删除通道组
 	 * @param channelGroupId
 	 * @return
@@ -85,11 +75,11 @@ public interface IChannelGroupManager {
 
 	/**
 	 * 根据通道移除通道组
-	 * @param channel
+	 * @param channelGroup
 	 * 
 	 * @author zai
 	 * 2019-12-01 17:53:23
 	 */
-	void removeChannelGroup(Channel channel);
+	void removeChannelGroup(IChannelGroup channelGroup);
 	
 }

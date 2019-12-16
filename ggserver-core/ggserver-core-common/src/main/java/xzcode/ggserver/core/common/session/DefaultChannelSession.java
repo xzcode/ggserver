@@ -49,12 +49,6 @@ public class DefaultChannelSession extends AbstractSession<GGConfig> {
 	}
 
 	@Override
-	public boolean isActive() {
-		return channel.isActive();
-	}
-
-
-	@Override
 	public Channel getChannel() {
 		return channel;
 	}

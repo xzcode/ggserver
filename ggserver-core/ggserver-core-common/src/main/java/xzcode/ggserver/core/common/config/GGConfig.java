@@ -5,8 +5,6 @@ import java.util.concurrent.ThreadFactory;
 
 import io.netty.channel.nio.NioEventLoopGroup;
 import nonapi.io.github.classgraph.concurrency.SimpleThreadFactory;
-import xzcode.ggserver.core.common.channel.group.IChannelGroupManager;
-import xzcode.ggserver.core.common.channel.group.impl.GGChannelGroupManager;
 import xzcode.ggserver.core.common.constant.GGServerTypeConstants;
 import xzcode.ggserver.core.common.event.IEventManager;
 import xzcode.ggserver.core.common.event.impl.DefaultEventManager;
@@ -78,8 +76,6 @@ public class GGConfig {
 	
 	protected long 		sessionExpireMs = 2L * 60L * 1000L;
 	
-	protected IChannelGroupManager channelGroupManager;
-	
 	protected ISessionFactory sessionFactory;
 	
 	protected ISerializer serializer;
@@ -111,11 +107,6 @@ public class GGConfig {
 		requestMessageManager = new RequestMessageManager();
 		filterManager = new DefaultFilterManager();
 		eventManager = new DefaultEventManager();
-		
-		
-		if (channelGroupManager == null) {
-			channelGroupManager = new GGChannelGroupManager(this);
-		}
 		
 		if (workerGroupThreadFactory == null) {
 			workerGroupThreadFactory = new SimpleThreadFactory("netty-worker-", false);
@@ -394,14 +385,6 @@ public class GGConfig {
 	
 	public void setSessionFactory(ISessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
-	}
-
-	public IChannelGroupManager getChannelGroupManager() {
-		return channelGroupManager;
-	}
-
-	public void setChannelGroupManager(IChannelGroupManager channelGroupManager) {
-		this.channelGroupManager = channelGroupManager;
 	}
 
 	public long getSessionExpireMs() {

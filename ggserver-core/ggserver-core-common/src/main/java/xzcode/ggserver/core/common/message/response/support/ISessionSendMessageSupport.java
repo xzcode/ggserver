@@ -147,11 +147,13 @@ public interface ISessionSendMessageSupport extends IMakePackSupport {
 	 * @author zai 2019-11-24 23:08:36
 	 */
 	default IGGFuture send(Pack pack, long delay, TimeUnit timeUnit) {
+		
 		GGSession session = pack.getSession();
-		if (!session.isActive()) {
+		Channel channel = session.getChannel();
+		
+		if (channel != null && !channel.isActive()) {
 			return GGFailedFuture.DEFAULT_FAILED_FUTURE;
 		}
-		Channel channel = session.getChannel();
 		
 		// 序列化后发送过滤器
 		if (!getFilterManager().doAfterSerializeFilters(pack)) {

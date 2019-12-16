@@ -44,9 +44,6 @@ public class DefaultSessionManager implements ISessionManager {
 				if (session.isExpired()) {
 					it.remove();
 				}
-				else if (!session.isActive()) {
-					it.remove();
-				}
 				session.disconnect();
 			}
 		});

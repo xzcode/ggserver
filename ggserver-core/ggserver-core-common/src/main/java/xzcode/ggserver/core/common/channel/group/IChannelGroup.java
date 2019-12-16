@@ -39,15 +39,6 @@ public interface IChannelGroup{
 	void removeChannel(Channel channel);
 	
 	/**
-	 * 关闭所有通道
-	 * 
-	 * 
-	 * @author zai
-	 * 2019-11-03 20:43:48
-	 */
-	void shutdown();
-	
-	/**
 	 * 随机获取一个通道
 	 * @return
 	 * 
@@ -56,13 +47,4 @@ public interface IChannelGroup{
 	 */
 	Channel getRandomChannel();
 
-	/**
-	 * 通道组是否可用
-	 * @return
-	 * 
-	 * @author zai
-	 * 2019-11-03 22:23:16
-	 */
-	boolean isActive();
-	
 }

@@ -54,9 +54,7 @@ public interface ISendMessageSupport extends IMakePackSupport {
 			Pack pack = makePack(response);
 			ISessionManager sessionManager = getSessionManager();
 			sessionManager.eachSession(session -> {
-				if (session.isActive()) {
-					session.send(pack, 0L, TimeUnit.MILLISECONDS);
-				}
+				session.send(pack, 0L, TimeUnit.MILLISECONDS);
 				return true;
 			});
 		} catch (Exception e) {
@@ -130,9 +128,7 @@ public interface ISendMessageSupport extends IMakePackSupport {
 				if (!getFilterManager().doResponseFilters(response)) {
 					return null;
 				}
-				if (session.isActive()) {
-					session.send(makePack(response), delay, timeUnit);
-				}
+				session.send(makePack(response), delay, timeUnit);
 			} catch (Exception e) {
 				GGLoggerUtil.getLogger().error("Send message Error!", e);
 			}

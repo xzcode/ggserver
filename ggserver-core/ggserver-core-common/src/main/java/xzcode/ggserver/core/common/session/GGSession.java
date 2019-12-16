@@ -31,8 +31,6 @@ public interface GGSession extends ISessionSendMessageSupport, IExecutorSupport 
 	
 	void setPort(int port);
 
-	boolean isActive();
-
 	String getSessonId();
 
 	Channel getChannel();
