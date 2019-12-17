@@ -7,7 +7,7 @@ import xzcode.ggserver.core.common.message.Pack;
 import xzcode.ggserver.core.common.message.meta.IMetadata;
 import xzcode.ggserver.core.common.message.meta.resolver.IMetadataResolver;
 import xzcode.ggserver.core.common.message.request.Request;
-import xzcode.ggserver.core.common.message.request.handler.IRequestMessageHandler;
+import xzcode.ggserver.core.common.message.request.handler.IRequestMessageHandlerInfo;
 import xzcode.ggserver.core.common.session.GGSession;
 import xzcode.ggserver.core.common.utils.logger.GGLoggerUtil;
 
@@ -63,7 +63,7 @@ public class RequestMessageTask implements Runnable{
 			}
 			
 			if (pack.getMessage() != null) {
-				IRequestMessageHandler messageHandler = config.getRequestMessageManager().getMessageHandler(action);
+				IRequestMessageHandlerInfo messageHandler = config.getRequestMessageManager().getMessageHandler(action);
 				if (messageHandler != null) {
 					message = serializer.deserialize(pack.getMessage(), messageHandler.getMessageClass());
 				}

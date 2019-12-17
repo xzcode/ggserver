@@ -1,7 +1,7 @@
 package xzcode.ggserver.core.common.message.request.handler;
 
 import xzcode.ggserver.core.common.message.request.Request;
-import xzcode.ggserver.core.common.message.request.action.IRequestMessageAcion;
+import xzcode.ggserver.core.common.message.request.action.IRequestMessageHandler;
 
 /**
  * 请求消息调用模型
@@ -10,7 +10,7 @@ import xzcode.ggserver.core.common.message.request.action.IRequestMessageAcion;
  * 2019-01-01 22:11:15
  * @param <T>
  */
-public class RequestMessagerHandler implements IRequestMessageHandler{
+public class RequestMessagerHandlerInfo implements IRequestMessageHandlerInfo{
 	
 	
 	/**
@@ -27,13 +27,13 @@ public class RequestMessagerHandler implements IRequestMessageHandler{
 	/**
 	 * 消息调用对象
 	 */
-	private IRequestMessageAcion<Object> messageAcion;
+	private IRequestMessageHandler<Object> messageAcion;
 
 
 
 	@SuppressWarnings("unchecked")
 	public void handle(Request<?> request) throws Exception {
-		messageAcion.action((Request<Object>) request);
+		messageAcion.handle((Request<Object>) request);
 	}
 
 
@@ -57,14 +57,14 @@ public class RequestMessagerHandler implements IRequestMessageHandler{
 	}
 
 
-	public IRequestMessageAcion<?> getHandler() {
+	public IRequestMessageHandler<?> getHandler() {
 		return messageAcion;
 	}
 
 
 	@SuppressWarnings("unchecked")
-	public void setHandler(IRequestMessageAcion<?> messageAcion) {
-		this.messageAcion =  (IRequestMessageAcion<Object>) messageAcion;
+	public void setHandler(IRequestMessageHandler<?> messageAcion) {
+		this.messageAcion =  (IRequestMessageHandler<Object>) messageAcion;
 	}
 
 

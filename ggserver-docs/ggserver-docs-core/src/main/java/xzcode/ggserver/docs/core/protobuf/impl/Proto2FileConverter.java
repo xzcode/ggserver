@@ -1,7 +1,6 @@
 package xzcode.ggserver.docs.core.protobuf.impl;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -13,10 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.omg.PortableServer.POA;
-
-import xzcode.ggserver.docs.core.GGDocs;
-import xzcode.ggserver.docs.core.config.GGDocsConfig;
 import xzcode.ggserver.docs.core.model.Doc;
 import xzcode.ggserver.docs.core.model.Model;
 import xzcode.ggserver.docs.core.model.ModelProperty;
@@ -33,7 +28,7 @@ public class Proto2FileConverter implements ProtoFileConverter {
 	
 	private static String ENTER_LINE = "\n";
 	
-	private static String HEADER_SYNTAX = "syntax = \"proto2\"";
+	private static String HEADER_SYNTAX = "syntax = \"proto2\";";
 	
 	private static String KEYWORD_REQUIRED = "required";
 	
@@ -73,13 +68,14 @@ public class Proto2FileConverter implements ProtoFileConverter {
 				.append(MODIFIER_MESSAGE).append(" ").append(model.getClazz().getSimpleName()).append(" {")
 				.append(ENTER_LINE);
 				
-				int seq = 1;
+				int seq = 0;
 				
 				List<ModelProperty> properties = model.getProperties();
 				
 				for (ModelProperty property : properties) {
 					
 					Field field = property.getField();
+					seq++;
 					
 					//跳过删除的字段
 					Deprecated deprecated = field.getAnnotation(Deprecated.class);
@@ -100,7 +96,7 @@ public class Proto2FileConverter implements ProtoFileConverter {
 					.append(" ")
 					.append("=")
 					.append(" ")
-					.append(seq++)
+					.append(seq)
 					.append(";")
 					.append("// ").append(property.getDesc())
 					.append(ENTER_LINE)
@@ -138,18 +134,7 @@ public class Proto2FileConverter implements ProtoFileConverter {
 		return files;
 	}
 	
-	public static void main(String[] args) {
-		GGDocsConfig config = new GGDocsConfig();
-		config.setScanPackages(new String[] {"xzcode.ggserver.docs.core"});
-		GGDocs docs = new GGDocs(config);
-		Doc doc = docs.scan();
-		Proto2FileConverter converter = new Proto2FileConverter();
-		List<File> output = converter.convertToProtoFileAndOutput(doc, "/app/docs-proto-out");
-		for (File file : output) {
-			System.out.println(file.getAbsolutePath());
-		}
-		
-	}
+	
 	
 	
 }

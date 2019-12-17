@@ -3,7 +3,7 @@ package xzcode.ggserver.core.common.message.request.manager;
 import java.util.List;
 
 import xzcode.ggserver.core.common.message.request.Request;
-import xzcode.ggserver.core.common.message.request.handler.IRequestMessageHandler;
+import xzcode.ggserver.core.common.message.request.handler.IRequestMessageHandlerInfo;
 
 public interface IRequestMessageManager {
 
@@ -25,7 +25,7 @@ public interface IRequestMessageManager {
 	 * @author zai
 	 * 2017-07-29
 	 */
-	void addMessageHandler(String action, IRequestMessageHandler receiveMessageHandler);
+	void addMessageHandler(String action, IRequestMessageHandlerInfo receiveMessageHandler);
 
 	/**
 	 * 获取关联方法模型
@@ -35,7 +35,7 @@ public interface IRequestMessageManager {
 	 * @author zai
 	 * 2017-08-02
 	 */
-	IRequestMessageHandler getMessageHandler(String action);
+	IRequestMessageHandlerInfo getMessageHandler(String action);
 
 	/**
 	 * 获取已注册的action名称集合
@@ -53,6 +53,6 @@ public interface IRequestMessageManager {
 	 * @author zai
 	 * 2019-10-23 16:40:34
 	 */
-	List<IRequestMessageHandler> getMappedInvokers();
+	List<IRequestMessageHandlerInfo> getMappedInvokers();
 
 }

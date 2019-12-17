@@ -7,7 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import xzcode.ggserver.core.common.message.request.Request;
-import xzcode.ggserver.core.common.message.request.handler.IRequestMessageHandler;
+import xzcode.ggserver.core.common.message.request.handler.IRequestMessageHandlerInfo;
 import xzcode.ggserver.core.common.utils.logger.GGLoggerUtil;
 
 
@@ -19,7 +19,7 @@ import xzcode.ggserver.core.common.utils.logger.GGLoggerUtil;
  */
 public class RequestMessageManager implements IRequestMessageManager {
 
-	private final Map<String, IRequestMessageHandler> handlerMap = new ConcurrentHashMap<>();
+	private final Map<String, IRequestMessageHandlerInfo> handlerMap = new ConcurrentHashMap<>();
 
 	/**
 	 * 调用被缓存的方法
@@ -32,7 +32,7 @@ public class RequestMessageManager implements IRequestMessageManager {
 	 */
 	@Override
 	public void handle(Request<?> request) throws Exception {
-		IRequestMessageHandler invoker = handlerMap.get(request.getAction());
+		IRequestMessageHandlerInfo invoker = handlerMap.get(request.getAction());
 		if (invoker != null) {
 			invoker.handle(request);
 			return;
@@ -48,7 +48,7 @@ public class RequestMessageManager implements IRequestMessageManager {
 	 * 2017-07-29
 	 */
 	@Override
-	public void addMessageHandler(String action, IRequestMessageHandler receiveMessageHandler) {
+	public void addMessageHandler(String action, IRequestMessageHandlerInfo receiveMessageHandler) {
 		if (handlerMap.containsKey(action)) {
 			throw new RuntimeException("Action '"+action+"' has been mapped!");
 		}
@@ -68,7 +68,7 @@ public class RequestMessageManager implements IRequestMessageManager {
 	 * 2017-08-02
 	 */
 	@Override
-	public IRequestMessageHandler getMessageHandler(String action){
+	public IRequestMessageHandlerInfo getMessageHandler(String action){
 		return handlerMap.get(action);
 	}
 	
@@ -92,7 +92,7 @@ public class RequestMessageManager implements IRequestMessageManager {
 	 * 2019-10-23 16:40:34
 	 */
 	@Override
-	public List<IRequestMessageHandler> getMappedInvokers() {
+	public List<IRequestMessageHandlerInfo> getMappedInvokers() {
 		return handlerMap.entrySet().stream().map(e -> e.getValue()).collect(Collectors.toList());
 	}
 

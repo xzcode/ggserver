@@ -66,6 +66,31 @@ public interface ISessionSendMessageSupport extends IMakePackSupport {
 	/**
 	 * 发送消息
 	 * 
+	 * @param action
+	 * @return
+	 * @author zai
+	 * 2019-12-17 18:44:14
+	 */
+	default IGGFuture send(String action) {
+		return send(new Response(null, null, action, null), 0L, TimeUnit.MILLISECONDS);
+	}
+	
+	/**
+	 * 发送消息
+	 * 
+	 * @param action
+	 * @param message
+	 * @return
+	 * @author zai
+	 * 2019-12-17 18:44:20
+	 */
+	default IGGFuture send(String action, Object message) {
+		return send(new Response(null, null, action, message), 0L, TimeUnit.MILLISECONDS);
+	}
+	
+	/**
+	 * 发送消息
+	 * 
 	 * @param session
 	 * @param action
 	 * @param message

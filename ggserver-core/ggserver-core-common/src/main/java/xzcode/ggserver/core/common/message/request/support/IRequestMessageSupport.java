@@ -3,8 +3,8 @@ package xzcode.ggserver.core.common.message.request.support;
 import java.lang.reflect.ParameterizedType;
 import java.util.Map;
 
-import xzcode.ggserver.core.common.message.request.action.IRequestMessageAcion;
-import xzcode.ggserver.core.common.message.request.handler.RequestMessagerHandler;
+import xzcode.ggserver.core.common.message.request.action.IRequestMessageHandler;
+import xzcode.ggserver.core.common.message.request.handler.RequestMessagerHandlerInfo;
 import xzcode.ggserver.core.common.message.request.manager.IRequestMessageManager;
 
 /**
@@ -36,9 +36,9 @@ public interface IRequestMessageSupport {
 	 * 2019-01-02 09:41:59
 	 * @param <T>
 	 */
-	default <T> void onMessage(String actionId, IRequestMessageAcion<T> messageAcion) {
+	default <T> void onMessage(String actionId, IRequestMessageHandler<T> messageAcion) {
 		
-		RequestMessagerHandler handler = new RequestMessagerHandler();
+		RequestMessagerHandlerInfo handler = new RequestMessagerHandlerInfo();
 		handler.setHandler(messageAcion);
 		handler.setRequestTag(actionId);
 		String typeName = ((ParameterizedType)messageAcion.getClass().getGenericInterfaces()[0]).getActualTypeArguments()[0].getTypeName();

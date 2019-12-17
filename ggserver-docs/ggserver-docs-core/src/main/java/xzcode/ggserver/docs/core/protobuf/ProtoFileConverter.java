@@ -57,11 +57,7 @@ public interface ProtoFileConverter {
 
 	default String getFieldProtoModifier(Field field) {
 		Class<?> type = field.getType();
-
-		if (type == String[].class || type == int[].class || type == Integer[].class || type == Long[].class
-				|| type == List.class || type == ArrayList.class || type == LinkedList.class
-
-		) {
+		if (type.isArray() || type == List.class || type == ArrayList.class || type == LinkedList.class) {
 			return "repeated";
 		}
 		return "optional";
@@ -95,10 +91,14 @@ public interface ProtoFileConverter {
 						Class<?> actualTypeArgument = (Class<?>) pt.getActualTypeArguments()[0];
 						protoTypeString = getProtoTypeString(actualTypeArgument);
 						if (protoTypeString == null) {
-							protoTypeString = actualTypeArgument.getName();
+							protoTypeString = actualTypeArgument.getSimpleName();
 						}
 					}
+				}else {
+					protoTypeString = type.getSimpleName().replace("[]", "");
 				}
+			}else {
+				protoTypeString = type.getSimpleName();
 			}
 		}
 		return protoTypeString;

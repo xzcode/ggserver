@@ -16,7 +16,7 @@ public class Model {
 	private Namespace namespace;
 	private Class<?> clazz;
 	
-	private List<ModelProperty> properties;
+	private List<ModelProperty> properties = new ArrayList<>();;
 	
 	/**
 	 * 添加属性
@@ -26,11 +26,6 @@ public class Model {
 	 * 2018-12-30 11:53:51
 	 */
 	public void addProperty(ModelProperty property) {
-		
-		//如果为空,创建新list
-		if (this.properties == null) {
-			this.properties = new ArrayList<>();			
-		}
 		this.properties.add(property);
 	}
 	
