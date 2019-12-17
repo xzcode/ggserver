@@ -15,9 +15,8 @@ public class InboundCommonHandler extends ChannelInboundHandlerAdapter{
 	private GGConfig config;
 	
 	public InboundCommonHandler() {
+		
 	}
-	
-	
 	
 	public InboundCommonHandler(GGConfig config) {
 		super();
@@ -29,8 +28,6 @@ public class InboundCommonHandler extends ChannelInboundHandlerAdapter{
 		super.channelRegistered(ctx);
 	}
 
-
-
 	@Override
 	public void channelInactive(ChannelHandlerContext ctx) throws Exception {
 		config.getSessionFactory().channelInActive(ctx.channel());
@@ -40,7 +37,6 @@ public class InboundCommonHandler extends ChannelInboundHandlerAdapter{
 		}
 	}
 
-	
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
 		

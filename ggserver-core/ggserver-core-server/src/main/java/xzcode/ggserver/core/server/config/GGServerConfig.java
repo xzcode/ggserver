@@ -20,14 +20,13 @@ public class GGServerConfig extends GGConfig{
 	@Override
 	public void init() {
 		
-		super.init();
-		
 		if (bossGroupThreadFactory == null) {
 			bossGroupThreadFactory = new SimpleThreadFactory("netty-boss-", false);
 		}
 		if (bossGroup == null) {
 			bossGroup = new NioEventLoopGroup(getBossThreadSize(),bossGroupThreadFactory);				
 		}
+		super.init();
 		
 	}
 	public NioEventLoopGroup getBossGroup() {

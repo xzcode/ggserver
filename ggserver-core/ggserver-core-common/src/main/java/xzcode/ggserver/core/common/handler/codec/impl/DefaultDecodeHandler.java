@@ -81,9 +81,10 @@ public class DefaultDecodeHandler implements IDecodeHandler {
 
 		// 获取session
 		GGSession session = config.getSessionFactory().getSession(ctx.channel(), pack);
+		pack.setSession(session);
 
 		// 接收包处理
-		config.getReceivePackHandler().handle(pack, session);
+		config.getReceivePackHandler().handle(pack);
 
 	}
 

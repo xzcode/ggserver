@@ -21,11 +21,12 @@ public class DefaultReceivePackHandler implements IReceivePackHandler {
 	}
 
 	@Override
-	public void handle(Pack pack, GGSession session) {
+	public void handle(Pack pack) {
 
 		config.getTaskExecutor().submitTask(new RequestMessageTask(pack, config));
 		
 		if(LOGGER.isInfoEnabled()){
+			GGSession session = pack.getSession();
         	LOGGER.info("\nReceived binary message  <----,\nfrom:{}\ntag:{}\nbytes-length:{}\ndata:{}", (session.getHost() + ":" +session.getPort()), pack.getAction() == null ? "" : new String(pack.getAction()), pack.getAction().length + (pack.getMessage() == null ? 0 : pack.getMessage().length) + 4, pack.getMessage() == null ? "" : new String(pack.getMessage()));
         }
 	}
