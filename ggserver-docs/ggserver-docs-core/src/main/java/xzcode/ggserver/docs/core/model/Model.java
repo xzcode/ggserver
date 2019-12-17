@@ -13,7 +13,8 @@ public class Model {
 	
 	private String actionId;
 	private String desc;
-	private String namespace;
+	private Namespace namespace;
+	private Class<?> clazz;
 	
 	private List<ModelProperty> properties;
 	
@@ -53,12 +54,18 @@ public class Model {
 	public void setDesc(String desc) {
 		this.desc = desc;
 	}
-	public String getNamespace() {
+	public Namespace getNamespace() {
 		return namespace;
 	}
-	public void setNamespace(String namespace) {
+	public void setNamespace(Namespace namespace) {
 		this.namespace = namespace;
 	}
+	public void setClazz(Class<?> clazz) {
+		this.clazz = clazz;
+	}
 	
+	public Class<?> getClazz() {
+		return clazz;
+	}
 	
 }

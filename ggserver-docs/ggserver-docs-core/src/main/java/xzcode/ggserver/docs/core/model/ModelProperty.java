@@ -1,5 +1,7 @@
 package xzcode.ggserver.docs.core.model;
 
+import java.lang.reflect.Field;
+
 /**
  * 扫描到的注解的模型
  * 
@@ -7,6 +9,11 @@ package xzcode.ggserver.docs.core.model;
  * 2018-12-30 11:48:07
  */
 public class ModelProperty {
+	
+	/**
+	 * 属性对象
+	 */
+	private Field field;
 	
 	/**
 	 * 参数名
@@ -42,6 +49,15 @@ public class ModelProperty {
 	 * 最大长度
 	 */
 	private Integer maxLength;
+	
+	
+	public Field getField() {
+		return field;
+	}
+	
+	public void setField(Field field) {
+		this.field = field;
+	}
 	
 
 	public String getName() {

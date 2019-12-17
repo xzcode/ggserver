@@ -6,31 +6,31 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 模型文档注解
+ * 模型文档命名空间注解
  * 
  * @author zai
  * 2018-12-30 11:15:06
  */
 @Target({ElementType.CONSTRUCTOR, ElementType.TYPE, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface DocsModel {
-	
+public @interface DocsNamespace {
 	
 	/**
-	 * action id
+	 * 名称
 	 * 
 	 * @return
 	 * @author zai
 	 * 2018-12-30 11:17:07
 	 */
-	public String actionId();
+	public String name();
 	
 	/**
 	 * 说明
 	 * 
 	 * @return
 	 * @author zai
-	 * 2018-12-30 11:17:01
+	 * 2018-12-30 11:17:07
 	 */
-	public String desc();
+	public String description();
+	
 }

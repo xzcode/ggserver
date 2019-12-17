@@ -1,10 +1,6 @@
 package xzcode.ggserver.docs.core;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Max;
@@ -27,9 +23,12 @@ import io.github.classgraph.ClassInfoList;
 import io.github.classgraph.ScanResult;
 import xzcode.ggserver.docs.core.annotation.DocsModel;
 import xzcode.ggserver.docs.core.annotation.DocsModelProperty;
+import xzcode.ggserver.docs.core.annotation.DocsNamespace;
 import xzcode.ggserver.docs.core.config.GGDocsConfig;
+import xzcode.ggserver.docs.core.model.Doc;
 import xzcode.ggserver.docs.core.model.Model;
 import xzcode.ggserver.docs.core.model.ModelProperty;
+import xzcode.ggserver.docs.core.model.Namespace;
 
 /**
  * 文档数据生成工具
@@ -44,7 +43,9 @@ public class GGDocs {
 
 	private static final Gson GSON = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
 
-	public Map<String, List<Model>> scan() {
+	public Doc scan() {
+		
+		Doc doc = new Doc();
 		
 		String[] scanPackages = config.getScanPackages();
 		
@@ -60,32 +61,45 @@ public class GGDocs {
 			LOGGER.warn("Cannot find class files annotated by DocsModel!");
 			return null;
 		}
-		Map<String, List<Model>> modelMap = new TreeMap<>();
-		List<Model> modelMapList = null;
+		
 		Model annoModel = null;
 		ModelProperty annoProperty = null;
 		for (ClassInfo classInfo : classInfoList) {
+			
+			
 			annoModel = new Model();
 			Class<?> loadClass = classInfo.loadClass();
 			DocsModel docsModel = loadClass.getAnnotation(DocsModel.class);
 			String actionId = docsModel.actionId();
 			String desc = docsModel.desc();
-			String namespace = docsModel.namespace();
+			String namespaceName = "default";
+			String namespaceDesc = "默认命名空间";
+			
+			DocsNamespace docsNamespace = loadClass.getAnnotation(DocsNamespace.class);
+			if (docsNamespace != null) {
+				namespaceName = docsNamespace.name();
+				namespaceDesc = docsNamespace.description();
+			}
+			
+			Namespace namespaceModel = doc.getNamespace(namespaceDesc);
+			if (namespaceModel == null) {
+				namespaceModel = new Namespace();
+				namespaceModel.setName(namespaceName);
+				namespaceModel.setDescription(namespaceDesc);
+			}
+			
 
 			annoModel.setActionId(actionId);
 			annoModel.setDesc(desc);
-			annoModel.setNamespace(namespace);
+			annoModel.setNamespace(namespaceModel);
 
-			modelMapList = modelMap.get(namespace);
-			if (modelMapList == null) {
-				modelMapList = new ArrayList<>();
-			}
-
-			modelMapList.add(annoModel);
-
-			modelMap.put(namespace, modelMapList);
+			namespaceModel.addModel(annoModel);
+			
+			doc.addNamespace(namespaceModel);
 
 			Class<?> tempClazz = loadClass;
+			
+			annoModel.setClazz(tempClazz);
 
 			while (tempClazz != null) {
 				Field[] fields = tempClazz.getDeclaredFields();
@@ -96,6 +110,7 @@ public class GGDocs {
 						continue;
 					}
 					annoProperty = new ModelProperty();
+					annoProperty.setField(field);
 					annoProperty.setDesc(modelProperty.value());
 					annoProperty.setName(field.getName());
 					annoProperty.setDataType(field.getType().getSimpleName());
@@ -153,7 +168,7 @@ public class GGDocs {
 			}
 		}
 
-		return modelMap;
+		return doc;
 
 	}
 

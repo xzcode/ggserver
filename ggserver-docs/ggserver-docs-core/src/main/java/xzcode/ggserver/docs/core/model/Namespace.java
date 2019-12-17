@@ -1,6 +1,5 @@
 package xzcode.ggserver.docs.core.model;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -12,7 +11,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public class Namespace {
 	
-	private String namespace;
+	private String name;
+	
+	private String description;
 	
 	private List<Model> models = new CopyOnWriteArrayList<>();
 	
@@ -39,11 +40,19 @@ public class Namespace {
 
 
 
-	public String getNamespace() {
-		return namespace;
+	public String getName() {
+		return name;
 	}
-	public void setNamespace(String namespace) {
-		this.namespace = namespace;
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	public String getDescription() {
+		return description;
+	}
+	
+	public void setDescription(String description) {
+		this.description = description;
 	}
 	
 	
