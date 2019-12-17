@@ -42,6 +42,15 @@ public class GGDocs {
 	private GGDocsConfig config;
 
 	private static final Gson GSON = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
+	
+	
+
+	public GGDocs(GGDocsConfig config) {
+		super();
+		this.config = config;
+	}
+
+
 
 	public Doc scan() {
 		
@@ -81,7 +90,7 @@ public class GGDocs {
 				namespaceDesc = docsNamespace.description();
 			}
 			
-			Namespace namespaceModel = doc.getNamespace(namespaceDesc);
+			Namespace namespaceModel = doc.getNamespace(namespaceName);
 			if (namespaceModel == null) {
 				namespaceModel = new Namespace();
 				namespaceModel.setName(namespaceName);

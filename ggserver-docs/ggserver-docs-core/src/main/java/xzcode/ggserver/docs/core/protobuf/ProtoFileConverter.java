@@ -76,7 +76,6 @@ public interface ProtoFileConverter {
 	 * 2019-12-17 15:28:38
 	 */
 	default String getFieldProtoDataType(Field field) {
-		String dataType = null;
 		Class<?> type = field.getType();
 
 		String protoTypeString = getProtoTypeString(type);
@@ -96,13 +95,13 @@ public interface ProtoFileConverter {
 						Class<?> actualTypeArgument = (Class<?>) pt.getActualTypeArguments()[0];
 						protoTypeString = getProtoTypeString(actualTypeArgument);
 						if (protoTypeString == null) {
-							return actualTypeArgument.getName();
+							protoTypeString = actualTypeArgument.getName();
 						}
 					}
 				}
 			}
 		}
-		return dataType;
+		return protoTypeString;
 	}
 	
 	/**
@@ -117,6 +116,9 @@ public interface ProtoFileConverter {
 		
 		if (type == String.class || type == String[].class) {
 			return "string";
+		}
+		if (type == boolean.class || type == Boolean.class) {
+			return "bool";
 		}
 		if (type == int.class || type == Integer.class || type == int[].class || type == Integer[].class) {
 			return "int32";
