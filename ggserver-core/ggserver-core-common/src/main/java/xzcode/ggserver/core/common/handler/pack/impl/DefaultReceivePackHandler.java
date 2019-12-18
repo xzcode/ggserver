@@ -1,5 +1,7 @@
 package xzcode.ggserver.core.common.handler.pack.impl;
 
+import java.util.Arrays;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,12 +27,6 @@ public class DefaultReceivePackHandler implements IReceivePackHandler {
 
 		config.getTaskExecutor().submitTask(new RequestMessageTask(pack, config));
 		
-		if(LOGGER.isInfoEnabled()){
-			GGSession session = pack.getSession();
-			if (session != null) {
-				LOGGER.info("\nReceived binary message  <----,\nfrom:{}\ntag:{}\nbytes-length:{}\ndata:{}", (session.getHost() + ":" +session.getPort()), pack.getAction() == null ? "" : new String(pack.getAction()), pack.getAction().length + (pack.getMessage() == null ? 0 : pack.getMessage().length) + 4, pack.getMessage() == null ? "" : new String(pack.getMessage()));
-			}
-        }
 	}
 
 

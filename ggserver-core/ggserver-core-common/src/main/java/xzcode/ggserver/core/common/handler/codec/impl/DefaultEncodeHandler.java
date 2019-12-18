@@ -1,5 +1,7 @@
 package xzcode.ggserver.core.common.handler.codec.impl;
 
+import java.util.Arrays;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,6 +15,7 @@ import io.netty.channel.ChannelPromise;
 import xzcode.ggserver.core.common.config.GGConfig;
 import xzcode.ggserver.core.common.handler.codec.IEncodeHandler;
 import xzcode.ggserver.core.common.message.Pack;
+import xzcode.ggserver.core.common.session.GGSession;
 
 /**
  * 
@@ -64,9 +67,7 @@ public class DefaultEncodeHandler implements IEncodeHandler {
 	@Override
 	public ByteBuf handle(ChannelHandlerContext ctx, Pack pack, ChannelPromise promise){
 		
-		Channel channel = ctx.channel();
 		ByteBuf out = null;
-			
 		
 		byte[] metaBytes = pack.getMetadata();
 		byte[] tagBytes = pack.getAction();
@@ -84,24 +85,33 @@ public class DefaultEncodeHandler implements IEncodeHandler {
 		}
 		out = ctx.alloc().buffer(packLen);
 		
-		
-		out.writeShort(metaBytes.length);
+		//metadata
 		if (metaBytes != null) {
-			out.writeBytes(metaBytes);			
+			out.writeShort(metaBytes.length);
+			if (metaBytes != null) {
+				out.writeBytes(metaBytes);			
+			}			
+		}else {
+			out.writeShort(0);
 		}
 		
+		//action id
 		out.writeByte(tagBytes.length);
 		out.writeBytes(tagBytes);
 		
+		//data body
 		if (bodyBytes != null) {
 			out.writeBytes(bodyBytes);			
 		}
-		
-		if (LOGGER.isInfoEnabled()) {
-        	LOGGER.info("\nmessage sended ---> \nchannel:{}\ntag:{}\nbytes-length:{}\ndata:{}", channel, new String(tagBytes, config.getCharset()), packLen +4 , new String(bodyBytes));
-        }
+		/*
+		int readableBytes = out.readableBytes();
+		out.markReaderIndex();
+		byte[] bb = new byte[readableBytes];
+		out.getBytes(0, bb);
+		System.out.println(Arrays.toString(bb));
+		out.resetReaderIndex();
+		*/
 		return out;
-		
 	}
 
 	

@@ -13,6 +13,11 @@ public interface DefaultChannelAttributeKeys {
 	 * 会话key
 	 */
 	String SESSION = "SESSION";
+	
+	/**
+	 * 会话key
+	 */
+	String PROTOCOL_TYPE = "PROTOCOL_TYPE";
 	/**
 	 * 通道组id
 	 */

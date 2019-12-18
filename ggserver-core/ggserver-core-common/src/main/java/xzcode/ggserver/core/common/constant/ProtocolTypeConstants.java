@@ -1,12 +1,12 @@
 package xzcode.ggserver.core.common.constant;
 
 /**
- * 服务器类型常量
+ * 协议类型常量
  * 
  * @author zai
  * 2019-06-15 14:39:40
  */
-public interface GGServerTypeConstants{
+public interface ProtocolTypeConstants{
 	
 	/**
 	 * socket服务器

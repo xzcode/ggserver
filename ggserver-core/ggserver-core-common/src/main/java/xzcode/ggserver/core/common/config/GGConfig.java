@@ -5,7 +5,7 @@ import java.util.concurrent.ThreadFactory;
 
 import io.netty.channel.nio.NioEventLoopGroup;
 import nonapi.io.github.classgraph.concurrency.SimpleThreadFactory;
-import xzcode.ggserver.core.common.constant.GGServerTypeConstants;
+import xzcode.ggserver.core.common.constant.ProtocolTypeConstants;
 import xzcode.ggserver.core.common.event.IEventManager;
 import xzcode.ggserver.core.common.event.impl.DefaultEventManager;
 import xzcode.ggserver.core.common.executor.ITaskExecutor;
@@ -60,7 +60,7 @@ public class GGConfig {
 	
 	protected int 		maxDataLength = 1024 * 1024 * 5;
 
-	protected String 	serverType = GGServerTypeConstants.MIXED;
+	protected String 	protocolType = ProtocolTypeConstants.MIXED;
 
 	protected String 	serializerType = SerializerFactory.SerializerType.PROTO_STUFF;
 
@@ -224,12 +224,12 @@ public class GGConfig {
 	}
 	
 	
-	public String getServerType() {
-		return serverType;
+	public String getProtocolType() {
+		return protocolType;
 	}
 	
-	public void setServerType(String serverType) {
-		this.serverType = serverType;
+	public void setProtocolType(String protocolType) {
+		this.protocolType = protocolType;
 	}
 	
 	public String getWebsocketPath() {

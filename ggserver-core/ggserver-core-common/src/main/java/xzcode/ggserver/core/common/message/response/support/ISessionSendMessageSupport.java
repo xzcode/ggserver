@@ -1,5 +1,6 @@
 package xzcode.ggserver.core.common.message.response.support;
 
+import java.util.Arrays;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
@@ -72,7 +73,7 @@ public interface ISessionSendMessageSupport extends IMakePackSupport {
 	 * 2019-12-17 18:44:14
 	 */
 	default IGGFuture send(String action) {
-		return send(new Response(null, null, action, null), 0L, TimeUnit.MILLISECONDS);
+		return send(new Response((GGSession) this, null, action, null), 0L, TimeUnit.MILLISECONDS);
 	}
 	
 	/**
@@ -85,7 +86,7 @@ public interface ISessionSendMessageSupport extends IMakePackSupport {
 	 * 2019-12-17 18:44:20
 	 */
 	default IGGFuture send(String action, Object message) {
-		return send(new Response(null, null, action, message), 0L, TimeUnit.MILLISECONDS);
+		return send(new Response((GGSession) this, null, action, message), 0L, TimeUnit.MILLISECONDS);
 	}
 	
 	/**
@@ -188,6 +189,11 @@ public interface ISessionSendMessageSupport extends IMakePackSupport {
 		if (!getFilterManager().doAfterSerializeFilters(pack)) {
 			return GGFailedFuture.DEFAULT_FAILED_FUTURE;
 		}
+		
+		if(GGLoggerUtil.getLogger().isInfoEnabled()){
+			GGLoggerUtil.logPack(pack, Pack.PackOperType.RESPONSE, channel);
+        }
+		
 		if (channel.isActive()) {
 			GGNettyFacadeFuture future = new GGNettyFacadeFuture();
 			if (delay <= 0) {

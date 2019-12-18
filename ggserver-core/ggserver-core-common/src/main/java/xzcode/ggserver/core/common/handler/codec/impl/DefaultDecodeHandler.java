@@ -1,5 +1,7 @@
 package xzcode.ggserver.core.common.handler.codec.impl;
 
+import java.util.Arrays;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -9,6 +11,7 @@ import xzcode.ggserver.core.common.config.GGConfig;
 import xzcode.ggserver.core.common.handler.codec.IDecodeHandler;
 import xzcode.ggserver.core.common.message.Pack;
 import xzcode.ggserver.core.common.session.GGSession;
+import xzcode.ggserver.core.common.utils.logger.GGLoggerUtil;
 
 /**
  * 自定协议解析
@@ -85,6 +88,11 @@ public class DefaultDecodeHandler implements IDecodeHandler {
 
 		// 接收包处理
 		config.getReceivePackHandler().handle(pack);
+		
+		
+		if(GGLoggerUtil.getLogger().isInfoEnabled()){
+			GGLoggerUtil.logPack(pack, Pack.PackOperType.REQUEST, ctx.channel());
+        }
 
 	}
 

@@ -1,5 +1,8 @@
 package xzcode.ggserver.core.common.session.factory;
 
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
+
 import io.netty.channel.Channel;
 import io.netty.util.AttributeKey;
 import xzcode.ggserver.core.common.channel.DefaultChannelAttributeKeys;
@@ -52,7 +55,9 @@ public class DefaultChannelSessionFactory implements ISessionFactory{
 	public void channelActive(Channel channel) {
 		//初始化session
 		DefaultChannelSession session = new DefaultChannelSession(channel, channel.id().asLongText(), config);
-		
+		InetSocketAddress remoteAddress = (InetSocketAddress)channel.remoteAddress();
+		session.setHost(remoteAddress.getHostName());
+		session.setPort(remoteAddress.getPort());
 		channel.attr(AttributeKey.valueOf(DefaultChannelAttributeKeys.SESSION)).set(session);
 		
 		config.getSessionManager().addSessionIfAbsent(session);

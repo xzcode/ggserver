@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -15,7 +16,10 @@ import io.netty.channel.ChannelPipeline;
 import io.netty.handler.codec.ByteToMessageDecoder;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpServerCodec;
+import io.netty.util.AttributeKey;
+import xzcode.ggserver.core.common.channel.DefaultChannelAttributeKeys;
 import xzcode.ggserver.core.common.config.GGConfig;
+import xzcode.ggserver.core.common.constant.ProtocolTypeConstants;
 import xzcode.ggserver.core.common.handler.common.InboundCommonHandler;
 import xzcode.ggserver.core.common.handler.common.OutboundCommonHandler;
 import xzcode.ggserver.core.common.handler.tcp.TcpInboundHandler;
@@ -34,6 +38,9 @@ public class SocketSelectHandler extends ByteToMessageDecoder {
 	private static final Logger LOGGER = LoggerFactory.getLogger(SocketSelectHandler.class);
 	
 	protected GGConfig config;
+	
+	
+	protected static final AttributeKey<String> PROTOCOL_TYPE_KEY = AttributeKey.valueOf(DefaultChannelAttributeKeys.PROTOCOL_TYPE);
 	
 	public SocketSelectHandler(GGConfig config) {
 		this.config = config;
@@ -68,6 +75,8 @@ public class SocketSelectHandler extends ByteToMessageDecoder {
 		   	
 			in.resetReaderIndex();
 			
+			ctx.channel().attr(PROTOCOL_TYPE_KEY).set(ProtocolTypeConstants.WEBSOCKET);
+			
 		}else {
 			//IN
 			pipeline.addLast(new TcpInboundHandler(this.config));
@@ -76,6 +85,8 @@ public class SocketSelectHandler extends ByteToMessageDecoder {
 			//OUT
 			pipeline.addLast(new TcpOutboundHandler(this.config));
 			pipeline.addLast(new OutboundCommonHandler(this.config));
+			
+			ctx.channel().attr(PROTOCOL_TYPE_KEY).set(ProtocolTypeConstants.TCP);
 			
 		}
 		pipeline.remove(SocketSelectHandler.class);

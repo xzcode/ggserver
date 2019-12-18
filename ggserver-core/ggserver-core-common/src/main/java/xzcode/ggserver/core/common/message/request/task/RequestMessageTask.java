@@ -44,7 +44,6 @@ public class RequestMessageTask implements Runnable{
 
 	@Override
 	public void run() {
-		
 		ISerializer serializer = config.getSerializer();
 		IFilterManager messageFilterManager = this.config.getFilterManager();
 		IMetadata metadata = null;

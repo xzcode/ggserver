@@ -48,7 +48,7 @@ public interface IMakePackSupport{
 			byte[] metadataBytes = response.getMetadata() == null ? null : serializer.serialize(response.getMetadata());
 			byte[] actionIdData = response.getAction().getBytes(getCharset());
 			byte[] messageData = response.getMessage() == null ? null : serializer.serialize(response.getMessage());
-			return new Pack(metadataBytes, actionIdData, messageData);
+			return new Pack(response.getSession(), metadataBytes, actionIdData, messageData);
 		} catch (Exception e) {
 			GGLoggerUtil.getLogger().error("Make pack Error!", e);
 		}

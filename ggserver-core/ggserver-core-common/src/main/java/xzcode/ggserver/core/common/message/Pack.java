@@ -39,6 +39,24 @@ public class Pack {
 		this.action = action;
 		this.message = message;
 	}
+	
+	/**
+	 * 包操作类型
+	 * 
+	 * @author zai
+	 * 2019-12-18 15:18:33
+	 */
+	public static interface PackOperType {
+		/**
+		 * 请求包
+		 */
+		int REQUEST = 1;
+		
+		/**
+		 * 响应包
+		 */
+		int RESPONSE = 2;
+	}
 
 
 	public byte[] getAction() {
