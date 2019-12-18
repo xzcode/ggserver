@@ -37,7 +37,9 @@ public class DefaultChannelSessionFactory implements ISessionFactory{
 	@Override
 	public GGSession getSession(Channel channel) {
 		GGSession session = channel.attr(sessAttributeKey).get();
-		session.updateExpire();
+		if (session != null) {
+			session.updateExpire();			
+		}
 		return session;
 	}
 	
