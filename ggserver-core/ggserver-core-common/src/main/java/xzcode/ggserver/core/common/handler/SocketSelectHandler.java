@@ -80,11 +80,6 @@ public class SocketSelectHandler extends ByteToMessageDecoder {
 		}
 		pipeline.remove(SocketSelectHandler.class);
 		super.channelActive(ctx);
-		Map<String, ChannelHandler> map = pipeline.toMap();
-		for (Entry<String, ChannelHandler> entry : map.entrySet()) {
-			System.out.println(entry.getKey());			
-		}
-		
 	}
 
 }

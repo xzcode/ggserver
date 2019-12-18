@@ -174,9 +174,13 @@ public interface ISessionSendMessageSupport extends IMakePackSupport {
 	default IGGFuture send(Pack pack, long delay, TimeUnit timeUnit) {
 		
 		GGSession session = pack.getSession();
-		Channel channel = session.getChannel();
 		
-		if (channel != null && !channel.isActive()) {
+		Channel channel = null;
+		if (session != null) {
+			channel = session.getChannel();
+		}
+		
+		if (channel == null || !channel.isActive()) {
 			return GGFailedFuture.DEFAULT_FAILED_FUTURE;
 		}
 		
@@ -191,8 +195,9 @@ public interface ISessionSendMessageSupport extends IMakePackSupport {
 				future.setFuture((Future<?>) channelFuture);
 
 			} else {
+				Channel ch = channel;
 				getTaskExecutor().schedule(delay, timeUnit, () -> {
-					ChannelFuture channelFuture = channel.writeAndFlush(pack);
+					ChannelFuture channelFuture = ch.writeAndFlush(pack);
 					future.setFuture((Future<?>) channelFuture);
 				});
 			}
