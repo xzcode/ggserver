@@ -2,6 +2,7 @@ package xzcode.ggserver.core.common.session;
 
 import java.nio.charset.Charset;
 import xzcode.ggserver.core.common.config.GGConfig;
+import xzcode.ggserver.core.common.event.IEventManager;
 import xzcode.ggserver.core.common.executor.ITaskExecutor;
 import xzcode.ggserver.core.common.filter.IFilterManager;
 import xzcode.ggserver.core.common.handler.serializer.ISerializer;
@@ -54,6 +55,12 @@ public abstract class AbstractSession<C extends GGConfig> implements GGSession {
 	@Override
 	public IMetadataProvider<?> getMetadataProvider() {
 		return getConfig().getMetadataProvider();
+	}
+	
+
+	@Override
+	public IEventManager getEventManagerImpl() {
+		return getConfig().getEventManager();
 	}
 
 	@Override

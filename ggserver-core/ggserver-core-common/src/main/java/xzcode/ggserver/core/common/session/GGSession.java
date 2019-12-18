@@ -1,6 +1,7 @@
 package xzcode.ggserver.core.common.session;
 
 import io.netty.channel.Channel;
+import xzcode.ggserver.core.common.event.IEventSupport;
 import xzcode.ggserver.core.common.executor.support.IExecutorSupport;
 import xzcode.ggserver.core.common.future.IGGFuture;
 import xzcode.ggserver.core.common.message.response.support.ISessionSendMessageSupport;
@@ -11,7 +12,7 @@ import xzcode.ggserver.core.common.message.response.support.ISessionSendMessageS
  * 
  * @author zai 2019-11-16 23:35:39
  */
-public interface GGSession extends ISessionSendMessageSupport, IExecutorSupport {
+public interface GGSession extends ISessionSendMessageSupport, IExecutorSupport, IEventSupport {
 
 	void addAttribute(String key, Object value);
 

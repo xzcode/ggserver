@@ -22,9 +22,8 @@ public class DefaultSessionManager implements ISessionManager {
 	private final ConcurrentHashMap<String, GGSession> sessionMap;
 	
 	public DefaultSessionManager(GGConfig config) {
-		super();
 		this.config = config;
-		 sessionMap = new ConcurrentHashMap<>(config.getWorkThreadSize() * 100);
+		sessionMap = new ConcurrentHashMap<>(config.getWorkThreadSize() * 1000);
 		this.startSessionExpireTask();
 	}
 
@@ -36,7 +35,7 @@ public class DefaultSessionManager implements ISessionManager {
 	 * 2019-11-17 00:40:04
 	 */
 	private void startSessionExpireTask() {
-		this.config.getTaskExecutor().scheduleWithFixedDelay( 100L, 100L, TimeUnit.MILLISECONDS,() -> {
+		this.config.getTaskExecutor().scheduleWithFixedDelay( 1000L, 1000L, TimeUnit.MILLISECONDS,() -> {
 			
 			Iterator<Entry<String, GGSession>> it = sessionMap.entrySet().iterator();
 			while (it.hasNext()) {

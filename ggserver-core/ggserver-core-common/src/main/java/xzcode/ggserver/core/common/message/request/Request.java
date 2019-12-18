@@ -51,6 +51,10 @@ public class Request<T> {
 		return session;
 	}
 	
+	public void setSession(GGSession session) {
+		this.session = session;
+	}
+	
 	public IMetadata getMetadata() {
 		return metadata;
 	}
