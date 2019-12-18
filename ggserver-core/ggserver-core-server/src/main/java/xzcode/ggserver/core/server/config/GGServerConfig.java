@@ -8,6 +8,8 @@ import xzcode.ggserver.core.common.config.GGConfig;
 
 public class GGServerConfig extends GGConfig{
 	
+	protected String	serverName = "GGServer";
+	
 	protected String	host = "0.0.0.0";
 
 	protected int 		port = 9999;
@@ -53,6 +55,12 @@ public class GGServerConfig extends GGConfig{
 	}
 	public void setPort(int port) {
 		this.port = port;
+	}
+	public String getServerName() {
+		return serverName;
+	}
+	public void setServerName(String serverName) {
+		this.serverName = serverName;
 	}
 	
 }

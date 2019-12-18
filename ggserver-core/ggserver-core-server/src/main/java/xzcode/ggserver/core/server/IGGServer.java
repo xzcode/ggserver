@@ -2,6 +2,7 @@ package xzcode.ggserver.core.server;
 
 import xzcode.ggserver.core.common.config.IGGConfigSupport;
 import xzcode.ggserver.core.common.control.IGGContolSupport;
+import xzcode.ggserver.core.common.future.IGGFuture;
 import xzcode.ggserver.core.server.config.GGServerConfig;
 
 /**
@@ -9,14 +10,14 @@ import xzcode.ggserver.core.server.config.GGServerConfig;
  * 
  * @author zai 2019-12-05 10:41:22
  */
-public interface IGGServer<C extends GGServerConfig> extends IGGConfigSupport<GGServerConfig> , IGGContolSupport{
+public interface IGGServer extends IGGConfigSupport<GGServerConfig> , IGGContolSupport{
 
 	/**
 	 * 启动服务器
 	 * 
 	 * @author zai 2019-12-05 10:41:09
 	 */
-	void start();
+	IGGFuture start();
 
 	/**
 	 * 关闭服务器

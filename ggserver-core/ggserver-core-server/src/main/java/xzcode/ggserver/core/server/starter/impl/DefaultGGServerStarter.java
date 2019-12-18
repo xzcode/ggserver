@@ -1,6 +1,11 @@
 package xzcode.ggserver.core.server.starter.impl;
 
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,6 +19,7 @@ import io.netty.handler.logging.LoggingHandler;
 import xzcode.ggserver.core.common.future.GGNettyFacadeFuture;
 import xzcode.ggserver.core.common.future.IGGFuture;
 import xzcode.ggserver.core.common.handler.MixedSocketChannelInitializer;
+import xzcode.ggserver.core.common.utils.logger.GGLoggerUtil;
 import xzcode.ggserver.core.server.config.GGServerConfig;
 import xzcode.ggserver.core.server.starter.IGGServerStarter;
 
@@ -40,6 +46,8 @@ public class DefaultGGServerStarter implements IGGServerStarter {
     	
         try {
         	
+        	printLogo();
+        	
             ServerBootstrap boot = new ServerBootstrap(); 
             
             //设置工作线程组
@@ -63,7 +71,16 @@ public class DefaultGGServerStarter implements IGGServerStarter {
             
             boot.childOption(ChannelOption.SO_KEEPALIVE, true); 
     
-            ChannelFuture future = boot.bind(config.getPort()); 
+            ChannelFuture future = boot.bind(config.getPort()).sync();
+            
+            future.addListener((f) -> {
+            	if (f.isSuccess()) {
+            		GGLoggerUtil.getLogger().warn("{} started successfully on port {}", config.getServerName(), config.getPort());
+				}else {
+					GGLoggerUtil.getLogger().warn("'{}' failed to start on port {}", config.getServerName(), config.getPort());
+				}
+            });
+            
             
             serverChannel = future.channel();
             
@@ -72,6 +89,23 @@ public class DefaultGGServerStarter implements IGGServerStarter {
         }catch (Exception e) {
         	throw new RuntimeException("GGServer start failed !! ", e);
         }
+    }
+    
+    private void printLogo() {
+    	try (
+    			InputStream is = this.getClass().getResourceAsStream("/ggserver-logo.txt");
+			){
+    		byte[] buff = new byte[1024];
+    		int len = -1;
+    		while ((len = is.read(buff)) != -1) {
+				String logoString = new String(buff, 0, len, config.getCharset());
+				System.out.print(logoString);
+			}
+    		System.out.println();
+			
+		} catch (Exception e) {
+			logger.error("GGServer print logo Error!", e);
+		}
     }
     
     /**

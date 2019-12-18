@@ -123,13 +123,7 @@ public class GGLoggerUtil {
 		  b[0] = (byte) (n >> 24 & 0xff);  
 		  return b;  
 	}
-/*	private static byte[] shortToBytes(int n) {  
-		byte[] b = new byte[2];  
-		b[1] = (byte) (n & 0xff);  
-		b[0] = (byte) (n >> 8 & 0xff);  
-		return b;  
-	}
-	*/
+	
 	public static byte[] shortToBytes(short number){ 
         int temp = number; 
         byte[] b = new byte[2]; 

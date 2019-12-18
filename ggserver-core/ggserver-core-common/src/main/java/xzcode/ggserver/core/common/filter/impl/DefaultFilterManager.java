@@ -83,7 +83,7 @@ public class DefaultFilterManager implements IFilterManager {
 
 	@Override
 	public boolean doAfterSerializeFilters(Pack pack) {
-		for (IBeforeDeserializeFilter filter : beforeDeserializeFilters) {
+		for (IAfterSerializeFilter filter : afterSerializeFilters) {
 			if (!filter.doFilter(pack)) {
 				return false;
 			}

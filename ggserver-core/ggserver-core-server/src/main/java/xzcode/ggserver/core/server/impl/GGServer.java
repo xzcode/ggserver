@@ -1,5 +1,6 @@
 package xzcode.ggserver.core.server.impl;
 
+import xzcode.ggserver.core.common.future.IGGFuture;
 import xzcode.ggserver.core.server.IGGServer;
 import xzcode.ggserver.core.server.config.GGServerConfig;
 import xzcode.ggserver.core.server.starter.IGGServerStarter;
@@ -11,7 +12,7 @@ import xzcode.ggserver.core.server.starter.impl.DefaultGGServerStarter;
  * @author zai
  * 2019-12-05 10:40:41
  */
-public class GGServer implements IGGServer<GGServerConfig> {
+public class GGServer implements IGGServer {
 
 	private GGServerConfig config;
 
@@ -23,10 +24,10 @@ public class GGServer implements IGGServer<GGServerConfig> {
 	}
 
 	@Override
-	public void start() {
+	public IGGFuture start() {
 		this.shutdown();
 		this.serverStarter = new DefaultGGServerStarter(config);
-		this.serverStarter.start();
+		return this.serverStarter.start();
 	}
 
 	@Override
