@@ -11,8 +11,10 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelOutboundHandlerAdapter;
 import io.netty.channel.ChannelPromise;
+import io.netty.handler.codec.http.DefaultFullHttpResponse;
 import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
 import xzcode.ggserver.core.common.config.GGConfig;
+import xzcode.ggserver.core.common.message.Pack;
 
 /**
  * websocket 消息发送处理器
@@ -49,14 +51,13 @@ public class WebSocketOutboundFrameHandler extends ChannelOutboundHandlerAdapter
 			return;
 		}
 		
-		/*
 		if(msg instanceof DefaultFullHttpResponse){
 			super.write(ctx, msg, promise);
+			return;
 		}
-		*/
 			
 		//调用编码处理器
-		ByteBuf out = config.getEncodeHandler().handle(ctx, msg,  promise);
+		ByteBuf out = config.getEncodeHandler().handle(ctx, (Pack) msg,  promise);
 		
 		if(channel.isWritable()){
 			ctx.writeAndFlush(new BinaryWebSocketFrame(out));

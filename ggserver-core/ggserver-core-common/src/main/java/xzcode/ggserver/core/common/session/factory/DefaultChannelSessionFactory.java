@@ -67,7 +67,9 @@ public class DefaultChannelSessionFactory implements ISessionFactory{
 			GGLoggerUtil.getLogger().debug("Channel Close:{}",channel);
 		}
 		config.getTaskExecutor().submitTask(new EventTask(session, GGEvents.Connection.CLOSED, null, config));
-		config.getSessionManager().remove(session.getSessonId());
+		if (session != null) {
+			config.getSessionManager().remove(session.getSessonId());
+		}
 	}
 	
 	

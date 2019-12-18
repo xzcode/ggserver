@@ -43,8 +43,8 @@ public class DefaultSessionManager implements ISessionManager {
 				GGSession session = it.next().getValue();
 				if (session.isExpired()) {
 					it.remove();
+					session.disconnect();
 				}
-				session.disconnect();
 			}
 		});
 	}

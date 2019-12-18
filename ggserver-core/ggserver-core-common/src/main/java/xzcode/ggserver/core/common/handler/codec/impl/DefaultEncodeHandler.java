@@ -62,11 +62,9 @@ public class DefaultEncodeHandler implements IEncodeHandler {
 	
 	
 	@Override
-	public ByteBuf handle(ChannelHandlerContext ctx, Object msg, ChannelPromise promise){
+	public ByteBuf handle(ChannelHandlerContext ctx, Pack pack, ChannelPromise promise){
 		
 		Channel channel = ctx.channel();
-		Pack pack = (Pack) msg;
-		
 		ByteBuf out = null;
 			
 		

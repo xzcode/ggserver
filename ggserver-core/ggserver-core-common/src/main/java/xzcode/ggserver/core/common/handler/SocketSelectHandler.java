@@ -1,12 +1,16 @@
 package xzcode.ggserver.core.common.handler;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.ChannelPipeline;
 import io.netty.handler.codec.ByteToMessageDecoder;
 import io.netty.handler.codec.http.HttpObjectAggregator;
@@ -28,44 +32,16 @@ import xzcode.ggserver.core.common.handler.web.WebSocketOutboundFrameHandler;
 public class SocketSelectHandler extends ByteToMessageDecoder {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(SocketSelectHandler.class);
-	/**
-	 * 数据包长度标识 字节数
-	 */
-	public static final int PACKAGE_LENGTH_BYTES = 4;
 	
-	/**
-	 * 每个数据包最大长度
-	 */
-	public static final int MAX_PACKAGE_LENGTH = 65536;
+	protected GGConfig config;
 	
-	/**
-	 * 请求标识字符串长度单位 字节数
-	 */
-	public static final int REQUEST_TAG_LENGTH_BYTES = 2;
-	
-	/**
-	 * 请求头 长度标识字节数
-	 */
-	public static final int HEADER_BYTES = PACKAGE_LENGTH_BYTES + REQUEST_TAG_LENGTH_BYTES;
-	
-	private GGConfig config;
-	
-	public SocketSelectHandler() {
-		
-	}
-	
-	
-
 	public SocketSelectHandler(GGConfig config) {
-		super();
 		this.config = config;
 	}
 
 
-
 	@Override
 	protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
-		
 		int readableBytes = in.readableBytes();
 		in.markReaderIndex();
 		if (readableBytes < 3) {
@@ -75,6 +51,8 @@ public class SocketSelectHandler extends ByteToMessageDecoder {
 		in.readBytes(bytes);
 		String tag = new String(bytes, config.getCharset());
 		ChannelPipeline pipeline = ctx.pipeline();
+		
+		
 		if (tag.equalsIgnoreCase("GET")) {
 			
 			//IN
@@ -86,9 +64,8 @@ public class SocketSelectHandler extends ByteToMessageDecoder {
 		   	
 		   	//OUT
 		   	pipeline.addLast(new WebSocketOutboundFrameHandler(this.config ));
-	        pipeline.addLast(new OutboundCommonHandler(this.config));
-			
-			
+		   	pipeline.addLast(new OutboundCommonHandler(this.config));
+		   	
 			in.resetReaderIndex();
 			
 		}else {
@@ -100,19 +77,14 @@ public class SocketSelectHandler extends ByteToMessageDecoder {
 			pipeline.addLast(new TcpOutboundHandler(this.config));
 			pipeline.addLast(new OutboundCommonHandler(this.config));
 			
-			
-			
-			
-			if (!"tcp".equalsIgnoreCase(tag)) {
-				in.resetReaderIndex();
-			}else {
-				ctx.channel().writeAndFlush("tcp".getBytes());
-			}
+		}
+		pipeline.remove(SocketSelectHandler.class);
+		super.channelActive(ctx);
+		Map<String, ChannelHandler> map = pipeline.toMap();
+		for (Entry<String, ChannelHandler> entry : map.entrySet()) {
+			System.out.println(entry.getKey());			
 		}
 		
-		pipeline.remove(SocketSelectHandler.class);
-		
 	}
-
 
 }

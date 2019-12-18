@@ -11,8 +11,7 @@ public class InboundCommonHandler extends ChannelInboundHandlerAdapter{
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(InboundCommonHandler.class);
 	
-	
-	private GGConfig config;
+	protected GGConfig config;
 	
 	public InboundCommonHandler() {
 		
@@ -31,20 +30,19 @@ public class InboundCommonHandler extends ChannelInboundHandlerAdapter{
 	@Override
 	public void channelInactive(ChannelHandlerContext ctx) throws Exception {
 		config.getSessionFactory().channelInActive(ctx.channel());
-		super.channelInactive(ctx);
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("channel Inactive:{}", ctx.channel());
 		}
+		super.channelInactive(ctx);
 	}
 
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
-		
 		config.getSessionFactory().channelActive(ctx.channel());
-		super.channelActive(ctx);
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Channel Active:{}", ctx.channel());
 		}
+		super.channelActive(ctx);
 	}
 	
 	@Override
@@ -66,9 +64,6 @@ public class InboundCommonHandler extends ChannelInboundHandlerAdapter{
 		super.userEventTriggered(ctx, evt);
 	}
 	
-	
-
-
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
 		if (cause instanceof java.io.IOException) {
@@ -76,6 +71,7 @@ public class InboundCommonHandler extends ChannelInboundHandlerAdapter{
 			return;
 		}
 		LOGGER.error("Inbound ERROR! ", cause);
+		super.exceptionCaught(ctx, cause);
 	}
 
 

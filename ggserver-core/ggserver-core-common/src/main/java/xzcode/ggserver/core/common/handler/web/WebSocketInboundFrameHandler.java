@@ -25,7 +25,6 @@ import io.netty.handler.codec.http.websocketx.PingWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.PongWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketFrame;
-import io.netty.handler.codec.http.websocketx.WebSocketHandshakeException;
 import io.netty.handler.codec.http.websocketx.WebSocketServerHandshaker;
 import io.netty.handler.codec.http.websocketx.WebSocketServerHandshakerFactory;
 import io.netty.util.CharsetUtil;
@@ -52,7 +51,7 @@ public class WebSocketInboundFrameHandler extends SimpleChannelInboundHandler<Ob
 	@Override
     public void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
         if (msg instanceof FullHttpRequest) {
-        	String uri = ((FullHttpRequest) msg).uri();
+        	//String uri = ((FullHttpRequest) msg).uri();
             handleHttpRequest(ctx, (FullHttpRequest) msg);
         } else if (msg instanceof WebSocketFrame) {
             handleWebSocketFrame(ctx, (WebSocketFrame) msg);
@@ -105,7 +104,7 @@ public class WebSocketInboundFrameHandler extends SimpleChannelInboundHandler<Ob
         } else {
         	try {
         		handshaker.handshake(ctx.channel(), req);				
-			} catch (WebSocketHandshakeException e) {
+			} catch (Exception e) {
 				LOGGER.error(e.getMessage());
 				ctx.channel().close();
 			}
@@ -161,12 +160,12 @@ public class WebSocketInboundFrameHandler extends SimpleChannelInboundHandler<Ob
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        cause.printStackTrace();
+        LOGGER.error(cause.getMessage());
         ctx.close();
     }
 
     private String getWebSocketLocation(FullHttpRequest req) {
         String location =  req.headers().get(HttpHeaderNames.HOST) + this.config.getWebsocketPath();
-        return "ws://" + location;
+        return "wss://" + location;
     }
 }

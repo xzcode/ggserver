@@ -12,6 +12,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelOutboundHandlerAdapter;
 import io.netty.channel.ChannelPromise;
 import xzcode.ggserver.core.common.config.GGConfig;
+import xzcode.ggserver.core.common.message.Pack;
 
 /**
  *  
@@ -62,7 +63,7 @@ public class TcpOutboundHandler extends ChannelOutboundHandlerAdapter {
 		else {
 		
 			//调用编码处理器
-			out = config.getEncodeHandler().handle(ctx, msg,  promise);
+			out = config.getEncodeHandler().handle(ctx, (Pack) msg,  promise);
 			
 			int packLen = out.readableBytes();
 			ByteBuf buffer = ctx.alloc().buffer(packLen);
