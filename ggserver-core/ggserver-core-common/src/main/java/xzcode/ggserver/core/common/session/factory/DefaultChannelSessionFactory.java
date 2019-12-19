@@ -48,7 +48,11 @@ public class DefaultChannelSessionFactory implements ISessionFactory{
 	
 	@Override
 	public GGSession getSession(Channel channel, Request<?> request) {
-		return request.getSession();
+		GGSession session = request.getSession();
+		if (session != null) {
+			session.updateExpire();
+		}
+		return session;
 	}
 
 	@Override
@@ -62,7 +66,6 @@ public class DefaultChannelSessionFactory implements ISessionFactory{
 		
 		config.getSessionManager().addSessionIfAbsent(session);
 		
-		config.getTaskExecutor().submitTask(new EventTask(session, GGEvents.Connection.OPENED, null, config));
 	}
 
 	@Override

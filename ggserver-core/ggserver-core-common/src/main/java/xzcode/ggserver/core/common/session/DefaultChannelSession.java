@@ -44,10 +44,6 @@ public class DefaultChannelSession extends AbstractSession<GGConfig> {
 		return channel.attr(AttributeKey.valueOf(key)).getAndSet(null);
 	}
 
-	@Override
-	public IGGFuture disconnect() {
-		return new GGNettyFacadeFuture(this.channel.close());
-	}
 
 	@Override
 	public Channel getChannel() {
@@ -58,6 +54,7 @@ public class DefaultChannelSession extends AbstractSession<GGConfig> {
 	public void setChannel(Channel channel) {
 		this.channel = channel;
 	}
+
 
 	
 }

@@ -42,5 +42,6 @@ public interface GGSession extends ISessionSendMessageSupport, IExecutorSupport,
 
 	void updateExpire();
 	
+	
 
 }

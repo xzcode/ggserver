@@ -1,10 +1,16 @@
 package xzcode.ggserver.core.common.session;
 
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
+
+import io.netty.channel.Channel;
 import xzcode.ggserver.core.common.config.GGConfig;
 import xzcode.ggserver.core.common.event.IEventManager;
 import xzcode.ggserver.core.common.executor.ITaskExecutor;
 import xzcode.ggserver.core.common.filter.IFilterManager;
+import xzcode.ggserver.core.common.future.GGNettyFacadeFuture;
+import xzcode.ggserver.core.common.future.IGGFuture;
 import xzcode.ggserver.core.common.handler.serializer.ISerializer;
 import xzcode.ggserver.core.common.message.meta.provider.IMetadataProvider;
 
@@ -22,6 +28,7 @@ public abstract class AbstractSession<C extends GGConfig> implements GGSession {
 	protected String sessionId;
 	protected String host;
 	protected int port;
+	protected List<ISessionDisconnectListener> disconnectListeners = new ArrayList<>();
 	
 	public AbstractSession(String sessionId, C config) {
 		this.config = config;
@@ -69,6 +76,11 @@ public abstract class AbstractSession<C extends GGConfig> implements GGSession {
 	}
 	
 	@Override
+	public IGGFuture disconnect() {
+		return new GGNettyFacadeFuture(this.getChannel().close());
+	}
+	
+	@Override
 	public String getHost() {
 		return this.host;
 	}
@@ -103,5 +115,6 @@ public abstract class AbstractSession<C extends GGConfig> implements GGSession {
 	public String getSessonId() {
 		return this.sessionId;
 	}
+
 
 }

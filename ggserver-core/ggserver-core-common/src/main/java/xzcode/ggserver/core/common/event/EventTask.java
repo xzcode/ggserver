@@ -61,7 +61,7 @@ public class EventTask implements Runnable{
 	public void run() {
 		
 		try {
-			config.getEventManager().emitEvent(event, new EventData(session, message));	
+			config.getEventManager().emitEvent(event, new EventData(session, message, channel));	
 		} catch (Exception e) {
 			LOGGER.error("EventTask Error!!", e);
 		}

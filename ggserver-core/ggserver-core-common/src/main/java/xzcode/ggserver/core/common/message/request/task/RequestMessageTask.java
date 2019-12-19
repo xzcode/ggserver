@@ -1,5 +1,6 @@
 package xzcode.ggserver.core.common.message.request.task;
 
+import io.netty.channel.Channel;
 import xzcode.ggserver.core.common.config.GGConfig;
 import xzcode.ggserver.core.common.filter.IFilterManager;
 import xzcode.ggserver.core.common.handler.serializer.ISerializer;
@@ -68,11 +69,13 @@ public class RequestMessageTask implements Runnable{
 				}
 			}
 			
+			Channel channel = pack.getChannel();
+			
 			Request<?> request = new Request<>(session, metadata, action, message);
-			request.setChannel(pack.getChannel());
+			request.setChannel(channel);
 			
 			if (session == null) {
-				session = config.getSessionFactory().getSession(null, request);
+				session = config.getSessionFactory().getSession(channel, request);
 			}
 			
 			//反序列化后的消息过滤器

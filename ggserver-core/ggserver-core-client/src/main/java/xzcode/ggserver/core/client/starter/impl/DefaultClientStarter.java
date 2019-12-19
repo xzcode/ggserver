@@ -12,6 +12,7 @@ import io.netty.channel.pool.FixedChannelPool;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
+import io.netty.util.concurrent.Future;
 import xzcode.ggserver.core.client.config.GGClientConfig;
 import xzcode.ggserver.core.client.pool.DefaultChannelPoolHandler;
 import xzcode.ggserver.core.client.starter.IGGClientStarter;
@@ -68,13 +69,12 @@ public class DefaultClientStarter implements IGGClientStarter {
 			}
 			if (config.getChannelPool() == null) {
 				config.setChannelPool(new FixedChannelPool(boot, config.getChannelPoolHandler(), config.getChannelMaxConnections()));
-				/*
-				Future<Channel> acquire = config.getChannelPool().acquire();
+				/*Future<Channel> acquire = config.getChannelPool().acquire();
 				acquire.addListener((Future<Channel> f) -> {
 					Channel channel = f.getNow();
 					System.out.println(channel);
-				});
-				*/
+					config.getChannelPool().release(channel);
+				});*/
 			}
 		}
 	}
