@@ -2,6 +2,7 @@ package xzcode.ggserver.core.common.message;
 
 import java.nio.charset.Charset;
 
+import io.netty.channel.Channel;
 import xzcode.ggserver.core.common.session.GGSession;
 
 /**
@@ -23,6 +24,14 @@ public class Pack {
 
 	/* 消息体 */
 	private byte[] message;
+	
+	/**
+	 * 协议类型
+	 */
+	private String protocolType;
+	
+	/* 通道 */
+	private Channel channel;
 	
 
 	public Pack(byte[] metadata, byte[] action, byte[] message) {
@@ -46,7 +55,7 @@ public class Pack {
 	 * @author zai
 	 * 2019-12-18 15:18:33
 	 */
-	public static interface PackOperType {
+	public static interface OperType {
 		/**
 		 * 请求包
 		 */
@@ -98,6 +107,20 @@ public class Pack {
 		this.session = session;
 	}
 	
+	public void setProtocolType(String protocolType) {
+		this.protocolType = protocolType;
+	}
 	
+	public String getProtocolType() {
+		return protocolType;
+	}
+	
+	public Channel getChannel() {
+		return channel;
+	}
+	
+	public void setChannel(Channel channel) {
+		this.channel = channel;
+	}
 
 }

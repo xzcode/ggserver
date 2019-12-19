@@ -57,7 +57,7 @@ public class WebSocketOutboundFrameHandler extends ChannelOutboundHandlerAdapter
 		}
 			
 		//调用编码处理器
-		ByteBuf out = config.getEncodeHandler().handle(ctx, (Pack) msg,  promise);
+		ByteBuf out = config.getEncodeHandler().handle(ctx, (Pack) msg);
 		
 		if(channel.isWritable()){
 			ctx.writeAndFlush(new BinaryWebSocketFrame(out));

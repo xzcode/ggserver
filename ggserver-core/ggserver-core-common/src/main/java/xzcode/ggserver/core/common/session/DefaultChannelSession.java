@@ -3,7 +3,6 @@ package xzcode.ggserver.core.common.session;
 import io.netty.channel.Channel;
 import io.netty.util.AttributeKey;
 import xzcode.ggserver.core.common.config.GGConfig;
-import xzcode.ggserver.core.common.event.IEventManager;
 import xzcode.ggserver.core.common.future.GGNettyFacadeFuture;
 import xzcode.ggserver.core.common.future.IGGFuture;
 

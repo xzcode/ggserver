@@ -16,7 +16,8 @@ import xzcode.ggserver.core.client.config.GGClientConfig;
 import xzcode.ggserver.core.client.pool.DefaultChannelPoolHandler;
 import xzcode.ggserver.core.client.starter.IGGClientStarter;
 import xzcode.ggserver.core.common.future.IGGFuture;
-import xzcode.ggserver.core.common.handler.SocketChannelInitializer;
+import xzcode.ggserver.core.common.handler.MixedSocketChannelInitializer;
+import xzcode.ggserver.core.common.handler.TcpChannelInitializer;
 import xzcode.ggserver.core.common.session.DefaultChannelSession;
 import xzcode.ggserver.core.common.session.GGSession;
 
@@ -52,7 +53,7 @@ public class DefaultClientStarter implements IGGClientStarter {
         boot.channel(NioSocketChannel.class); 
         
         //设置消息处理器
-        boot.handler(new SocketChannelInitializer(config));
+        boot.handler(new MixedSocketChannelInitializer(config));
         
         boot.option(ChannelOption.SO_BACKLOG, config.getSoBacklog());  
         boot.option(ChannelOption.TCP_NODELAY, true);  
@@ -63,7 +64,7 @@ public class DefaultClientStarter implements IGGClientStarter {
         	boot.remoteAddress(config.getHost(), config.getPort());
         	
 			if (config.getChannelPoolHandler() == null) {
-				config.setChannelPoolHandler(new DefaultChannelPoolHandler());
+				config.setChannelPoolHandler(new DefaultChannelPoolHandler(this.config));
 			}
 			if (config.getChannelPool() == null) {
 				config.setChannelPool(new FixedChannelPool(boot, config.getChannelPoolHandler(), config.getChannelMaxConnections()));

@@ -6,6 +6,6 @@ import io.netty.channel.ChannelHandlerContext;
 public interface IDecodeHandler {
 	
 	
-	void handle(ChannelHandlerContext ctx, ByteBuf in);
+	void handle(ChannelHandlerContext ctx, ByteBuf in, String protocolType);
 	
 }

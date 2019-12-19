@@ -5,10 +5,13 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
-import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.timeout.IdleStateHandler;
+import io.netty.util.AttributeKey;
+import xzcode.ggserver.core.common.channel.DefaultChannelAttributeKeys;
 import xzcode.ggserver.core.common.config.GGConfig;
+import xzcode.ggserver.core.common.constant.ProtocolTypeConstants;
 import xzcode.ggserver.core.common.handler.common.InboundCommonHandler;
 import xzcode.ggserver.core.common.handler.common.OutboundCommonHandler;
 import xzcode.ggserver.core.common.handler.exception.ExceptionHandler;
@@ -17,60 +20,55 @@ import xzcode.ggserver.core.common.handler.tcp.TcpInboundHandler;
 import xzcode.ggserver.core.common.handler.tcp.TcpOutboundHandler;
 
 /**
- * 默认channel初始化处理器
+ * Tcp channel初始化处理器
  * 
  * 
  * @author zai
  * 2017-08-02
  */
-public class SocketChannelInitializer extends ChannelInitializer<SocketChannel> {
+public class TcpChannelInitializer extends ChannelInitializer<Channel> {
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(SocketChannelInitializer.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(TcpChannelInitializer.class);
+	
+	protected static final AttributeKey<String> PROTOCOL_TYPE_KEY = AttributeKey.valueOf(DefaultChannelAttributeKeys.PROTOCOL_TYPE);
 
 
 	private GGConfig config;
 	
 	
-	public SocketChannelInitializer() {
+	public TcpChannelInitializer() {
 		
 	}
 	
 
-	public SocketChannelInitializer(GGConfig config) {
+	public TcpChannelInitializer(GGConfig config) {
 		this.config = config;
 	}
 
 	@Override
-	protected void initChannel(SocketChannel ch) throws Exception {
+	protected void initChannel(Channel ch) throws Exception {
 		
-		LOGGER.debug("Init Channel:{}", ch);
-		
-		//Inbound 是顺序执行
-   	 
 	   	if (config.getIdleCheckEnabled()) {
 	   		
 		   	 //空闲事件触发器
 		   	 ch.pipeline().addLast(new IdleStateHandler(config.getReaderIdleTime(), config.getWriterIdleTime(), config.getAllIdleTime(), TimeUnit.MILLISECONDS));
 		   	 
-		   	 //心跳包处理
+		   	 //空闲事件处理
 		   	 ch.pipeline().addLast(new IdleHandler(config));
 	   	}
    	 
-	   	 //消息解码器
         ch.pipeline().addLast(new TcpInboundHandler(this.config));
         
-        //inbound异常处理
         ch.pipeline().addLast(new InboundCommonHandler(this.config));
         
-        //Outbound 是反顺序执行
         
-        //消息编码器
         ch.pipeline().addLast(new TcpOutboundHandler(this.config));
         
-        //outbound异常处理
         ch.pipeline().addLast(new OutboundCommonHandler(this.config));
         
         ch.pipeline().addLast(new ExceptionHandler());
+        
+        ch.attr(PROTOCOL_TYPE_KEY).set(ProtocolTypeConstants.TCP);
 	}
 	
 

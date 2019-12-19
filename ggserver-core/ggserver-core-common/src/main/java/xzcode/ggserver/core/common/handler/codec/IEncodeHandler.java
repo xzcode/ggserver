@@ -8,6 +8,6 @@ import xzcode.ggserver.core.common.message.Pack;
 public interface IEncodeHandler {
 
 	
-	ByteBuf handle(ChannelHandlerContext ctx, Pack pack, ChannelPromise promise);
+	ByteBuf handle(ChannelHandlerContext ctx, Pack pack);
 	
 }

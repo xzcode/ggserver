@@ -73,6 +73,15 @@ public class DefaultChannelGroupManager implements IChannelGroupManager{
 		channelGroups.remove(channelGroup.getChannelGroupId());
 	}
 
+	@Override
+	public Channel getRandomChannel(String channelGroupId) {
+		IChannelGroup channelGroup = getChannelGroup(channelGroupId);
+		if (channelGroup != null) {
+			return channelGroup.getRandomChannel();
+		}
+		return null;
+	}
+
 
 
 }

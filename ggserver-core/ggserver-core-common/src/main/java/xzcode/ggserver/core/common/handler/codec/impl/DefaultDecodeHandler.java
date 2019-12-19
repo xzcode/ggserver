@@ -1,13 +1,15 @@
 package xzcode.ggserver.core.common.handler.codec.impl;
 
-import java.util.Arrays;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.util.AttributeKey;
+import xzcode.ggserver.core.common.channel.DefaultChannelAttributeKeys;
 import xzcode.ggserver.core.common.config.GGConfig;
+import xzcode.ggserver.core.common.constant.ProtocolTypeConstants;
 import xzcode.ggserver.core.common.handler.codec.IDecodeHandler;
 import xzcode.ggserver.core.common.message.Pack;
 import xzcode.ggserver.core.common.session.GGSession;
@@ -40,8 +42,15 @@ public class DefaultDecodeHandler implements IDecodeHandler {
 	 * 所有标识长度
 	 */
 	public static final int ALL_TAG_LEN = METADATA_TAG_LEN + ACTION_TAG_LEN;
+	
+	/**
+	 * 协议类型channel key
+	 */
+	protected static final AttributeKey<String> PROTOCOL_TYPE_KEY = AttributeKey.valueOf(DefaultChannelAttributeKeys.PROTOCOL_TYPE);
+	
 
 	private GGConfig config;
+	
 
 	public DefaultDecodeHandler() {
 
@@ -52,9 +61,16 @@ public class DefaultDecodeHandler implements IDecodeHandler {
 		this.config = config;
 	}
 
-	public void handle(ChannelHandlerContext ctx, ByteBuf in) {
-
-		int packLen = in.readableBytes();
+	public void handle(ChannelHandlerContext ctx, ByteBuf in, String protocolType) {
+		
+		//读取整个包体长度
+		int packLen;
+		if (ProtocolTypeConstants.TCP == protocolType) {
+			packLen = in.readInt();
+		}else {
+			packLen = in.readableBytes();
+		}
+		
 
 		// 读取元数据
 		int metadataLen = in.readUnsignedShort();
@@ -81,9 +97,13 @@ public class DefaultDecodeHandler implements IDecodeHandler {
 		}
 
 		Pack pack = new Pack(metadata, action, message);
-
+		pack.setProtocolType(protocolType);
+		
+		Channel channel = ctx.channel();
+		pack.setChannel(channel);
+		
 		// 获取session
-		GGSession session = config.getSessionFactory().getSession(ctx.channel(), pack);
+		GGSession session = config.getSessionFactory().getSession(channel, pack);
 		pack.setSession(session);
 
 		// 接收包处理
@@ -91,7 +111,7 @@ public class DefaultDecodeHandler implements IDecodeHandler {
 		
 		
 		if(GGLoggerUtil.getLogger().isInfoEnabled()){
-			GGLoggerUtil.logPack(pack, Pack.PackOperType.REQUEST, ctx.channel());
+			GGLoggerUtil.logPack(pack, Pack.OperType.REQUEST, ctx.channel());
         }
 
 	}

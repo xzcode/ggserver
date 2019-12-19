@@ -8,6 +8,8 @@ import org.slf4j.Logger;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
+import io.netty.util.AttributeKey;
+import xzcode.ggserver.core.common.channel.DefaultChannelAttributeKeys;
 import xzcode.ggserver.core.common.executor.ITaskExecutor;
 import xzcode.ggserver.core.common.filter.IFilterManager;
 import xzcode.ggserver.core.common.future.GGFailedFuture;
@@ -180,19 +182,20 @@ public interface ISessionSendMessageSupport extends IMakePackSupport {
 		if (session != null) {
 			channel = session.getChannel();
 		}
+		if (channel == null) {
+			channel = pack.getChannel();
+		}
 		
 		if (channel == null || !channel.isActive()) {
 			return GGFailedFuture.DEFAULT_FAILED_FUTURE;
 		}
 		
+		
+		
 		// 序列化后发送过滤器
 		if (!getFilterManager().doAfterSerializeFilters(pack)) {
 			return GGFailedFuture.DEFAULT_FAILED_FUTURE;
 		}
-		
-		if(GGLoggerUtil.getLogger().isInfoEnabled()){
-			GGLoggerUtil.logPack(pack, Pack.PackOperType.RESPONSE, channel);
-        }
 		
 		if (channel.isActive()) {
 			GGNettyFacadeFuture future = new GGNettyFacadeFuture();

@@ -1,9 +1,11 @@
 package xzcode.ggserver.core.common.event.model;
 
+import io.netty.channel.Channel;
 import xzcode.ggserver.core.common.session.GGSession;
 
 public class EventData<T> {
 	private GGSession session;
+	private Channel channel;
 	private T data;
 	
 	
@@ -11,6 +13,11 @@ public class EventData<T> {
 		super();
 		this.session = session;
 		this.data = data;
+	}
+	public EventData(GGSession session, T data, Channel channel) {
+		this.session = session;
+		this.data = data;
+		this.channel = channel;
 	}
 	public GGSession getSession() {
 		return session;
@@ -24,6 +31,12 @@ public class EventData<T> {
 	public void setData(T data) {
 		this.data = data;
 	}
+	public void setChannel(Channel channel) {
+		this.channel = channel;
+	}
 	
+	public Channel getChannel() {
+		return channel;
+	}
 	
 }

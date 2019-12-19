@@ -1,10 +1,9 @@
 package xzcode.ggserver.core.common.handler.tcp;
 
+import java.util.Arrays;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
@@ -25,11 +24,11 @@ public class TcpOutboundHandler extends ChannelOutboundHandlerAdapter {
 	    
 
 	private GGConfig config;
-	
+	/*
 	private static final Gson GSON = new GsonBuilder()
     		.serializeNulls()
     		.create();
-	
+	*/
 	
 	public TcpOutboundHandler() {
 	}
@@ -63,20 +62,15 @@ public class TcpOutboundHandler extends ChannelOutboundHandlerAdapter {
 		else {
 		
 			//调用编码处理器
-			out = config.getEncodeHandler().handle(ctx, (Pack) msg,  promise);
-			
-			int packLen = out.readableBytes();
-			ByteBuf buffer = ctx.alloc().buffer(packLen);
-			buffer.writeBytes(out, packLen);
+			out = config.getEncodeHandler().handle(ctx, (Pack) msg);
 			
 			if(channel.isWritable()){
-				ctx.writeAndFlush(buffer);
+				ctx.writeAndFlush(out);
 			}else {
 				if (LOGGER.isInfoEnabled()) {
-            		LOGGER.info("Write And Flush msg ERROR!");
+            		LOGGER.error("Write And Flush msg ERROR!");
             	}
 			}
-			out.release();
 		}
 		
 		

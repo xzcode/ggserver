@@ -1,5 +1,6 @@
 package xzcode.ggserver.core.common.message.request;
 
+import io.netty.channel.Channel;
 import xzcode.ggserver.core.common.message.meta.IMetadata;
 import xzcode.ggserver.core.common.session.GGSession;
 
@@ -23,6 +24,9 @@ public class Request<T> {
 	
 	//消息体
 	private T message;
+	
+	//会话对象
+	private Channel channel;
 	
 	
 	
@@ -64,4 +68,11 @@ public class Request<T> {
 		return (T) metadata;
 	}
 
+	public Channel getChannel() {
+		return channel;
+	}
+	
+	public void setChannel(Channel channel) {
+		this.channel = channel;
+	}
 }

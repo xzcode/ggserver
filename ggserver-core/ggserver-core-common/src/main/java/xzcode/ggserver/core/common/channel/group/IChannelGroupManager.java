@@ -82,4 +82,14 @@ public interface IChannelGroupManager {
 	 */
 	void removeChannelGroup(IChannelGroup channelGroup);
 	
+	/**
+	 * 随机获取通道
+	 * 
+	 * @param channelGroupId
+	 * @return
+	 * @author zai
+	 * 2019-12-19 16:31:10
+	 */
+	Channel getRandomChannel(String channelGroupId);
+	
 }

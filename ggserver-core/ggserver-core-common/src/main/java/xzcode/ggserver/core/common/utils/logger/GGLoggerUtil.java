@@ -16,7 +16,6 @@ import xzcode.ggserver.core.common.message.Pack;
 public class GGLoggerUtil {
 	private static final Logger LOGGER = LoggerFactory.getLogger(GGLoggerUtil.class);
 	
-	private static final AttributeKey<String> PROTOCOL_TYPE_KEY = AttributeKey.valueOf(DefaultChannelAttributeKeys.PROTOCOL_TYPE);
 	
 	public static Logger getLogger() {
 		return LOGGER;
@@ -39,11 +38,11 @@ public class GGLoggerUtil {
 	 */
 	public static void logPack(Pack pack, int packOperType, Channel channel) {
 		
-		String protocalType = channel.attr(PROTOCOL_TYPE_KEY).get();
+		String protocalType = pack.getProtocolType();
 		
 		StringBuilder sb = new StringBuilder(256);
 		int packLen = 0;
-		if (protocalType.equals(ProtocolTypeConstants.TCP)) {
+		if (ProtocolTypeConstants.TCP.equals(protocalType)) {
 			packLen = 4;
 		}
 
@@ -82,10 +81,10 @@ public class GGLoggerUtil {
 			fillByteList(totalBytes, message);
 		}
 		
-		if (packOperType == Pack.PackOperType.REQUEST) {
+		if (packOperType == Pack.OperType.REQUEST) {
 			sb.append("\nReceived Pack  <----");
 		}
-		else if (packOperType == Pack.PackOperType.RESPONSE) {
+		else if (packOperType == Pack.OperType.RESPONSE) {
 			sb.append("\nSended Pack  ---->");
 		}
 		
@@ -94,6 +93,7 @@ public class GGLoggerUtil {
 		.append("\ntag: {}")
 		.append("\npack-length: {}")
 		.append("\npack-data: {}")
+		.append("\n")
 		;
 		
 		

@@ -66,11 +66,11 @@ public interface IChannelPoolSendMessageSupport {
 	 * @author zai
 	 * 2019-12-16 12:35:47
 	 */
-	default IGGFuture handlePoolSend(ChannelPool channelPool, Pack pack, GGNettyFacadeFuture returningFuture) {
+	default IGGFuture handlePoolSend(final ChannelPool channelPool, Pack pack, GGNettyFacadeFuture returningFuture) {
 		Future<Channel> acquireFuture = channelPool.acquire();
 		acquireFuture.addListener((Future<Channel> f) -> {
 				Channel ch = f.getNow();
-				if (!f.isDone()) {
+				if (!f.isDone() || ch == null) {
 					Throwable cause = f.cause();
 					if (cause instanceof ConnectException) {
 						GGLoggerUtil.getLogger().error(cause.getMessage());

@@ -1,7 +1,5 @@
 package xzcode.ggserver.core.common.handler.pack.impl;
 
-import java.util.Arrays;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -9,7 +7,6 @@ import xzcode.ggserver.core.common.config.GGConfig;
 import xzcode.ggserver.core.common.handler.pack.IReceivePackHandler;
 import xzcode.ggserver.core.common.message.Pack;
 import xzcode.ggserver.core.common.message.request.task.RequestMessageTask;
-import xzcode.ggserver.core.common.session.GGSession;
 
 public class DefaultReceivePackHandler implements IReceivePackHandler {
 	

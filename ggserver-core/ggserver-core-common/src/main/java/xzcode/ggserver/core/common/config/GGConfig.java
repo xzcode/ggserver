@@ -78,7 +78,7 @@ public class GGConfig {
 	
 	protected ISessionFactory sessionFactory;
 	
-	protected ISerializer serializer;
+	protected ISerializer serializer = SerializerFactory.geSerializer(serializerType);
 	
 	protected IDecodeHandler decodeHandler;
 	protected IEncodeHandler encodeHandler;

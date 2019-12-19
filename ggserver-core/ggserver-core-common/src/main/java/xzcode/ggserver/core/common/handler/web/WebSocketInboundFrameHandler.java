@@ -29,6 +29,7 @@ import io.netty.handler.codec.http.websocketx.WebSocketServerHandshaker;
 import io.netty.handler.codec.http.websocketx.WebSocketServerHandshakerFactory;
 import io.netty.util.CharsetUtil;
 import xzcode.ggserver.core.common.config.GGConfig;
+import xzcode.ggserver.core.common.constant.ProtocolTypeConstants;
 
 
 public class WebSocketInboundFrameHandler extends SimpleChannelInboundHandler<Object> {
@@ -116,7 +117,7 @@ public class WebSocketInboundFrameHandler extends SimpleChannelInboundHandler<Ob
     	if (frame instanceof BinaryWebSocketFrame) {
     		ByteBuf in = ((BinaryWebSocketFrame) frame).content();
     		//调用解码处理器
-    		config.getDecodeHandler().handle(ctx, in);
+    		config.getDecodeHandler().handle(ctx, in, ProtocolTypeConstants.WEBSOCKET);
     		return;
     	}
     	if (frame instanceof CloseWebSocketFrame) {

@@ -12,10 +12,14 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPromise;
+import io.netty.util.AttributeKey;
+import xzcode.ggserver.core.common.channel.DefaultChannelAttributeKeys;
 import xzcode.ggserver.core.common.config.GGConfig;
+import xzcode.ggserver.core.common.constant.ProtocolTypeConstants;
 import xzcode.ggserver.core.common.handler.codec.IEncodeHandler;
 import xzcode.ggserver.core.common.message.Pack;
 import xzcode.ggserver.core.common.session.GGSession;
+import xzcode.ggserver.core.common.utils.logger.GGLoggerUtil;
 
 /**
  * 
@@ -31,6 +35,11 @@ public class DefaultEncodeHandler implements IEncodeHandler {
 	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultEncodeHandler.class);
 	
 	/**
+	 * 数据包长度标识 字节数
+	 */
+	public static final int PACKAGE_LEN = 4;
+	
+	/**
 	 * 元数据标识占用字节数
 	 */
 	public static final int METADATA_TAG_LEN= 2;
@@ -44,6 +53,13 @@ public class DefaultEncodeHandler implements IEncodeHandler {
 	 * 所有标识长度
 	 */
 	public static final int ALL_TAG_LEN = METADATA_TAG_LEN + ACTION_TAG_LEN;
+	
+	
+	/**
+	 * 协议类型channel key
+	 */
+	protected static final AttributeKey<String> PROTOCOL_TYPE_KEY = AttributeKey.valueOf(DefaultChannelAttributeKeys.PROTOCOL_TYPE);
+	
 	    
 
 	private GGConfig config;
@@ -65,7 +81,15 @@ public class DefaultEncodeHandler implements IEncodeHandler {
 	
 	
 	@Override
-	public ByteBuf handle(ChannelHandlerContext ctx, Pack pack, ChannelPromise promise){
+	public ByteBuf handle(ChannelHandlerContext ctx, Pack pack){
+		
+		Channel channel = ctx.channel();
+		String protocolType = channel.attr(PROTOCOL_TYPE_KEY).get();
+		
+		if(GGLoggerUtil.getLogger().isInfoEnabled()){
+			pack.setProtocolType(protocolType);
+			GGLoggerUtil.logPack(pack, Pack.OperType.RESPONSE, channel);
+        }
 		
 		ByteBuf out = null;
 		
@@ -74,6 +98,8 @@ public class DefaultEncodeHandler implements IEncodeHandler {
 		byte[] bodyBytes = (byte[]) pack.getMessage();
 		
 		int packLen = ALL_TAG_LEN;
+		
+		
 		if (metaBytes != null) {
 			packLen += metaBytes.length;		
 		}
@@ -83,7 +109,15 @@ public class DefaultEncodeHandler implements IEncodeHandler {
 		if (bodyBytes != null) {
 			packLen += bodyBytes.length;			
 		}
-		out = ctx.alloc().buffer(packLen);
+		
+		//判断协议类型
+		if (ProtocolTypeConstants.TCP.equals(protocolType)) {
+			out = ctx.alloc().buffer(packLen);
+			out.writeInt(packLen);
+		}else {
+			out = ctx.alloc().buffer(packLen);			
+		}
+		
 		
 		//metadata
 		if (metaBytes != null) {
