@@ -120,7 +120,7 @@ public class AlgoG28Util extends BasicAlgoUtil {
 		CARD_TYPES.put(TONG_8 * 1000 + TONG_8, AlgoG28CardType.BAO_8);
 		CARD_TYPES.put(TONG_9 * 1000 + TONG_9, AlgoG28CardType.BAO_9);
 		
-		CARD_TYPES.put(BAI_BAN * 1000 + BAI_BAN, AlgoG28CardType.BAO_1);
+		CARD_TYPES.put(BAI_BAN * 1000 + BAI_BAN, AlgoG28CardType.TIAN_WANG);
 		
 	}
 	
