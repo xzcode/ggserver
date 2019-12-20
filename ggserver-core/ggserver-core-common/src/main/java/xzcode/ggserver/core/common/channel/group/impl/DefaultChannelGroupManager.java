@@ -41,6 +41,9 @@ public class DefaultChannelGroupManager implements IChannelGroupManager{
 		if (!channelGroups.containsKey(channelGroupId)) {
 			DefaultChannelGroup defaultChannelGroup = new DefaultChannelGroup(channelGroupId);
 			putChannelGroup = channelGroups.putIfAbsent(channelGroupId, defaultChannelGroup);
+			if (putChannelGroup == null) {
+				putChannelGroup = defaultChannelGroup;
+			}
 		}else {
 			putChannelGroup = channelGroups.get(channelGroupId);
 		}
