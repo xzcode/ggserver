@@ -23,10 +23,11 @@ public class DefaultSessionManager implements ISessionManager {
 	
 	public DefaultSessionManager(GGConfig config) {
 		this.config = config;
-		sessionMap = new ConcurrentHashMap<>(config.getWorkThreadSize() * 1000);
+		int initSize = config.getWorkThreadSize() * 1000;
+		sessionMap = new ConcurrentHashMap<>(initSize);
 		this.startSessionExpireTask();
 	}
-
+	
 	/**
 	 * 启动会话超时检查任务
 	 * 

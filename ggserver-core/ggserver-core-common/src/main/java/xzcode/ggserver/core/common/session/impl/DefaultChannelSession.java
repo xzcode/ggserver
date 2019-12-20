@@ -1,4 +1,4 @@
-package xzcode.ggserver.core.common.session;
+package xzcode.ggserver.core.common.session.impl;
 
 import io.netty.channel.Channel;
 import io.netty.util.AttributeKey;

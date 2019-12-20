@@ -1,10 +1,9 @@
-package xzcode.ggserver.core.common.session;
+package xzcode.ggserver.core.common.session.impl;
 
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.netty.channel.Channel;
 import xzcode.ggserver.core.common.config.GGConfig;
 import xzcode.ggserver.core.common.event.IEventManager;
 import xzcode.ggserver.core.common.executor.ITaskExecutor;
@@ -13,6 +12,8 @@ import xzcode.ggserver.core.common.future.GGNettyFacadeFuture;
 import xzcode.ggserver.core.common.future.IGGFuture;
 import xzcode.ggserver.core.common.handler.serializer.ISerializer;
 import xzcode.ggserver.core.common.message.meta.provider.IMetadataProvider;
+import xzcode.ggserver.core.common.session.GGSession;
+import xzcode.ggserver.core.common.session.listener.ISessionDisconnectListener;
 
 /**
  * sesson默认实现
@@ -33,6 +34,7 @@ public abstract class AbstractSession<C extends GGConfig> implements GGSession {
 	public AbstractSession(String sessionId, C config) {
 		this.config = config;
 		this.sessionId = sessionId;
+		this.updateExpire();
 	}
 
 	public C getConfig() {

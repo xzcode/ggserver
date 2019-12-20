@@ -28,6 +28,8 @@ import xzcode.ggserver.core.common.message.request.manager.IRequestMessageManage
 import xzcode.ggserver.core.common.message.request.manager.RequestMessageManager;
 import xzcode.ggserver.core.common.session.factory.DefaultChannelSessionFactory;
 import xzcode.ggserver.core.common.session.factory.ISessionFactory;
+import xzcode.ggserver.core.common.session.id.DefaultSessionIdGenerator;
+import xzcode.ggserver.core.common.session.id.ISessionIdGenerator;
 import xzcode.ggserver.core.common.session.manager.DefaultSessionManager;
 import xzcode.ggserver.core.common.session.manager.ISessionManager;
 
@@ -77,6 +79,7 @@ public class GGConfig {
 	protected long 		sessionExpireMs = 2L * 60L * 1000L;
 	
 	protected ISessionFactory sessionFactory;
+	protected ISessionIdGenerator sessionIdGenerator;
 	
 	protected ISerializer serializer = SerializerFactory.geSerializer(serializerType);
 	
@@ -102,6 +105,7 @@ public class GGConfig {
 	
 	
 	protected ThreadFactory workerGroupThreadFactory;
+
 	
 	public void init() {
 		requestMessageManager = new RequestMessageManager();
@@ -147,6 +151,9 @@ public class GGConfig {
 		
 		if (sessionFactory == null) {
 			sessionFactory = new DefaultChannelSessionFactory(this);
+		}
+		if (sessionIdGenerator == null) {
+			sessionIdGenerator = new DefaultSessionIdGenerator();
 		}
 		
 		this.inited = true;
@@ -419,4 +426,11 @@ public class GGConfig {
 		this.metadataProvider = metadataProvider;
 	}
 	
+	public ISessionIdGenerator getSessionIdGenerator() {
+		return sessionIdGenerator;
+	}
+	
+	public void setSessionIdGenerator(ISessionIdGenerator sessionIdGenerator) {
+		this.sessionIdGenerator = sessionIdGenerator;
+	}
 }

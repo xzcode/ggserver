@@ -1,6 +1,5 @@
 package xzcode.ggserver.core.common.message.response.support;
 
-import java.util.Arrays;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
@@ -8,8 +7,6 @@ import org.slf4j.Logger;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
-import io.netty.util.AttributeKey;
-import xzcode.ggserver.core.common.channel.DefaultChannelAttributeKeys;
 import xzcode.ggserver.core.common.executor.ITaskExecutor;
 import xzcode.ggserver.core.common.filter.IFilterManager;
 import xzcode.ggserver.core.common.future.GGFailedFuture;
@@ -132,6 +129,11 @@ public interface ISessionSendMessageSupport extends IMakePackSupport {
 	 * @author zai 2019-11-24 17:29:24
 	 */
 	default IGGFuture send(Response response, long delay, TimeUnit timeUnit) {
+		if (response.getMetadata() == null) {
+			IMetadataProvider<?> metadataProvider = getMetadataProvider();
+			Object metadata = metadataProvider.provide(response.getSession());
+			response.setMetadata(metadata);			
+		}
 		return send(makePack(response), delay, timeUnit);
 	}
 	
@@ -144,11 +146,6 @@ public interface ISessionSendMessageSupport extends IMakePackSupport {
 	 * 2019-12-12 15:57:08
 	 */
 	default IGGFuture send(Response response) {
-		if (response.getMetadata() != null) {
-			IMetadataProvider<?> metadataProvider = getMetadataProvider();
-			Object metadata = metadataProvider.provide(response.getSession());
-			response.setMetadata(metadata);			
-		}
 		return send(response, 0L, TimeUnit.MILLISECONDS);
 	}
 	

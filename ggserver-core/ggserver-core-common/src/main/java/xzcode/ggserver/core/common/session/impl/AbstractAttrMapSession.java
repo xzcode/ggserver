@@ -1,4 +1,4 @@
-package xzcode.ggserver.core.common.session;
+package xzcode.ggserver.core.common.session.impl;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

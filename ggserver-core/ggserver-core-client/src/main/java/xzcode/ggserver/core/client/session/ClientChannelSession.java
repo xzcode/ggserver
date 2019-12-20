@@ -7,7 +7,7 @@ import xzcode.ggserver.core.client.config.GGClientConfig;
 import xzcode.ggserver.core.client.pool.IChannelPoolSendMessageSupport;
 import xzcode.ggserver.core.common.future.IGGFuture;
 import xzcode.ggserver.core.common.message.Pack;
-import xzcode.ggserver.core.common.session.DefaultChannelSession;
+import xzcode.ggserver.core.common.session.impl.DefaultChannelSession;
 
 /**
  * 客户端会后

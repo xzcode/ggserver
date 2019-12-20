@@ -1,4 +1,6 @@
-package xzcode.ggserver.core.common.session;
+package xzcode.ggserver.core.common.session.listener;
+
+import xzcode.ggserver.core.common.session.GGSession;
 
 /**
  * 会话断开连接监听器

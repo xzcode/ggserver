@@ -1,7 +1,6 @@
 package xzcode.ggserver.core.common.session.factory;
 
 import java.net.InetSocketAddress;
-import java.net.SocketAddress;
 
 import io.netty.channel.Channel;
 import io.netty.util.AttributeKey;
@@ -11,8 +10,10 @@ import xzcode.ggserver.core.common.event.EventTask;
 import xzcode.ggserver.core.common.event.GGEvents;
 import xzcode.ggserver.core.common.message.Pack;
 import xzcode.ggserver.core.common.message.request.Request;
-import xzcode.ggserver.core.common.session.DefaultChannelSession;
 import xzcode.ggserver.core.common.session.GGSession;
+import xzcode.ggserver.core.common.session.id.DefaultSessionIdGenerator;
+import xzcode.ggserver.core.common.session.id.ISessionIdGenerator;
+import xzcode.ggserver.core.common.session.impl.DefaultChannelSession;
 import xzcode.ggserver.core.common.utils.logger.GGLoggerUtil;
 
 /**
@@ -58,7 +59,7 @@ public class DefaultChannelSessionFactory implements ISessionFactory{
 	@Override
 	public void channelActive(Channel channel) {
 		//初始化session
-		DefaultChannelSession session = new DefaultChannelSession(channel, channel.id().asLongText(), config);
+		DefaultChannelSession session = new DefaultChannelSession(channel, config.getSessionIdGenerator().generateSessionId(channel), config);
 		InetSocketAddress remoteAddress = (InetSocketAddress)channel.remoteAddress();
 		session.setHost(remoteAddress.getHostName());
 		session.setPort(remoteAddress.getPort());
@@ -79,7 +80,5 @@ public class DefaultChannelSessionFactory implements ISessionFactory{
 			config.getSessionManager().remove(session.getSessonId());
 		}
 	}
-	
-	
 
 }
