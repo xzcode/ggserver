@@ -16,7 +16,7 @@ import xzcode.ggserver.game.card.games.player.RoomPlayer;
  * @author zai
  * 2019-12-21 11:50:27
  */
-public class RoomManager<R extends Room<P, R>, P extends RoomPlayer<R>> {
+public class RoomManager<P extends RoomPlayer<R>, R extends Room<P, R>> {
 	
 	/**
 	 * ggserver对象
@@ -29,14 +29,14 @@ public class RoomManager<R extends Room<P, R>, P extends RoomPlayer<R>> {
 	protected Queue<Runnable> enterRoomQueue = new ConcurrentLinkedQueue<>();
 	
 	/**
-	 * 房间集合
+	 * 大厅集合Map<houseNo,房间集合Map<RoomNo, Room>>
 	 */
-	protected Map<String, Map<String, R>> rooms = new ConcurrentHashMap<>(1000);
+	protected Map<String, Map<String, R>> houses = new ConcurrentHashMap<>(1000);
 	
 	/**
-	 * 玩家集合
+	 * 玩家集合Map<playerNo, player>
 	 */
-	protected Map<String, P> players = new ConcurrentHashMap<>(rooms.size() * 4);
+	protected Map<String, P> players = new ConcurrentHashMap<>(houses.size() * 4);
 	
 	
 	
@@ -44,5 +44,18 @@ public class RoomManager<R extends Room<P, R>, P extends RoomPlayer<R>> {
 		enterRoomQueue.add(enterRoomAction);
 	}
 	
+	public void addRoom(R room) {
+		Map<String, R> rooms = houses.get(room.getHouseNo());
+		rooms.put(room.getRoomNo(), room);
+	}
+	
+	
+	public Map<String, Map<String, R>> getHouses() {
+		return houses;
+	}
+	
+	public Map<String, P> getPlayers() {
+		return players;
+	}
 
 }

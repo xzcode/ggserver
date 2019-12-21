@@ -25,6 +25,11 @@ public abstract class Room<P extends RoomPlayer<R>, R>{
 	protected IGGServer server;
 	
 	/**
+	 * 大厅编号
+	 */
+	protected String houseNo;
+	
+	/**
 	 * 房间编号
 	 */
 	protected String roomNo;
@@ -188,6 +193,14 @@ public abstract class Room<P extends RoomPlayer<R>, R>{
 
 	public void setServer(IGGServer server) {
 		this.server = server;
+	}
+	
+	public String getHouseNo() {
+		return houseNo;
+	}
+	
+	public void setHouseNo(String houseNo) {
+		this.houseNo = houseNo;
 	}
 	
 }
