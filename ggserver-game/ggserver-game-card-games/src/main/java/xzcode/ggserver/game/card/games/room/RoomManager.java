@@ -6,6 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import xzcode.ggserver.core.server.IGGServer;
+import xzcode.ggserver.game.card.games.house.House;
 import xzcode.ggserver.game.card.games.player.RoomPlayer;
 
 /**
@@ -16,7 +17,7 @@ import xzcode.ggserver.game.card.games.player.RoomPlayer;
  * @author zai
  * 2019-12-21 11:50:27
  */
-public class RoomManager<P extends RoomPlayer<R>, R extends Room<P, R>> {
+public class RoomManager<P extends RoomPlayer<R>, R extends Room<P, R>, H extends House<P, R>> {
 	
 	/**
 	 * ggserver对象
@@ -29,9 +30,9 @@ public class RoomManager<P extends RoomPlayer<R>, R extends Room<P, R>> {
 	protected Queue<Runnable> enterRoomQueue = new ConcurrentLinkedQueue<>();
 	
 	/**
-	 * 大厅集合Map<houseNo,房间集合Map<RoomNo, Room>>
+	 * 大厅集合Map<houseNo, house>
 	 */
-	protected Map<String, Map<String, R>> houses = new ConcurrentHashMap<>(1000);
+	protected Map<String, House<P, R>> houses = new ConcurrentHashMap<>(1000);
 	
 	/**
 	 * 玩家集合Map<playerNo, player>
@@ -45,12 +46,28 @@ public class RoomManager<P extends RoomPlayer<R>, R extends Room<P, R>> {
 	}
 	
 	public void addRoom(R room) {
-		Map<String, R> rooms = houses.get(room.getHouseNo());
-		rooms.put(room.getRoomNo(), room);
+		House<P, R> house = houses.get(room.getHouseNo());
+		house.addRoom(room);
+	}
+	
+	public void removeRoom(String roomNo) {
+		House<P, R> house = houses.get(roomNo);
+		if (house == null) {
+			return;
+		}
+		house.removeRoom(roomNo);
+	}
+	
+	public void removeRoom(R room) {
+		House<P, R> house = houses.get(room.getRoomNo());
+		if (house == null) {
+			return;
+		}
+		house.removeRoom(room.getRoomNo());
 	}
 	
 	
-	public Map<String, Map<String, R>> getHouses() {
+	public Map<String, House<P, R>> getHouses() {
 		return houses;
 	}
 	
