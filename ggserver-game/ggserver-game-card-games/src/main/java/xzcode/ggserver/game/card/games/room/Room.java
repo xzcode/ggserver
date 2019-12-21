@@ -25,11 +25,6 @@ public abstract class Room<P extends RoomPlayer<R>, R>{
 	protected IGGServer server;
 	
 	/**
-	 * 房间id
-	 */
-	protected Object roomId;
-
-	/**
 	 * 房间编号
 	 */
 	protected String roomNo;
@@ -150,14 +145,6 @@ public abstract class Room<P extends RoomPlayer<R>, R>{
 
 	public P getPlayer(Object playerId) {
 		return players.get(playerId);
-	}
-
-	public Object getRoomId() {
-		return roomId;
-	}
-
-	public void setRoomId(Object roomId) {
-		this.roomId = roomId;
 	}
 
 	public String getRoomNo() {

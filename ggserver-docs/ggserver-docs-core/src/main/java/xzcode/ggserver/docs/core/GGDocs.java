@@ -87,7 +87,7 @@ public class GGDocs {
 			DocsNamespace docsNamespace = loadClass.getAnnotation(DocsNamespace.class);
 			if (docsNamespace != null) {
 				namespaceName = docsNamespace.name();
-				namespaceDesc = docsNamespace.description();
+				namespaceDesc = docsNamespace.desc();
 			}
 			
 			Namespace namespaceModel = doc.getNamespace(namespaceName);

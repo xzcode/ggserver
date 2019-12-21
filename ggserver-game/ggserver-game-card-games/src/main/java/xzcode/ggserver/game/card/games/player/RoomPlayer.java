@@ -6,10 +6,17 @@ import xzcode.ggserver.game.core.player.Player;
  * 房间玩家
  * 
  * @param <R>
- * @author zzz
- * 2019-09-22 10:07:01
+ * @author zai
+ * 2019-12-21 15:57:44
  */
-public class RoomPlayer<R> extends Player{
+public class RoomPlayer<R> extends Player {
+	
+	/**
+	 * 玩家编号
+	 */
+	protected String playerNo;
+	
+	
 	/**
 	 * IP地址
 	 */
@@ -18,7 +25,7 @@ public class RoomPlayer<R> extends Player{
 	/**
 	 * 用户座号
 	 */
-	protected int seatNo; 
+	protected int seat; 
 	
 	/**
 	 * 是否已准备
@@ -49,11 +56,11 @@ public class RoomPlayer<R> extends Player{
 	public void setIp(String ip) {
 		this.ip = ip;
 	}
-	public int getSeatNo() {
-		return seatNo;
+	public int getSeat() {
+		return seat;
 	}
-	public void setSeatNo(int seatNo) {
-		this.seatNo = seatNo;
+	public void setSeat(int seatNo) {
+		this.seat = seatNo;
 	}
 	
 	public boolean isReady() {
@@ -68,5 +75,13 @@ public class RoomPlayer<R> extends Player{
 	public void setInGame(boolean inGame) {
 		this.inGame = inGame;
 	}
+	public String getPlayerNo() {
+		return playerNo;
+	}
+	public void setPlayerNo(String playerNo) {
+		this.playerNo = playerNo;
+	}
+	
+	
 	
 }

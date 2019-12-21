@@ -36,6 +36,18 @@ public interface ITaskExecutor {
 	 */
 	<V> IGGFuture submitTask(Callable<V> callable);
 	
+	
+	/**
+	 * 执行计划任务
+	 * 
+	 * @param delayMs
+	 * @param runnable
+	 * @return
+	 * @author zai
+	 * 2019-12-20 19:27:05
+	 */
+	IGGFuture schedule(long delayMs, Runnable runnable);
+	
 	/**
 	 * 执行计划任务
 	 * @param delay 延迟时间
