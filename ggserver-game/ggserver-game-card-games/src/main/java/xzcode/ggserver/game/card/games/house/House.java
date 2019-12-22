@@ -1,10 +1,10 @@
 package xzcode.ggserver.game.card.games.house;
 
 import java.util.Map;
-import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
+import xzcode.ggserver.core.common.executor.ITaskExecutor;
+import xzcode.ggserver.core.common.executor.SingleThreadTaskExecutor;
 import xzcode.ggserver.game.card.games.player.RoomPlayer;
 import xzcode.ggserver.game.card.games.room.Room;
 import xzcode.ggserver.game.card.games.room.enter.IEnterRoomAction;
@@ -26,10 +26,18 @@ H extends House<P, R, H>
 > 
 {
 	
-	/**
-	 * 进入房间队列
-	 */
-	protected Queue<Runnable> enterRoomQueue = new ConcurrentLinkedQueue<>();
+	protected String houseNo;
+	
+	protected String houseName;
+	
+	protected ITaskExecutor executor;
+	
+	
+	
+	public House(String houseNo) {
+		this.houseNo = houseNo;
+		executor = new SingleThreadTaskExecutor("House-"+ houseNo +"-");
+	}
 
 	/**
 	 * 房间集合
@@ -38,9 +46,13 @@ H extends House<P, R, H>
 	
 	
 	public void enterRoom(IEnterRoomAction<P, R, H> enterRoomAction) {
-		// 所有进房操作必须先进入队列
-		this.enterRoomQueue.add(enterRoomAction);
+		// 所有进房操作必须使用单线程任务执行器进行处理
+		executor.submitTask(enterRoomAction);
 	}
+	
+	
+	
+	
 	
 	/**
 	 * 添加房间
@@ -74,6 +86,33 @@ H extends House<P, R, H>
 	public void removeRoom(String roomNo) {
 		rooms.remove(roomNo);
 	}
+
+	public String getHouseNo() {
+		return houseNo;
+	}
+
+	public void setHouseNo(String houseNo) {
+		this.houseNo = houseNo;
+	}
+
+	public String getHouseName() {
+		return houseName;
+	}
+
+	public void setHouseName(String houseName) {
+		this.houseName = houseName;
+	}
+
+	public Map<String, R> getRooms() {
+		return rooms;
+	}
+
+	public void setRooms(Map<String, R> rooms) {
+		this.rooms = rooms;
+	}
+	
+	
+	
 	
 	
 }

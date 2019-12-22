@@ -1,21 +1,21 @@
 package xzcode.ggserver.core.common.executor;
 
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.DefaultEventLoopGroup;
 import io.netty.util.concurrent.ScheduledFuture;
 import xzcode.ggserver.core.common.executor.task.AsyncCallableTask;
 import xzcode.ggserver.core.common.executor.task.AsyncRunnableTask;
 import xzcode.ggserver.core.common.future.GGNettyFacadeFuture;
 import xzcode.ggserver.core.common.future.IGGFuture;
 
-public class NioEventLoopGroupTaskExecutor implements ITaskExecutor{
+public class DefaultEventLoopGroupTaskExecutor implements ITaskExecutor{
 	
-	private NioEventLoopGroup executor;
+	private DefaultEventLoopGroup executor;
 
-	public NioEventLoopGroupTaskExecutor(NioEventLoopGroup executor) {
-		super();
+	public DefaultEventLoopGroupTaskExecutor(DefaultEventLoopGroup executor) {
 		this.executor = executor;
 	}
 
@@ -68,6 +68,11 @@ public class NioEventLoopGroupTaskExecutor implements ITaskExecutor{
 	@Override
 	public IGGFuture schedule(long delayMs, Runnable runnable) {
 		return schedule(delayMs, TimeUnit.MILLISECONDS, runnable);
+	}
+
+	@Override
+	public ExecutorService nextEvecutor() {
+		return executor.next();
 	}
 
 

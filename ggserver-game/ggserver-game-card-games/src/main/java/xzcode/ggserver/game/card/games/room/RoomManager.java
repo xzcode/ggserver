@@ -37,17 +37,40 @@ H extends House<P, R, H>
 	/**
 	 * 玩家集合Map<playerNo, player>
 	 */
-	protected Map<String, P> players = new ConcurrentHashMap<>(houses.size() * 4);
+	protected Map<String, P> players;
 	
-	
-	public RoomManager() {
+	/**
+	 * 构造器
+	 * @param designPlayerNum 预计总玩家数量
+	 */
+	public RoomManager(int designPlayerNum) {
+		
 		houses = initHouses();
+		
+		players = new ConcurrentHashMap<>(designPlayerNum);
+		
 	}
 	
-	abstract ConcurrentHashMap<String, House<P, R, H>> initHouses();
+	/**
+	 * 初始化大厅集合
+	 * 
+	 * @return
+	 * @author zai
+	 * 2019-12-22 16:24:08
+	 */
+	protected abstract ConcurrentHashMap<String, House<P, R, H>> initHouses();
 	
+	
+	/**
+	 * 进入房间操作
+	 * 
+	 * @param enterRoomAction
+	 * @author zai
+	 * 2019-12-22 16:24:24
+	 */
 	public void enterRoom(IEnterRoomAction<P, R, H> enterRoomAction) {
 		House<P, R, H> house = houses.get(enterRoomAction.getHouseNo());
+		//查询并进入指定大厅房间
 		if (house != null) {
 			house.enterRoom(enterRoomAction);
 		}
