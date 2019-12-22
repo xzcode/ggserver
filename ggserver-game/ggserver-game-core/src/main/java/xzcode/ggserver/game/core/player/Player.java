@@ -1,6 +1,7 @@
 package xzcode.ggserver.game.core.player;
 
 import xzcode.ggserver.core.common.session.GGSession;
+import xzcode.ggserver.game.core.player.support.IGGSessionPlayerSupport;
 
 /**
      玩家基类
@@ -8,14 +9,14 @@ import xzcode.ggserver.core.common.session.GGSession;
  * @author zai
  * 2019-01-21 20:21:20
  */
-public class Player {
+public class Player implements IGGSessionPlayerSupport{
 	
 	protected GGSession session; 
 	
 	/**
 	 * 玩家id
 	 */
-	protected Object playerId; 
+	protected String playerId; 
 	
 	/**
 	 * 用户昵称
@@ -35,12 +36,12 @@ public class Player {
 	
 	
 
-	public Object getPlayerId() {
+	public String getPlayerId() {
 		return playerId;
 	}
 
 
-	public void setPlayerId(Object playerId) {
+	public void setPlayerId(String playerId) {
 		this.playerId = playerId;
 	}
 
@@ -84,5 +85,6 @@ public class Player {
 	public void setSession(GGSession session) {
 		this.session = session;
 	}
+
 	
 }

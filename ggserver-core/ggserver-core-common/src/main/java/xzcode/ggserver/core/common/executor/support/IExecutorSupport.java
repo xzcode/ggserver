@@ -15,6 +15,13 @@ import xzcode.ggserver.core.common.future.IGGFuture;
  */
 public interface IExecutorSupport extends ITaskExecutor {
 	
+	/**
+	 * 获取任务执行器
+	 * 
+	 * @return
+	 * @author zai
+	 * 2019-12-21 11:16:45
+	 */
 	ITaskExecutor getTaskExecutor();
 
 	@Override
@@ -52,7 +59,10 @@ public interface IExecutorSupport extends ITaskExecutor {
 	default IGGFuture scheduleWithFixedDelay(long initialDelay, long delay, TimeUnit timeUnit, Runnable runnable) {
 		return getTaskExecutor().scheduleWithFixedDelay(initialDelay, delay, timeUnit, runnable);
 	}
-	
-	
+
+	@Override
+	default IGGFuture schedule(long delayMs, Runnable runnable) {
+		return getTaskExecutor().schedule(delayMs, runnable);
+	}
 	
 }

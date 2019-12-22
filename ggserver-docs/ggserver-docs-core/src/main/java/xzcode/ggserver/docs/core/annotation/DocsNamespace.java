@@ -31,6 +31,6 @@ public @interface DocsNamespace {
 	 * @author zai
 	 * 2018-12-30 11:17:07
 	 */
-	public String description();
+	public String desc();
 	
 }

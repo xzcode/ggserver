@@ -16,7 +16,7 @@ import xzcode.ggserver.game.card.games.room.listener.IPlayerLeaveListener;
  * 
  * @author zai 2018-05-24
  */
-public abstract class Room<P extends RoomPlayer<R>, R>{	
+public abstract class Room<P extends RoomPlayer<R, H>, R, H>{	
 	
 	
 	/**
@@ -25,10 +25,10 @@ public abstract class Room<P extends RoomPlayer<R>, R>{
 	protected IGGServer server;
 	
 	/**
-	 * 房间id
+	 * 大厅编号
 	 */
-	protected Object roomId;
-
+	protected String houseNo;
+	
 	/**
 	 * 房间编号
 	 */
@@ -152,14 +152,6 @@ public abstract class Room<P extends RoomPlayer<R>, R>{
 		return players.get(playerId);
 	}
 
-	public Object getRoomId() {
-		return roomId;
-	}
-
-	public void setRoomId(Object roomId) {
-		this.roomId = roomId;
-	}
-
 	public String getRoomNo() {
 		return roomNo;
 	}
@@ -201,6 +193,14 @@ public abstract class Room<P extends RoomPlayer<R>, R>{
 
 	public void setServer(IGGServer server) {
 		this.server = server;
+	}
+	
+	public String getHouseNo() {
+		return houseNo;
+	}
+	
+	public void setHouseNo(String houseNo) {
+		this.houseNo = houseNo;
 	}
 	
 }

@@ -65,5 +65,10 @@ public class NioEventLoopGroupTaskExecutor implements ITaskExecutor{
 		return new GGNettyFacadeFuture(executor.scheduleWithFixedDelay(new AsyncRunnableTask(runnable), initialDelay, delay, timeUnit));
 	}
 
+	@Override
+	public IGGFuture schedule(long delayMs, Runnable runnable) {
+		return schedule(delayMs, TimeUnit.MILLISECONDS, runnable);
+	}
+
 
 }

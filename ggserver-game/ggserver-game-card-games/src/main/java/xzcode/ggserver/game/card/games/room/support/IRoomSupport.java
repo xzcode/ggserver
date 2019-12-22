@@ -26,7 +26,7 @@ import xzcode.ggserver.game.card.games.player.RoomPlayer;
  * 2019-02-16 17:57:18
  * @param <R>
  */
-public interface IRoomSupport<P extends RoomPlayer<R>, R>  extends IGGServerSupport {
+public interface IRoomSupport<P extends RoomPlayer<R, H>, R, H>  extends IGGServerSupport {
 	
 	
 	
@@ -255,9 +255,9 @@ public interface IRoomSupport<P extends RoomPlayer<R>, R>  extends IGGServerSupp
 			List<P> pList = getSortedInGamePlayerList();
 			//排除起始座位号
 			if (condition != null) {
-				pList = pList.stream().filter(o -> o.getSeatNo() != startSeatNo && condition.check(o)).collect(Collectors.toList());
+				pList = pList.stream().filter(o -> o.getSeat() != startSeatNo && condition.check(o)).collect(Collectors.toList());
 			}else {
-				pList = pList.stream().filter(o -> o.getSeatNo() != startSeatNo).collect(Collectors.toList());
+				pList = pList.stream().filter(o -> o.getSeat() != startSeatNo).collect(Collectors.toList());
 			}
 			
 			if (pList.size() == 0) {
@@ -265,13 +265,13 @@ public interface IRoomSupport<P extends RoomPlayer<R>, R>  extends IGGServerSupp
 			}
 			
 			for (P p : pList) {
-				if (p.getSeatNo() > startSeatNo) {
+				if (p.getSeat() > startSeatNo) {
 					return p;
 				}
 			}
 			
 			for (P p : pList) {
-				if (p.getSeatNo() < startSeatNo) {
+				if (p.getSeat() < startSeatNo) {
 					return p;
 				}
 			}
@@ -344,7 +344,7 @@ public interface IRoomSupport<P extends RoomPlayer<R>, R>  extends IGGServerSupp
 	 * @author zai
 	 * 2019-02-21 11:15:34
 	 */
-	default int getSeatNo() {
+	default int getSeat() {
 		
 		int maxPlayerNum = getMaxPlayerNum();
 		List<Integer> nums = new ArrayList<>(maxPlayerNum);
@@ -353,10 +353,29 @@ public interface IRoomSupport<P extends RoomPlayer<R>, R>  extends IGGServerSupp
 		}
 			Map<Object, P> players = getPlayers();
 			for (Entry<Object, P> entry : players.entrySet()) {
-				nums.remove(new Integer(entry.getValue().getSeatNo()));
+				nums.remove(new Integer(entry.getValue().getSeat()));
 			}
 			return nums.get(0);
-	};
+	}
+	
+	/**
+	 * 根据座位号获取玩家
+	 * 
+	 * @param seat
+	 * @return
+	 * @author zai
+	 * 2019-12-21 16:09:53
+	 */
+	default P getPlayerBySeat(int seat) {
+		List<P> players = getPlayerList();
+		for (P p : players) {
+			if (p.getSeat() == seat) {
+				return p;
+			}
+		}
+		return null;
+	}
+	
 	
 	/**
 	 * 获取最大玩家数
@@ -417,111 +436,6 @@ public interface IRoomSupport<P extends RoomPlayer<R>, R>  extends IGGServerSupp
 
 	
 	/**
-	 * 获取玩家客户端座位号号
-	 * 
-	 * @param maxPlayer 最大玩家数
-	 * @param selfSeatNo 当前玩家服务端座位号
-	 * @param targetSeatNo 目标玩家服务端座位号
-	 * @return
-	 * @author zai
-	 * 2019-03-12 18:58:35
-	 */
-	default int getPlayerClientSeatNo(int maxPlayer, int selfSeatNo,int targetSeatNo) {
-		return ((maxPlayer - selfSeatNo + targetSeatNo) % maxPlayer +1);
-	}
-	/**
-	 * 获取玩家客户端座位号 适合在自己发给自己 但是有转座位号的需求
-	 * 
-	 * @param maxPlayer
-	 * @param selfSeatNo
-	 * @return
-	 * @author Wmc
-	 * 2019-03-15 18:57:09
-	 */
-	default int getPlayerClientSeatNo(int selfSeatNo,int targetSeatNo) {
-		return getPlayerClientSeatNo(getMaxPlayerNum(), selfSeatNo, targetSeatNo);
-	}
-	
-	/**
-	 * 获取玩家客户端座位号 适合在自己发给自己 但是有转座位号的需求
-	 * 
-	 * @param maxPlayer
-	 * @param selfSeatNo
-	 * @return
-	 * @author zai
-	 * 2019-03-19 11:13:21
-	 */
-	default int getSelfClientSeatNo(int maxPlayer, int selfSeatNo) {
-		return getPlayerClientSeatNo(maxPlayer,selfSeatNo,selfSeatNo);
-	}
-	
-	/**
-	 * 获取玩家自己的客户端座位号
-	 * 
-	 * @param selfSeatNo
-	 * @return
-	 * @author zai
-	 * 2019-03-18 18:10:01
-	 */
-	default int getSelfClientSeatNo(int selfSeatNo) {
-		return getPlayerClientSeatNo(getMaxPlayerNum(), selfSeatNo,selfSeatNo);
-	}
-
-	/**
-	 * 获取自己的客户端座位号
-	 * 
-	 * @return
-	 * @author zai
-	 * 2019-03-22 15:53:32
-	 */
-	default int getSelfClientSeatNo() {
-		return 1;
-	}
-	
-	/**
-	 * 获取玩家客户端座位号
-	 * 
-	 * @param self 
-	 * @param target
-	 * @return
-	 * @author zai
-	 * 2019-04-20 13:18:51
-	 */
-	default int getClientSeatNo(P self, P target) {
-		return getPlayerClientSeatNo(getMaxPlayerNum(), self.getSeatNo(), target.getSeatNo());
-	}
-
-	/**
-	 * 根据客户端座位号获取玩家
-	 * 
-	 * @param room
-	 * @param selfSeatNo
-	 * @param targetClientSeatNo
-	 * @return
-	 * @author zai
-	 * 2019-03-26 20:07:28
-	 */
-	default P getPlayerByClientSeatNo(int selfSeatNo, int targetClientSeatNo) {
-		return getPlayer(player -> {
-			return getPlayerClientSeatNo(selfSeatNo, player.getSeatNo()) == targetClientSeatNo;
-		}); 
-	};
-	
-	/**
-	 * 根据客户端座位号获取玩家
-	 * 
-	 * @param room
-	 * @param self
-	 * @param targetClientSeatNo
-	 * @return
-	 * @author zai
-	 * 2019-04-20 13:23:15
-	 */
-	default P getPlayerByClientSeatNo(P self, int targetClientSeatNo) {
-		return getPlayerByClientSeatNo(self.getSeatNo(), targetClientSeatNo);
-	};
-
-	/**
 	 * 获取已排序的参与游戏的玩家
 	 * 
 	 * @param room
@@ -533,7 +447,7 @@ public interface IRoomSupport<P extends RoomPlayer<R>, R>  extends IGGServerSupp
 		List<P> inGamePlayers = getPlayers(player -> {
 			return player.isInGame();
 		});
-		Collections.sort(inGamePlayers, (x, y) -> x.getSeatNo() - y.getSeatNo());
+		Collections.sort(inGamePlayers, (x, y) -> x.getSeat() - y.getSeat());
 		return inGamePlayers;
 	}
 	
