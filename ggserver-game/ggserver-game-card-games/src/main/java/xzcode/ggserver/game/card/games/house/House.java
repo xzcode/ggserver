@@ -25,11 +25,19 @@ R extends Room<P, R, H>,
 H extends House<P, R, H>
 > 
 {
-	
+	/**
+	 * 大厅编号
+	 */
 	protected String houseNo;
 	
+	/**
+	 * 大厅名称
+	 */
 	protected String houseName;
 	
+	/**
+	 * 任务执行器
+	 */
 	protected ITaskExecutor executor;
 	
 	

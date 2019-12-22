@@ -1,4 +1,4 @@
-package xzcode.ggserver.game.card.games.room;
+package xzcode.ggserver.game.card.games.room.manager;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -6,6 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import xzcode.ggserver.core.server.IGGServer;
 import xzcode.ggserver.game.card.games.house.House;
 import xzcode.ggserver.game.card.games.player.RoomPlayer;
+import xzcode.ggserver.game.card.games.room.Room;
 import xzcode.ggserver.game.card.games.room.enter.IEnterRoomAction;
 
 /**

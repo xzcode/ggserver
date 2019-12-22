@@ -21,12 +21,22 @@ H extends House<P, R, H>
 >
 extends Room<P, R, H>{	
 	
+	/**
+	 * 单线程执行器
+	 */
 	protected ITaskExecutor executor;
 
 	public SingleThreadExecutorRoom(ITaskExecutor singleThreadExecutor) {
 		this.executor = singleThreadExecutor;
 	}
 	
+	/**
+	 * 添加操作到待执行队列
+	 * 
+	 * @param oper
+	 * @author zai
+	 * 2019-12-22 17:33:57
+	 */
 	public void addOperaction(IRoomOperaction oper) {
 		executor.submitTask(oper);
 	}
