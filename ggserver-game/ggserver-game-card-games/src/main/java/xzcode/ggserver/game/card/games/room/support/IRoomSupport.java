@@ -13,9 +13,11 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import xzcode.ggserver.core.common.message.response.Response;
+import xzcode.ggserver.game.card.games.house.House;
 import xzcode.ggserver.game.card.games.interfaces.IGGServerSupport;
 import xzcode.ggserver.game.card.games.interfaces.condition.ICheckCondition;
 import xzcode.ggserver.game.card.games.player.RoomPlayer;
+import xzcode.ggserver.game.card.games.room.Room;
 
 /**
  * 房间游戏控制器接口
@@ -26,7 +28,13 @@ import xzcode.ggserver.game.card.games.player.RoomPlayer;
  * 2019-02-16 17:57:18
  * @param <R>
  */
-public interface IRoomSupport<P extends RoomPlayer<R, H>, R, H>  extends IGGServerSupport {
+public interface IRoomSupport
+<
+P extends RoomPlayer<P, R, H>,
+R extends Room<P, R, H>, 
+H extends House<P, R, H>
+>
+extends IGGServerSupport {
 	
 	
 	

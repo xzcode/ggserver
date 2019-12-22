@@ -1,10 +1,13 @@
 package xzcode.ggserver.game.card.games.house;
 
 import java.util.Map;
+import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import xzcode.ggserver.game.card.games.player.RoomPlayer;
 import xzcode.ggserver.game.card.games.room.Room;
+import xzcode.ggserver.game.card.games.room.enter.IEnterRoomAction;
 
 /**
  * 大厅管理器
@@ -17,15 +20,27 @@ import xzcode.ggserver.game.card.games.room.Room;
  */
 public abstract class House
 <
-P extends RoomPlayer<R, H>, 
-R extends Room<P, R, H>,
-H
-> {
+P extends RoomPlayer<P, R, H>,
+R extends Room<P, R, H>, 
+H extends House<P, R, H>
+> 
+{
+	
+	/**
+	 * 进入房间队列
+	 */
+	protected Queue<Runnable> enterRoomQueue = new ConcurrentLinkedQueue<>();
 
 	/**
 	 * 房间集合
 	 */
 	protected Map<String, R> rooms = new ConcurrentHashMap<>(1000);
+	
+	
+	public void enterRoom(IEnterRoomAction<P, R, H> enterRoomAction) {
+		// 所有进房操作必须先进入队列
+		this.enterRoomQueue.add(enterRoomAction);
+	}
 	
 	/**
 	 * 添加房间

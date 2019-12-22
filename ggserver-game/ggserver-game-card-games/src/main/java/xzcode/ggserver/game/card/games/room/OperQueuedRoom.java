@@ -5,6 +5,7 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.TimeUnit;
 
 import xzcode.ggserver.core.common.future.IGGFuture;
+import xzcode.ggserver.game.card.games.house.House;
 import xzcode.ggserver.game.card.games.player.RoomPlayer;
 
 /**
@@ -13,7 +14,13 @@ import xzcode.ggserver.game.card.games.player.RoomPlayer;
  * 
  * @author zai 2018-05-24
  */
-public abstract class OperQueuedRoom<P extends RoomPlayer<R, H>,R, H> extends Room<P, R, H>{	
+public abstract class OperQueuedRoom
+<
+P extends RoomPlayer<P, R, H>,
+R extends Room<P, R, H>, 
+H extends House<P, R, H>
+>
+extends Room<P, R, H>{	
 	
 	/**
 	 * 操作队列

@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import xzcode.ggserver.core.server.IGGServer;
+import xzcode.ggserver.game.card.games.house.House;
 import xzcode.ggserver.game.card.games.player.RoomPlayer;
 import xzcode.ggserver.game.card.games.room.listener.IPlayerEnterListener;
 import xzcode.ggserver.game.card.games.room.listener.IPlayerLeaveListener;
@@ -16,7 +17,12 @@ import xzcode.ggserver.game.card.games.room.listener.IPlayerLeaveListener;
  * 
  * @author zai 2018-05-24
  */
-public abstract class Room<P extends RoomPlayer<R, H>, R, H>{	
+public abstract class Room
+<
+P extends RoomPlayer<P, R, H>,
+R extends Room<P, R, H>, 
+H extends House<P, R, H>
+>{	
 	
 	
 	/**
