@@ -26,7 +26,7 @@ import xzcode.ggserver.game.card.games.player.RoomPlayer;
  * 2019-02-16 17:57:18
  * @param <R>
  */
-public interface IRoomSupport<P extends RoomPlayer<R>, R>  extends IGGServerSupport {
+public interface IRoomSupport<P extends RoomPlayer<R, H>, R, H>  extends IGGServerSupport {
 	
 	
 	

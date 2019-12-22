@@ -12,12 +12,18 @@ import xzcode.ggserver.game.card.games.player.RoomPlayer;
 /**
  * 房间管理器
  * 
- * @param <R>
  * @param <P>
+ * @param <R>
+ * @param <H>
  * @author zai
- * 2019-12-21 11:50:27
+ * 2019-12-22 11:30:22
  */
-public class RoomManager<P extends RoomPlayer<R>, R extends Room<P, R>, H extends House<P, R>> {
+public class RoomManager
+<
+P extends RoomPlayer<R, H>, 
+R extends Room<P, R>, 
+H extends House<P, R>
+> {
 	
 	/**
 	 * ggserver对象
@@ -45,11 +51,7 @@ public class RoomManager<P extends RoomPlayer<R>, R extends Room<P, R>, H extend
 		enterRoomQueue.add(enterRoomAction);
 	}
 	
-	public void addRoom(R room) {
-		House<P, R> house = houses.get(room.getHouseNo());
-		house.addRoom(room);
-	}
-	
+		
 	public void removeRoom(String roomNo) {
 		House<P, R> house = houses.get(roomNo);
 		if (house == null) {
@@ -64,6 +66,14 @@ public class RoomManager<P extends RoomPlayer<R>, R extends Room<P, R>, H extend
 			return;
 		}
 		house.removeRoom(room.getRoomNo());
+	}
+	
+	public void addRoom(R room) {
+		House<P, R> house = houses.get(room.getRoomNo());
+		if (house == null) {
+			return;
+		}
+		house.addRoom(room);
 	}
 	
 	

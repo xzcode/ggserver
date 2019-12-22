@@ -15,7 +15,12 @@ import xzcode.ggserver.game.card.games.room.Room;
  * @author zai
  * 2019-12-21 11:34:05
  */
-public abstract class House<P extends RoomPlayer<R>, R extends Room<P, R>> {
+public abstract class House
+<
+P extends RoomPlayer<R, H>, 
+R extends Room<P, R>,
+H
+> {
 
 	/**
 	 * 房间集合

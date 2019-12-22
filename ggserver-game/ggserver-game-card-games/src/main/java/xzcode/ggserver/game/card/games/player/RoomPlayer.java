@@ -6,10 +6,11 @@ import xzcode.ggserver.game.core.player.Player;
  * 房间玩家
  * 
  * @param <R>
+ * @param <H>
  * @author zai
  * 2019-12-21 15:57:44
  */
-public class RoomPlayer<R> extends Player {
+public class RoomPlayer<R, H> extends Player {
 	
 	/**
 	 * 玩家编号
@@ -43,11 +44,24 @@ public class RoomPlayer<R> extends Player {
 	 */
 	protected R room;
 	
+	/**
+	 * 所在大厅
+	 */
+	protected H house;
+	
 	public R getRoom() {
 		return room;
 	}
 	public void setRoom(R room) {
 		this.room = room;
+	}
+	
+	public H getHouse() {
+		return house;
+	}
+	
+	public void setHouse(H house) {
+		this.house = house;
 	}
 	
 	public String getIp() {
