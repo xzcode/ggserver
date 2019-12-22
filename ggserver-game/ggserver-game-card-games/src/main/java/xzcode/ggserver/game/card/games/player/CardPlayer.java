@@ -3,7 +3,9 @@ package xzcode.ggserver.game.card.games.player;
 import java.util.ArrayList;
 import java.util.List;
 
+import xzcode.ggserver.game.card.games.house.House;
 import xzcode.ggserver.game.card.games.poker.PokerCard;
+import xzcode.ggserver.game.card.games.room.Room;
 
 /**
      牌类玩家基类
@@ -11,7 +13,16 @@ import xzcode.ggserver.game.card.games.poker.PokerCard;
  * @author zai
  * 2019-01-21 20:21:20
  */
-public abstract class CardPlayer<C extends PokerCard, R, H> extends RoomPlayer<R, H> implements ICardPlayer<C>{
+public abstract class CardPlayer
+<
+C extends PokerCard, 
+P extends RoomPlayer<P, R, H>,
+R extends Room<P, R, H>, 
+H extends House<P, R, H>
+> 
+extends RoomPlayer<P, R, H> 
+implements ICardPlayer<C>
+{
 	
 	/**
 	 * 手牌

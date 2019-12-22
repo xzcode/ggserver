@@ -12,10 +12,13 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+import xzcode.ggserver.core.common.executor.support.IExecutorSupport;
 import xzcode.ggserver.core.common.message.response.Response;
-import xzcode.ggserver.game.card.games.interfaces.IGGServerSupport;
+import xzcode.ggserver.core.common.message.response.support.ISendMessageSupport;
+import xzcode.ggserver.game.card.games.house.House;
 import xzcode.ggserver.game.card.games.interfaces.condition.ICheckCondition;
 import xzcode.ggserver.game.card.games.player.RoomPlayer;
+import xzcode.ggserver.game.card.games.room.Room;
 
 /**
  * 房间游戏控制器接口
@@ -26,7 +29,13 @@ import xzcode.ggserver.game.card.games.player.RoomPlayer;
  * 2019-02-16 17:57:18
  * @param <R>
  */
-public interface IRoomSupport<P extends RoomPlayer<R, H>, R, H>  extends IGGServerSupport {
+public interface IRoomSupport
+<
+P extends RoomPlayer<P, R, H>,
+R extends Room<P, R, H>, 
+H extends House<P, R, H>
+>
+extends IExecutorSupport, ISendMessageSupport {
 	
 	
 	
@@ -178,7 +187,7 @@ public interface IRoomSupport<P extends RoomPlayer<R, H>, R, H>  extends IGGServ
 	 */
 	default void bcToAllPlayer(String actionId, Object message) {
 		eachPlayer((player) -> {
-			getGGServer().send(new Response(player.getSession(), null, actionId, message), 0, TimeUnit.MILLISECONDS);
+			send(new Response(player.getSession(), null, actionId, message), 0, TimeUnit.MILLISECONDS);
 		});
 	}
 	
@@ -197,7 +206,7 @@ public interface IRoomSupport<P extends RoomPlayer<R, H>, R, H>  extends IGGServ
 	default void bcToAllPlayer(String actionId, Object message, ICheckCondition<P> condition) {
 		eachPlayer((player) -> {
 			if (condition.check(player)) {
-				getGGServer().send(new Response(player.getSession(), null, actionId, message), 0, TimeUnit.MILLISECONDS);	
+				send(new Response(player.getSession(), null, actionId, message), 0, TimeUnit.MILLISECONDS);	
 			}
 		});
 	}
@@ -215,6 +224,9 @@ public interface IRoomSupport<P extends RoomPlayer<R, H>, R, H>  extends IGGServ
 		Map<Object, P> players = getPlayers();
 		if (players.size() <= 0) {
 			return null;
+		}
+		if (players.size() == 1) {
+			return players.entrySet().stream().findFirst().get().getValue();
 		}
 		return ((Entry<Object, P>)players.entrySet().toArray()[ThreadLocalRandom.current().nextInt(players.size())]).getValue();
 	}
@@ -538,7 +550,7 @@ public interface IRoomSupport<P extends RoomPlayer<R, H>, R, H>  extends IGGServ
 	 */
 	default void bcToAllPlayer(String actionId) {
 		eachPlayer(player -> {
-			getGGServer().send(new Response(player.getSession(), null, actionId, null), 0, TimeUnit.MILLISECONDS);
+			send(new Response(player.getSession(), null, actionId, null), 0, TimeUnit.MILLISECONDS);
 		});
 	}
 

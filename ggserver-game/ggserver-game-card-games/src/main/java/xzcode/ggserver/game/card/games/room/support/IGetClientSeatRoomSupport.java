@@ -1,6 +1,8 @@
 package xzcode.ggserver.game.card.games.room.support;
 
+import xzcode.ggserver.game.card.games.house.House;
 import xzcode.ggserver.game.card.games.player.RoomPlayer;
+import xzcode.ggserver.game.card.games.room.Room;
 
 /**
  * 房间游戏控制器接口
@@ -11,7 +13,12 @@ import xzcode.ggserver.game.card.games.player.RoomPlayer;
  * 2019-02-16 17:57:18
  * @param <R>
  */
-public interface IGetClientSeatRoomSupport<P extends RoomPlayer<R, H>, R, H>  extends IRoomSupport<P, R, H> {
+public interface IGetClientSeatRoomSupport
+<
+P extends RoomPlayer<P, R, H>,
+R extends Room<P, R, H>, 
+H extends House<P, R, H>
+>  extends IRoomSupport<P, R, H> {
 	
 	/**
 	 * 获取玩家客户端座位号号

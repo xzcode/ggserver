@@ -3,13 +3,14 @@ package xzcode.ggserver.core.common.config;
 import java.nio.charset.Charset;
 import java.util.concurrent.ThreadFactory;
 
+import io.netty.channel.DefaultEventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import nonapi.io.github.classgraph.concurrency.SimpleThreadFactory;
 import xzcode.ggserver.core.common.constant.ProtocolTypeConstants;
 import xzcode.ggserver.core.common.event.IEventManager;
 import xzcode.ggserver.core.common.event.impl.DefaultEventManager;
+import xzcode.ggserver.core.common.executor.DefaultEventLoopGroupTaskExecutor;
 import xzcode.ggserver.core.common.executor.ITaskExecutor;
-import xzcode.ggserver.core.common.executor.NioEventLoopGroupTaskExecutor;
 import xzcode.ggserver.core.common.filter.IFilterManager;
 import xzcode.ggserver.core.common.filter.impl.DefaultFilterManager;
 import xzcode.ggserver.core.common.handler.codec.IDecodeHandler;
@@ -50,7 +51,9 @@ public class GGConfig {
 
 	protected int 		bossThreadSize = 0;
 	
-	protected int 		workThreadSize = 32;
+	protected int 		workThreadSize = 0;
+	
+	protected int 		taskThreadSize = 0;
 
 	protected boolean 	idleCheckEnabled = true;
 	
@@ -116,11 +119,11 @@ public class GGConfig {
 			workerGroupThreadFactory = new SimpleThreadFactory("netty-worker-", false);
 		}
 		if (workerGroup == null) {
-			workerGroup = new NioEventLoopGroup(getWorkThreadSize(),workerGroupThreadFactory);	
+			workerGroup = new NioEventLoopGroup(getWorkThreadSize(),getWorkerGroupThreadFactory());	
 		}
 		
 		if (taskExecutor == null) {
-			taskExecutor = new NioEventLoopGroupTaskExecutor(workerGroup);
+			taskExecutor = new DefaultEventLoopGroupTaskExecutor(new DefaultEventLoopGroup(getTaskThreadSize()));
 		}
 		
 		if (decodeHandler == null) {
@@ -202,6 +205,15 @@ public class GGConfig {
 	public void setWorkThreadSize(int workThreadSize) {
 		this.workThreadSize = workThreadSize;
 	}
+	
+	public int getTaskThreadSize() {
+		return taskThreadSize;
+	}
+	
+	public void setTaskThreadSize(int taskThreadSize) {
+		this.taskThreadSize = taskThreadSize;
+	}
+	
 	public long getReaderIdleTime() {
 		return readerIdleTime;
 	}

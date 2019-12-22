@@ -3,8 +3,6 @@ package xzcode.ggserver.core.common.session.impl;
 import io.netty.channel.Channel;
 import io.netty.util.AttributeKey;
 import xzcode.ggserver.core.common.config.GGConfig;
-import xzcode.ggserver.core.common.future.GGNettyFacadeFuture;
-import xzcode.ggserver.core.common.future.IGGFuture;
 
 /**
  * sesson默认实现

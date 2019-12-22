@@ -1,5 +1,7 @@
 package xzcode.ggserver.game.card.games.player;
 
+import xzcode.ggserver.game.card.games.house.House;
+import xzcode.ggserver.game.card.games.room.Room;
 import xzcode.ggserver.game.core.player.Player;
 
 /**
@@ -10,7 +12,12 @@ import xzcode.ggserver.game.core.player.Player;
  * @author zai
  * 2019-12-21 15:57:44
  */
-public class RoomPlayer<R, H> extends Player {
+public class RoomPlayer
+<
+P extends RoomPlayer<P, R, H>,
+R extends Room<P, R, H>, 
+H extends House<P, R, H>
+> extends Player {
 	
 	/**
 	 * 玩家编号

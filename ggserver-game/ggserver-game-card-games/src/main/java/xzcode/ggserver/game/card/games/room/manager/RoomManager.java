@@ -1,13 +1,13 @@
-package xzcode.ggserver.game.card.games.room;
+package xzcode.ggserver.game.card.games.room.manager;
 
 import java.util.Map;
-import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 import xzcode.ggserver.core.server.IGGServer;
 import xzcode.ggserver.game.card.games.house.House;
 import xzcode.ggserver.game.card.games.player.RoomPlayer;
+import xzcode.ggserver.game.card.games.room.Room;
+import xzcode.ggserver.game.card.games.room.enter.IEnterRoomAction;
 
 /**
  * 房间管理器
@@ -20,7 +20,7 @@ import xzcode.ggserver.game.card.games.player.RoomPlayer;
  */
 public abstract class RoomManager
 <
-P extends RoomPlayer<R, H>, 
+P extends RoomPlayer<P, R, H>,
 R extends Room<P, R, H>, 
 H extends House<P, R, H>
 > {
@@ -31,11 +31,6 @@ H extends House<P, R, H>
 	protected IGGServer server;
 	
 	/**
-	 * 进入房间队列
-	 */
-	protected Queue<Runnable> enterRoomQueue = new ConcurrentLinkedQueue<>();
-	
-	/**
 	 * 大厅集合Map<houseNo, house>
 	 */
 	protected Map<String, House<P, R, H>> houses;
@@ -43,17 +38,43 @@ H extends House<P, R, H>
 	/**
 	 * 玩家集合Map<playerNo, player>
 	 */
-	protected Map<String, P> players = new ConcurrentHashMap<>(houses.size() * 4);
+	protected Map<String, P> players;
 	
-	
-	public RoomManager() {
+	/**
+	 * 构造器
+	 * @param designPlayerNum 预计总玩家数量
+	 */
+	public RoomManager(int designPlayerNum) {
+		
 		houses = initHouses();
+		
+		players = new ConcurrentHashMap<>(designPlayerNum);
+		
 	}
 	
-	abstract ConcurrentHashMap<String, House<P, R, H>> initHouses();
+	/**
+	 * 初始化大厅集合
+	 * 
+	 * @return
+	 * @author zai
+	 * 2019-12-22 16:24:08
+	 */
+	protected abstract ConcurrentHashMap<String, House<P, R, H>> initHouses();
 	
-	public void enterRoom(Runnable enterRoomAction) {
-		enterRoomQueue.add(enterRoomAction);
+	
+	/**
+	 * 进入房间操作
+	 * 
+	 * @param enterRoomAction
+	 * @author zai
+	 * 2019-12-22 16:24:24
+	 */
+	public void enterRoom(IEnterRoomAction<P, R, H> enterRoomAction) {
+		House<P, R, H> house = houses.get(enterRoomAction.getHouseNo());
+		//查询并进入指定大厅房间
+		if (house != null) {
+			house.enterRoom(enterRoomAction);
+		}
 	}
 	
 		

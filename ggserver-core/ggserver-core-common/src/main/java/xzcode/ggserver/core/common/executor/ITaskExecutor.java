@@ -1,6 +1,7 @@
 package xzcode.ggserver.core.common.executor;
 
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import xzcode.ggserver.core.common.future.IGGFuture;
@@ -113,5 +114,13 @@ public interface ITaskExecutor {
 	IGGFuture scheduleWithFixedDelay(long initialDelay, long delay, TimeUnit timeUnit, Runnable runnable);
 	
 	
+	/**
+	 * 获取下一个执行器
+	 * 
+	 * @return
+	 * @author zai
+	 * 2019-12-22 17:12:55
+	 */
+	ExecutorService nextEvecutor();
 	
 }
