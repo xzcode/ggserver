@@ -22,7 +22,7 @@ public class RoomManager
 <
 P extends RoomPlayer<R, H>, 
 R extends Room<P, R>, 
-H extends House<P, R>
+H extends House<P, R, H>
 > {
 	
 	/**
@@ -38,7 +38,7 @@ H extends House<P, R>
 	/**
 	 * 大厅集合Map<houseNo, house>
 	 */
-	protected Map<String, House<P, R>> houses = new ConcurrentHashMap<>(1000);
+	protected Map<String, House<P, R, H>> houses = new ConcurrentHashMap<>(1000);
 	
 	/**
 	 * 玩家集合Map<playerNo, player>
@@ -53,7 +53,7 @@ H extends House<P, R>
 	
 		
 	public void removeRoom(String roomNo) {
-		House<P, R> house = houses.get(roomNo);
+		House<P, R, H> house = houses.get(roomNo);
 		if (house == null) {
 			return;
 		}
@@ -61,7 +61,7 @@ H extends House<P, R>
 	}
 	
 	public void removeRoom(R room) {
-		House<P, R> house = houses.get(room.getRoomNo());
+		House<P, R, H> house = houses.get(room.getRoomNo());
 		if (house == null) {
 			return;
 		}
@@ -69,7 +69,7 @@ H extends House<P, R>
 	}
 	
 	public void addRoom(R room) {
-		House<P, R> house = houses.get(room.getRoomNo());
+		House<P, R, H> house = houses.get(room.getRoomNo());
 		if (house == null) {
 			return;
 		}
@@ -77,12 +77,16 @@ H extends House<P, R>
 	}
 	
 	
-	public Map<String, House<P, R>> getHouses() {
+	public Map<String, House<P, R, H>> getHouses() {
 		return houses;
 	}
 	
 	public Map<String, P> getPlayers() {
 		return players;
+	}
+	
+	public P getPlayer(String playerNo) {
+		return players.get(playerNo);
 	}
 
 }
