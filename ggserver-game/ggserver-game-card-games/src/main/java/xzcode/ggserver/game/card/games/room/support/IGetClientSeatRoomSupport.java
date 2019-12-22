@@ -11,7 +11,7 @@ import xzcode.ggserver.game.card.games.player.RoomPlayer;
  * 2019-02-16 17:57:18
  * @param <R>
  */
-public interface IGetClientSeatRoomSupport<P extends RoomPlayer<R>, R>  extends IRoomSupport<RoomPlayer<R>, R> {
+public interface IGetClientSeatRoomSupport<P extends RoomPlayer<R, H>, R, H>  extends IRoomSupport<P, R, H> {
 	
 	/**
 	 * 获取玩家客户端座位号号

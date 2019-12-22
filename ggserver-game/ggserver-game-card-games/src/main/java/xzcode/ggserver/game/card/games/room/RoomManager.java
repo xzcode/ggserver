@@ -18,10 +18,10 @@ import xzcode.ggserver.game.card.games.player.RoomPlayer;
  * @author zai
  * 2019-12-22 11:30:22
  */
-public class RoomManager
+public abstract class RoomManager
 <
 P extends RoomPlayer<R, H>, 
-R extends Room<P, R>, 
+R extends Room<P, R, H>, 
 H extends House<P, R, H>
 > {
 	
@@ -38,7 +38,7 @@ H extends House<P, R, H>
 	/**
 	 * 大厅集合Map<houseNo, house>
 	 */
-	protected Map<String, House<P, R, H>> houses = new ConcurrentHashMap<>(1000);
+	protected Map<String, House<P, R, H>> houses;
 	
 	/**
 	 * 玩家集合Map<playerNo, player>
@@ -46,6 +46,11 @@ H extends House<P, R, H>
 	protected Map<String, P> players = new ConcurrentHashMap<>(houses.size() * 4);
 	
 	
+	public RoomManager() {
+		houses = initHouses();
+	}
+	
+	abstract ConcurrentHashMap<String, House<P, R, H>> initHouses();
 	
 	public void enterRoom(Runnable enterRoomAction) {
 		enterRoomQueue.add(enterRoomAction);

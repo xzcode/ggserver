@@ -11,7 +11,7 @@ import xzcode.ggserver.game.card.games.poker.PokerCard;
  * @author zai
  * 2019-01-21 20:21:20
  */
-public abstract class CardPlayer<C extends PokerCard, R, H> extends RoomPlayer<R> implements ICardPlayer<C>{
+public abstract class CardPlayer<C extends PokerCard, R, H> extends RoomPlayer<R, H> implements ICardPlayer<C>{
 	
 	/**
 	 * 手牌

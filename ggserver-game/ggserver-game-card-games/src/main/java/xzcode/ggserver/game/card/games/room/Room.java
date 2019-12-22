@@ -16,7 +16,7 @@ import xzcode.ggserver.game.card.games.room.listener.IPlayerLeaveListener;
  * 
  * @author zai 2018-05-24
  */
-public abstract class Room<P extends RoomPlayer<R>, R>{	
+public abstract class Room<P extends RoomPlayer<R, H>, R, H>{	
 	
 	
 	/**

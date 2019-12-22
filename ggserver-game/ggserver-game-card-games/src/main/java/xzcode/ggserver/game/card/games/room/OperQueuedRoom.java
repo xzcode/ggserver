@@ -13,7 +13,7 @@ import xzcode.ggserver.game.card.games.player.RoomPlayer;
  * 
  * @author zai 2018-05-24
  */
-public abstract class OperQueuedRoom<R> extends Room<RoomPlayer<R>, R>{	
+public abstract class OperQueuedRoom<P extends RoomPlayer<R, H>,R, H> extends Room<P, R, H>{	
 	
 	/**
 	 * 操作队列
