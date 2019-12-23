@@ -3,8 +3,8 @@ package xzcode.ggserver.core.server.config;
 import java.util.concurrent.ThreadFactory;
 
 import io.netty.channel.nio.NioEventLoopGroup;
-import nonapi.io.github.classgraph.concurrency.SimpleThreadFactory;
 import xzcode.ggserver.core.common.config.GGConfig;
+import xzcode.ggserver.core.common.executor.thread.SimpleThreadFactory;
 
 public class GGServerConfig extends GGConfig{
 	

@@ -31,9 +31,9 @@ H extends House<P, R, H>
 	protected IGGServer server;
 	
 	/**
-	 * 大厅编号
+	 * 大厅
 	 */
-	protected String houseNo;
+	protected H house;
 	
 	/**
 	 * 房间编号
@@ -201,12 +201,12 @@ H extends House<P, R, H>
 		this.server = server;
 	}
 	
-	public String getHouseNo() {
-		return houseNo;
+	public H getHouse() {
+		return house;
 	}
 	
-	public void setHouseNo(String houseNo) {
-		this.houseNo = houseNo;
+	public void setHouse(H house) {
+		this.house = house;
 	}
 	
 }

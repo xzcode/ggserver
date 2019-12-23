@@ -25,6 +25,7 @@ R extends Room<P, R, H>,
 H extends House<P, R, H>
 > 
 {
+	
 	/**
 	 * 大厅编号
 	 */

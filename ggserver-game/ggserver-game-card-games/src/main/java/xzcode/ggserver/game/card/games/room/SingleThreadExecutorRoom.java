@@ -24,10 +24,10 @@ extends Room<P, R, H>{
 	/**
 	 * 单线程执行器
 	 */
-	protected ITaskExecutor executor;
+	protected ITaskExecutor taskExecutor;
 
 	public SingleThreadExecutorRoom(ITaskExecutor singleThreadExecutor) {
-		this.executor = singleThreadExecutor;
+		this.taskExecutor = singleThreadExecutor;
 	}
 	
 	/**
@@ -38,7 +38,7 @@ extends Room<P, R, H>{
 	 * 2019-12-22 17:33:57
 	 */
 	public void addOperaction(IRoomOperaction oper) {
-		executor.submitTask(oper);
+		taskExecutor.submitTask(oper);
 	}
 	
 	
