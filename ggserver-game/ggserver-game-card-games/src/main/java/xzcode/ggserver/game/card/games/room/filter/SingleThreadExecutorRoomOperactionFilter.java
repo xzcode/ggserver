@@ -39,16 +39,22 @@ H extends House<P, R, H>
 	@Override
 	public boolean doFilter(Request<?> request) {
 		GGSession session = request.getSession();
+		if (session == null) {
+			return true;
+		}
 		P player = (P) session.getAttribute(playerSessionKey);	
 		R room = player.getRoom();
-		room.addOperaction(() -> {
-			try {
-				requestMessageManager.handle(request);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		});
-		return false;
+		if (room != null) {
+			room.addOperaction(() -> {
+				try {
+					requestMessageManager.handle(request);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			});
+			return false;
+		}
+		return true;
 	}
 
 }

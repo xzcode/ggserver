@@ -1,7 +1,6 @@
 package xzcode.ggserver.core.common.executor;
 
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
@@ -14,10 +13,15 @@ import xzcode.ggserver.core.common.executor.task.AsyncRunnableTask;
 import xzcode.ggserver.core.common.future.GGNettyFacadeFuture;
 import xzcode.ggserver.core.common.future.IGGFuture;
 
+/**
+ * 单线程任务执行器
+ * 
+ * @author zai
+ * 2019-12-24 17:45:30
+ */
 public class SingleThreadTaskExecutor implements ITaskExecutor{
 	
 	private EventLoop executor = new DefaultEventLoop();
-	
 	
 	
 	public SingleThreadTaskExecutor() {
@@ -84,8 +88,8 @@ public class SingleThreadTaskExecutor implements ITaskExecutor{
 	}
 
 	@Override
-	public ExecutorService nextEvecutor() {
-		return executor.next();
+	public ITaskExecutor nextEvecutor() {
+		return this;
 	}
 
 

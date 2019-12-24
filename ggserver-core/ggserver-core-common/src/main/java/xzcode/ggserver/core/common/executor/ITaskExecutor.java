@@ -121,6 +121,6 @@ public interface ITaskExecutor {
 	 * @author zai
 	 * 2019-12-22 17:12:55
 	 */
-	ExecutorService nextEvecutor();
+	ITaskExecutor nextEvecutor();
 	
 }

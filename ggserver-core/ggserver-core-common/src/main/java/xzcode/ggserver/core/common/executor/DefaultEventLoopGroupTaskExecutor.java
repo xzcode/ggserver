@@ -1,10 +1,9 @@
 package xzcode.ggserver.core.common.executor;
 
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import io.netty.channel.DefaultEventLoopGroup;
+import io.netty.channel.EventLoopGroup;
 import io.netty.util.concurrent.ScheduledFuture;
 import xzcode.ggserver.core.common.executor.task.AsyncCallableTask;
 import xzcode.ggserver.core.common.executor.task.AsyncRunnableTask;
@@ -13,9 +12,9 @@ import xzcode.ggserver.core.common.future.IGGFuture;
 
 public class DefaultEventLoopGroupTaskExecutor implements ITaskExecutor{
 	
-	private DefaultEventLoopGroup executor;
+	private EventLoopGroup executor;
 
-	public DefaultEventLoopGroupTaskExecutor(DefaultEventLoopGroup executor) {
+	public DefaultEventLoopGroupTaskExecutor(EventLoopGroup executor) {
 		this.executor = executor;
 	}
 
@@ -71,8 +70,8 @@ public class DefaultEventLoopGroupTaskExecutor implements ITaskExecutor{
 	}
 
 	@Override
-	public ExecutorService nextEvecutor() {
-		return executor.next();
+	public ITaskExecutor nextEvecutor() {
+		return new DefaultEventLoopGroupTaskExecutor(executor.next());
 	}
 
 

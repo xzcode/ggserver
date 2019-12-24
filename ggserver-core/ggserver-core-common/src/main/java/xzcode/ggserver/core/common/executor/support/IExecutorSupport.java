@@ -67,7 +67,7 @@ public interface IExecutorSupport extends ITaskExecutor {
 	}
 
 	@Override
-	default ExecutorService nextEvecutor() {
+	default ITaskExecutor nextEvecutor() {
 		return getTaskExecutor().nextEvecutor();
 	}
 	

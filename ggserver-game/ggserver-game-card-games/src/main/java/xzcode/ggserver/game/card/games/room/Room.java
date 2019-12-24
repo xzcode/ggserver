@@ -48,7 +48,7 @@ H extends House<P, R, H>
 	 * @author zai
 	 * 2019-02-20 19:07:54
 	 */
-	public abstract int getMaxPalyerNum();	
+	public abstract int getMaxPlayerNum();	
 	
 	
 	/**
@@ -77,7 +77,7 @@ H extends House<P, R, H>
 	 * 2019-02-20 20:24:18
 	 */
 	public boolean isFullPlayers() {
-		return players.size() >= this.getMaxPalyerNum();
+		return players.size() >= this.getMaxPlayerNum();
 	}
 	
 	
