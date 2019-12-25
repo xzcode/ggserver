@@ -103,7 +103,7 @@ H extends House<P, R, H>
 	}
 	
 	
-	public Map<String, House<P, R, H>> getHouses() {
+	public Map<String, H> getHouses() {
 		return houses;
 	}
 	

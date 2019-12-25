@@ -14,6 +14,7 @@ import xzcode.ggserver.core.common.future.GGNettyFacadeFuture;
 import xzcode.ggserver.core.common.future.IGGFuture;
 import xzcode.ggserver.core.common.message.Pack;
 import xzcode.ggserver.core.common.message.meta.provider.IMetadataProvider;
+import xzcode.ggserver.core.common.message.model.IMessage;
 import xzcode.ggserver.core.common.message.response.Response;
 import xzcode.ggserver.core.common.session.GGSession;
 import xzcode.ggserver.core.common.utils.json.GGServerJsonUtil;
@@ -91,6 +92,18 @@ public interface ISessionSendMessageSupport extends IMakePackSupport {
 	/**
 	 * 发送消息
 	 * 
+	 * @param message
+	 * @return
+	 * @author zai
+	 * 2019-12-25 11:57:05
+	 */
+	default IGGFuture send(IMessage message) {
+		return send(new Response((GGSession) this, null, message.getActionId(), message), 0L, TimeUnit.MILLISECONDS);
+	}
+	
+	/**
+	 * 发送消息
+	 * 
 	 * @param session
 	 * @param action
 	 * @param message
@@ -100,6 +113,19 @@ public interface ISessionSendMessageSupport extends IMakePackSupport {
 	 */
 	default IGGFuture send(GGSession session, String action, Object message) {
 		return send(new Response(session, null, action, message), 0L, TimeUnit.MILLISECONDS);
+	}
+	
+	/**
+	 * 发送消息
+	 * 
+	 * @param session
+	 * @param message
+	 * @return
+	 * @author zai
+	 * 2019-12-25 11:57:44
+	 */
+	default IGGFuture send(GGSession session, IMessage message) {
+		return send(new Response(session, null, message.getActionId(), message), 0L, TimeUnit.MILLISECONDS);
 	}
 	
 	/**
@@ -116,6 +142,21 @@ public interface ISessionSendMessageSupport extends IMakePackSupport {
 	 */
 	default IGGFuture send(GGSession session, String action, Object message, long delay, TimeUnit timeUnit) {
 		return send(new Response(session, null, action, message), delay, timeUnit);
+	}
+	
+	/**
+	 * message
+	 * 
+	 * @param session
+	 * @param message
+	 * @param delay
+	 * @param timeUnit
+	 * @return
+	 * @author zai
+	 * 2019-12-25 11:58:06
+	 */
+	default IGGFuture send(GGSession session, IMessage message, long delay, TimeUnit timeUnit) {
+		return send(new Response(session, null, message.getActionId(), message), delay, timeUnit);
 	}
 	
 	/**

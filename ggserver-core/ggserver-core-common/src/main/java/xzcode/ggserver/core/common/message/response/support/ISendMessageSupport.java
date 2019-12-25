@@ -5,6 +5,7 @@ import java.util.concurrent.TimeUnit;
 import xzcode.ggserver.core.common.filter.IFilterManager;
 import xzcode.ggserver.core.common.future.IGGFuture;
 import xzcode.ggserver.core.common.message.Pack;
+import xzcode.ggserver.core.common.message.model.IMessage;
 import xzcode.ggserver.core.common.message.response.Response;
 import xzcode.ggserver.core.common.session.GGSession;
 import xzcode.ggserver.core.common.session.manager.ISessionManager;
@@ -93,6 +94,10 @@ public interface ISendMessageSupport extends IMakePackSupport {
 		return send(new Response(session, null, action, message), 0L, TimeUnit.MILLISECONDS);
 	}
 	
+	default IGGFuture send(GGSession session, IMessage message) {
+		return send(new Response(session, null, message.getActionId(), message), 0L, TimeUnit.MILLISECONDS);
+	}
+	
 	/**
 	 * 发送消息
 	 * 
@@ -105,8 +110,8 @@ public interface ISendMessageSupport extends IMakePackSupport {
 	 * @author zai
 	 * 2019-11-29 15:23:47
 	 */
-	default IGGFuture send(GGSession session, String action, Object message, long delay, TimeUnit timeUnit) {
-		return send(new Response(session, null, action, message), delay, timeUnit);
+	default IGGFuture send(GGSession session, IMessage message, long delay, TimeUnit timeUnit) {
+		return send(new Response(session, null, message.getActionId(), message), delay, timeUnit);
 	}
 
 	/**
