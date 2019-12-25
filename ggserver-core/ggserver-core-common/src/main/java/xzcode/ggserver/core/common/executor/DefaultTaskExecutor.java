@@ -3,10 +3,12 @@ package xzcode.ggserver.core.common.executor;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
+import io.netty.channel.DefaultEventLoopGroup;
 import io.netty.channel.EventLoopGroup;
 import io.netty.util.concurrent.ScheduledFuture;
 import xzcode.ggserver.core.common.executor.task.AsyncCallableTask;
 import xzcode.ggserver.core.common.executor.task.AsyncRunnableTask;
+import xzcode.ggserver.core.common.executor.thread.SimpleThreadFactory;
 import xzcode.ggserver.core.common.future.GGNettyFacadeFuture;
 import xzcode.ggserver.core.common.future.IGGFuture;
 
@@ -16,6 +18,12 @@ public class DefaultTaskExecutor implements ITaskExecutor{
 
 	public DefaultTaskExecutor(EventLoopGroup executor) {
 		this.executor = executor;
+	}
+	public DefaultTaskExecutor(String threadNamePrefix, int threadSize) {
+		this.executor = new DefaultEventLoopGroup(threadSize, new SimpleThreadFactory(threadNamePrefix, false));
+	}
+	public DefaultTaskExecutor(int threadSize) {
+		this.executor = new DefaultEventLoopGroup(threadSize, new SimpleThreadFactory("ITaskExecutor-", false));
 	}
 
 	@Override

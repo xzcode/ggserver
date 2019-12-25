@@ -123,7 +123,7 @@ public class GGConfig {
 		}
 		
 		if (taskExecutor == null) {
-			taskExecutor = new DefaultTaskExecutor(new DefaultEventLoopGroup(getTaskThreadSize()));
+			taskExecutor = new DefaultTaskExecutor(getTaskThreadSize());
 		}
 		
 		if (decodeHandler == null) {

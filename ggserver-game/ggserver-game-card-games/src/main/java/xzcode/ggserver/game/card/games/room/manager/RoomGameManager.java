@@ -3,6 +3,9 @@ package xzcode.ggserver.game.card.games.room.manager;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import xzcode.ggserver.core.common.executor.ITaskExecutor;
+import xzcode.ggserver.core.common.executor.SingleThreadTaskExecutor;
+import xzcode.ggserver.core.common.future.IGGFuture;
 import xzcode.ggserver.core.server.IGGServer;
 import xzcode.ggserver.game.card.games.house.House;
 import xzcode.ggserver.game.card.games.player.RoomPlayer;
@@ -18,7 +21,7 @@ import xzcode.ggserver.game.card.games.room.enter.IEnterRoomAction;
  * @author zai
  * 2019-12-22 11:30:22
  */
-public abstract class RoomManager
+public abstract class RoomGameManager
 <
 P extends RoomPlayer<P, R, H>,
 R extends Room<P, R, H>, 
@@ -41,14 +44,21 @@ H extends House<P, R, H>
 	protected Map<String, P> players;
 	
 	/**
+	 * 任务执行器
+	 */
+	protected ITaskExecutor executor;
+	
+	/**
 	 * 构造器
 	 * @param designPlayerNum 预计总玩家数量
 	 */
-	public RoomManager(int designPlayerNum) {
+	public RoomGameManager(int designPlayerNum) {
 		
 		houses = initHouses();
 		
 		players = new ConcurrentHashMap<>(designPlayerNum);
+		
+		executor = new SingleThreadTaskExecutor("room-game-manager-");
 		
 	}
 	
@@ -70,11 +80,16 @@ H extends House<P, R, H>
 	 * 2019-12-22 16:24:24
 	 */
 	public void enterRoom(IEnterRoomAction<P, R, H> enterRoomAction) {
-		House<P, R, H> house = houses.get(enterRoomAction.getHouseNo());
+		H house = houses.get(enterRoomAction.getHouseNo());
 		//查询并进入指定大厅房间
 		if (house != null) {
+			enterRoomAction.setHouse(house);
 			house.enterRoom(enterRoomAction);
 		}
+	}
+	
+	public IGGFuture submitTask(Runnable runnable) {
+		return executor.submitTask(runnable);
 	}
 	
 		
@@ -102,6 +117,21 @@ H extends House<P, R, H>
 		house.addRoom(room);
 	}
 	
+	public void addPlayer(P player) {
+		players.put(player.getPlayerNo(), player);
+	}
+	public void removePlayer(P player) {
+		players.remove(player.getPlayerNo());
+	}
+	public void removePlayer(String playerNo) {
+		players.remove(playerNo);
+	}
+	
+	
+	
+	public H getHouse(String houseNo){
+		return houses.get(houseNo);
+	}
 	
 	public Map<String, H> getHouses() {
 		return houses;
@@ -113,6 +143,10 @@ H extends House<P, R, H>
 	
 	public P getPlayer(String playerNo) {
 		return players.get(playerNo);
+	}
+	
+	public ITaskExecutor getExecutor() {
+		return executor;
 	}
 
 }

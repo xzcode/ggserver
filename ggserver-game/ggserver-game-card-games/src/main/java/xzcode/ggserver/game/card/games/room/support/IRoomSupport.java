@@ -13,6 +13,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import xzcode.ggserver.core.common.executor.support.IExecutorSupport;
+import xzcode.ggserver.core.common.message.model.IMessage;
 import xzcode.ggserver.core.common.message.response.Response;
 import xzcode.ggserver.core.common.message.response.support.ISendMessageSupport;
 import xzcode.ggserver.game.card.games.house.House;
@@ -176,18 +177,17 @@ extends IExecutorSupport, ISendMessageSupport {
 			}
 			return true;
 	}
-
+	
 	/**
 	 * 广播给所有玩家
 	 * 
-	 * @param room
-	 * @param actionId
 	 * @param message
-	 * @author zai 2019-01-25 11:06:29
+	 * @author zai
+	 * 2019-12-25 18:52:39
 	 */
-	default void bcToAllPlayer(String actionId, Object message) {
+	default void bcToAllPlayer(IMessage message) {
 		eachPlayer((player) -> {
-			send(new Response(player.getSession(), null, actionId, message), 0, TimeUnit.MILLISECONDS);
+			player.send(message);
 		});
 	}
 	
@@ -203,10 +203,10 @@ extends IExecutorSupport, ISendMessageSupport {
 	 * @author zai
 	 * 2019-02-23 16:49:17
 	 */
-	default void bcToAllPlayer(String actionId, Object message, ICheckCondition<P> condition) {
+	default void bcToAllPlayer(IMessage message, ICheckCondition<P> condition) {
 		eachPlayer((player) -> {
 			if (condition.check(player)) {
-				send(new Response(player.getSession(), null, actionId, message), 0, TimeUnit.MILLISECONDS);	
+				player.send(message);	
 			}
 		});
 	}

@@ -17,4 +17,8 @@ public interface IEnterRoomAction<P, R, H> extends Runnable {
 	 */
 	String getHouseNo();
 	
+	H getHouse();
+	
+	void setHouse(H house);
+	
 }
