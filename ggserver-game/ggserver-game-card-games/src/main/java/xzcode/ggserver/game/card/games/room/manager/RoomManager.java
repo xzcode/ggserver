@@ -33,7 +33,7 @@ H extends House<P, R, H>
 	/**
 	 * 大厅集合Map<houseNo, house>
 	 */
-	protected Map<String, House<P, R, H>> houses;
+	protected Map<String, H> houses;
 	
 	/**
 	 * 玩家集合Map<playerNo, player>
@@ -59,7 +59,7 @@ H extends House<P, R, H>
 	 * @author zai
 	 * 2019-12-22 16:24:08
 	 */
-	protected abstract ConcurrentHashMap<String, House<P, R, H>> initHouses();
+	protected abstract ConcurrentHashMap<String, H> initHouses();
 	
 	
 	/**
