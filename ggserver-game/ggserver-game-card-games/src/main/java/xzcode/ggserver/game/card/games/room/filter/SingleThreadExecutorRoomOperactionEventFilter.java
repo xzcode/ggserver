@@ -1,5 +1,10 @@
 package xzcode.ggserver.game.card.games.room.filter;
 
+import xzcode.ggserver.core.common.event.EventTask;
+import xzcode.ggserver.core.common.event.IEventListener;
+import xzcode.ggserver.core.common.event.IEventManager;
+import xzcode.ggserver.core.common.event.model.EventData;
+import xzcode.ggserver.core.common.filter.IEventFilter;
 import xzcode.ggserver.core.common.filter.IRequestFilter;
 import xzcode.ggserver.core.common.message.request.Request;
 import xzcode.ggserver.core.common.message.request.manager.IRequestMessageManager;
@@ -20,26 +25,26 @@ import xzcode.ggserver.game.card.games.room.SingleThreadExecutorRoom;
  * @author zai
  * 2019-12-22 21:46:57
  */
-public class SingleThreadExecutorRoomOperactionFilter
+public class SingleThreadExecutorRoomOperactionEventFilter
 <
 P extends RoomPlayer<P, R, H>,
 R extends SingleThreadExecutorRoom<P, R, H>,
 H extends House<P, R, H>
-> implements IRequestFilter {
+> implements IEventFilter {
 	
-	protected IRequestMessageManager requestMessageManager;
+	protected IEventManager eventManager;
 	
 	protected String playerSessionKey;
 
-	public SingleThreadExecutorRoomOperactionFilter(String playerSessionKey, IRequestMessageManager requestMessageManager) {
+	public SingleThreadExecutorRoomOperactionEventFilter(String playerSessionKey, IEventManager eventManager) {
 		this.playerSessionKey = playerSessionKey;
-		this.requestMessageManager = requestMessageManager;
+		this.eventManager = eventManager;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public boolean doFilter(Request<?> request) {
-		GGSession session = request.getSession();
+	public boolean doFilter(EventData<?> eventData) {
+		GGSession session = eventData.getSession();
 		if (session == null) {
 			return true;
 		}
@@ -48,9 +53,9 @@ H extends House<P, R, H>
 		if (room != null) {
 			room.addOperaction(() -> {
 				try {
-					requestMessageManager.handle(request);
+					eventManager.emitEvent(eventData);
 				} catch (Exception e) {
-					GGLoggerUtil.getLogger(this).error("Request Filter Error!", e);
+					GGLoggerUtil.getLogger(this).error("Event Filter Error!", e);
 				}
 			});
 			return false;

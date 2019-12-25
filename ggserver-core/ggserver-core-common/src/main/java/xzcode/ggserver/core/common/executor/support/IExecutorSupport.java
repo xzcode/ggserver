@@ -1,7 +1,6 @@
 package xzcode.ggserver.core.common.executor.support;
 
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import xzcode.ggserver.core.common.executor.ITaskExecutor;
@@ -48,6 +47,11 @@ public interface IExecutorSupport extends ITaskExecutor {
 	@Override
 	default IGGFuture scheduleAfter(IGGFuture afterFuture, long delay, TimeUnit timeUnit, Runnable runnable) {
 		return  getTaskExecutor().scheduleAfter(afterFuture, delay, timeUnit, runnable);
+	}
+	
+	@Override
+	default IGGFuture scheduleAfter(IGGFuture afterFuture, long delayMs, Runnable runnable) {
+		return  getTaskExecutor().scheduleAfter(afterFuture, delayMs, TimeUnit.MILLISECONDS, runnable);
 	}
 
 	@Override

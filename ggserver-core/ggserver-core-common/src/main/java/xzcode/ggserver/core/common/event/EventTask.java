@@ -59,9 +59,14 @@ public class EventTask implements Runnable{
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void run() {
-		
+		EventData eventData = new EventData(session, event, message, channel);
 		try {
-			config.getEventManager().emitEvent(event, new EventData(session, message, channel));	
+			
+			//执行事件过滤器
+			if (!config.getFilterManager().doEventFilters(eventData)) {
+				return;
+			}
+			config.getEventManager().emitEvent(eventData);	
 		} catch (Exception e) {
 			LOGGER.error("EventTask Error!!", e);
 		}

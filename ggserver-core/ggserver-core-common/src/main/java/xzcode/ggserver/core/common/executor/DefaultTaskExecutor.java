@@ -10,11 +10,11 @@ import xzcode.ggserver.core.common.executor.task.AsyncRunnableTask;
 import xzcode.ggserver.core.common.future.GGNettyFacadeFuture;
 import xzcode.ggserver.core.common.future.IGGFuture;
 
-public class DefaultEventLoopGroupTaskExecutor implements ITaskExecutor{
+public class DefaultTaskExecutor implements ITaskExecutor{
 	
-	private EventLoopGroup executor;
+	protected EventLoopGroup executor;
 
-	public DefaultEventLoopGroupTaskExecutor(EventLoopGroup executor) {
+	public DefaultTaskExecutor(EventLoopGroup executor) {
 		this.executor = executor;
 	}
 
@@ -47,6 +47,12 @@ public class DefaultEventLoopGroupTaskExecutor implements ITaskExecutor{
 		});
 		return taskFuture;
 	}
+	
+
+	@Override
+	public IGGFuture scheduleAfter(IGGFuture afterFuture, long delayMs, Runnable runnable) {
+		return scheduleAfter(afterFuture, delayMs, TimeUnit.MILLISECONDS, runnable);
+	}
 
 	@Override
 	public <V> IGGFuture scheduleAfter(IGGFuture afterFuture, long delay, TimeUnit timeUnit, Callable<V> callable) {
@@ -71,8 +77,9 @@ public class DefaultEventLoopGroupTaskExecutor implements ITaskExecutor{
 
 	@Override
 	public ITaskExecutor nextEvecutor() {
-		return new DefaultEventLoopGroupTaskExecutor(executor.next());
+		return new DefaultTaskExecutor(executor.next());
 	}
+
 
 
 }

@@ -31,8 +31,8 @@ public interface IEventSupport extends IEventManager {
 		getEventManagerImpl().clearEventListener(event);
 	}
 
-	default <T> void emitEvent(String event, EventData<T> eventData) {
-		getEventManagerImpl().emitEvent(event, eventData);
+	default <T> void emitEvent(EventData<T> eventData) {
+		getEventManagerImpl().emitEvent(eventData);
 	}
 
 	@Override

@@ -19,7 +19,7 @@ public interface IEventManager {
 	 * @author zai
 	 * 2019-12-05 10:50:36
 	 */
-	<T> void emitEvent(String event, EventData<T> eventData);
+	<T> void emitEvent(EventData<T> eventData);
 	
 	/**
 	 * 添加事件监听

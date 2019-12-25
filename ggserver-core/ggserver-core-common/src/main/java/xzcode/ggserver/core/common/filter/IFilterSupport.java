@@ -1,5 +1,6 @@
 package xzcode.ggserver.core.common.filter;
 
+import xzcode.ggserver.core.common.event.model.EventData;
 import xzcode.ggserver.core.common.message.Pack;
 import xzcode.ggserver.core.common.message.request.Request;
 import xzcode.ggserver.core.common.message.response.Response;
@@ -70,6 +71,23 @@ public interface IFilterSupport extends IFilterManager{
 
 	default void removeAfterSerializeFilter(IAfterSerializeFilter filter) {
 		getFilterManager().removeAfterSerializeFilter(filter);
+	}
+
+	@Override
+	default boolean doEventFilters(EventData<?> eventData) {
+		return getFilterManager().doEventFilters(eventData);
+	}
+
+	@Override
+	default void addEventFilter(IEventFilter filter) {
+		getFilterManager().addEventFilter(filter);
+	}
+
+	@Override
+	default void removeEventFilter(IEventFilter filter) {
+		getFilterManager().removeEventFilter(filter);
 	};
+	
+	
 	
 }

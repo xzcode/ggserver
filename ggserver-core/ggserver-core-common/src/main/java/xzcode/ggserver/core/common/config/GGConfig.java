@@ -8,7 +8,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import xzcode.ggserver.core.common.constant.ProtocolTypeConstants;
 import xzcode.ggserver.core.common.event.IEventManager;
 import xzcode.ggserver.core.common.event.impl.DefaultEventManager;
-import xzcode.ggserver.core.common.executor.DefaultEventLoopGroupTaskExecutor;
+import xzcode.ggserver.core.common.executor.DefaultTaskExecutor;
 import xzcode.ggserver.core.common.executor.ITaskExecutor;
 import xzcode.ggserver.core.common.executor.thread.SimpleThreadFactory;
 import xzcode.ggserver.core.common.filter.IFilterManager;
@@ -123,7 +123,7 @@ public class GGConfig {
 		}
 		
 		if (taskExecutor == null) {
-			taskExecutor = new DefaultEventLoopGroupTaskExecutor(new DefaultEventLoopGroup(getTaskThreadSize()));
+			taskExecutor = new DefaultTaskExecutor(new DefaultEventLoopGroup(getTaskThreadSize()));
 		}
 		
 		if (decodeHandler == null) {

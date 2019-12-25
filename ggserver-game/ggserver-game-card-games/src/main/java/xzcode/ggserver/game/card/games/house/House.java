@@ -42,7 +42,6 @@ H extends House<P, R, H>
 	protected ITaskExecutor executor;
 	
 	
-	
 	public House(String houseNo) {
 		this.houseNo = houseNo;
 		executor = new SingleThreadTaskExecutor("House-"+ houseNo +"-");
