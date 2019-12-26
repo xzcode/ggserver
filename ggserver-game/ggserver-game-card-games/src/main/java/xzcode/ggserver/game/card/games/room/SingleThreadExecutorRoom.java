@@ -50,8 +50,9 @@ IGGServerSupport
 	 * @author zai
 	 * 2019-12-22 17:33:57
 	 */
-	public void addOperaction(IRoomOperaction oper) {
-		taskExecutor.submitTask(oper);
+	@SuppressWarnings("unchecked")
+	public void addOperaction(IRoomOperaction<R> oper) {
+		taskExecutor.submitTask(() -> { oper.oper((R) this);});
 	}
 	
 

@@ -553,6 +553,20 @@ extends IExecutorSupport, ISendMessageSupport {
 			send(new Response(player.getSession(), null, actionId, null), 0, TimeUnit.MILLISECONDS);
 		});
 	}
+	
+	/**
+	 * 广播给所有玩家
+	 * 
+	 * @param actionId
+	 * @param message
+	 * @author zai
+	 * 2019-12-26 10:03:47
+	 */
+	default void bcToAllPlayer(String actionId, Object message) {
+		eachPlayer(player -> {
+			send(new Response(player.getSession(), null, actionId, message), 0, TimeUnit.MILLISECONDS);
+		});
+	}
 
 	
 	/**
