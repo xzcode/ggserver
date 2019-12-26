@@ -8,7 +8,6 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import io.netty.channel.DefaultEventLoop;
 import xzcode.ggserver.core.common.utils.logger.GGLoggerUtil;
 
 
@@ -100,6 +99,16 @@ public class GGNettyFacadeFuture implements IGGFuture {
 	@Override
 	public Object get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
 		return this.nettyFuture.get(timeout, unit);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> T get(Class<T> clazz) {
+		try {
+			return (T) get();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 

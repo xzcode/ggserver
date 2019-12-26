@@ -11,6 +11,10 @@ public class GGDocsConfig {
 	
 	//扫码的包路径
 	private String[] scanPackages;
+	
+	private String actionIdPrefix = "";
+	
+	private String messageModelPrefix = "";
 
 	public String[] getScanPackages() {
 		return scanPackages;
@@ -18,6 +22,22 @@ public class GGDocsConfig {
 
 	public void setScanPackages(String[] scanPackages) {
 		this.scanPackages = scanPackages;
+	}
+
+	public String getActionIdPrefix() {
+		return actionIdPrefix;
+	}
+
+	public void setActionIdPrefix(String actionIdPrefix) {
+		this.actionIdPrefix = actionIdPrefix;
+	}
+
+	public String getMessageModelPrefix() {
+		return messageModelPrefix;
+	}
+
+	public void setMessageModelPrefix(String messageModelPrefix) {
+		this.messageModelPrefix = messageModelPrefix;
 	}
 	
 	
