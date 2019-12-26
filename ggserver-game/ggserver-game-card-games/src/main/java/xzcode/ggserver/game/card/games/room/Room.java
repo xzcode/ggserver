@@ -31,9 +31,9 @@ H extends House<P, R, H>
 	protected IGGServer server;
 	
 	/**
-	 * 大厅编号
+	 * 大厅
 	 */
-	protected String houseNo;
+	protected H house;
 	
 	/**
 	 * 房间编号
@@ -48,7 +48,7 @@ H extends House<P, R, H>
 	 * @author zai
 	 * 2019-02-20 19:07:54
 	 */
-	public abstract int getMaxPalyerNum();	
+	public abstract int getMaxPlayerNum();	
 	
 	
 	/**
@@ -77,7 +77,7 @@ H extends House<P, R, H>
 	 * 2019-02-20 20:24:18
 	 */
 	public boolean isFullPlayers() {
-		return players.size() >= this.getMaxPalyerNum();
+		return players.size() >= this.getMaxPlayerNum();
 	}
 	
 	
@@ -201,12 +201,12 @@ H extends House<P, R, H>
 		this.server = server;
 	}
 	
-	public String getHouseNo() {
-		return houseNo;
+	public H getHouse() {
+		return house;
 	}
 	
-	public void setHouseNo(String houseNo) {
-		this.houseNo = houseNo;
+	public void setHouse(H house) {
+		this.house = house;
 	}
 	
 }

@@ -47,6 +47,11 @@ H extends House<P, R, H>
 	protected boolean inGame;
 	
 	/**
+	 * 是否参与游戏
+	 */
+	protected boolean robot;
+	
+	/**
 	 * 所在房间
 	 */
 	protected R room;
@@ -104,5 +109,12 @@ H extends House<P, R, H>
 	}
 	
 	
+	public boolean isRobot() {
+		return robot;
+	}
+	
+	public void setRobot(boolean robot) {
+		this.robot = robot;
+	}
 	
 }

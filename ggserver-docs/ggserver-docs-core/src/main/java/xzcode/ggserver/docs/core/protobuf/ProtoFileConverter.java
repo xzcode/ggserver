@@ -71,8 +71,12 @@ public interface ProtoFileConverter {
 	 * @author zai
 	 * 2019-12-17 15:28:38
 	 */
-	default String getFieldProtoDataType(Field field) {
+	default String getFieldProtoDataType(Field field, String simpleNamePrefix) {
 		Class<?> type = field.getType();
+		
+		if (simpleNamePrefix == null) {
+			simpleNamePrefix = "";
+		}
 
 		String protoTypeString = getProtoTypeString(type);
 		
@@ -92,13 +96,16 @@ public interface ProtoFileConverter {
 						protoTypeString = getProtoTypeString(actualTypeArgument);
 						if (protoTypeString == null) {
 							protoTypeString = actualTypeArgument.getSimpleName();
+							if (protoTypeString != null) {
+								protoTypeString = simpleNamePrefix + protoTypeString; 
+							}
 						}
 					}
 				}else {
-					protoTypeString = type.getSimpleName().replace("[]", "");
+					protoTypeString = simpleNamePrefix + type.getSimpleName().replace("[]", "");
 				}
 			}else {
-				protoTypeString = type.getSimpleName();
+				protoTypeString = simpleNamePrefix + type.getSimpleName();
 			}
 		}
 		return protoTypeString;

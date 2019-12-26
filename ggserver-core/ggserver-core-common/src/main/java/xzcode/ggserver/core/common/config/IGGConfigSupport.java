@@ -2,7 +2,6 @@ package xzcode.ggserver.core.common.config;
 
 import java.nio.charset.Charset;
 
-import xzcode.ggserver.core.common.control.IGGContolSupport;
 import xzcode.ggserver.core.common.event.IEventManager;
 import xzcode.ggserver.core.common.event.IEventSupport;
 import xzcode.ggserver.core.common.executor.ITaskExecutor;
@@ -21,9 +20,13 @@ import xzcode.ggserver.core.common.session.manager.ISessionManager;
  * @param <C>
  * @author zai 2019-12-11 10:11:31
  */
-public interface IGGConfigSupport<C extends GGConfig> extends
-
-		ISendMessageSupport, IRequestMessageSupport, IFilterSupport, IExecutorSupport, IEventSupport
+public interface IGGConfigSupport<C extends GGConfig> 
+extends
+ISendMessageSupport, 
+IRequestMessageSupport, 
+IFilterSupport, 
+IExecutorSupport, 
+IEventSupport
 
 {
 

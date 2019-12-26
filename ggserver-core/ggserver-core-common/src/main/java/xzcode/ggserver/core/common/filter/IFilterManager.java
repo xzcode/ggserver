@@ -1,16 +1,18 @@
 package xzcode.ggserver.core.common.filter;
 
+import xzcode.ggserver.core.common.event.model.EventData;
 import xzcode.ggserver.core.common.message.Pack;
 import xzcode.ggserver.core.common.message.request.Request;
 import xzcode.ggserver.core.common.message.response.Response;
 
 /**
- * 过滤器管理器
+ * 过滤器管理器统一接口
  * 
- * 
- * @author zai 2019-12-01 17:01:14
+ * @author zai
+ * 2019-12-25 15:05:30
  */
 public interface IFilterManager {
+	
 
 	boolean doBeforeDeserializeFilters(Pack pack);
 
@@ -19,12 +21,25 @@ public interface IFilterManager {
 	boolean doResponseFilters(Response response);
 
 	boolean doAfterSerializeFilters(Pack pack);
+	
+	boolean doEventFilters(EventData<?> eventData);
+	
+	
+	
+	
 
 	void addBeforeDeserializeFilter(IBeforeDeserializeFilter filter);
 
 	void addRequestFilter(IRequestFilter filter);
 
 	void addResponseFilter(IResponseFilter filter);
+	
+	void addAfterSerializeFilter(IAfterSerializeFilter filter);
+	
+	void addEventFilter(IEventFilter filter);
+	
+	
+	
 
 	void removeBeforeDeserializeFilter(IBeforeDeserializeFilter filter);
 
@@ -32,8 +47,10 @@ public interface IFilterManager {
 
 	void removeRequestFilter(IRequestFilter filter);
 
-	void addAfterSerializeFilter(IAfterSerializeFilter filter);
-
 	void removeAfterSerializeFilter(IAfterSerializeFilter filter);
+	
+	void removeEventFilter(IEventFilter filter);
+	
+	
 
 }

@@ -96,4 +96,36 @@ public abstract class AbstractRobotManager<P> implements IRobotManager<P>{
 		workingRobots.remove(robot);
 	}
 
+
+	public CopyOnWriteArraySet<P> getRemainRobots() {
+		return remainRobots;
+	}
+
+
+	public void setRemainRobots(CopyOnWriteArraySet<P> remainRobots) {
+		this.remainRobots = remainRobots;
+	}
+
+
+	public CopyOnWriteArraySet<P> getWorkingRobots() {
+		return workingRobots;
+	}
+
+
+	public void setWorkingRobots(CopyOnWriteArraySet<P> workingRobots) {
+		this.workingRobots = workingRobots;
+	}
+
+
+	public IRobotFactory<P> getRobotFactory() {
+		return robotFactory;
+	}
+
+
+	public void setRobotFactory(IRobotFactory<P> robotFactory) {
+		this.robotFactory = robotFactory;
+	}
+	
+	
+
 }

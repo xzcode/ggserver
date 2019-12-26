@@ -5,12 +5,16 @@ import java.io.FileOutputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.nio.charset.Charset;
+import java.text.Collator;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import org.apache.commons.lang3.StringUtils;
 
 import xzcode.ggserver.docs.core.model.Doc;
 import xzcode.ggserver.docs.core.model.Model;
@@ -18,23 +22,18 @@ import xzcode.ggserver.docs.core.model.ModelProperty;
 import xzcode.ggserver.docs.core.model.Namespace;
 import xzcode.ggserver.docs.core.protobuf.ProtoFile;
 import xzcode.ggserver.docs.core.protobuf.ProtoFileConverter;
+import xzcode.ggserver.docs.core.protobuf.ProtoMessage;
 
 /**
  * proto
  * 
  * @author zai 2019-12-17 14:07:59
  */
-public class Proto2FileConverter implements ProtoFileConverter {
+public class ProtoV2FileConverter implements ProtoFileConverter {
 	
 	private static String ENTER_LINE = "\n";
 	
 	private static String HEADER_SYNTAX = "syntax = \"proto2\";";
-	
-	private static String KEYWORD_REQUIRED = "required";
-	
-	private static String KEYWORD_OPTIONAL = "optional";
-	
-	private static String KEYWORD_REPEATED = "repeated";
 	
 	private static String MODIFIER_MESSAGE = "message";
 	
@@ -49,23 +48,50 @@ public class Proto2FileConverter implements ProtoFileConverter {
 			Namespace namespace = entry.getValue();
 			List<Model> models = namespace.getModels();
 			
+			ProtoFile protoFile = new ProtoFile(namespace.getName().toLowerCase() + ".proto");
+			
 			StringBuilder sb = new StringBuilder(8192);
+			if (doc.getAuth() == null) {
+				doc.setAuth("GGServer Docs " + this.getClass().getSimpleName());
+			}
 			sb
+			.append(ENTER_LINE)
+			.append("//Author : ").append(doc.getAuth())
+			.append(ENTER_LINE)
+			.append("//Namespace : " + namespace.getName())
+			.append(ENTER_LINE)
+			.append("//Description : " + namespace.getDescription())
+			.append(ENTER_LINE)
+			.append("//Create Date : " + dateFormat.format(new Date()))
+			.append(ENTER_LINE)
+			.append(ENTER_LINE)
+			.append(ENTER_LINE)
 			.append(HEADER_SYNTAX)
 			.append(ENTER_LINE)
 			.append(ENTER_LINE)
-			.append("//Last Update : " + dateFormat.format(new Date()))
-			.append(ENTER_LINE)
 			.append(ENTER_LINE)
 			;
+			protoFile.setContentStart(sb.toString());
+			
+			sb.setLength(0);
+		
+			protoFile.setContentEnd(sb.toString());
+			
+			sb.setLength(0);
+			
 			for (Model model : models) {
 				
+				String messageName = doc.getMessageModelPrefix() + model.getClazz().getSimpleName();
+				
+				
+				
+				String actionId = (StringUtils.isNotEmpty(model.getActionId()) ? doc.getActionIdPrefix() : "") + model.getActionId();
 				sb
 				.append("// ").append(model.getDesc())
 				.append(ENTER_LINE)
-				.append("// ").append(model.getActionId())
+				.append("// ").append(actionId)
 				.append(ENTER_LINE)
-				.append(MODIFIER_MESSAGE).append(" ").append(model.getClazz().getSimpleName()).append(" {")
+				.append(MODIFIER_MESSAGE).append(" ").append(messageName).append(" {")
 				.append(ENTER_LINE);
 				
 				int seq = 0;
@@ -86,11 +112,16 @@ public class Proto2FileConverter implements ProtoFileConverter {
 					if (Modifier.isTransient(field.getModifiers())) {
 						continue;
 					}
+					
+					if (property.getName().equals("playerHandcards")) {
+						System.out.println();
+					}
+					
 					sb
 					.append("  ")
 					.append(getFieldProtoModifier(field))
 					.append(" ")
-					.append(getFieldProtoDataType(field))
+					.append(getFieldProtoDataType(field, doc.getMessageModelPrefix()))
 					.append(" ")
 					.append(field.getName())
 					.append(" ")
@@ -101,13 +132,26 @@ public class Proto2FileConverter implements ProtoFileConverter {
 					.append("// ").append(property.getDesc())
 					.append(ENTER_LINE)
 					;
+					
 				}
 				sb
 				.append("}")
 				.append(ENTER_LINE)
 				.append(ENTER_LINE);
+				
+				protoFile.addMessage(new ProtoMessage(messageName, sb.toString()));
+				
+				sb.setLength(0);
+				
 			}
-			protoFiles.add(new ProtoFile(namespace.getName().toLowerCase() + ".proto", sb.toString()));
+			protoFiles.add(protoFile);
+		}
+		Comparator<Object> com = Collator.getInstance(java.util.Locale.CHINA);  
+		for (ProtoFile pfile : protoFiles) {
+			
+			pfile.getMessages().sort((a, b) -> {
+				return com.compare(a.getMessageName(), b.getMessageName()); 
+			});
 		}
 		return protoFiles;
 	}
@@ -125,7 +169,14 @@ public class Proto2FileConverter implements ProtoFileConverter {
 			try (
 					FileOutputStream os = new FileOutputStream(file);
 			){
-				os.write(protoFile.getContent().getBytes(Charset.forName("utf-8")));
+				List<ProtoMessage> messages = protoFile.getMessages();
+				StringBuilder sb = new StringBuilder(1024);
+				sb.append(protoFile.getContentStart());
+				for (ProtoMessage msg : messages) {
+					sb.append(msg.getContent());
+				}
+				sb.append(protoFile.getContentEnd());
+				os.write(sb.toString().getBytes(Charset.forName("utf-8")));					
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}

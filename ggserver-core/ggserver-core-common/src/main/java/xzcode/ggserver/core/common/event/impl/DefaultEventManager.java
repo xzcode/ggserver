@@ -24,8 +24,8 @@ public class DefaultEventManager implements IEventManager {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> void emitEvent(String event, EventData<T> eventData) {
-		IEventListenerGroup<T> group = (IEventListenerGroup<T>) eventMap.get(event);
+	public <T> void emitEvent(EventData<T> eventData) {
+		IEventListenerGroup<T> group = (IEventListenerGroup<T>) eventMap.get(eventData.getEvent());
 		if (group != null) {
 			group.onEvent(eventData);
 		}

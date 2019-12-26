@@ -5,6 +5,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import xzcode.ggserver.core.common.executor.ITaskExecutor;
 import xzcode.ggserver.core.common.executor.SingleThreadTaskExecutor;
+import xzcode.ggserver.core.common.future.IGGFuture;
 import xzcode.ggserver.game.card.games.player.RoomPlayer;
 import xzcode.ggserver.game.card.games.room.Room;
 import xzcode.ggserver.game.card.games.room.enter.IEnterRoomAction;
@@ -25,6 +26,7 @@ R extends Room<P, R, H>,
 H extends House<P, R, H>
 > 
 {
+	
 	/**
 	 * 大厅编号
 	 */
@@ -35,31 +37,17 @@ H extends House<P, R, H>
 	 */
 	protected String houseName;
 	
-	/**
-	 * 任务执行器
-	 */
-	protected ITaskExecutor executor;
 	
 	
 	
 	public House(String houseNo) {
 		this.houseNo = houseNo;
-		executor = new SingleThreadTaskExecutor("House-"+ houseNo +"-");
 	}
 
 	/**
 	 * 房间集合
 	 */
 	protected Map<String, R> rooms = new ConcurrentHashMap<>(1000);
-	
-	
-	public void enterRoom(IEnterRoomAction<P, R, H> enterRoomAction) {
-		// 所有进房操作必须使用单线程任务执行器进行处理
-		executor.submitTask(enterRoomAction);
-	}
-	
-	
-	
 	
 	
 	/**
@@ -95,6 +83,18 @@ H extends House<P, R, H>
 		rooms.remove(roomNo);
 	}
 
+	/**
+	 * 获取房间
+	 * 
+	 * @param roomNo
+	 * @return
+	 * @author zai
+	 * 2019-12-26 10:54:33
+	 */
+	public R getRoom(String roomNo) {
+		return rooms.get(roomNo);
+	}
+	
 	public String getHouseNo() {
 		return houseNo;
 	}

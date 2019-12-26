@@ -101,6 +101,16 @@ public class GGNettyFacadeFuture implements IGGFuture {
 		return this.nettyFuture.get(timeout, unit);
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> T get(Class<T> clazz) {
+		try {
+			return (T) get();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
 
 
 

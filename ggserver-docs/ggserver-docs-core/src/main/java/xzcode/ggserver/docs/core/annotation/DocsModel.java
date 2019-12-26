@@ -23,7 +23,7 @@ public @interface DocsModel {
 	 * @author zai
 	 * 2018-12-30 11:17:07
 	 */
-	public String actionId();
+	public String actionId() default "";
 	
 	/**
 	 * 说明

@@ -86,6 +86,22 @@ public interface ITaskExecutor {
 	 * 2019-12-01 15:46:16
 	 */
 	IGGFuture scheduleAfter(IGGFuture afterFuture, long delay, TimeUnit timeUnit, Runnable runnable);
+	
+	
+
+	/**
+	 * 等待指定future执行完成后再进行计划任务的执行
+	 * 
+	 * @param afterFuture
+	 * @param delayMs 延迟时间毫秒
+	 * @param runnable
+	 * @return
+	 * @author zai
+	 * 2019-12-25 14:52:04
+	 */
+	IGGFuture scheduleAfter(IGGFuture afterFuture, long delayMs, Runnable runnable);
+	
+	
 	/**
 	 * 等待指定future执行完成后再进行计划任务的执行
 	 * @param <V> callable回调类型
@@ -121,6 +137,7 @@ public interface ITaskExecutor {
 	 * @author zai
 	 * 2019-12-22 17:12:55
 	 */
-	ExecutorService nextEvecutor();
+	ITaskExecutor nextEvecutor();
+
 	
 }

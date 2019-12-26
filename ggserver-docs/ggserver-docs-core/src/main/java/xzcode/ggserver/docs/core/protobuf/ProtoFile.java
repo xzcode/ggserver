@@ -1,5 +1,8 @@
 package xzcode.ggserver.docs.core.protobuf;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ProtoFile {
 	
 	/**
@@ -8,19 +11,25 @@ public class ProtoFile {
 	private String filename;
 	
 	/**
-	 * 内容
+	 * 消息集合
 	 */
-	private String content;
+	private List<ProtoMessage> messages = new ArrayList<>();
 	
 	
+	private String contentStart;
+	
+	private String contentEnd;
 	
 
 	public ProtoFile() {
 	}
 
-	public ProtoFile(String filename, String content) {
+	public ProtoFile(String filename) {
 		this.filename = filename;
-		this.content = content;
+	}
+	
+	public void addMessage(ProtoMessage message) {
+		this.messages.add(message);
 	}
 
 	public String getFilename() {
@@ -31,12 +40,28 @@ public class ProtoFile {
 		this.filename = filename;
 	}
 
-	public String getContent() {
-		return content;
+	public List<ProtoMessage> getMessages() {
+		return messages;
 	}
 
-	public void setContent(String content) {
-		this.content = content;
+	public void setMessages(List<ProtoMessage> messages) {
+		this.messages = messages;
+	}
+
+	public String getContentStart() {
+		return contentStart;
+	}
+
+	public void setContentStart(String contentStart) {
+		this.contentStart = contentStart;
+	}
+
+	public String getContentEnd() {
+		return contentEnd;
+	}
+
+	public void setContentEnd(String contentEnd) {
+		this.contentEnd = contentEnd;
 	}
 	
 	

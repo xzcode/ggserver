@@ -13,6 +13,12 @@ public class Doc {
 	
 	private Map<String, Namespace> namespaces = new ConcurrentHashMap<>();
 	
+	private String actionIdPrefix = "";
+	
+	private String messageModelPrefix = "";
+	
+	private String auth;
+	
 	/**
 	 * 获取命名空间
 	 * 
@@ -30,6 +36,33 @@ public class Doc {
 	
 	public Map<String, Namespace> getNamespaces() {
 		return namespaces;
+	}
+
+	public String getActionIdPrefix() {
+		return actionIdPrefix;
+	}
+
+	public void setActionIdPrefix(String actionIdPrefix) {
+		this.actionIdPrefix = actionIdPrefix;
+	}
+
+	public String getMessageModelPrefix() {
+		return messageModelPrefix;
+	}
+
+	public void setMessageModelPrefix(String messageModelPrefix) {
+		this.messageModelPrefix = messageModelPrefix;
+	}
+
+	public void setNamespaces(Map<String, Namespace> namespaces) {
+		this.namespaces = namespaces;
+	}
+	public String getAuth() {
+		return auth;
+	}
+	
+	public void setAuth(String auth) {
+		this.auth = auth;
 	}
 	
 	

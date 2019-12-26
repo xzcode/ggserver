@@ -5,12 +5,12 @@ import java.util.concurrent.ThreadFactory;
 
 import io.netty.channel.DefaultEventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
-import nonapi.io.github.classgraph.concurrency.SimpleThreadFactory;
 import xzcode.ggserver.core.common.constant.ProtocolTypeConstants;
 import xzcode.ggserver.core.common.event.IEventManager;
 import xzcode.ggserver.core.common.event.impl.DefaultEventManager;
-import xzcode.ggserver.core.common.executor.DefaultEventLoopGroupTaskExecutor;
+import xzcode.ggserver.core.common.executor.DefaultTaskExecutor;
 import xzcode.ggserver.core.common.executor.ITaskExecutor;
+import xzcode.ggserver.core.common.executor.thread.SimpleThreadFactory;
 import xzcode.ggserver.core.common.filter.IFilterManager;
 import xzcode.ggserver.core.common.filter.impl.DefaultFilterManager;
 import xzcode.ggserver.core.common.handler.codec.IDecodeHandler;
@@ -123,7 +123,7 @@ public class GGConfig {
 		}
 		
 		if (taskExecutor == null) {
-			taskExecutor = new DefaultEventLoopGroupTaskExecutor(new DefaultEventLoopGroup(getTaskThreadSize()));
+			taskExecutor = new DefaultTaskExecutor(getTaskThreadSize());
 		}
 		
 		if (decodeHandler == null) {

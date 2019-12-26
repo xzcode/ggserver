@@ -15,5 +15,7 @@ public interface IGGFuture extends Future<Object>{
 	void addListener(IGGFutureListener<IGGFuture> listener);
 
 	boolean cancel();
+	
+	<T> T get(Class<T> clazz);
 
 }

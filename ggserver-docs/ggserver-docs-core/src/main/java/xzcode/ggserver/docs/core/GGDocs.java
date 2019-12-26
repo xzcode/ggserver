@@ -55,6 +55,8 @@ public class GGDocs {
 	public Doc scan() {
 		
 		Doc doc = new Doc();
+		doc.setActionIdPrefix(config.getActionIdPrefix());
+		doc.setMessageModelPrefix(config.getMessageModelPrefix());
 		
 		String[] scanPackages = config.getScanPackages();
 		

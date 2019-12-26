@@ -3,6 +3,7 @@ package xzcode.ggserver.game.core.player.support;
 import java.util.concurrent.TimeUnit;
 
 import xzcode.ggserver.core.common.future.IGGFuture;
+import xzcode.ggserver.core.common.message.model.IMessage;
 import xzcode.ggserver.core.common.message.response.Response;
 import xzcode.ggserver.core.common.session.GGSession;
 
@@ -33,6 +34,18 @@ public interface IGGSessionPlayerSupport{
 	 */
 	default IGGFuture send(String actionId, Object message) {
 		return getSession().send(new Response(getSession(), null, actionId, message), 0, TimeUnit.MILLISECONDS);
+	}
+	
+	/**
+	 * 发送消息
+	 * 
+	 * @param message
+	 * @return
+	 * @author zai
+	 * 2019-12-25 12:04:20
+	 */
+	default IGGFuture send(IMessage message) {
+		return getSession().send(new Response(getSession(), null, message.getActionId(), message), 0, TimeUnit.MILLISECONDS);
 	}
 	
 	/**

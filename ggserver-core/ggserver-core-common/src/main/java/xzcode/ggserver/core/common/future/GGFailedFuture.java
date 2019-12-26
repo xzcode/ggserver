@@ -58,6 +58,16 @@ public class GGFailedFuture implements IGGFuture {
 	public boolean cancel() {
 		return false;
 	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> T get(Class<T> clazz) {
+		try {
+			return (T) get();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
 	
 	
 

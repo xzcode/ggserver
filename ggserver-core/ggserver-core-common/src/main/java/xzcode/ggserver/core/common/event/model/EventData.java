@@ -4,17 +4,18 @@ import io.netty.channel.Channel;
 import xzcode.ggserver.core.common.session.GGSession;
 
 public class EventData<T> {
-	private GGSession session;
-	private Channel channel;
-	private T data;
+	protected String event;
+	protected GGSession session;
+	protected Channel channel;
+	protected T data;
 	
 	
-	public EventData(GGSession session, T data) {
+	public EventData(GGSession session, String event, T data) {
 		super();
 		this.session = session;
 		this.data = data;
 	}
-	public EventData(GGSession session, T data, Channel channel) {
+	public EventData(GGSession session, String event, T data, Channel channel) {
 		this.session = session;
 		this.data = data;
 		this.channel = channel;
@@ -24,6 +25,14 @@ public class EventData<T> {
 	}
 	public void setSession(GGSession session) {
 		this.session = session;
+	}
+	
+	public String getEvent() {
+		return event;
+	}
+	
+	public void setEvent(String event) {
+		this.event = event;
 	}
 	public T getData() {
 		return data;
