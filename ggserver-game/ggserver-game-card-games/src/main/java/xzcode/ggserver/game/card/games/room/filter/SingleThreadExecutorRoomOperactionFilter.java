@@ -46,7 +46,7 @@ H extends House<P, R, H>
 		P player = (P) session.getAttribute(playerSessionKey);	
 		R room = player.getRoom();
 		if (room != null) {
-			room.addOperaction(() -> {
+			room.addOperaction((r) -> {
 				try {
 					requestMessageManager.handle(request);
 				} catch (Exception e) {

@@ -81,7 +81,9 @@ public class ProtoV2FileConverter implements ProtoFileConverter {
 			
 			for (Model model : models) {
 				
-				String messageName = doc.getMessageModelPrefix()+model.getClazz().getSimpleName();
+				String messageName = doc.getMessageModelPrefix() + model.getClazz().getSimpleName();
+				
+				
 				
 				String actionId = (StringUtils.isNotEmpty(model.getActionId()) ? doc.getActionIdPrefix() : "") + model.getActionId();
 				sb
@@ -111,11 +113,15 @@ public class ProtoV2FileConverter implements ProtoFileConverter {
 						continue;
 					}
 					
+					if (property.getName().equals("playerHandcards")) {
+						System.out.println();
+					}
+					
 					sb
 					.append("  ")
 					.append(getFieldProtoModifier(field))
 					.append(" ")
-					.append(getFieldProtoDataType(field))
+					.append(getFieldProtoDataType(field, doc.getMessageModelPrefix()))
 					.append(" ")
 					.append(field.getName())
 					.append(" ")
