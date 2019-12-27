@@ -24,11 +24,12 @@ import xzcode.ggserver.core.common.session.listener.ISessionDisconnectListener;
  */
 public abstract class AbstractSession<C extends GGConfig> implements GGSession {
 	
-	protected C config;
-	protected long expireMs;
-	protected String sessionId;
-	protected String host;
-	protected int port;
+	protected C config;//具体的配置
+	protected long expireMs;//超时时间
+	protected boolean expired = false;//是否已超时
+	protected String sessionId;//sessionid
+	protected String host;//远端地址
+	protected int port;//远端端口号
 	protected List<ISessionDisconnectListener> disconnectListeners = new ArrayList<>();
 	
 	public AbstractSession(String sessionId, C config) {
@@ -102,16 +103,22 @@ public abstract class AbstractSession<C extends GGConfig> implements GGSession {
 		this.port = port;
 		
 	}
+	@Override
+	public void expire() {
+		this.expired = true;
+	}
 
 	@Override
 	public boolean isExpired() {
-		return expireMs < System.currentTimeMillis();
+		if (!this.expired) {
+			this.expired = expireMs < System.currentTimeMillis();
+		}
+		return this.expired;
 	}
 
 	@Override
 	public void updateExpire() {
 		this.expireMs = System.currentTimeMillis() + config.getSessionExpireMs();
-		
 	}
 	@Override
 	public String getSessonId() {

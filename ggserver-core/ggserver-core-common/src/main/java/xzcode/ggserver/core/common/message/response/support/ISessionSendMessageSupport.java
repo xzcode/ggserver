@@ -175,6 +175,10 @@ public interface ISessionSendMessageSupport extends IMakePackSupport {
 			Object metadata = metadataProvider.provide(response.getSession());
 			response.setMetadata(metadata);			
 		}
+		// 发送过滤器
+		if (!getFilterManager().doResponseFilters(response)) {
+			return null;
+		}
 		return send(makePack(response), delay, timeUnit);
 	}
 	

@@ -13,11 +13,13 @@ public class EventData<T> {
 	public EventData(GGSession session, String event, T data) {
 		super();
 		this.session = session;
+		this.event = event;
 		this.data = data;
 	}
 	public EventData(GGSession session, String event, T data, Channel channel) {
 		this.session = session;
 		this.data = data;
+		this.event = event;
 		this.channel = channel;
 	}
 	public GGSession getSession() {

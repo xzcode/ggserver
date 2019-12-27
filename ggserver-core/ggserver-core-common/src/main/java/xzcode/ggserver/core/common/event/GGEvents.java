@@ -20,15 +20,15 @@ public interface GGEvents {
 		/**
 	     * 读空闲
 	     */
-		String READE = "GG.idle.read";
+		String READE = "GG.IDLE.READ";
 	    /**
 	     * 写空闲
 	     */
-		String WRITE = "GG.idle.write";
+		String WRITE = "GG.IDLE.WRITE";
 	    /**
 	     * 读与写空闲
 	     */
-		String ALL = "GG.idle.all";
+		String ALL = "GG.IDLE.ALL";
 
 	}
 	
@@ -45,12 +45,27 @@ public interface GGEvents {
 		/**
 		 * 连接打开
 		 */
-		String OPENED = "GG.conn.opened";
+		String OPENED = "GG.CONN.OPENED";
 		
 		/**
 		 * 连接关闭
 		 */
-		String CLOSED = "GG.conn.closed";
+		String CLOSED = "GG.CONN.CLOSED";
+
+	}
+	
+	/**
+	 * 会话相关事件
+	 * 
+	 * @author zai
+	 * 2019-12-27 11:59:28
+	 */
+	interface Session {
+		
+		/**
+		 * 会话超时
+		 */
+		String EXPIRED = "GG.SESSION.EXPIRED";
 		
 
 	}

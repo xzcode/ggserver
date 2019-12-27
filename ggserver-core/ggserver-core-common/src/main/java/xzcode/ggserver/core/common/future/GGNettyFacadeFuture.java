@@ -1,8 +1,6 @@
 package xzcode.ggserver.core.common.future;
 
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -22,8 +20,6 @@ public class GGNettyFacadeFuture implements IGGFuture {
 	private io.netty.util.concurrent.Future<?> nettyFuture;
 	
 	
-	private List<IGGFutureListener<IGGFuture>> futureListeners;
-	
 	public GGNettyFacadeFuture() {
 	}
 	
@@ -36,29 +32,15 @@ public class GGNettyFacadeFuture implements IGGFuture {
 			return;
 		}
 		this.nettyFuture = (io.netty.util.concurrent.Future<?>) future;
-		if (this.futureListeners != null) {
-			nettyFuture.addListener((f) -> {
-				for (IGGFutureListener<IGGFuture> listener : futureListeners) {
-					listener.operationComplete(new GGNettyFacadeFuture((Future<?>) f));
-				}
-			});
-		}
 	}
 
 	@Override
 	public void addListener(IGGFutureListener<IGGFuture> listener) {
 			
 		try {
-			if (this.futureListeners == null) {
-				this.futureListeners = new ArrayList<>();
-			}
-	
-			if (!this.isDone()) {
-				this.futureListeners.add(listener);		
-				return;
-			}
-			this.futureListeners.add(listener);	
-			listener.operationComplete(new GGNettyFacadeFuture(this.nettyFuture));
+			nettyFuture.addListener((f) -> {
+				listener.operationComplete(new GGNettyFacadeFuture((Future<?>) f));
+			});
 		} catch (Exception e) {
 			GGLoggerUtil.getLogger().error("IGGFuture 'operationComplete' Error!", e);
 		}
