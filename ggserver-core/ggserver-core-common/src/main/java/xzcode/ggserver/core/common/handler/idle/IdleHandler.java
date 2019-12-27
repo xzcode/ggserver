@@ -61,7 +61,7 @@ public class IdleHandler extends ChannelInboundHandlerAdapter{
 		
 		
 		if (evt instanceof IdleStateEvent) {
-			GGSession session = config.getSessionFactory().getSession(ctx.channel());
+			
             switch (((IdleStateEvent) evt).state()) {
             	
 				case WRITER_IDLE:
@@ -69,6 +69,7 @@ public class IdleHandler extends ChannelInboundHandlerAdapter{
 							if (LOGGER.isDebugEnabled()) {
 								LOGGER.debug("...WRITER_IDLE...: channel:{}", ctx.channel());								
 							}
+							GGSession session = config.getSessionFactory().getSession(ctx.channel());
 							config.getTaskExecutor().submitTask(new EventTask(session, GGEvents.Idle.WRITE, null, config,ctx.channel()));
 						}
 					break;
@@ -77,6 +78,7 @@ public class IdleHandler extends ChannelInboundHandlerAdapter{
 							if (LOGGER.isDebugEnabled()) {
 								LOGGER.debug("...READER_IDLE...: channel:{}", ctx.channel());								
 							}
+							GGSession session = config.getSessionFactory().getSession(ctx.channel());
 							config.getTaskExecutor().submitTask(new EventTask(session, GGEvents.Idle.READE, null, config,ctx.channel()));
 						}
 					break;
@@ -85,6 +87,7 @@ public class IdleHandler extends ChannelInboundHandlerAdapter{
 							if (LOGGER.isDebugEnabled()) {
 								LOGGER.debug("...ALL_IDLE...: channel:{}", ctx.channel());								
 							}
+							GGSession session = config.getSessionFactory().getSession(ctx.channel());
 							config.getTaskExecutor().submitTask(new EventTask(session, GGEvents.Idle.ALL, null, config,ctx.channel()));
 						}
 					break;

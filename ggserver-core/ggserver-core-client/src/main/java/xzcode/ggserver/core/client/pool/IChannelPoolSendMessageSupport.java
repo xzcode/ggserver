@@ -73,15 +73,16 @@ public interface IChannelPoolSendMessageSupport {
 				if (!f.isDone() || ch == null) {
 					Throwable cause = f.cause();
 					if (cause instanceof ConnectException) {
-						GGLoggerUtil.getLogger().error(cause.getMessage());
+						GGLoggerUtil.getLogger(this).error(cause.getMessage());
 					}else {
-						GGLoggerUtil.getLogger().error("Cannot acquire channel from channel pool!");					
+						GGLoggerUtil.getLogger(this).error("Cannot acquire channel from channel pool!");					
 					}
 					return;
 				}
 				ChannelFuture channelFuture = ch.writeAndFlush(pack);
 				returningFuture.setFuture(channelFuture);
 				channelPool.release(ch);
+				
 		});
 		return returningFuture;
 	}

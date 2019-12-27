@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelOutboundHandlerAdapter;
 import io.netty.channel.ChannelPromise;
@@ -52,6 +53,11 @@ public class TcpOutboundHandler extends ChannelOutboundHandlerAdapter {
 			return;
 		}
 		
+		if (msg instanceof ByteBuf) {
+			ctx.writeAndFlush(msg);
+			return;
+		}
+		
 		ByteBuf out = null;
 		if (msg instanceof byte[]) {
 			byte[] bytes = (byte[]) msg;
@@ -64,13 +70,15 @@ public class TcpOutboundHandler extends ChannelOutboundHandlerAdapter {
 			//调用编码处理器
 			out = config.getEncodeHandler().handle(ctx, (Pack) msg);
 			
-			if(channel.isWritable()){
-				ctx.writeAndFlush(out);
-			}else {
-				if (LOGGER.isInfoEnabled()) {
-            		LOGGER.error("Write And Flush msg ERROR!");
-            	}
-			}
+			ChannelFuture writeFuture = ctx.writeAndFlush(out, promise);
+			writeFuture.addListener(f -> {
+				if (!f.isSuccess()) {
+					if (LOGGER.isInfoEnabled()) {
+	            		LOGGER.error("Write And Flush msg FAILED! ,channel: {}, active: {}, \nerror: {}", channel, channel.isActive(), f.cause());
+	            	}
+				}
+			});
+			
 		}
 		
 		

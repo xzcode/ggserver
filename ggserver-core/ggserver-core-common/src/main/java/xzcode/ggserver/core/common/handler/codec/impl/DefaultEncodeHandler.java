@@ -144,6 +144,9 @@ public class DefaultEncodeHandler implements IEncodeHandler {
 		out.getBytes(0, bb);
 		System.out.println(Arrays.toString(bb));
 		out.resetReaderIndex();
+		if (packLen + 4 == 101) {
+			System.out.println(101);
+		}
 		*/
 		return out;
 	}

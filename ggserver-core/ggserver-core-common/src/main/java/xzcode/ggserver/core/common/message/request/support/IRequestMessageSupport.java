@@ -52,12 +52,20 @@ public interface IRequestMessageSupport {
 			msgClass = (Class<?>) ((ParameterizedType)messageAcion.getClass().getGenericInterfaces()[0]).getActualTypeArguments()[0];			
 		}
 		*/
+		
+		
 		Type[] genericInterfaces = messageAcion.getClass().getGenericInterfaces();
 		if (genericInterfaces == null || genericInterfaces.length == 0) {
 			ParameterizedType superParameterizedType = (ParameterizedType)messageAcion.getClass().getGenericSuperclass();
 			msgClass = (Class<?>) superParameterizedType.getActualTypeArguments()[0];
 		}else {
-			msgClass = (Class<?>) ((ParameterizedType)genericInterfaces[0]).getActualTypeArguments()[0];
+			Type type = genericInterfaces[0];
+			if (type == IRequestMessageHandler.class) {
+				msgClass = IRequestMessageHandler.class;
+			}else {
+				msgClass = (Class<?>) ((ParameterizedType)genericInterfaces[0]).getActualTypeArguments()[0];
+			}
+			
 		}
 		handler.setMessageClass(msgClass );
 		

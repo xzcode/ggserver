@@ -3,7 +3,6 @@ package xzcode.ggserver.core.common.config;
 import java.nio.charset.Charset;
 import java.util.concurrent.ThreadFactory;
 
-import io.netty.channel.DefaultEventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import xzcode.ggserver.core.common.constant.ProtocolTypeConstants;
 import xzcode.ggserver.core.common.event.IEventManager;
