@@ -88,7 +88,14 @@ H extends House<P, R, H>
 	}
 	@Override
 	public R createRoom() {
-		return roomFactory.createRoom();
+		R room = roomFactory.createRoom();
+		//注册玩家离开房间监听器
+		//当玩家离开时，同时在游戏管理器移除玩家
+		room.addPlayerLeaveListener(player -> {
+			removePlayer(player.getPlayerNo());
+		});
+		
+		return room;
 	}
 	
 	@Override

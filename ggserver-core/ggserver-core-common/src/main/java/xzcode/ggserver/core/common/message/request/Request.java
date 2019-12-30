@@ -16,7 +16,7 @@ public class Request<T> {
 	//会话对象
 	private GGSession session;
 
-	//消息体
+	//元数据
 	private IMetadata metadata;
 
 	//发送消息标识
@@ -25,7 +25,7 @@ public class Request<T> {
 	//消息体
 	private T message;
 	
-	//会话对象
+	//通道
 	private Channel channel;
 	
 	

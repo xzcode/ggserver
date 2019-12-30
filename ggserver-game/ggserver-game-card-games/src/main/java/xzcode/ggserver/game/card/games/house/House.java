@@ -3,12 +3,8 @@ package xzcode.ggserver.game.card.games.house;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import xzcode.ggserver.core.common.executor.ITaskExecutor;
-import xzcode.ggserver.core.common.executor.SingleThreadTaskExecutor;
-import xzcode.ggserver.core.common.future.IGGFuture;
 import xzcode.ggserver.game.card.games.player.RoomPlayer;
 import xzcode.ggserver.game.card.games.room.Room;
-import xzcode.ggserver.game.card.games.room.enter.IEnterRoomAction;
 
 /**
  * 大厅管理器
@@ -38,15 +34,6 @@ H extends House<P, R, H>
 	protected String houseName;
 	
 	
-	
-	
-	public House(String houseNo) {
-		this.houseNo = houseNo;
-	}
-	public House(String houseNo, String houseName) {
-		this.houseNo = houseNo;
-		this.houseName = houseName;
-	}
 
 	/**
 	 * 房间集合
@@ -86,7 +73,7 @@ H extends House<P, R, H>
 	public void removeRoom(String roomNo) {
 		rooms.remove(roomNo);
 	}
-
+	
 	/**
 	 * 获取房间
 	 * 

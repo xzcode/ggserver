@@ -28,7 +28,7 @@ H extends House<P, R, H>
 	/**
 	 * ggserver对象
 	 */
-	protected IGGServer server;
+	protected IGGServer ggserver;
 	
 	/**
 	 * 大厅
@@ -192,13 +192,13 @@ H extends House<P, R, H>
 
 	
 	
-	public IGGServer getServer() {
-		return server;
+	public IGGServer getGGserver() {
+		return ggserver;
 	}
 
 
-	public void setServer(IGGServer server) {
-		this.server = server;
+	public void setGGserver(IGGServer server) {
+		this.ggserver = server;
 	}
 	
 	public H getHouse() {
