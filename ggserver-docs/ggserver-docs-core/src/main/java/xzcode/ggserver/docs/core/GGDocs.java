@@ -58,13 +58,18 @@ public class GGDocs {
 		doc.setActionIdPrefix(config.getActionIdPrefix());
 		doc.setMessageModelPrefix(config.getMessageModelPrefix());
 		
-		String[] scanPackages = config.getScanPackages();
+		String[] scanPackages = config.getScanPackages();//扫描的路径
+		String[] excludedPackages = config.getExcludedPackages();//排除的路径
 		
 		if (scanPackages == null || scanPackages.length == 0) {
 			throw new NullPointerException("The attribute 'scanPackages' in 'GGDocsConfig' cannot be empty!");
 		}
 		
-		ScanResult scanResult = new ClassGraph().enableAllInfo().whitelistPackages(scanPackages).scan();
+		ScanResult scanResult = new ClassGraph()
+				.enableAllInfo()
+				.whitelistPackages(scanPackages)//扫描的路径
+				.blacklistPackages(excludedPackages)//排除的路径
+				.scan();
 
 		// 扫描模型注解
 		ClassInfoList classInfoList = scanResult.getClassesWithAnnotation(DocsModel.class.getName());
@@ -86,7 +91,14 @@ public class GGDocs {
 			String namespaceName = "default";
 			String namespaceDesc = "默认命名空间";
 			
+			
 			DocsNamespace docsNamespace = loadClass.getAnnotation(DocsNamespace.class);
+			
+			if (config.getNamespace() != null) {
+				namespaceName = config.getNamespace();
+				namespaceDesc = config.getNamespaceDesc();
+			}
+			else
 			if (docsNamespace != null) {
 				namespaceName = docsNamespace.name();
 				namespaceDesc = docsNamespace.desc();
