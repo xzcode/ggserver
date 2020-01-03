@@ -130,6 +130,40 @@ public class AlgoPjUtil extends BasicAlgoUtil{
 			TIAN_PAI 
 	};
 	
+	/**
+	 * 文牌集合
+	 */
+	public static int[] WEN_PAI_VALUES = {
+			LING_LING_LIU,
+			GAO_JIAO_QI,
+			HONG_TOU_SHI,
+			FU_TOU,
+			BAN_DENG,
+			CHANG_SAN,
+			MEI_PAI,
+			E_PAI,
+			REN_PAI,
+			DI_PAI,
+			TIAN_PAI
+
+	};
+	
+	/**
+	 * 武牌集合
+	 */
+	public static int[] WU_PAI_VALUES = {
+			DING_SAN,
+			ER_SI,
+			ZA_WU_1,
+			ZA_WU_2,
+			ZA_QI_1,
+			ZA_QI_2,
+			ZA_BA_1,
+			ZA_BA_2,
+			ZA_JIU_1,
+			ZA_JIU_2,
+	};
+	
 	
 	
 	
