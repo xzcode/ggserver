@@ -33,7 +33,7 @@ H extends House<P, R, H>
 	/**
 	 * ggserver对象
 	 */
-	protected IGGServer server;
+	protected IGGServer ggserver;
 	
 	/**
 	 * 大厅集合Map<houseNo, house>
@@ -64,12 +64,14 @@ H extends House<P, R, H>
 	 * @param designPlayerSize 预计总玩家数量
 	 */
 	public RoomGameManager(
+			IGGServer ggserver,
 			int designPlayerSize,
 			IPlayerFactory<P> playerFactory,
 			IRoomFactory<R> roomFactory,
 			IRobotManager<P> robotManager
 			) {
 		
+		this.ggserver = ggserver;
 		this.playerFactory = playerFactory;
 		this.roomFactory = roomFactory;
 		this.robotManager = robotManager;
@@ -121,7 +123,7 @@ H extends House<P, R, H>
 	
 	@Override
 	public void removeRoom(R room) {
-		House<P, R, H> house = houses.get(room.getRoomNo());
+		House<P, R, H> house = houses.get(room.getHouse().getHouseNo());
 		if (house == null) {
 			return;
 		}
@@ -190,6 +192,10 @@ H extends House<P, R, H>
 	@Override
 	public ITaskExecutor getTaskExecutor() {
 		return executor;
+	}
+	
+	public IGGServer getGGserver() {
+		return ggserver;
 	}
 
 }

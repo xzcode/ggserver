@@ -14,9 +14,6 @@ import javax.validation.constraints.Size;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ClassInfoList;
@@ -41,9 +38,6 @@ public class GGDocs {
 
 	private GGDocsConfig config;
 
-	private static final Gson GSON = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
-	
-	
 
 	public GGDocs(GGDocsConfig config) {
 		super();
