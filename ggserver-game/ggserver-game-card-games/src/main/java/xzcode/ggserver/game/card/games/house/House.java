@@ -43,6 +43,10 @@ H extends House<P, R, H>
 	public House(String houseNo) {
 		this.houseNo = houseNo;
 	}
+	public House(String houseNo, String houseName) {
+		this.houseNo = houseNo;
+		this.houseName = houseName;
+	}
 
 	/**
 	 * 房间集合

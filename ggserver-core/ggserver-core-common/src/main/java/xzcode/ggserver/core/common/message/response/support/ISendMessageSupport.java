@@ -130,9 +130,9 @@ public interface ISendMessageSupport extends IMakePackSupport {
 		if (session != null) {
 			try {
 			// 发送过滤器
-				if (!getFilterManager().doResponseFilters(response)) {
-					return null;
-				}
+			if (!getFilterManager().doResponseFilters(response)) {
+				return null;
+			}
 				session.send(makePack(response), delay, timeUnit);
 			} catch (Exception e) {
 				GGLoggerUtil.getLogger().error("Send message Error!", e);

@@ -107,7 +107,7 @@ H extends House<P, R, H>
 	 */
 	public void addPlayer(P player) {
 		if (player != null) {
-			this.players.put(player.getPlayerId(), player);
+			this.players.put(player.getPlayerNo(), player);
 			if (playerLeaveListeners.size() > 0) {
 				for (IPlayerEnterListener<P> listener : playerEnterListeners) {
 					listener.enter(player);

@@ -6,6 +6,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 import xzcode.ggserver.core.common.config.GGConfig;
+import xzcode.ggserver.core.common.event.GGEvents;
+import xzcode.ggserver.core.common.event.model.EventData;
 import xzcode.ggserver.core.common.session.GGSession;
 
 /**
@@ -43,7 +45,7 @@ public class DefaultSessionManager implements ISessionManager {
 				GGSession session = it.next().getValue();
 				if (session.isExpired()) {
 					it.remove();
-					session.disconnect();
+					config.getEventManager().emitEvent(new EventData<Void>(session, GGEvents.Session.EXPIRED, null));
 				}
 			}
 		});

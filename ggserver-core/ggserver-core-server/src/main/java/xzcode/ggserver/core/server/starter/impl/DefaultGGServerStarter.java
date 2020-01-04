@@ -46,7 +46,7 @@ public class DefaultGGServerStarter implements IGGServerStarter {
     	
         try {
         	
-        	printLogo();
+        	
         	
             ServerBootstrap boot = new ServerBootstrap(); 
             
@@ -74,10 +74,11 @@ public class DefaultGGServerStarter implements IGGServerStarter {
             ChannelFuture future = boot.bind(config.getPort()).sync();
             
             future.addListener((f) -> {
+            	String logoString = getLogoString();
             	if (f.isSuccess()) {
-            		GGLoggerUtil.getLogger().warn("{} started successfully on port {}", config.getServerName(), config.getPort());
+            		GGLoggerUtil.getLogger().warn("{}\n{} started successfully on port {}!\n", logoString, config.getServerName(), config.getPort());
 				}else {
-					GGLoggerUtil.getLogger().warn("'{}' failed to start on port {}", config.getServerName(), config.getPort());
+					GGLoggerUtil.getLogger().warn("{}]n{} failed to start on port {}!\n", logoString, config.getServerName(), config.getPort());
 				}
             });
             
@@ -91,7 +92,8 @@ public class DefaultGGServerStarter implements IGGServerStarter {
         }
     }
     
-    private void printLogo() {
+    private String getLogoString() {
+    	StringBuilder sb = new StringBuilder(512);
     	try (
     			InputStream is = this.getClass().getResourceAsStream("/ggserver-logo.txt");
 			){
@@ -99,13 +101,12 @@ public class DefaultGGServerStarter implements IGGServerStarter {
     		int len = -1;
     		while ((len = is.read(buff)) != -1) {
 				String logoString = new String(buff, 0, len, config.getCharset());
-				System.out.print(logoString);
+				sb.append(logoString);
 			}
-    		System.out.println();
-			
 		} catch (Exception e) {
 			logger.error("GGServer print logo Error!", e);
 		}
+    	return sb.toString();
     }
     
     /**

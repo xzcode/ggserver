@@ -20,10 +20,10 @@ public class OutboundCommonHandler extends ChannelOutboundHandlerAdapter{
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
 		if (cause instanceof java.io.IOException) {
-			LOGGER.error("Inbound ERROR! {}", cause.getMessage());
+			LOGGER.error("Outbound ERROR! {}", cause.getMessage());
 			return;
 		}
-		LOGGER.error("Inbound ERROR! ", cause);
+		LOGGER.error("Outbound ERROR! ", cause);
 		super.exceptionCaught(ctx, cause);
 	}
 

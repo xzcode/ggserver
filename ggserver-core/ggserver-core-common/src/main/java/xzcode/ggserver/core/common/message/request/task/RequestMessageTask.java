@@ -48,7 +48,7 @@ public class RequestMessageTask implements Runnable{
 		ISerializer serializer = config.getSerializer();
 		IFilterManager messageFilterManager = this.config.getFilterManager();
 		IMetadata metadata = null;
-		String action = new String(pack.getAction(), config.getCharset());
+		String action = null;
 		Object message = null;
 		GGSession session = pack.getSession();
 		try {
@@ -56,6 +56,8 @@ public class RequestMessageTask implements Runnable{
 			if (!messageFilterManager.doBeforeDeserializeFilters(pack)) {
 				return;
 			}
+			
+			action = new String(pack.getAction(), config.getCharset());
 			
 			if (pack.getMetadata() != null) {
 				IMetadataResolver<?> metadataResolver = config.getMetadataResolver();
