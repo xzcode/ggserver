@@ -59,7 +59,11 @@ public class DefaultSessionManager implements ISessionManager {
 	@Override
 	public GGSession getSession(String sessionId) {
 		if (sessionId != null) {
-			return sessionMap.get(sessionId);
+			GGSession session = sessionMap.get(sessionId);
+			if (session != null) {
+				session.updateExpire();
+			}
+			return session;
 		}
 		return null;
 	}

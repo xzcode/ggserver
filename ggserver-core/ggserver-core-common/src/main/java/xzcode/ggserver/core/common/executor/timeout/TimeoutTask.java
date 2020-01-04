@@ -133,4 +133,8 @@ public class TimeoutTask{
 		return remain;
 	}
 	
+	public long getTimeoutDelay() {
+		return timeoutDelay;
+	}
+	
 }

@@ -168,7 +168,9 @@ public class BasicAlgoUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> void shift(List<T> list, int offset) {
-		
+		if (offset == 0) {
+			return;
+		}
 		Object[] array = list.toArray();
 		ArrayUtils.shift(array, offset);
 		list.clear();
