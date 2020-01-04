@@ -30,8 +30,7 @@ H extends House<P, R, H>
 extends Room<P, R, H>
 implements 
 IRoomSupport<P, R, H>,
-IExecutorSupport,
-IGGServerSupport
+IExecutorSupport
 {	
 	
 	/**
@@ -64,22 +63,22 @@ IGGServerSupport
 
 	@Override
 	public Charset getCharset() {
-		return getGGServer().getCharset();
+		return getGGserver().getCharset();
 	}
 
 	@Override
 	public ISerializer getSerializer() {
-		return getGGServer().getSerializer();
+		return getGGserver().getSerializer();
 	}
 
 	@Override
 	public ISessionManager getSessionManager() {
-		return getGGServer().getSessionManager();
+		return getGGserver().getSessionManager();
 	}
 
 	@Override
 	public IFilterManager getFilterManager() {
-		return getGGServer().getFilterManager();
+		return getGGserver().getFilterManager();
 	}
 
 	

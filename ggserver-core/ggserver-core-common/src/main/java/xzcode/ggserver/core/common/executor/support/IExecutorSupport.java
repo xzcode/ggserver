@@ -4,6 +4,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 import xzcode.ggserver.core.common.executor.ITaskExecutor;
+import xzcode.ggserver.core.common.executor.timeout.TimeoutTask;
 import xzcode.ggserver.core.common.future.IGGFuture;
 
 /**
@@ -68,6 +69,11 @@ public interface IExecutorSupport extends ITaskExecutor {
 	@Override
 	default IGGFuture schedule(long delayMs, Runnable runnable) {
 		return getTaskExecutor().schedule(delayMs, runnable);
+	}
+
+	@Override
+	default TimeoutTask timeoutTask(long timeoutDelay, Runnable timeoutAction) {
+		return getTaskExecutor().timeoutTask(timeoutDelay, timeoutAction);
 	}
 
 	@Override

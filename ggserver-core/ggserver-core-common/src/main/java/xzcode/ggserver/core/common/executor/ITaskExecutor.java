@@ -4,6 +4,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import xzcode.ggserver.core.common.executor.timeout.TimeoutTask;
 import xzcode.ggserver.core.common.future.IGGFuture;
 
 /**
@@ -128,6 +129,18 @@ public interface ITaskExecutor {
 	 * 2019-12-01 15:48:27
 	 */
 	IGGFuture scheduleWithFixedDelay(long initialDelay, long delay, TimeUnit timeUnit, Runnable runnable);
+	
+	/**
+	 * 创建超时任务对象
+	 * 
+	 * @param timeoutDelay
+	 * @param timeoutAction
+	 * @return
+	 * @author zai
+	 * 2019-12-29 21:22:50
+	 */
+	TimeoutTask timeoutTask(long timeoutDelay, Runnable timeoutAction);
+	
 	
 	
 	/**

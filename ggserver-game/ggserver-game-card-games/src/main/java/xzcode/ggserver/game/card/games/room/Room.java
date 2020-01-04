@@ -28,7 +28,7 @@ H extends House<P, R, H>
 	/**
 	 * ggserver对象
 	 */
-	protected IGGServer server;
+	protected IGGServer ggserver;
 	
 	/**
 	 * 大厅
@@ -89,14 +89,16 @@ H extends House<P, R, H>
 	 * @author zai
 	 * 2019-02-20 19:10:19
 	 */
-	public P removePlayer(Object playerId) {
-		P player = players.remove(playerId);
-		if (player != null && playerEnterListeners.size() > 0) {
-			for (IPlayerLeaveListener<P> listener : playerLeaveListeners) {
-				listener.leave(player);
+	public P removePlayer(P player) {
+		P remove = players.remove(player.getPlayerNo());
+		if (remove != null) {
+			if (player != null && playerLeaveListeners.size() > 0) {
+				for (IPlayerLeaveListener<P> listener : playerLeaveListeners) {
+					listener.leave(player);
+				}
 			}
 		}
-		return player;
+		return remove;
 	}
 	
 	/**
@@ -192,13 +194,13 @@ H extends House<P, R, H>
 
 	
 	
-	public IGGServer getServer() {
-		return server;
+	public IGGServer getGGserver() {
+		return ggserver;
 	}
 
 
-	public void setServer(IGGServer server) {
-		this.server = server;
+	public void setGGserver(IGGServer server) {
+		this.ggserver = server;
 	}
 	
 	public H getHouse() {

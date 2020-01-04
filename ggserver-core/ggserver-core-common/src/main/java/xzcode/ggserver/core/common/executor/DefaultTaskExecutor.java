@@ -9,6 +9,7 @@ import io.netty.util.concurrent.ScheduledFuture;
 import xzcode.ggserver.core.common.executor.task.AsyncCallableTask;
 import xzcode.ggserver.core.common.executor.task.AsyncRunnableTask;
 import xzcode.ggserver.core.common.executor.thread.SimpleThreadFactory;
+import xzcode.ggserver.core.common.executor.timeout.TimeoutTask;
 import xzcode.ggserver.core.common.future.GGNettyFacadeFuture;
 import xzcode.ggserver.core.common.future.IGGFuture;
 
@@ -86,6 +87,10 @@ public class DefaultTaskExecutor implements ITaskExecutor{
 	@Override
 	public ITaskExecutor nextEvecutor() {
 		return new DefaultTaskExecutor(executor.next());
+	}
+	@Override
+	public TimeoutTask timeoutTask(long timeoutDelay, Runnable timeoutAction) {
+		return new TimeoutTask(this, timeoutDelay, timeoutAction);
 	}
 
 

@@ -65,10 +65,13 @@ public class DefaultDecodeHandler implements IDecodeHandler {
 		
 		//读取整个包体长度
 		int packLen;
-		if (ProtocolTypeConstants.TCP == protocolType) {
+		if (ProtocolTypeConstants.TCP.equals(protocolType)) {
 			packLen = in.readInt();
-		}else {
+		}else if (ProtocolTypeConstants.WEBSOCKET.equals(protocolType)) {
 			packLen = in.readableBytes();
+		}else {
+			ctx.close();
+			throw new RuntimeException("Unknow protocolType !!");
 		}
 		
 

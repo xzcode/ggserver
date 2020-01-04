@@ -38,14 +38,14 @@ public class DefaultSessionManager implements ISessionManager {
 	 * 2019-11-17 00:40:04
 	 */
 	private void startSessionExpireTask() {
-		this.config.getTaskExecutor().scheduleWithFixedDelay( 1000L, 1000L, TimeUnit.MILLISECONDS,() -> {
+		this.config.getTaskExecutor().scheduleWithFixedDelay( 1000L, 100L, TimeUnit.MILLISECONDS,() -> {
 			
 			Iterator<Entry<String, GGSession>> it = sessionMap.entrySet().iterator();
 			while (it.hasNext()) {
 				GGSession session = it.next().getValue();
 				if (session.isExpired()) {
-					it.remove();
 					config.getEventManager().emitEvent(new EventData<Void>(session, GGEvents.Session.EXPIRED, null));
+					it.remove();
 				}
 			}
 		});
@@ -59,7 +59,11 @@ public class DefaultSessionManager implements ISessionManager {
 	@Override
 	public GGSession getSession(String sessionId) {
 		if (sessionId != null) {
-			return sessionMap.get(sessionId);
+			GGSession session = sessionMap.get(sessionId);
+			if (session != null) {
+				session.updateExpire();
+			}
+			return session;
 		}
 		return null;
 	}

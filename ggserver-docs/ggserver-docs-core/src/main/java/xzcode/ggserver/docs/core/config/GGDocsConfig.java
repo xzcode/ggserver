@@ -9,8 +9,17 @@ package xzcode.ggserver.docs.core.config;
  */
 public class GGDocsConfig {
 	
-	//扫码的包路径
+	//扫描的包路径
 	private String[] scanPackages;
+	
+	//排除扫描的包路径
+	private String[] excludedPackages = {};
+	
+	//命名空间
+	private String namespace = "";
+	
+	//命名空间说明
+	private String namespaceDesc = "";
 	
 	private String actionIdPrefix = "";
 	
@@ -38,6 +47,30 @@ public class GGDocsConfig {
 
 	public void setMessageModelPrefix(String messageModelPrefix) {
 		this.messageModelPrefix = messageModelPrefix;
+	}
+
+	public String getNamespace() {
+		return namespace;
+	}
+
+	public void setNamespace(String namespace) {
+		this.namespace = namespace;
+	}
+
+	public String getNamespaceDesc() {
+		return namespaceDesc;
+	}
+
+	public void setNamespaceDesc(String namespaceDesc) {
+		this.namespaceDesc = namespaceDesc;
+	}
+
+	public String[] getExcludedPackages() {
+		return excludedPackages;
+	}
+
+	public void setExcludedPackages(String[] excludedPackages) {
+		this.excludedPackages = excludedPackages;
 	}
 	
 	
