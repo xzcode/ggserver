@@ -78,7 +78,7 @@ public class GGConfig {
 	
 	protected boolean 	soReuseaddr = false;
 	
-	protected long 		sessionExpireMs = 2L * 60L * 1000L;
+	protected long 		sessionExpireMs = 24L * 3600L * 1000L;
 	
 	protected ISessionFactory sessionFactory;
 	protected ISessionIdGenerator sessionIdGenerator;

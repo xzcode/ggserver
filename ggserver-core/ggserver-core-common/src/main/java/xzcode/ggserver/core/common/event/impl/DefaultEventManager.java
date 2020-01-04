@@ -7,6 +7,7 @@ import xzcode.ggserver.core.common.event.IEventListener;
 import xzcode.ggserver.core.common.event.IEventListenerGroup;
 import xzcode.ggserver.core.common.event.IEventManager;
 import xzcode.ggserver.core.common.event.model.EventData;
+import xzcode.ggserver.core.common.utils.logger.GGLoggerUtil;
 
 /**
  * 默认事件管理器
@@ -27,7 +28,11 @@ public class DefaultEventManager implements IEventManager {
 	public <T> void emitEvent(EventData<T> eventData) {
 		IEventListenerGroup<T> group = (IEventListenerGroup<T>) eventMap.get(eventData.getEvent());
 		if (group != null) {
-			group.onEvent(eventData);
+			try {
+				group.onEvent(eventData);
+			} catch (Exception e) {
+				GGLoggerUtil.getLogger(this).error("Emit Event Error!", e);
+			}
 		}
 	}
 	
