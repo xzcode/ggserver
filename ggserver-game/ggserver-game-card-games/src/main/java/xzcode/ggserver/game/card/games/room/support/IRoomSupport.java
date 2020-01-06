@@ -356,7 +356,7 @@ extends IExecutorSupport, ISendMessageSupport {
 	 * @author zai
 	 * 2019-02-21 11:15:34
 	 */
-	default int getSeat() {
+	default int getNewSeat() {
 		
 		int maxPlayerNum = getMaxPlayerNum();
 		List<Integer> nums = new ArrayList<>(maxPlayerNum);
