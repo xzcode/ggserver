@@ -2,7 +2,6 @@ package xzcode.ggserver.game.card.games.room.manager;
 
 import java.util.Map;
 
-import xzcode.ggserver.core.common.executor.ITaskExecutor;
 import xzcode.ggserver.core.common.executor.support.IExecutorSupport;
 import xzcode.ggserver.core.common.future.IGGFuture;
 import xzcode.ggserver.game.card.games.house.House;
