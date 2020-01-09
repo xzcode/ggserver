@@ -363,11 +363,14 @@ extends IExecutorSupport, ISendMessageSupport {
 		for (int i = 1; i <= maxPlayerNum; i++) {
 			nums.add(i);
 		}
-			Map<Object, P> players = getPlayers();
-			for (Entry<Object, P> entry : players.entrySet()) {
-				nums.remove(new Integer(entry.getValue().getSeat()));
-			}
-			return nums.get(0);
+		Map<Object, P> players = getPlayers();
+		for (Entry<Object, P> entry : players.entrySet()) {
+			nums.remove(new Integer(entry.getValue().getSeat()));
+		}
+		if (nums.size() == 0) {
+			return -1;
+		}
+		return nums.get(0);
 	}
 	
 	/**
