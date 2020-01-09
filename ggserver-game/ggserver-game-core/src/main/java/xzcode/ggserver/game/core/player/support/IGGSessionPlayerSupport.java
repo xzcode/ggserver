@@ -33,7 +33,11 @@ public interface IGGSessionPlayerSupport{
 	 * 2019-09-22 10:29:42
 	 */
 	default IGGFuture send(String actionId, Object message) {
-		return getSession().send(new Response(getSession(), null, actionId, message), 0, TimeUnit.MILLISECONDS);
+		GGSession session = getSession();
+		if (session == null) {
+			return null;
+		}
+		return session.send(new Response(getSession(), null, actionId, message), 0, TimeUnit.MILLISECONDS);
 	}
 	
 	/**
@@ -45,7 +49,11 @@ public interface IGGSessionPlayerSupport{
 	 * 2019-12-25 12:04:20
 	 */
 	default IGGFuture send(IMessage message) {
-		return getSession().send(new Response(getSession(), null, message.getActionId(), message), 0, TimeUnit.MILLISECONDS);
+		GGSession session = getSession();
+		if (session == null) {
+			return null;
+		}
+		return session.send(new Response(getSession(), null, message.getActionId(), message), 0, TimeUnit.MILLISECONDS);
 	}
 	
 	/**

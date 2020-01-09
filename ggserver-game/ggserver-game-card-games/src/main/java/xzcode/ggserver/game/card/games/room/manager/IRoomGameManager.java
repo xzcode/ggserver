@@ -22,7 +22,6 @@ extends IExecutorSupport
 
 	R createRoom();
 
-	IRobotManager<P> getRobotManager();
 
 	IGGFuture submitTask(Runnable runnable);
 
