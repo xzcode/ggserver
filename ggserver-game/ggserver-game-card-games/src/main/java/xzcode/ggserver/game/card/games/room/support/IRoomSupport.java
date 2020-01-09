@@ -83,8 +83,8 @@ extends IExecutorSupport, ISendMessageSupport {
 	 * 
 	 * @author zai 2019-02-10 14:34:15
 	 */
-	default P getPlayer(Object playerId) {
-		return getPlayer(playerId);
+	default P getPlayer(Object playerNo) {
+		return getPlayers().get(playerNo);
 	}
 	
 	/**
