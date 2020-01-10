@@ -56,7 +56,7 @@ public class DefaultClientStarter implements IGGClientStarter {
         //设置消息处理器
         boot.handler(new MixedSocketChannelInitializer(config));
         
-        boot.option(ChannelOption.SO_BACKLOG, config.getSoBacklog());  
+        //boot.option(ChannelOption.SO_BACKLOG, config.getSoBacklog());  
         boot.option(ChannelOption.TCP_NODELAY, true);  
         
       //判断是否开启通道池
