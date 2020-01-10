@@ -33,6 +33,11 @@ public class Pack {
 	/* 通道 */
 	private Channel channel;
 	
+	/**
+	 * 缓存转换后的actionid
+	 */
+	private String cachedActionId;
+	
 
 	public Pack(byte[] metadata, byte[] action, byte[] message) {
 		this.metadata = metadata;
@@ -73,10 +78,13 @@ public class Pack {
 	}
 	
 	public String getActionString() {
-		return new String(action, Charset.forName("utf-8"));
+		return getActionString(Charset.forName("utf-8"));
 	}
 	public String getActionString(Charset charset) {
-		return new String(action,charset);
+		if (this.cachedActionId == null) {
+			this.cachedActionId = new String(action,charset);
+		}
+		return this.cachedActionId;
 	}
 
 	public void setAction(byte[] sendTag) {

@@ -68,7 +68,7 @@ public class DefaultClientStarter implements IGGClientStarter {
 				config.setChannelPoolHandler(new DefaultChannelPoolHandler(this.config));
 			}
 			if (config.getChannelPool() == null) {
-				config.setChannelPool(new FixedChannelPool(boot, config.getChannelPoolHandler(), config.getChannelMaxConnections()));
+				config.setChannelPool(new FixedChannelPool(boot, config.getChannelPoolHandler(), config.getChannelPoolMaxSize()));
 			}
 		}
 	}

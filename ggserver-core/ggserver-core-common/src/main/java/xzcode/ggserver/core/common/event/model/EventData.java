@@ -10,8 +10,14 @@ public class EventData<T> {
 	protected T data;
 	
 	
+	public EventData(String event) {
+		this.event = event;
+	}
+	public EventData(String event, T data) {
+		this.event = event;
+		this.data = data;
+	}
 	public EventData(GGSession session, String event, T data) {
-		super();
 		this.session = session;
 		this.event = event;
 		this.data = data;

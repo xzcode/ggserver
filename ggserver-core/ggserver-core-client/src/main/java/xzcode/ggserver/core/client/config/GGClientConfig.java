@@ -20,7 +20,7 @@ public class GGClientConfig extends GGConfig{
 	
 	private ChannelPoolHandler channelPoolHandler;
 	
-	private int channelMaxConnections = 2;
+	private int channelPoolMaxSize = 2;
 	
 	private Bootstrap bootstrap;
 	
@@ -59,12 +59,12 @@ public class GGClientConfig extends GGConfig{
 		this.channelPoolHandler = channelPoolHandler;
 	}
 
-	public int getChannelMaxConnections() {
-		return channelMaxConnections;
+	public int getChannelPoolMaxSize() {
+		return channelPoolMaxSize;
 	}
 
-	public void setChannelMaxConnections(int channelMaxConnections) {
-		this.channelMaxConnections = channelMaxConnections;
+	public void setChannelPoolMaxSize(int channelMaxConnections) {
+		this.channelPoolMaxSize = channelMaxConnections;
 	}
 
 	public Bootstrap getBootstrap() {

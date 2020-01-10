@@ -28,7 +28,7 @@ public class AsyncRunnableTask implements Runnable{
 		try {
 			runnable.run();
 		} catch (Exception e) {
-			LOGGER.error("SyncTask ERROR!!", e);
+			LOGGER.error("GGTask ERROR!!", e);
 		}
 	}
 }
