@@ -31,10 +31,14 @@ public class RequestMessageManager implements IRequestMessageManager {
 	 * 2017-07-29
 	 */
 	@Override
-	public void handle(Request<?> request) throws Exception {
+	public void handle(Request<?> request){
 		IRequestMessageHandlerInfo invoker = handlerMap.get(request.getAction());
 		if (invoker != null) {
-			invoker.handle(request);
+			try {
+				invoker.handle(request);
+			} catch (Exception e) {
+				GGLoggerUtil.getLogger(this.getClass()).error("Handle request Error!", e);
+			}
 			return;
 		}
 		GGLoggerUtil.getLogger().warn("No such action: {} ", request.getAction());

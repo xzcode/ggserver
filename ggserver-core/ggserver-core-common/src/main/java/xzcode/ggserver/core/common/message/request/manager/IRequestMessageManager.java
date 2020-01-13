@@ -16,7 +16,7 @@ public interface IRequestMessageManager {
 	 * @author zai
 	 * 2017-07-29
 	 */
-	void handle(Request<?> request) throws Exception;
+	void handle(Request<?> request);
 
 	/**
 	 * 添加缓存方法
