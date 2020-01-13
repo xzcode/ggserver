@@ -50,6 +50,8 @@ extends IExecutorSupport
 	Map<String, P> getPlayers();
 
 	P getPlayer(String playerNo);
+	
+	void updateHouses();
 
 
 }
