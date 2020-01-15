@@ -1,6 +1,7 @@
 package xzcode.ggserver.game.card.games.house;
 
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 import xzcode.ggserver.game.card.games.player.RoomPlayer;
@@ -84,6 +85,20 @@ H extends House<P, R, H>
 	 */
 	public R getRoom(String roomNo) {
 		return rooms.get(roomNo);
+	}
+	
+	/**
+	 * 获取一个房间
+	 * 
+	 * @return
+	 * @author zai
+	 * 2020-01-15 11:47:57
+	 */
+	public R getOneRoom() {
+		for (Entry<String, R> entry : rooms.entrySet()) {
+			return entry.getValue();
+		}
+		return null;
 	}
 	
 	public String getHouseNo() {
