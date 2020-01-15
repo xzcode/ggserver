@@ -21,9 +21,7 @@ public class DefaultReceivePackHandler implements IReceivePackHandler {
 
 	@Override
 	public void handle(Pack pack) {
-
-		config.getTaskExecutor().submitTask(new RequestMessageTask(pack, config));
-		
+		pack.getChannel().eventLoop().submit(new RequestMessageTask(pack, config));
 	}
 
 
