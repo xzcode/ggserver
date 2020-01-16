@@ -31,9 +31,6 @@ public class IdleHandler extends ChannelInboundHandlerAdapter{
 	private boolean allIdleEnabled;
 	
 	public IdleHandler(GGConfig config) {
-		if (config.getClass().getSimpleName().equals("GGServerConfig")) {
-			System.out.println();
-		}
 		this.config = config;
 		init();
 	}
@@ -99,9 +96,8 @@ public class IdleHandler extends ChannelInboundHandlerAdapter{
 					
 			}
             
-        } else {  
-            super.userEventTriggered(ctx, evt);  
-        } 
+        }  
+        super.userEventTriggered(ctx, evt);  
 		
 	}
 }

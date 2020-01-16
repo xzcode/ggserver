@@ -8,9 +8,12 @@ import org.slf4j.LoggerFactory;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
+import io.netty.handler.timeout.IdleState;
+import io.netty.handler.timeout.IdleStateEvent;
 import xzcode.ggserver.core.common.config.GGConfig;
 import xzcode.ggserver.core.common.constant.ProtocolTypeConstants;
 import xzcode.ggserver.core.common.handler.codec.impl.DefaultDecodeHandler;
+import xzcode.ggserver.core.common.prefebs.pingpong.GGPingHandler;
 
 /**
  * 数据输入控制器
@@ -18,6 +21,7 @@ import xzcode.ggserver.core.common.handler.codec.impl.DefaultDecodeHandler;
  *
  */
 public class TcpInboundHandler extends ByteToMessageDecoder{
+	
 	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultDecodeHandler.class);
 
 	/**
@@ -28,24 +32,16 @@ public class TcpInboundHandler extends ByteToMessageDecoder{
 	
 	private GGConfig config;
 	
-	
-
-
 	public TcpInboundHandler(GGConfig config) {
-		super();
 		this.config = config;
 	}
-
-
-
-
 
 	@Override
 	protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
 		
 		while (true) {
-			int readableBytes = in.readableBytes();
 			
+			int readableBytes = in.readableBytes();
 			
 			//如果长度不足4位，放弃并等待下次读取
 			if (readableBytes < PACKAGE_LEN) {
@@ -63,12 +59,12 @@ public class TcpInboundHandler extends ByteToMessageDecoder{
 			}
 			
 			if (readableBytes - PACKAGE_LEN < packLen) {
+				in.resetReaderIndex();
 				return;
 			}
 			//调用解码处理器
 			config.getDecodeHandler().handle(ctx, in, ProtocolTypeConstants.TCP);
 		}
-		
 	}
-
+	
 }

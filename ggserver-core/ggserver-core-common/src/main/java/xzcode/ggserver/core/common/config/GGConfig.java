@@ -26,6 +26,11 @@ import xzcode.ggserver.core.common.message.meta.resolver.IMetadataResolver;
 import xzcode.ggserver.core.common.message.meta.resolver.VoidMetadataResolver;
 import xzcode.ggserver.core.common.message.request.manager.IRequestMessageManager;
 import xzcode.ggserver.core.common.message.request.manager.RequestMessageManager;
+import xzcode.ggserver.core.common.prefebs.pingpong.GGPingHandler;
+import xzcode.ggserver.core.common.prefebs.pingpong.GGPingPongEventListener;
+import xzcode.ggserver.core.common.prefebs.pingpong.GGPongHandler;
+import xzcode.ggserver.core.common.prefebs.pingpong.model.GGPing;
+import xzcode.ggserver.core.common.prefebs.pingpong.model.GGPong;
 import xzcode.ggserver.core.common.session.factory.DefaultChannelSessionFactory;
 import xzcode.ggserver.core.common.session.factory.ISessionFactory;
 import xzcode.ggserver.core.common.session.id.DefaultSessionIdGenerator;
@@ -62,7 +67,7 @@ public class GGConfig {
 	
 	protected long 		allIdleTime = 5000;
 	
-	protected int 		maxDataLength = 1024 * 1024 * 5;
+	protected int 		maxDataLength = 8 * 1024; 
 
 	protected String 	protocolType = ProtocolTypeConstants.MIXED;
 
@@ -78,7 +83,14 @@ public class GGConfig {
 	
 	protected boolean 	soReuseaddr = false;
 	
+	
 	protected long 		sessionExpireMs = 24L * 3600L * 1000L;
+	
+	protected boolean 	pingPongEnabled = false;
+	
+	private int pingPongLostTimes = 0; //心跳失败次数
+	
+	private int pingPongMaxLoseTimes = 3;//最大心跳失败允许次数
 	
 	protected ISessionFactory sessionFactory;
 	protected ISessionIdGenerator sessionIdGenerator;
@@ -101,6 +113,8 @@ public class GGConfig {
 	
     
 	protected NioEventLoopGroup workerGroup;
+	
+	protected GGPingHandler gGPingHandler;
 	
 	
 	protected ITaskExecutor taskExecutor;
@@ -157,6 +171,16 @@ public class GGConfig {
 		if (sessionIdGenerator == null) {
 			sessionIdGenerator = new DefaultSessionIdGenerator();
 		}
+		if (isPingPongEnabled()) {
+			this.gGPingHandler = new GGPingHandler(this);
+		}
+		
+		if (isPingPongEnabled()) {
+			requestMessageManager.onMessage(GGPing.ACTION_ID, new GGPingHandler(this));			
+			requestMessageManager.onMessage(GGPong.ACTION_ID, new GGPongHandler(this));	
+			eventManager.addEventListener(GGPingPongEventListener.EVENT, new GGPingPongEventListener(this));
+		}
+		
 		
 		this.inited = true;
 	}
@@ -444,4 +468,36 @@ public class GGConfig {
 	public void setSessionIdGenerator(ISessionIdGenerator sessionIdGenerator) {
 		this.sessionIdGenerator = sessionIdGenerator;
 	}
+	
+	public GGPingHandler getPingPongHandler() {
+		return gGPingHandler;
+	}
+	public void setPingPongHandler(GGPingHandler gGPingHandler) {
+		this.gGPingHandler = gGPingHandler;
+	}
+	public boolean isPingPongEnabled() {
+		return pingPongEnabled;
+	}
+	
+	public void setPingPongEnabled(boolean enablePingPong) {
+		this.pingPongEnabled = enablePingPong;
+	}
+
+	public int getPingPongLostTimes() {
+		return pingPongLostTimes;
+	}
+
+	public void setPingPongLostTimes(int lostTimes) {
+		this.pingPongLostTimes = lostTimes;
+	}
+
+	public int getPingPongMaxLoseTimes() {
+		return pingPongMaxLoseTimes;
+	}
+
+	public void setPingPongMaxLoseTimes(int maxLoseTimes) {
+		this.pingPongMaxLoseTimes = maxLoseTimes;
+	}
+	
+	
 }
