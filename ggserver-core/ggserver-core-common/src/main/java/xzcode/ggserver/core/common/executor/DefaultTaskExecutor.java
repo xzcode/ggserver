@@ -92,6 +92,10 @@ public class DefaultTaskExecutor implements ITaskExecutor{
 	public TimeoutTask timeoutTask(long timeoutDelay, Runnable timeoutAction) {
 		return new TimeoutTask(this, timeoutDelay, timeoutAction);
 	}
+	@Override
+	public void execute(Runnable command) {
+		submitTask(command);
+	}
 
 
 

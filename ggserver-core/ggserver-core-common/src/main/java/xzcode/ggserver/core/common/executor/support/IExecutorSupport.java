@@ -81,6 +81,9 @@ public interface IExecutorSupport extends ITaskExecutor {
 		return getTaskExecutor().nextEvecutor();
 	}
 	
-	
+	@Override
+	default void execute(Runnable command) {
+		getTaskExecutor().submitTask(command);
+	}
 	
 }

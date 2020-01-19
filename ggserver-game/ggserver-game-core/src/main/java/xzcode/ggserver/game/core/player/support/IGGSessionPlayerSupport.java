@@ -2,6 +2,7 @@ package xzcode.ggserver.game.core.player.support;
 
 import java.util.concurrent.TimeUnit;
 
+import xzcode.ggserver.core.common.future.GGFailedFuture;
 import xzcode.ggserver.core.common.future.IGGFuture;
 import xzcode.ggserver.core.common.message.model.IMessage;
 import xzcode.ggserver.core.common.message.response.Response;
@@ -51,7 +52,7 @@ public interface IGGSessionPlayerSupport{
 	default IGGFuture send(IMessage message) {
 		GGSession session = getSession();
 		if (session == null) {
-			return null;
+			return GGFailedFuture.DEFAULT_FAILED_FUTURE;
 		}
 		return session.send(new Response(getSession(), null, message.getActionId(), message), 0, TimeUnit.MILLISECONDS);
 	}
@@ -64,7 +65,11 @@ public interface IGGSessionPlayerSupport{
 	 * 2019-09-22 10:29:42
 	 */
 	default IGGFuture send(String actionId) {
-		return getSession().send(new Response(getSession(), null, actionId, null), 0, TimeUnit.MILLISECONDS);
+		GGSession session = getSession();
+		if (session != null) {
+			return session.send(new Response(session, null, actionId, null), 0, TimeUnit.MILLISECONDS);			
+		}
+		return GGFailedFuture.DEFAULT_FAILED_FUTURE;
 	}
 	
 	/**

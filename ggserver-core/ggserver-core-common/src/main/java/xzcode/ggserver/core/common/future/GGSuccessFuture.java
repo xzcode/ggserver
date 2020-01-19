@@ -5,6 +5,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import xzcode.ggserver.core.common.executor.ITaskExecutor;
 import xzcode.ggserver.core.common.utils.logger.GGLoggerUtil;
 
 
@@ -51,6 +52,13 @@ public class GGSuccessFuture<V> implements IGGFuture {
 		} catch (Exception e) {
 			GGLoggerUtil.getLogger().error("IGGFuture 'operationComplete' Error!", e);
 		}
+	}
+	
+	@Override
+	public void addListener(ITaskExecutor listenerExecutor, IGGFutureListener<IGGFuture> listener) {
+		listenerExecutor.submitTask(() -> {
+			addListener(listener);
+		});
 	}
 
 	@Override
