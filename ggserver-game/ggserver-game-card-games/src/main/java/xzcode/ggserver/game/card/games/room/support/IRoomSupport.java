@@ -9,12 +9,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import xzcode.ggserver.core.common.executor.support.IExecutorSupport;
 import xzcode.ggserver.core.common.message.model.IMessage;
-import xzcode.ggserver.core.common.message.response.Response;
 import xzcode.ggserver.core.common.message.response.support.ISendMessageSupport;
 import xzcode.ggserver.game.card.games.house.House;
 import xzcode.ggserver.game.card.games.interfaces.condition.ICheckCondition;
@@ -553,7 +551,7 @@ extends IExecutorSupport, ISendMessageSupport {
 	 */
 	default void bcToAllPlayer(String actionId) {
 		eachPlayer(player -> {
-			send(new Response(player.getSession(), null, actionId, null), 0, TimeUnit.MILLISECONDS);
+			player.send(actionId);
 		});
 	}
 	
@@ -567,7 +565,7 @@ extends IExecutorSupport, ISendMessageSupport {
 	 */
 	default void bcToAllPlayer(String actionId, Object message) {
 		eachPlayer(player -> {
-			send(new Response(player.getSession(), null, actionId, message), 0, TimeUnit.MILLISECONDS);
+			player.send((IMessage) message);
 		});
 	}
 
