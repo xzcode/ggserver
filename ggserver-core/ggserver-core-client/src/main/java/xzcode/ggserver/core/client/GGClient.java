@@ -1,7 +1,5 @@
 package xzcode.ggserver.core.client;
 
-import java.util.concurrent.TimeUnit;
-
 import xzcode.ggserver.core.client.config.GGClientConfig;
 import xzcode.ggserver.core.client.pool.IChannelPoolSendMessageSupport;
 import xzcode.ggserver.core.client.starter.IGGClientStarter;
@@ -52,11 +50,11 @@ implements
 	}
 
 	@Override
-	public IGGFuture send(GGSession session, Pack pack, long delay, TimeUnit timeUnit) {
+	public IGGFuture send(GGSession session, Pack pack) {
 		if (!config.isChannelPoolEnabled()) {
-			return IGGConfigSupport.super.send(session, pack, delay, timeUnit);			
+			return IGGConfigSupport.super.send(session, pack);			
 		}
-		return poolSend(pack, delay, timeUnit);
+		return poolSend(pack);
 	}
 
 }

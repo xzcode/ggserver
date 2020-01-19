@@ -8,7 +8,7 @@ import xzcode.ggserver.core.common.config.GGConfig;
 import xzcode.ggserver.core.common.event.IEventManager;
 import xzcode.ggserver.core.common.executor.ITaskExecutor;
 import xzcode.ggserver.core.common.filter.IFilterManager;
-import xzcode.ggserver.core.common.future.GGNettyFacadeFuture;
+import xzcode.ggserver.core.common.future.GGNettyFuture;
 import xzcode.ggserver.core.common.future.IGGFuture;
 import xzcode.ggserver.core.common.handler.serializer.ISerializer;
 import xzcode.ggserver.core.common.message.meta.provider.IMetadataProvider;
@@ -80,7 +80,7 @@ public abstract class AbstractSession<C extends GGConfig> implements GGSession {
 	
 	@Override
 	public IGGFuture disconnect() {
-		return new GGNettyFacadeFuture(this.getChannel().close());
+		return new GGNettyFuture(this.getChannel().close());
 	}
 	
 	@Override

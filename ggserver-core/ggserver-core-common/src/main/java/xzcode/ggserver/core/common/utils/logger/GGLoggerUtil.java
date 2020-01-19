@@ -1,15 +1,12 @@
 package xzcode.ggserver.core.common.utils.logger;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.netty.channel.Channel;
-import io.netty.util.AttributeKey;
-import xzcode.ggserver.core.common.channel.DefaultChannelAttributeKeys;
 import xzcode.ggserver.core.common.constant.ProtocolTypeConstants;
 import xzcode.ggserver.core.common.message.Pack;
 
@@ -89,6 +86,7 @@ public class GGLoggerUtil {
 		}
 		
 		sb
+		.append("\nthread: {}")
 		.append("\nchannel: {}")
 		.append("\ntag: {}")
 		.append("\npack-length: {}")
@@ -99,6 +97,7 @@ public class GGLoggerUtil {
 		
 		GGLoggerUtil.getLogger().info(
 				sb.toString(),
+				Thread.currentThread().getName(),
 				channel,
 				new String(action),
 				packLen,

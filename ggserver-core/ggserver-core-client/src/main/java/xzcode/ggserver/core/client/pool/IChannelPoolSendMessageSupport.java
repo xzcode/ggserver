@@ -1,7 +1,6 @@
 package xzcode.ggserver.core.client.pool;
 
 import java.net.ConnectException;
-import java.util.concurrent.TimeUnit;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -9,7 +8,7 @@ import io.netty.channel.pool.ChannelPool;
 import io.netty.util.concurrent.Future;
 import xzcode.ggserver.core.client.config.GGClientConfig;
 import xzcode.ggserver.core.common.future.GGFailedFuture;
-import xzcode.ggserver.core.common.future.GGNettyFacadeFuture;
+import xzcode.ggserver.core.common.future.GGNettyFuture;
 import xzcode.ggserver.core.common.future.IGGFuture;
 import xzcode.ggserver.core.common.message.Pack;
 import xzcode.ggserver.core.common.utils.logger.GGLoggerUtil;
@@ -35,7 +34,7 @@ public interface IChannelPoolSendMessageSupport {
 	 * @author zai
 	 * 2019-12-16 12:35:38
 	 */
-	default IGGFuture poolSend(Pack pack, long delay, TimeUnit timeUnit) {
+	default IGGFuture poolSend(Pack pack) {
 
 		// 序列化后发送过滤器
 		if (!getConfig().getFilterManager().doAfterSerializeFilters(pack)) {
@@ -44,15 +43,8 @@ public interface IChannelPoolSendMessageSupport {
 		
 		//以下通过通道池进行发送
 		ChannelPool channelPool = getConfig().getChannelPool();
-		GGNettyFacadeFuture future = new GGNettyFacadeFuture();
-		if (delay <= 0) {
-			handlePoolSend(channelPool, pack, future);
-		} else {
-			getConfig().getTaskExecutor().schedule(delay, timeUnit, () -> {
-				handlePoolSend(channelPool, pack, future);
-			});
-		}
-		
+		GGNettyFuture future = new GGNettyFuture();
+		handlePoolSend(channelPool, pack, future);
 		return future;
 	}
 	
@@ -66,7 +58,7 @@ public interface IChannelPoolSendMessageSupport {
 	 * @author zai
 	 * 2019-12-16 12:35:47
 	 */
-	default IGGFuture handlePoolSend(final ChannelPool channelPool, Pack pack, GGNettyFacadeFuture returningFuture) {
+	default IGGFuture handlePoolSend(final ChannelPool channelPool, Pack pack, GGNettyFuture returningFuture) {
 		Future<Channel> acquireFuture = channelPool.acquire();
 		acquireFuture.addListener((Future<Channel> f) -> {
 				Channel ch = f.getNow();
@@ -75,7 +67,7 @@ public interface IChannelPoolSendMessageSupport {
 					if (cause instanceof ConnectException) {
 						GGLoggerUtil.getLogger(this).error(cause.getMessage());
 					}else {
-						GGLoggerUtil.getLogger(this).error("Cannot acquire channel from channel pool!");					
+						GGLoggerUtil.getLogger(this).error("Cannot acquire channel from channel pool!", cause);					
 					}
 					return;
 				}

@@ -9,7 +9,7 @@ import xzcode.ggserver.core.common.event.IEventManager;
 import xzcode.ggserver.core.common.event.impl.DefaultEventManager;
 import xzcode.ggserver.core.common.executor.DefaultTaskExecutor;
 import xzcode.ggserver.core.common.executor.ITaskExecutor;
-import xzcode.ggserver.core.common.executor.thread.SimpleThreadFactory;
+import xzcode.ggserver.core.common.executor.thread.GGThreadFactory;
 import xzcode.ggserver.core.common.filter.IFilterManager;
 import xzcode.ggserver.core.common.filter.impl.DefaultFilterManager;
 import xzcode.ggserver.core.common.handler.codec.IDecodeHandler;
@@ -129,7 +129,7 @@ public class GGConfig {
 		eventManager = new DefaultEventManager();
 		
 		if (workerGroupThreadFactory == null) {
-			workerGroupThreadFactory = new SimpleThreadFactory("netty-worker-", false);
+			workerGroupThreadFactory = new GGThreadFactory("netty-worker-", false);
 		}
 		if (workerGroup == null) {
 			workerGroup = new NioEventLoopGroup(getWorkThreadSize(),getWorkerGroupThreadFactory());	

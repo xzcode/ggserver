@@ -8,7 +8,6 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import xzcode.ggserver.core.common.executor.ITaskExecutor;
 import xzcode.ggserver.core.common.utils.logger.GGLoggerUtil;
 
 
@@ -18,18 +17,17 @@ import xzcode.ggserver.core.common.utils.logger.GGLoggerUtil;
  * @author zai
  * 2019-11-24 17:54:50
  */
-public class GGNettyFacadeFuture implements IGGFuture {
+public class GGNettyFuture implements IGGFuture {
 	
 	private io.netty.util.concurrent.Future<?> nettyFuture;
 	
 	private Set<IGGFutureListener<IGGFuture>> listeners;
 	
-	
-	public GGNettyFacadeFuture() {
+	public GGNettyFuture() {
 		listeners = new LinkedHashSet<>(2);
 	}
 	
-	public GGNettyFacadeFuture(Future<?> nettyFuture) {
+	public GGNettyFuture(Future<?> nettyFuture) {
 		this.setFuture(nettyFuture);
 	}
 
@@ -37,7 +35,9 @@ public class GGNettyFacadeFuture implements IGGFuture {
 		if (this.nettyFuture != null) {
 			return;
 		}
-		this.nettyFuture = (io.netty.util.concurrent.Future<?>) future;
+		synchronized (this) {
+			this.nettyFuture = (io.netty.util.concurrent.Future<?>) future;			
+		}
 		if (listeners != null && listeners.size() > 0) {
 			for (IGGFutureListener<IGGFuture> listener : listeners) {
 				nettyFuture.addListener((f) -> {
@@ -50,24 +50,19 @@ public class GGNettyFacadeFuture implements IGGFuture {
 	@Override
 	public void addListener(IGGFutureListener<IGGFuture> listener) {
 		try {
-				if (nettyFuture == null) {
-					listeners.add(listener);
-					return;
+				synchronized (this) {
+					if (nettyFuture == null) {
+						listeners.add(listener);
+						return;
+					}
+					nettyFuture.addListener((f) -> {
+						listener.operationComplete(this);
+					});
 				}
-				nettyFuture.addListener((f) -> {
-					listener.operationComplete(this);
-				});
 		} catch (Exception e) {
 			GGLoggerUtil.getLogger().error("IGGFuture 'operationComplete' Error!", e);
 		}
 		
-	}
-	
-	@Override
-	public void addListener(ITaskExecutor listenerExecutor, IGGFutureListener<IGGFuture> listener) {
-		listenerExecutor.submitTask(() -> {
-			addListener(listener);
-		});
 	}
 
 

@@ -4,7 +4,7 @@ import java.util.concurrent.ThreadFactory;
 
 import io.netty.channel.nio.NioEventLoopGroup;
 import xzcode.ggserver.core.common.config.GGConfig;
-import xzcode.ggserver.core.common.executor.thread.SimpleThreadFactory;
+import xzcode.ggserver.core.common.executor.thread.GGThreadFactory;
 
 public class GGServerConfig extends GGConfig{
 	
@@ -23,7 +23,7 @@ public class GGServerConfig extends GGConfig{
 	public void init() {
 		
 		if (bossGroupThreadFactory == null) {
-			bossGroupThreadFactory = new SimpleThreadFactory("netty-boss-", false);
+			bossGroupThreadFactory = new GGThreadFactory("netty-boss-", false);
 		}
 		if (bossGroup == null) {
 			bossGroup = new NioEventLoopGroup(getBossThreadSize(),bossGroupThreadFactory);				

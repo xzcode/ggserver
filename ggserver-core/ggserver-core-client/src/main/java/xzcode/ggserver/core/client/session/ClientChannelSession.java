@@ -1,7 +1,5 @@
 package xzcode.ggserver.core.client.session;
 
-import java.util.concurrent.TimeUnit;
-
 import io.netty.channel.Channel;
 import xzcode.ggserver.core.client.config.GGClientConfig;
 import xzcode.ggserver.core.client.pool.IChannelPoolSendMessageSupport;
@@ -30,12 +28,12 @@ public class ClientChannelSession extends DefaultChannelSession implements IChan
 	}
 
 	@Override
-	public IGGFuture send(Pack pack, long delay, TimeUnit timeUnit) {
+	public IGGFuture send(Pack pack) {
 		
 		if (!config.isChannelPoolEnabled()) {
-			return super.send(pack, delay, timeUnit);
+			return super.send(pack);
 		}
-		return poolSend(pack, delay, timeUnit);
+		return poolSend(pack);
 	}
 
 }
