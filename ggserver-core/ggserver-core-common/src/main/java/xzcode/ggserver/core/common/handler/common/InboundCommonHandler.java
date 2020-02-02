@@ -82,7 +82,6 @@ public class InboundCommonHandler extends ChannelInboundHandlerAdapter{
 			return;
 		}
 		LOGGER.error("Inbound ERROR! ", cause);
-		super.exceptionCaught(ctx, cause);
 	}
 
 

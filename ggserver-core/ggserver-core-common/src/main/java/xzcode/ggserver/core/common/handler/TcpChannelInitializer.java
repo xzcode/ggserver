@@ -14,7 +14,6 @@ import xzcode.ggserver.core.common.config.GGConfig;
 import xzcode.ggserver.core.common.constant.ProtocolTypeConstants;
 import xzcode.ggserver.core.common.handler.common.InboundCommonHandler;
 import xzcode.ggserver.core.common.handler.common.OutboundCommonHandler;
-import xzcode.ggserver.core.common.handler.exception.ExceptionHandler;
 import xzcode.ggserver.core.common.handler.idle.IdleHandler;
 import xzcode.ggserver.core.common.handler.tcp.TcpInboundHandler;
 import xzcode.ggserver.core.common.handler.tcp.TcpOutboundHandler;
@@ -65,8 +64,6 @@ public class TcpChannelInitializer extends ChannelInitializer<Channel> {
         ch.pipeline().addLast(new TcpOutboundHandler(this.config));
         
         ch.pipeline().addLast(new OutboundCommonHandler(this.config));
-        
-        ch.pipeline().addLast(new ExceptionHandler());
         
         ch.attr(PROTOCOL_TYPE_KEY).set(ProtocolTypeConstants.TCP);
 	}

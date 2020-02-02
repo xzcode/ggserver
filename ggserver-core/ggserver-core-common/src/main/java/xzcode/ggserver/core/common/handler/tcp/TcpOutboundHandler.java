@@ -83,6 +83,4 @@ public class TcpOutboundHandler extends ChannelOutboundHandlerAdapter {
 		
 	}
 
-	
-
 }

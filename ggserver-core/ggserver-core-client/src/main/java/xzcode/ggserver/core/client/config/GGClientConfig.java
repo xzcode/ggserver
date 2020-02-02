@@ -22,7 +22,7 @@ public class GGClientConfig extends GGConfig{
 	
 	private int channelPoolMaxSize = 2;
 	
-	private Bootstrap bootstrap;
+	private Bootstrap bootstrap = new Bootstrap();
 	
 	private String host;
 	
@@ -33,6 +33,8 @@ public class GGClientConfig extends GGConfig{
 		
 		this.sessionFactory = new ClientChannelSessionFactory(this);
 		super.init();
+		
+		
 	}
 
 	public boolean isChannelPoolEnabled() {

@@ -5,22 +5,22 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.pool.FixedChannelPool;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
-import io.netty.util.concurrent.Future;
 import xzcode.ggserver.core.client.config.GGClientConfig;
 import xzcode.ggserver.core.client.pool.DefaultChannelPoolHandler;
 import xzcode.ggserver.core.client.starter.IGGClientStarter;
+import xzcode.ggserver.core.common.constant.ProtocolTypeConstants;
+import xzcode.ggserver.core.common.future.GGNettyFuture;
 import xzcode.ggserver.core.common.future.IGGFuture;
 import xzcode.ggserver.core.common.handler.MixedSocketChannelInitializer;
 import xzcode.ggserver.core.common.handler.TcpChannelInitializer;
+import xzcode.ggserver.core.common.handler.WebSocketChannelInitializer;
 import xzcode.ggserver.core.common.session.GGSession;
-import xzcode.ggserver.core.common.session.impl.DefaultChannelSession;
 
 public class DefaultClientStarter implements IGGClientStarter {
 	
@@ -37,7 +37,7 @@ public class DefaultClientStarter implements IGGClientStarter {
     
     public void init() {
     	
-    	Bootstrap boot = new Bootstrap();
+    	Bootstrap boot = config.getBootstrap();
 
         //设置工作线程组
         boot.group(config.getWorkerGroup());
@@ -54,7 +54,16 @@ public class DefaultClientStarter implements IGGClientStarter {
         boot.channel(NioSocketChannel.class); 
         
         //设置消息处理器
-        boot.handler(new MixedSocketChannelInitializer(config));
+        if (config.getProtocolType().equals(ProtocolTypeConstants.MIXED)) {
+        	boot.handler(new MixedSocketChannelInitializer(config));
+		}
+        else if (config.getProtocolType().equals(ProtocolTypeConstants.TCP)) {
+        	boot.handler(new TcpChannelInitializer(config));
+        }
+        else if (config.getProtocolType().equals(ProtocolTypeConstants.WEBSOCKET)) {
+        	boot.handler(new WebSocketChannelInitializer(config));
+        }
+        
         
         //boot.option(ChannelOption.SO_BACKLOG, config.getSoBacklog());  
         boot.option(ChannelOption.TCP_NODELAY, true);  
@@ -74,17 +83,16 @@ public class DefaultClientStarter implements IGGClientStarter {
 	}
     
     
-    public GGSession connect(String host, int port) {
+    public IGGFuture connect(String host, int port) {
         try {
         	Bootstrap boot = config.getBootstrap();
             // 连接服务器
-            ChannelFuture future = boot.connect(host, port).sync();
-            Channel channel = future.channel();
-            GGSession session = new DefaultChannelSession(channel, channel.id().asLongText(), config);
-            return session;
+            ChannelFuture future = boot.connect(host, port);
+            return new GGNettyFuture(future);
         }catch (Exception e) {
         	throw new RuntimeException("GGClient connect error !! ", e);
 		}
+        
     }
     
 

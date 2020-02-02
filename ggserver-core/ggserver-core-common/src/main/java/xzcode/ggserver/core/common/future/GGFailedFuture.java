@@ -71,5 +71,10 @@ public class GGFailedFuture implements IGGFuture {
 		}
 	}
 
+	@Override
+	public boolean isSuccess() {
+		return false;
+	}
+
 
 }

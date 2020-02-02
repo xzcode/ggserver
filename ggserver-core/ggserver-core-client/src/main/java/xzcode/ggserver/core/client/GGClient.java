@@ -27,7 +27,7 @@ implements
 	
 	private IGGClientStarter clientStarter;
 	
-	public GGSession connect(String host, int port) {
+	public IGGFuture connect(String host, int port) {
 		return clientStarter.connect(host, port);
 	}
 	

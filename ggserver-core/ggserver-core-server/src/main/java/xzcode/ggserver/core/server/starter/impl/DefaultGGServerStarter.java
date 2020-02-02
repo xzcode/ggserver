@@ -16,9 +16,12 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
+import xzcode.ggserver.core.common.constant.ProtocolTypeConstants;
 import xzcode.ggserver.core.common.future.GGNettyFuture;
 import xzcode.ggserver.core.common.future.IGGFuture;
 import xzcode.ggserver.core.common.handler.MixedSocketChannelInitializer;
+import xzcode.ggserver.core.common.handler.TcpChannelInitializer;
+import xzcode.ggserver.core.common.handler.WebSocketChannelInitializer;
 import xzcode.ggserver.core.common.utils.logger.GGLoggerUtil;
 import xzcode.ggserver.core.server.config.GGServerConfig;
 import xzcode.ggserver.core.server.starter.IGGServerStarter;
@@ -63,15 +66,23 @@ public class DefaultGGServerStarter implements IGGServerStarter {
             boot.channel(NioServerSocketChannel.class);
             
             //设置消息处理器
-            boot.childHandler(new MixedSocketChannelInitializer(config));
+            if (config.getProtocolType().equals(ProtocolTypeConstants.MIXED)) {
+            	boot.childHandler(new MixedSocketChannelInitializer(config));
+    		}
+            else if (config.getProtocolType().equals(ProtocolTypeConstants.TCP)) {
+            	boot.childHandler(new TcpChannelInitializer(config));
+            }
+            else if (config.getProtocolType().equals(ProtocolTypeConstants.WEBSOCKET)) {
+            	boot.childHandler(new WebSocketChannelInitializer(config));
+            }
             
             boot.option(ChannelOption.SO_BACKLOG, config.getSoBacklog()); 
-            boot.option(ChannelOption.SO_REUSEADDR, config.isSoReuseaddr()); 
-            boot.option(ChannelOption.TCP_NODELAY, true); 
+            boot.childOption(ChannelOption.SO_REUSEADDR, config.isSoReuseaddr()); 
+            boot.childOption(ChannelOption.TCP_NODELAY, true); 
             
             boot.childOption(ChannelOption.SO_KEEPALIVE, true); 
     
-            ChannelFuture future = boot.bind(config.getPort()).sync();
+            ChannelFuture future = boot.bind(config.getPort());
             
             future.addListener((f) -> {
             	String logoString = getLogoString();
@@ -88,6 +99,7 @@ public class DefaultGGServerStarter implements IGGServerStarter {
             return new GGNettyFuture(future);
             
         }catch (Exception e) {
+        	shutdown();
         	throw new RuntimeException("GGServer start failed !! ", e);
         }
     }

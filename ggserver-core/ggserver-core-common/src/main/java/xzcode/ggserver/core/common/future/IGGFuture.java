@@ -18,4 +18,6 @@ public interface IGGFuture extends Future<Object>{
 	
 	<T> T get(Class<T> clazz);
 
+	boolean isSuccess();
+
 }

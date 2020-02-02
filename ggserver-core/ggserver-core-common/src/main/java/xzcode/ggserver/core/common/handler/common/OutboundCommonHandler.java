@@ -24,7 +24,6 @@ public class OutboundCommonHandler extends ChannelOutboundHandlerAdapter{
 			return;
 		}
 		LOGGER.error("Outbound ERROR! ", cause);
-		super.exceptionCaught(ctx, cause);
 	}
 
 }

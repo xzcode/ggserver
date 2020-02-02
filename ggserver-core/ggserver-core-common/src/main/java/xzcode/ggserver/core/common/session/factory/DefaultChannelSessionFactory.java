@@ -72,10 +72,6 @@ public class DefaultChannelSessionFactory implements ISessionFactory{
 	@Override
 	public void channelInActive(Channel channel) {
 		GGSession session = getSession(channel);
-		if (GGLoggerUtil.getLogger().isDebugEnabled()) {
-			GGLoggerUtil.getLogger().debug("Channel Close:{}",channel);
-		}
-		config.getTaskExecutor().submitTask(new EventTask(session, GGEvents.Connection.CLOSED, null, config));
 		if (session != null) {
 			config.getSessionManager().remove(session.getSessonId());
 		}

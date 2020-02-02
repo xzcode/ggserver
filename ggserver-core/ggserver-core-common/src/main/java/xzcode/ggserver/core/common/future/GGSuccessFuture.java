@@ -69,4 +69,9 @@ public class GGSuccessFuture<V> implements IGGFuture {
 		}
 	}
 
+	@Override
+	public boolean isSuccess() {
+		return true;
+	}
+
 }

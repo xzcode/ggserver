@@ -65,6 +65,10 @@ public class GGNettyFuture implements IGGFuture {
 		
 	}
 
+	@Override
+	public boolean isSuccess() {
+		return this.nettyFuture.isSuccess();
+	}
 
 	@Override
 	public boolean isDone() {
