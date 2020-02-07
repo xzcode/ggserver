@@ -15,14 +15,14 @@ import xzcode.ggserver.core.common.prefebs.pingpong.model.GGPong;
  * @author zai
  * 2020-01-16 17:04:11
  */
-public class GGPongHandler implements IRequestMessageHandler<GGPong>{
+public class GGPongResponseHandler implements IRequestMessageHandler<GGPong>{
 	
 	protected GGConfig config;
 	
 	protected static final AttributeKey<GGPingPongInfo> PING_PONG_INFO_KEY = AttributeKey.valueOf(DefaultChannelAttributeKeys.PING_INFO);
 	
 	
-	public GGPongHandler(GGConfig config) {
+	public GGPongResponseHandler(GGConfig config) {
 		this.config = config;
 	}
 

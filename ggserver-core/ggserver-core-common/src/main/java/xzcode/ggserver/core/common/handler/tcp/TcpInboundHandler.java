@@ -8,12 +8,9 @@ import org.slf4j.LoggerFactory;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
-import io.netty.handler.timeout.IdleState;
-import io.netty.handler.timeout.IdleStateEvent;
 import xzcode.ggserver.core.common.config.GGConfig;
 import xzcode.ggserver.core.common.constant.ProtocolTypeConstants;
 import xzcode.ggserver.core.common.handler.codec.impl.DefaultDecodeHandler;
-import xzcode.ggserver.core.common.prefebs.pingpong.GGPingHandler;
 
 /**
  * 数据输入控制器
@@ -24,11 +21,8 @@ public class TcpInboundHandler extends ByteToMessageDecoder{
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultDecodeHandler.class);
 
-	/**
-	 * 数据包长度标识 字节数
-	 */
+	//数据包长度标识 字节数
 	public static final int PACKAGE_LEN = 4;
-	
 	
 	private GGConfig config;
 	

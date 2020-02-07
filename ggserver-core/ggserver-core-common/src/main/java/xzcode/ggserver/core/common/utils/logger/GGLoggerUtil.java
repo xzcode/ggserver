@@ -9,6 +9,8 @@ import org.slf4j.LoggerFactory;
 import io.netty.channel.Channel;
 import xzcode.ggserver.core.common.constant.ProtocolTypeConstants;
 import xzcode.ggserver.core.common.message.Pack;
+import xzcode.ggserver.core.common.prefebs.pingpong.model.GGPing;
+import xzcode.ggserver.core.common.prefebs.pingpong.model.GGPong;
 
 public class GGLoggerUtil {
 	private static final Logger LOGGER = LoggerFactory.getLogger(GGLoggerUtil.class);
@@ -29,11 +31,25 @@ public class GGLoggerUtil {
 	 * @param pack
 	 * @param packOperType
 	 * @param channel
+	 * @author zai
+	 * 2020-02-06 11:00:28
+	 */
+	public static void logPack(Pack pack, int packOperType, Channel channel) {
+		logPack(pack, packOperType, channel, false);
+	}
+	
+	
+	/**
+	 * 记录包信息日志
+	 * 
+	 * @param pack
+	 * @param packOperType
+	 * @param channel
 	 * @return
 	 * @author zai
 	 * 2019-12-18 15:20:37
 	 */
-	public static void logPack(Pack pack, int packOperType, Channel channel) {
+	public static void logPack(Pack pack, int packOperType, Channel channel, boolean showPingPong) {
 		
 		String protocalType = pack.getProtocolType();
 		
@@ -41,6 +57,14 @@ public class GGLoggerUtil {
 		int packLen = 0;
 		if (ProtocolTypeConstants.TCP.equals(protocalType)) {
 			packLen = 4;
+		}
+		
+		String actionString = pack.getActionString();
+		
+		if (showPingPong) {
+			if (actionString.equals(GGPing.ACTION_ID) || actionString.equals(GGPong.ACTION_ID)) {
+				return;
+			}			
 		}
 
 		byte[] metadata = pack.getMetadata();

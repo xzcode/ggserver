@@ -26,11 +26,7 @@ import xzcode.ggserver.core.common.message.meta.resolver.IMetadataResolver;
 import xzcode.ggserver.core.common.message.meta.resolver.VoidMetadataResolver;
 import xzcode.ggserver.core.common.message.request.manager.IRequestMessageManager;
 import xzcode.ggserver.core.common.message.request.manager.RequestMessageManager;
-import xzcode.ggserver.core.common.prefebs.pingpong.GGPingHandler;
-import xzcode.ggserver.core.common.prefebs.pingpong.GGPingPongEventListener;
-import xzcode.ggserver.core.common.prefebs.pingpong.GGPongHandler;
-import xzcode.ggserver.core.common.prefebs.pingpong.model.GGPing;
-import xzcode.ggserver.core.common.prefebs.pingpong.model.GGPong;
+import xzcode.ggserver.core.common.prefebs.pingpong.GGPingRequestHandler;
 import xzcode.ggserver.core.common.session.factory.DefaultChannelSessionFactory;
 import xzcode.ggserver.core.common.session.factory.ISessionFactory;
 import xzcode.ggserver.core.common.session.id.DefaultSessionIdGenerator;
@@ -114,7 +110,7 @@ public class GGConfig {
     
 	protected NioEventLoopGroup workerGroup;
 	
-	protected GGPingHandler gGPingHandler;
+	protected GGPingRequestHandler gGPingRequestHandler;
 	
 	
 	protected ITaskExecutor taskExecutor;
@@ -172,15 +168,8 @@ public class GGConfig {
 			sessionIdGenerator = new DefaultSessionIdGenerator();
 		}
 		if (isPingPongEnabled()) {
-			this.gGPingHandler = new GGPingHandler(this);
+			this.gGPingRequestHandler = new GGPingRequestHandler(this);
 		}
-		
-		if (isPingPongEnabled()) {
-			requestMessageManager.onMessage(GGPing.ACTION_ID, new GGPingHandler(this));			
-			requestMessageManager.onMessage(GGPong.ACTION_ID, new GGPongHandler(this));	
-			eventManager.addEventListener(GGPingPongEventListener.EVENT, new GGPingPongEventListener(this));
-		}
-		
 		
 		this.inited = true;
 	}
@@ -469,11 +458,11 @@ public class GGConfig {
 		this.sessionIdGenerator = sessionIdGenerator;
 	}
 	
-	public GGPingHandler getPingPongHandler() {
-		return gGPingHandler;
+	public GGPingRequestHandler getPingPongHandler() {
+		return gGPingRequestHandler;
 	}
-	public void setPingPongHandler(GGPingHandler gGPingHandler) {
-		this.gGPingHandler = gGPingHandler;
+	public void setPingPongHandler(GGPingRequestHandler gGPingRequestHandler) {
+		this.gGPingRequestHandler = gGPingRequestHandler;
 	}
 	public boolean isPingPongEnabled() {
 		return pingPongEnabled;

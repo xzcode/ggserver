@@ -9,18 +9,13 @@ import xzcode.ggserver.core.common.event.model.EventData;
 import xzcode.ggserver.core.common.prefebs.pingpong.model.GGPingPongInfo;
 
 
-public class GGPingPongEventListener implements IEventListener<Void>{
-	
-	public static final String EVENT = "GG.PING.PONG.EVENT";
+public class GGPingPongServerEventListener implements IEventListener<Void>{
 	
 	protected GGConfig config;
 	
 	protected static final AttributeKey<GGPingPongInfo> PING_PONG_INFO_KEY = AttributeKey.valueOf(DefaultChannelAttributeKeys.PING_INFO);
 	
-	
-	
-	
-	public GGPingPongEventListener(GGConfig config) {
+	public GGPingPongServerEventListener(GGConfig config) {
 		super();
 		this.config = config;
 	}
@@ -28,16 +23,17 @@ public class GGPingPongEventListener implements IEventListener<Void>{
 	@Override
 	public void onEvent(EventData<Void> eventData) {
 		Channel channel = eventData.getChannel();
-		GGPingPongInfo gGPingPongInfo = channel.attr(PING_PONG_INFO_KEY).get();
-		if (gGPingPongInfo == null) {
-			gGPingPongInfo = new GGPingPongInfo(config.getPingPongLostTimes(), config.getPingPongMaxLoseTimes());
-			channel.attr(PING_PONG_INFO_KEY).set(gGPingPongInfo);
+		GGPingPongInfo pingPongInfo = channel.attr(PING_PONG_INFO_KEY).get();
+		if (pingPongInfo == null) {
+			pingPongInfo = new GGPingPongInfo(config.getPingPongLostTimes(), config.getPingPongMaxLoseTimes());
+			channel.attr(PING_PONG_INFO_KEY).set(pingPongInfo);
 		}
-		gGPingPongInfo.heartBeatLostTimesIncrease();
+		pingPongInfo.heartBeatLostTimesIncrease();
 		
 		//超过心跳丢失次数，断开连接
-		if (gGPingPongInfo.isHeartBeatLost()) {
+		if (pingPongInfo.isHeartBeatLost()) {
 			channel.disconnect();
+			return;
 		}
 	}
 

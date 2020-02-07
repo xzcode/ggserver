@@ -5,6 +5,10 @@ import io.netty.channel.pool.ChannelPool;
 import io.netty.channel.pool.ChannelPoolHandler;
 import xzcode.ggserver.core.client.session.ClientChannelSessionFactory;
 import xzcode.ggserver.core.common.config.GGConfig;
+import xzcode.ggserver.core.common.event.GGEvents;
+import xzcode.ggserver.core.common.prefebs.pingpong.GGPingPongClientEventListener;
+import xzcode.ggserver.core.common.prefebs.pingpong.GGPongResponseHandler;
+import xzcode.ggserver.core.common.prefebs.pingpong.model.GGPong;
 
 /**
  * 客户端配置
@@ -32,8 +36,13 @@ public class GGClientConfig extends GGConfig{
 	public void init() {
 		
 		this.sessionFactory = new ClientChannelSessionFactory(this);
+
 		super.init();
 		
+		if (isPingPongEnabled()) {
+			requestMessageManager.onMessage(GGPong.ACTION_ID, new GGPongResponseHandler(this));			
+			eventManager.addEventListener(GGEvents.Idle.ALL, new GGPingPongClientEventListener(this));
+		}
 		
 	}
 

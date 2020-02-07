@@ -100,6 +100,7 @@ public interface IRequestMessageManager {
 			}
 			
 		}
+		
 		handler.setMessageClass(msgClass );
 		
 		this.addMessageHandler(actionId, handler);
