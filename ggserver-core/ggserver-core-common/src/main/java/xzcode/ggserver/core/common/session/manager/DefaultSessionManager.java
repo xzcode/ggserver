@@ -89,6 +89,10 @@ public class DefaultSessionManager implements ISessionManager {
 	@Override
 	public void clearAllSession() {
 		if (sessionMap != null) {
+			eachSession(session -> {
+				session.expire();
+				return true;
+			});
 			sessionMap.clear();
 		}
 	}

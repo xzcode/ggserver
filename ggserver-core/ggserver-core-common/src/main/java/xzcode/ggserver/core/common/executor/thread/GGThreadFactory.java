@@ -8,7 +8,7 @@ import xzcode.ggserver.core.common.executor.ITaskExecutor;
 
 public class GGThreadFactory implements ThreadFactory {
     private final String threadNamePrefix;
-    private static final AtomicInteger THREAD_IDX = new AtomicInteger();
+    private final AtomicInteger THREAD_IDX = new AtomicInteger();
     private final boolean daemon;
     private ITaskExecutor taskExecutor;
 
