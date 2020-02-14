@@ -114,7 +114,7 @@ public class DefaultDecodeHandler implements IDecodeHandler {
 		
 		
 		if(GGLoggerUtil.getLogger().isInfoEnabled()){
-			GGLoggerUtil.logPack(pack, Pack.OperType.REQUEST, ctx.channel());
+			GGLoggerUtil.logPack(pack, Pack.OperType.REQUEST, ctx.channel(), config.isPrintPingPongInfo());
         }
 
 	}

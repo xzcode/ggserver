@@ -84,7 +84,7 @@ public class DefaultEncodeHandler implements IEncodeHandler {
 		
 		if(GGLoggerUtil.getLogger().isInfoEnabled()){
 			pack.setProtocolType(protocolType);
-			GGLoggerUtil.logPack(pack, Pack.OperType.RESPONSE, channel);
+			GGLoggerUtil.logPack(pack, Pack.OperType.RESPONSE, channel, config.isPrintPingPongInfo());
         }
 		
 		ByteBuf out = null;

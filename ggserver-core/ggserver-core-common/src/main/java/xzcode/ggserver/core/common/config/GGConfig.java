@@ -84,6 +84,8 @@ public class GGConfig {
 	
 	protected boolean 	pingPongEnabled = false;
 	
+	protected boolean 	printPingPongInfo = false;
+	
 	private int pingPongLostTimes = 0; //心跳失败次数
 	
 	private int pingPongMaxLoseTimes = 3;//最大心跳失败允许次数
@@ -488,5 +490,11 @@ public class GGConfig {
 		this.pingPongMaxLoseTimes = maxLoseTimes;
 	}
 	
+	public boolean isPrintPingPongInfo() {
+		return printPingPongInfo;
+	}
 	
+	public void setPrintPingPongInfo(boolean printPingPongInfo) {
+		this.printPingPongInfo = printPingPongInfo;
+	}
 }

@@ -61,7 +61,7 @@ public class GGLoggerUtil {
 		
 		String actionString = pack.getActionString();
 		
-		if (showPingPong) {
+		if (!showPingPong) {
 			if (actionString.equals(GGPing.ACTION_ID) || actionString.equals(GGPong.ACTION_ID)) {
 				return;
 			}			
