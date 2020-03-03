@@ -77,7 +77,7 @@ public class GGConfig {
 	
 	protected int 		soBacklog = 1024;
 	
-	protected boolean 	soReuseaddr = false;
+	protected boolean 	soReuseaddr = true;
 	
 	
 	protected long 		sessionExpireMs = 24L * 3600L * 1000L;

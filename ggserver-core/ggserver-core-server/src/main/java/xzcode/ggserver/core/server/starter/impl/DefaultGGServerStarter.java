@@ -77,6 +77,8 @@ public class DefaultGGServerStarter implements IGGServerStarter {
             }
             
             boot.option(ChannelOption.SO_BACKLOG, config.getSoBacklog()); 
+            boot.option(ChannelOption.SO_REUSEADDR, true); 
+            
             boot.childOption(ChannelOption.SO_REUSEADDR, config.isSoReuseaddr()); 
             boot.childOption(ChannelOption.TCP_NODELAY, true); 
             
@@ -90,6 +92,7 @@ public class DefaultGGServerStarter implements IGGServerStarter {
             		GGLoggerUtil.getLogger().warn("{}\n{} started successfully on port {}!\n", logoString, config.getServerName(), config.getPort());
 				}else {
 					GGLoggerUtil.getLogger().warn("{}\n{} failed to start on port {}!\nError:{}\n", logoString, config.getServerName(), config.getPort(),f.cause());
+					
 					shutdown();
 				}
             });
