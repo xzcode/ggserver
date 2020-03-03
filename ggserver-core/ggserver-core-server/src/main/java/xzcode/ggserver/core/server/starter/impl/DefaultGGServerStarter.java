@@ -89,7 +89,8 @@ public class DefaultGGServerStarter implements IGGServerStarter {
             	if (f.isSuccess()) {
             		GGLoggerUtil.getLogger().warn("{}\n{} started successfully on port {}!\n", logoString, config.getServerName(), config.getPort());
 				}else {
-					GGLoggerUtil.getLogger().warn("{}]n{} failed to start on port {}!\n", logoString, config.getServerName(), config.getPort());
+					GGLoggerUtil.getLogger().warn("{}\n{} failed to start on port {}!\nError:{}\n", logoString, config.getServerName(), config.getPort(),f.cause());
+					shutdown();
 				}
             });
             
