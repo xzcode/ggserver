@@ -1,8 +1,6 @@
 package xzcode.ggserver.core.common.session.impl;
 
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.List;
 
 import xzcode.ggserver.core.common.config.GGConfig;
 import xzcode.ggserver.core.common.event.IEventManager;
@@ -13,7 +11,6 @@ import xzcode.ggserver.core.common.future.IGGFuture;
 import xzcode.ggserver.core.common.handler.serializer.ISerializer;
 import xzcode.ggserver.core.common.message.meta.provider.IMetadataProvider;
 import xzcode.ggserver.core.common.session.GGSession;
-import xzcode.ggserver.core.common.session.listener.ISessionDisconnectListener;
 
 /**
  * sesson默认实现
@@ -30,7 +27,6 @@ public abstract class AbstractSession<C extends GGConfig> implements GGSession {
 	protected String sessionId;//sessionid
 	protected String host;//远端地址
 	protected int port;//远端端口号
-	protected List<ISessionDisconnectListener> disconnectListeners = new ArrayList<>();
 	
 	public AbstractSession(String sessionId, C config) {
 		this.config = config;
