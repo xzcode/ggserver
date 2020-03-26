@@ -2,6 +2,8 @@ package xzcode.ggserver.core.common.future;
 
 import java.util.concurrent.Future;
 
+import xzcode.ggserver.core.common.session.GGSession;
+
 /**
  * 未来对象
  * @param <V>
@@ -19,5 +21,7 @@ public interface IGGFuture extends Future<Object>{
 	<T> T get(Class<T> clazz);
 
 	boolean isSuccess();
+	
+	GGSession getSession();
 
 }

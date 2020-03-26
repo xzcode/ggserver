@@ -5,6 +5,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import xzcode.ggserver.core.common.session.GGSession;
 import xzcode.ggserver.core.common.utils.logger.GGLoggerUtil;
 
 
@@ -74,6 +75,11 @@ public class GGFailedFuture implements IGGFuture {
 	@Override
 	public boolean isSuccess() {
 		return false;
+	}
+
+	@Override
+	public GGSession getSession() {
+		return null;
 	}
 
 

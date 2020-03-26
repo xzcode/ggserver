@@ -8,6 +8,11 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
+import io.netty.util.AttributeKey;
+import xzcode.ggserver.core.common.channel.DefaultChannelAttributeKeys;
+import xzcode.ggserver.core.common.session.GGSession;
 import xzcode.ggserver.core.common.utils.logger.GGLoggerUtil;
 
 
@@ -113,6 +118,17 @@ public class GGNettyFuture implements IGGFuture {
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	@Override
+	public GGSession getSession() {
+		if (this.nettyFuture instanceof ChannelFuture) {
+			Channel channel = ((ChannelFuture)this.nettyFuture).channel();
+			if (channel != null) {
+				return (GGSession) channel.attr(AttributeKey.valueOf(DefaultChannelAttributeKeys.SESSION)).get();
+			}
+		}
+		return null;
 	}
 
 

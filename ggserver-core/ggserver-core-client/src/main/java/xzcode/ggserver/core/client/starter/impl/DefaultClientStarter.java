@@ -62,7 +62,9 @@ public class DefaultClientStarter implements IGGClientStarter {
         }
         else if (config.getProtocolType().equals(ProtocolTypeConstants.WEBSOCKET)) {
         	boot.handler(new WebSocketChannelInitializer(config));
-        }
+        }else {
+			throw new RuntimeException("ChannelInitializer Not Set!");
+		}
         
         
         //boot.option(ChannelOption.SO_BACKLOG, config.getSoBacklog());  
