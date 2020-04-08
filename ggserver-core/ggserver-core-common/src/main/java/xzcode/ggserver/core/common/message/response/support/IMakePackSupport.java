@@ -3,8 +3,8 @@ package xzcode.ggserver.core.common.message.response.support;
 import java.nio.charset.Charset;
 
 import xzcode.ggserver.core.common.handler.serializer.ISerializer;
+import xzcode.ggserver.core.common.message.MessageData;
 import xzcode.ggserver.core.common.message.Pack;
-import xzcode.ggserver.core.common.message.response.Response;
 import xzcode.ggserver.core.common.utils.logger.GGLoggerUtil;
 
 /**
@@ -37,18 +37,17 @@ public interface IMakePackSupport{
 	/**
 	 * 生成字节码数据包
 	 * 
-	 * @param response
+	 * @param messageData
 	 * @return
 	 * 
 	 * @author zai 2019-11-24 17:28:57
 	 */
-	default Pack makePack(Response response) {
+	default Pack makePack(MessageData<?> messageData) {
 		try {
 			ISerializer serializer = getSerializer();
-			byte[] metadataBytes = response.getMetadata() == null ? null : serializer.serialize(response.getMetadata());
-			byte[] actionIdData = response.getAction().getBytes(getCharset());
-			byte[] messageData = response.getMessage() == null ? null : serializer.serialize(response.getMessage());
-			return new Pack(response.getSession(), metadataBytes, actionIdData, messageData);
+			byte[] actionIdBytes = messageData.getAction().getBytes(getCharset());
+			byte[] messageBytes = messageData.getMessage() == null ? null : serializer.serialize(messageData.getMessage());
+			return new Pack(messageData.getSession(), actionIdBytes, messageBytes);
 		} catch (Exception e) {
 			GGLoggerUtil.getLogger().error("Make pack Error!", e);
 		}

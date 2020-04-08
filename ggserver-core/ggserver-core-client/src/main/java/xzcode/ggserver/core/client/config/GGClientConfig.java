@@ -6,8 +6,6 @@ import xzcode.ggserver.core.common.event.GGEvents;
 import xzcode.ggserver.core.common.prefebs.pingpong.GGPingPongClientEventListener;
 import xzcode.ggserver.core.common.prefebs.pingpong.GGPongResponseHandler;
 import xzcode.ggserver.core.common.prefebs.pingpong.model.GGPong;
-import xzcode.ggserver.core.common.prefebs.sessiongroup.GGSessionGroupRegisterRespHandler;
-import xzcode.ggserver.core.common.prefebs.sessiongroup.model.GGSessionGroupRegisterResp;
 
 /**
  * 客户端配置
@@ -26,11 +24,6 @@ public class GGClientConfig extends GGConfig {
 	public void init() {
 
 		super.init();
-
-		if (isUseSessionGroup()) {
-			requestMessageManager.onMessage(GGSessionGroupRegisterResp.ACTION_ID,
-					new GGSessionGroupRegisterRespHandler(this));
-		}
 
 		if (isPingPongEnabled()) {
 			requestMessageManager.onMessage(GGPong.ACTION_ID, new GGPongResponseHandler(this));

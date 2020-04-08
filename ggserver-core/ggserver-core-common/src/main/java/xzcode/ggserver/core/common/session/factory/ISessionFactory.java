@@ -1,8 +1,8 @@
 package xzcode.ggserver.core.common.session.factory;
 
 import io.netty.channel.Channel;
+import xzcode.ggserver.core.common.message.MessageData;
 import xzcode.ggserver.core.common.message.Pack;
-import xzcode.ggserver.core.common.message.request.Request;
 import xzcode.ggserver.core.common.session.GGSession;
 
 /**
@@ -23,7 +23,7 @@ public interface ISessionFactory {
 	 * @author zai
 	 * 2019-12-16 16:47:20
 	 */
-	GGSession getSession(Channel channel, Request<?> request);
+	GGSession getSession(Channel channel, MessageData<?> request);
 	
 	/**
 	 * 获取会话

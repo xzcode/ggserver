@@ -8,8 +8,8 @@ import xzcode.ggserver.core.common.channel.DefaultChannelAttributeKeys;
 import xzcode.ggserver.core.common.config.GGConfig;
 import xzcode.ggserver.core.common.event.EventTask;
 import xzcode.ggserver.core.common.event.GGEvents;
+import xzcode.ggserver.core.common.message.MessageData;
 import xzcode.ggserver.core.common.message.Pack;
-import xzcode.ggserver.core.common.message.request.Request;
 import xzcode.ggserver.core.common.session.GGSession;
 import xzcode.ggserver.core.common.session.id.DefaultSessionIdGenerator;
 import xzcode.ggserver.core.common.session.id.ISessionIdGenerator;
@@ -48,7 +48,7 @@ public class DefaultChannelSessionFactory implements ISessionFactory{
 	}
 	
 	@Override
-	public GGSession getSession(Channel channel, Request<?> request) {
+	public GGSession getSession(Channel channel, MessageData<?> request) {
 		GGSession session = request.getSession();
 		if (session != null) {
 			session.updateExpire();

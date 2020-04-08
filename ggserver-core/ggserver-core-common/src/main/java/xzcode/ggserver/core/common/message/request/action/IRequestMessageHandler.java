@@ -1,7 +1,7 @@
 package xzcode.ggserver.core.common.message.request.action;
 
 
-import xzcode.ggserver.core.common.message.request.Request;
+import xzcode.ggserver.core.common.message.MessageData;
 
 /**
  * 动态请求消息绑定接口
@@ -20,6 +20,6 @@ public interface IRequestMessageHandler<T> {
 	 * @author zai
 	 * 2019-11-24 22:35:17
 	 */
-	void handle(Request<T> request);
+	void handle(MessageData<T> request);
 	
 }

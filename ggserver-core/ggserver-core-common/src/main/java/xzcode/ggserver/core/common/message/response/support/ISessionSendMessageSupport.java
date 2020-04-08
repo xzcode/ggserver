@@ -11,10 +11,10 @@ import xzcode.ggserver.core.common.filter.IFilterManager;
 import xzcode.ggserver.core.common.future.GGFailedFuture;
 import xzcode.ggserver.core.common.future.GGNettyFuture;
 import xzcode.ggserver.core.common.future.IGGFuture;
+import xzcode.ggserver.core.common.message.MessageData;
 import xzcode.ggserver.core.common.message.Pack;
 import xzcode.ggserver.core.common.message.meta.provider.IMetadataProvider;
 import xzcode.ggserver.core.common.message.model.IMessage;
-import xzcode.ggserver.core.common.message.response.Response;
 import xzcode.ggserver.core.common.session.GGSession;
 import xzcode.ggserver.core.common.utils.json.GGServerJsonUtil;
 import xzcode.ggserver.core.common.utils.logger.GGLoggerUtil;
@@ -72,7 +72,7 @@ public interface ISessionSendMessageSupport extends IMakePackSupport {
 	 * 2019-12-17 18:44:14
 	 */
 	default IGGFuture send(String action) {
-		return send(new Response((GGSession) this, null, action, null));
+		return send(new MessageData<>((GGSession) this, action, null));
 	}
 	
 	/**
@@ -85,7 +85,7 @@ public interface ISessionSendMessageSupport extends IMakePackSupport {
 	 * 2019-12-17 18:44:20
 	 */
 	default IGGFuture send(String action, Object message) {
-		return send(new Response((GGSession) this, null, action, message));
+		return send(new MessageData<>((GGSession) this, action, message));
 	}
 	
 	/**
@@ -97,7 +97,7 @@ public interface ISessionSendMessageSupport extends IMakePackSupport {
 	 * 2019-12-25 11:57:05
 	 */
 	default IGGFuture send(IMessage message) {
-		return send(new Response((GGSession) this, null, message.getActionId(), message));
+		return send(new MessageData<>((GGSession) this, message.getActionId(), message));
 	}
 	
 	/**
@@ -111,7 +111,7 @@ public interface ISessionSendMessageSupport extends IMakePackSupport {
 	 * 2019-11-29 15:26:11
 	 */
 	default IGGFuture send(GGSession session, String action, Object message) {
-		return send(new Response(session, null, action, message));
+		return send(new MessageData<>(session,  action, message));
 	}
 	
 	/**
@@ -124,7 +124,7 @@ public interface ISessionSendMessageSupport extends IMakePackSupport {
 	 * 2019-12-25 11:57:44
 	 */
 	default IGGFuture send(GGSession session, IMessage message) {
-		return send(new Response(session, null, message.getActionId(), message));
+		return send(new MessageData<>(session, message.getActionId(), message));
 	}
 	
 	
@@ -138,17 +138,12 @@ public interface ISessionSendMessageSupport extends IMakePackSupport {
 	 * 
 	 * @author zai 2019-11-24 17:29:24
 	 */
-	default IGGFuture send(Response response) {
-		if (response.getMetadata() == null) {
-			IMetadataProvider<?> metadataProvider = getMetadataProvider();
-			Object metadata = metadataProvider.provide(response.getSession());
-			response.setMetadata(metadata);			
-		}
+	default IGGFuture send(MessageData<?> messageData) {
 		// 发送过滤器
-		if (!getFilterManager().doResponseFilters(response)) {
+		if (!getFilterManager().doResponseFilters(messageData)) {
 			return null;
 		}
-		return send(makePack(response));
+		return send(makePack(messageData));
 	}
 	
 	/**

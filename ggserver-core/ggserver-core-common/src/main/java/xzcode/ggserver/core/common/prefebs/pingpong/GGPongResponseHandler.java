@@ -4,7 +4,7 @@ import io.netty.channel.Channel;
 import io.netty.util.AttributeKey;
 import xzcode.ggserver.core.common.channel.DefaultChannelAttributeKeys;
 import xzcode.ggserver.core.common.config.GGConfig;
-import xzcode.ggserver.core.common.message.request.Request;
+import xzcode.ggserver.core.common.message.MessageData;
 import xzcode.ggserver.core.common.message.request.action.IRequestMessageHandler;
 import xzcode.ggserver.core.common.prefebs.pingpong.model.GGPingPongInfo;
 import xzcode.ggserver.core.common.prefebs.pingpong.model.GGPong;
@@ -29,7 +29,7 @@ public class GGPongResponseHandler implements IRequestMessageHandler<GGPong>{
 
 
 	@Override
-	public void handle(Request<GGPong> request) {
+	public void handle(MessageData<GGPong> request) {
 		Channel channel = request.getChannel();
 		GGPingPongInfo gGPingPongInfo = channel.attr(PING_PONG_INFO_KEY).get();
 		if (gGPingPongInfo == null) {

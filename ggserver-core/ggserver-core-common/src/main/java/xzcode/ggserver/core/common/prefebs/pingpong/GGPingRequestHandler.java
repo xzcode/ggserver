@@ -7,12 +7,11 @@ import io.netty.util.AttributeKey;
 import xzcode.ggserver.core.common.channel.DefaultChannelAttributeKeys;
 import xzcode.ggserver.core.common.config.GGConfig;
 import xzcode.ggserver.core.common.handler.serializer.ISerializer;
-import xzcode.ggserver.core.common.message.request.Request;
+import xzcode.ggserver.core.common.message.MessageData;
 import xzcode.ggserver.core.common.message.request.action.IRequestMessageHandler;
-import xzcode.ggserver.core.common.message.response.Response;
 import xzcode.ggserver.core.common.message.response.support.IMakePackSupport;
-import xzcode.ggserver.core.common.prefebs.pingpong.model.GGPingPongInfo;
 import xzcode.ggserver.core.common.prefebs.pingpong.model.GGPing;
+import xzcode.ggserver.core.common.prefebs.pingpong.model.GGPingPongInfo;
 import xzcode.ggserver.core.common.prefebs.pingpong.model.GGPong;
 
 /**
@@ -32,9 +31,9 @@ public class GGPingRequestHandler implements IRequestMessageHandler<GGPing> , IM
 	}
 
 	@Override
-	public void handle(Request<GGPing> request) {
+	public void handle(MessageData<GGPing> request) {
 		Channel channel = request.getChannel();
-		channel.writeAndFlush(makePack(new Response(request.getSession(), null, GGPong.ACTION_ID, null)));
+		channel.writeAndFlush(makePack(new MessageData<>(request.getSession(), GGPong.ACTION_ID, null)));
 		
 		GGPingPongInfo pingPongInfo = channel.attr(PING_PONG_INFO_KEY).get();
 		if (pingPongInfo == null) {

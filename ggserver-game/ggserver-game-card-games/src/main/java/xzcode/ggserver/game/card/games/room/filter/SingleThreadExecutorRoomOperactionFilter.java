@@ -1,7 +1,7 @@
 package xzcode.ggserver.game.card.games.room.filter;
 
 import xzcode.ggserver.core.common.filter.IRequestFilter;
-import xzcode.ggserver.core.common.message.request.Request;
+import xzcode.ggserver.core.common.message.MessageData;
 import xzcode.ggserver.core.common.message.request.manager.IRequestMessageManager;
 import xzcode.ggserver.core.common.session.GGSession;
 import xzcode.ggserver.core.common.utils.logger.GGLoggerUtil;
@@ -38,7 +38,7 @@ H extends House<P, R, H>
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public boolean doFilter(Request<?> request) {
+	public boolean doFilter(MessageData<?> request) {
 		GGSession session = request.getSession();
 		if (session == null) {
 			return true;

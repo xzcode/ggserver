@@ -4,7 +4,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.List;
 
-import xzcode.ggserver.core.common.message.request.Request;
+import xzcode.ggserver.core.common.message.MessageData;
 import xzcode.ggserver.core.common.message.request.action.IRequestMessageHandler;
 import xzcode.ggserver.core.common.message.request.handler.IRequestMessageHandlerInfo;
 import xzcode.ggserver.core.common.message.request.handler.RequestMessagerHandlerInfo;
@@ -20,7 +20,7 @@ public interface IRequestMessageManager {
 	 * @author zai
 	 * 2017-07-29
 	 */
-	void handle(Request<?> request);
+	void handle(MessageData<?> request);
 
 	/**
 	 * 添加缓存方法

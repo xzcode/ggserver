@@ -7,10 +7,11 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import xzcode.ggserver.core.common.future.GGDefaultFuture;
+import xzcode.ggserver.core.common.future.GGFailedFuture;
 import xzcode.ggserver.core.common.future.IGGFuture;
+import xzcode.ggserver.core.common.message.MessageData;
 import xzcode.ggserver.core.common.message.Pack;
 import xzcode.ggserver.core.common.message.model.IMessage;
-import xzcode.ggserver.core.common.message.response.Response;
 import xzcode.ggserver.core.common.message.response.support.IMakePackSupport;
 import xzcode.ggserver.core.common.session.GGSession;
 
@@ -53,11 +54,17 @@ public interface GGSessionGroup extends IMakePackSupport {
 		AtomicInteger count = new AtomicInteger(0);
 		for (Entry<String, GGSession> entry : sessionMap.entrySet()) {
 			GGSession session = entry.getValue();
-			session.send(pack).addListener(f -> {
+			if (session.isReady()) {
+				session.send(pack).addListener(f -> {
+					if (count.incrementAndGet() >= size && !defaultFuture.isDone()) {
+						defaultFuture.setDone(true);
+					}
+				});
+			}else {
 				if (count.incrementAndGet() >= size && !defaultFuture.isDone()) {
 					defaultFuture.setDone(true);
 				}
-			});
+			}
 		}
 		return defaultFuture;
 	}
@@ -73,8 +80,25 @@ public interface GGSessionGroup extends IMakePackSupport {
 		Map<String, GGSession> sessionMap = getSessionMap();
 		Set<Entry<String, GGSession>> entrySet = sessionMap.entrySet();
 		int size = entrySet.size();
+		if (size == 0) {
+			return GGFailedFuture.DEFAULT_FAILED_FUTURE;
+		}
+		//获取随机会话
 		GGSession session = (GGSession) entrySet.toArray()[ThreadLocalRandom.current().nextInt(size)];
-		return session.send(pack);
+		if(!session.isReady()) {
+			//如果随机会话未就绪，遍历并获取就绪会话进行发送
+			for (Entry<String, GGSession> entry : entrySet) {
+				session = entry.getValue();
+				if (session.isReady()) {
+					break;
+				}
+			}
+		}
+		if (session.isReady()) {
+			pack.setSession(session);
+			return session.send(pack);
+		}
+		return GGFailedFuture.DEFAULT_FAILED_FUTURE;
 	}
 	
 	/**
@@ -86,11 +110,7 @@ public interface GGSessionGroup extends IMakePackSupport {
 	 * 2020-04-07 15:38:44
 	 */
 	default IGGFuture sendToRandomOne(IMessage message) {
-		Map<String, GGSession> sessionMap = getSessionMap();
-		Set<Entry<String, GGSession>> entrySet = sessionMap.entrySet();
-		int size = entrySet.size();
-		GGSession session = (GGSession) entrySet.toArray()[ThreadLocalRandom.current().nextInt(size)];
-		return session.send(makePack(new Response(session, null, message.getActionId(), message)));
+		return sendToRandomOne(makePack(new MessageData<>(null, message.getActionId(), message)));
 	}
 
 	/**

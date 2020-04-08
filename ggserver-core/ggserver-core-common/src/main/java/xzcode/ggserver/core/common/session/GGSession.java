@@ -162,6 +162,13 @@ public interface GGSession extends ISessionSendMessageSupport, IExecutorSupport,
 	 */
 	boolean isReady();
 	
+	/**
+	 * 设置准备就绪
+	 *
+	 * @author zai
+	 * 2020-04-08 17:05:34
+	 */
+	void setReady(boolean ready);
 	
 
 }

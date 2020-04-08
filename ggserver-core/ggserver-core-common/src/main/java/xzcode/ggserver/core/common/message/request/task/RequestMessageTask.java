@@ -4,10 +4,10 @@ import io.netty.channel.Channel;
 import xzcode.ggserver.core.common.config.GGConfig;
 import xzcode.ggserver.core.common.filter.IFilterManager;
 import xzcode.ggserver.core.common.handler.serializer.ISerializer;
+import xzcode.ggserver.core.common.message.MessageData;
 import xzcode.ggserver.core.common.message.Pack;
 import xzcode.ggserver.core.common.message.meta.IMetadata;
 import xzcode.ggserver.core.common.message.meta.resolver.IMetadataResolver;
-import xzcode.ggserver.core.common.message.request.Request;
 import xzcode.ggserver.core.common.message.request.handler.IRequestMessageHandlerInfo;
 import xzcode.ggserver.core.common.session.GGSession;
 import xzcode.ggserver.core.common.utils.logger.GGLoggerUtil;
@@ -47,7 +47,6 @@ public class RequestMessageTask implements Runnable{
 	public void run() {
 		ISerializer serializer = config.getSerializer();
 		IFilterManager messageFilterManager = this.config.getFilterManager();
-		IMetadata metadata = null;
 		String action = null;
 		Object message = null;
 		GGSession session = pack.getSession();
@@ -59,10 +58,6 @@ public class RequestMessageTask implements Runnable{
 			
 			action = new String(pack.getAction(), config.getCharset());
 			
-			if (pack.getMetadata() != null) {
-				IMetadataResolver<?> metadataResolver = config.getMetadataResolver();
-				metadata = (IMetadata) metadataResolver.resolve(pack.getMetadata());
-			}
 			
 			if (pack.getMessage() != null) {
 				IRequestMessageHandlerInfo messageHandler = config.getRequestMessageManager().getMessageHandler(action);
@@ -73,7 +68,7 @@ public class RequestMessageTask implements Runnable{
 			
 			Channel channel = pack.getChannel();
 			
-			Request<?> request = new Request<>(session, metadata, action, message);
+			MessageData<?> request = new MessageData<>(session, action, message);
 			request.setChannel(channel);
 			
 			if (session == null) {

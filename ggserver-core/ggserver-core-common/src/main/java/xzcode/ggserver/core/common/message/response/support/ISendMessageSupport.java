@@ -2,9 +2,9 @@ package xzcode.ggserver.core.common.message.response.support;
 
 import xzcode.ggserver.core.common.filter.IFilterManager;
 import xzcode.ggserver.core.common.future.IGGFuture;
+import xzcode.ggserver.core.common.message.MessageData;
 import xzcode.ggserver.core.common.message.Pack;
 import xzcode.ggserver.core.common.message.model.IMessage;
-import xzcode.ggserver.core.common.message.response.Response;
 import xzcode.ggserver.core.common.session.GGSession;
 import xzcode.ggserver.core.common.session.manager.ISessionManager;
 import xzcode.ggserver.core.common.utils.logger.GGLoggerUtil;
@@ -43,7 +43,7 @@ public interface ISendMessageSupport extends IMakePackSupport {
 	 * @author zai
 	 * 2019-11-27 22:09:14
 	 */
-	default void sendToAll(Response response) {
+	default void sendToAll(MessageData<?> response) {
 		try {
 			// 发送过滤器
 			if (!getFilterManager().doResponseFilters(response)) {
@@ -89,7 +89,7 @@ public interface ISendMessageSupport extends IMakePackSupport {
 	 * 2019-11-29 15:24:23
 	 */
 	default IGGFuture send(GGSession session, String action, Object message) {
-		return send(new Response(session, null, action, message));
+		return send(new MessageData<>(session, action, message));
 	}
 	
 	/**
@@ -105,7 +105,7 @@ public interface ISendMessageSupport extends IMakePackSupport {
 	 * 2019-11-29 15:23:47
 	 */
 	default IGGFuture send(GGSession session, IMessage message) {
-		return send(new Response(session, null, message.getActionId(), message));
+		return send(new MessageData<>(session, message.getActionId(), message));
 	}
 
 	/**
@@ -119,15 +119,15 @@ public interface ISendMessageSupport extends IMakePackSupport {
 	 * @author zai
 	 * 2019-11-27 21:53:08
 	 */
-	default IGGFuture send(Response response) {
-		GGSession session = response.getSession();
+	default IGGFuture send(MessageData<?> messageData) {
+		GGSession session = messageData.getSession();
 		if (session != null) {
 			try {
 			// 发送过滤器
-			if (!getFilterManager().doResponseFilters(response)) {
+			if (!getFilterManager().doResponseFilters(messageData)) {
 				return null;
 			}
-				session.send(makePack(response));
+				session.send(makePack(messageData));
 			} catch (Exception e) {
 				GGLoggerUtil.getLogger().error("Send message Error!", e);
 			}

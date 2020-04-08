@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
-import xzcode.ggserver.core.common.message.request.Request;
+import xzcode.ggserver.core.common.message.MessageData;
 import xzcode.ggserver.core.common.message.request.handler.IRequestMessageHandlerInfo;
 import xzcode.ggserver.core.common.utils.logger.GGLoggerUtil;
 
@@ -31,7 +31,7 @@ public class RequestMessageManager implements IRequestMessageManager {
 	 * 2017-07-29
 	 */
 	@Override
-	public void handle(Request<?> request){
+	public void handle(MessageData<?> request){
 		IRequestMessageHandlerInfo invoker = handlerMap.get(request.getAction());
 		if (invoker != null) {
 			try {

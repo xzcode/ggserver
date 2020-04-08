@@ -6,7 +6,7 @@ import xzcode.ggserver.core.common.event.IEventManager;
 import xzcode.ggserver.core.common.event.model.EventData;
 import xzcode.ggserver.core.common.filter.IEventFilter;
 import xzcode.ggserver.core.common.filter.IRequestFilter;
-import xzcode.ggserver.core.common.message.request.Request;
+import xzcode.ggserver.core.common.message.MessageData;
 import xzcode.ggserver.core.common.message.request.manager.IRequestMessageManager;
 import xzcode.ggserver.core.common.session.GGSession;
 import xzcode.ggserver.core.common.utils.logger.GGLoggerUtil;

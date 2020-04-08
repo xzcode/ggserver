@@ -39,17 +39,15 @@ public class Pack {
 	private String cachedActionId;
 	
 
-	public Pack(byte[] metadata, byte[] action, byte[] message) {
-		this.metadata = metadata;
+	public Pack(byte[] action, byte[] message) {
 		this.action = action;
 		this.message = message;
 	}
 	
 
-	public Pack(GGSession session, byte[] metadata, byte[] action, byte[] message) {
+	public Pack(GGSession session, byte[] action, byte[] message) {
 		super();
 		this.session = session;
-		this.metadata = metadata;
 		this.action = action;
 		this.message = message;
 	}
