@@ -8,7 +8,7 @@ public class DefaultSessionIdGenerator implements ISessionIdGenerator {
 
 	@Override
 	public String generateSessionId(Channel channel) {
-		return UUID.randomUUID().toString();
+		return UUID.randomUUID().toString().replaceAll("-", "");
 	}
 
 }

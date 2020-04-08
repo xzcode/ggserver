@@ -7,12 +7,10 @@ import org.slf4j.LoggerFactory;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelOption;
-import io.netty.channel.pool.FixedChannelPool;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import xzcode.ggserver.core.client.config.GGClientConfig;
-import xzcode.ggserver.core.client.pool.DefaultChannelPoolHandler;
 import xzcode.ggserver.core.client.starter.IGGClientStarter;
 import xzcode.ggserver.core.common.constant.ProtocolTypeConstants;
 import xzcode.ggserver.core.common.future.GGNettyFuture;
@@ -42,8 +40,6 @@ public class DefaultClientStarter implements IGGClientStarter {
         //设置工作线程组
         boot.group(config.getWorkerGroup());
         
-        
-        
         if (logger.isDebugEnabled()) {
         	boot.handler(new LoggingHandler(LogLevel.INFO));				
 		}else {
@@ -66,22 +62,9 @@ public class DefaultClientStarter implements IGGClientStarter {
 			throw new RuntimeException("ChannelInitializer Not Set!");
 		}
         
-        
-        //boot.option(ChannelOption.SO_BACKLOG, config.getSoBacklog());  
         boot.option(ChannelOption.TCP_NODELAY, true);  
         
-      //判断是否开启通道池
-        if (config.isChannelPoolEnabled()) {
-        	
-        	boot.remoteAddress(config.getHost(), config.getPort());
-        	
-			if (config.getChannelPoolHandler() == null) {
-				config.setChannelPoolHandler(new DefaultChannelPoolHandler(this.config));
-			}
-			if (config.getChannelPool() == null) {
-				config.setChannelPool(new FixedChannelPool(boot, config.getChannelPoolHandler(), config.getChannelPoolMaxSize()));
-			}
-		}
+      
 	}
     
     

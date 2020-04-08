@@ -63,6 +63,7 @@ public class DefaultChannelSessionFactory implements ISessionFactory{
 		InetSocketAddress remoteAddress = (InetSocketAddress)channel.remoteAddress();
 		session.setHost(remoteAddress.getHostName());
 		session.setPort(remoteAddress.getPort());
+		session.setReady(true);
 		channel.attr(AttributeKey.valueOf(DefaultChannelAttributeKeys.SESSION)).set(session);
 		
 		config.getSessionManager().addSessionIfAbsent(session);

@@ -1,81 +1,42 @@
 package xzcode.ggserver.core.client.config;
 
 import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.pool.ChannelPool;
-import io.netty.channel.pool.ChannelPoolHandler;
-import xzcode.ggserver.core.client.session.ClientChannelSessionFactory;
 import xzcode.ggserver.core.common.config.GGConfig;
 import xzcode.ggserver.core.common.event.GGEvents;
 import xzcode.ggserver.core.common.prefebs.pingpong.GGPingPongClientEventListener;
 import xzcode.ggserver.core.common.prefebs.pingpong.GGPongResponseHandler;
 import xzcode.ggserver.core.common.prefebs.pingpong.model.GGPong;
+import xzcode.ggserver.core.common.prefebs.sessiongroup.GGSessionGroupRegisterRespHandler;
+import xzcode.ggserver.core.common.prefebs.sessiongroup.model.GGSessionGroupRegisterResp;
 
 /**
  * 客户端配置
  * 
- * @author zai
- * 2019-12-12 19:41:19
+ * @author zai 2019-12-12 19:41:19
  */
-public class GGClientConfig extends GGConfig{
-	
-	private boolean channelPoolEnabled;
-	
-	private ChannelPool channelPool;
-	
-	private ChannelPoolHandler channelPoolHandler;
-	
-	private int channelPoolMaxSize = 2;
-	
+public class GGClientConfig extends GGConfig {
+
 	private Bootstrap bootstrap = new Bootstrap();
-	
+
 	private String host;
-	
+
 	private int port;
-	
+
 	@Override
 	public void init() {
-		
-		this.sessionFactory = new ClientChannelSessionFactory(this);
 
 		super.init();
-		
+
+		if (isUseSessionGroup()) {
+			requestMessageManager.onMessage(GGSessionGroupRegisterResp.ACTION_ID,
+					new GGSessionGroupRegisterRespHandler(this));
+		}
+
 		if (isPingPongEnabled()) {
-			requestMessageManager.onMessage(GGPong.ACTION_ID, new GGPongResponseHandler(this));			
+			requestMessageManager.onMessage(GGPong.ACTION_ID, new GGPongResponseHandler(this));
 			eventManager.addEventListener(GGEvents.Idle.ALL, new GGPingPongClientEventListener(this));
 		}
-		
-	}
 
-	public boolean isChannelPoolEnabled() {
-		return channelPoolEnabled;
-	}
-
-	public void setChannelPoolEnabled(boolean channelPoolEnabled) {
-		this.channelPoolEnabled = channelPoolEnabled;
-	}
-
-	public ChannelPool getChannelPool() {
-		return channelPool;
-	}
-
-	public void setChannelPool(ChannelPool channelPool) {
-		this.channelPool = channelPool;
-	}
-
-	public ChannelPoolHandler getChannelPoolHandler() {
-		return channelPoolHandler;
-	}
-
-	public void setChannelPoolHandler(ChannelPoolHandler channelPoolHandler) {
-		this.channelPoolHandler = channelPoolHandler;
-	}
-
-	public int getChannelPoolMaxSize() {
-		return channelPoolMaxSize;
-	}
-
-	public void setChannelPoolMaxSize(int channelMaxConnections) {
-		this.channelPoolMaxSize = channelMaxConnections;
 	}
 
 	public Bootstrap getBootstrap() {
@@ -101,8 +62,5 @@ public class GGClientConfig extends GGConfig{
 	public void setPort(int port) {
 		this.port = port;
 	}
-	
-	
-	
-	
+
 }

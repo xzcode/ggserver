@@ -53,6 +53,11 @@ public class DefaultChannelSession extends AbstractSession<GGConfig> {
 		this.channel = channel;
 	}
 
+	@Override
+	public boolean isReady() {
+		return false;
+	}
+
 
 
 	

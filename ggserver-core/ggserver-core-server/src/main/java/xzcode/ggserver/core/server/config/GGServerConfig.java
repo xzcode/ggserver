@@ -9,6 +9,8 @@ import xzcode.ggserver.core.common.executor.thread.GGThreadFactory;
 import xzcode.ggserver.core.common.prefebs.pingpong.GGPingPongServerEventListener;
 import xzcode.ggserver.core.common.prefebs.pingpong.GGPingRequestHandler;
 import xzcode.ggserver.core.common.prefebs.pingpong.model.GGPing;
+import xzcode.ggserver.core.common.prefebs.sessiongroup.GGSessionGroupRegisterReqHandler;
+import xzcode.ggserver.core.common.prefebs.sessiongroup.model.GGSessionGroupRegisterReq;
 
 public class GGServerConfig extends GGConfig{
 	
@@ -27,11 +29,15 @@ public class GGServerConfig extends GGConfig{
 	public void init() {
 		
 		if (bossGroupThreadFactory == null) {
-			bossGroupThreadFactory = new GGThreadFactory("netty-boss-", false);
+			bossGroupThreadFactory = new GGThreadFactory("gg-boss-", false);
 		}
 		
 		if (bossGroup == null) {
 			bossGroup = new NioEventLoopGroup(getBossThreadSize(),bossGroupThreadFactory);				
+		}
+		
+		if (isUseSessionGroup()) {
+			requestMessageManager.onMessage(GGSessionGroupRegisterReq.ACTION_ID, new GGSessionGroupRegisterReqHandler(this));			
 		}
 		
 		

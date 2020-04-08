@@ -27,6 +27,7 @@ public abstract class AbstractSession<C extends GGConfig> implements GGSession {
 	protected String sessionId;//sessionid
 	protected String host;//远端地址
 	protected int port;//远端端口号
+	protected boolean ready;//是否已准备就绪
 	
 	public AbstractSession(String sessionId, C config) {
 		this.config = config;
@@ -121,5 +122,13 @@ public abstract class AbstractSession<C extends GGConfig> implements GGSession {
 		return this.sessionId;
 	}
 
+	@Override
+	public boolean isReady() {
+		return this.ready;
+	}
+	
+	public void setReady(boolean ready) {
+		this.ready = ready;
+	}
 
 }
