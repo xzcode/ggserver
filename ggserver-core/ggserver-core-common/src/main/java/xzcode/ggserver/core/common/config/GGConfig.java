@@ -20,16 +20,10 @@ import xzcode.ggserver.core.common.handler.pack.IReceivePackHandler;
 import xzcode.ggserver.core.common.handler.pack.impl.DefaultReceivePackHandler;
 import xzcode.ggserver.core.common.handler.serializer.ISerializer;
 import xzcode.ggserver.core.common.handler.serializer.factory.SerializerFactory;
-import xzcode.ggserver.core.common.message.meta.provider.IMetadataProvider;
-import xzcode.ggserver.core.common.message.meta.provider.VoidMetadataProvider;
-import xzcode.ggserver.core.common.message.meta.resolver.IMetadataResolver;
-import xzcode.ggserver.core.common.message.meta.resolver.VoidMetadataResolver;
 import xzcode.ggserver.core.common.message.request.manager.IRequestMessageManager;
 import xzcode.ggserver.core.common.message.request.manager.RequestMessageManager;
-import xzcode.ggserver.core.common.prefebs.pingpong.GGPingRequestHandler;
 import xzcode.ggserver.core.common.session.factory.DefaultChannelSessionFactory;
 import xzcode.ggserver.core.common.session.factory.ISessionFactory;
-import xzcode.ggserver.core.common.session.group.manager.GGSessionGroupManager;
 import xzcode.ggserver.core.common.session.id.DefaultSessionIdGenerator;
 import xzcode.ggserver.core.common.session.id.ISessionIdGenerator;
 import xzcode.ggserver.core.common.session.manager.DefaultSessionManager;
@@ -104,10 +98,6 @@ public class GGConfig {
 	protected IEventManager eventManager;
 	protected ISessionManager sessionManager;
 
-	protected IMetadataResolver<?> metadataResolver;
-
-	protected IMetadataProvider<?> metadataProvider;
-
 	protected NioEventLoopGroup workerGroup;
 
 
@@ -116,8 +106,6 @@ public class GGConfig {
 	protected ThreadFactory workerGroupThreadFactory;
 
 	protected boolean useSessionGroup = false;
-
-	protected GGSessionGroupManager sessionGroupManager;
 
 	public void init() {
 		requestMessageManager = new RequestMessageManager();
@@ -142,14 +130,6 @@ public class GGConfig {
 			encodeHandler = new DefaultEncodeHandler(this);
 		}
 
-		if (metadataResolver == null) {
-			metadataResolver = new VoidMetadataResolver();
-		}
-
-		if (metadataProvider == null) {
-			metadataProvider = new VoidMetadataProvider();
-		}
-
 		if (receivePackHandler == null) {
 			receivePackHandler = new DefaultReceivePackHandler(this);
 		}
@@ -167,11 +147,6 @@ public class GGConfig {
 		if (sessionIdGenerator == null) {
 			sessionIdGenerator = new DefaultSessionIdGenerator();
 		}
-
-		if (useSessionGroup) {
-			sessionGroupManager = new GGSessionGroupManager(this);
-		}
-
 
 		this.inited = true;
 	}
@@ -439,22 +414,6 @@ public class GGConfig {
 		this.soReuseaddr = soReuseaddr;
 	}
 
-	public IMetadataResolver<?> getMetadataResolver() {
-		return metadataResolver;
-	}
-
-	public void setMetadataResolver(IMetadataResolver<?> metadataResolver) {
-		this.metadataResolver = metadataResolver;
-	}
-
-	public IMetadataProvider<?> getMetadataProvider() {
-		return metadataProvider;
-	}
-
-	public void setMetadataProvider(IMetadataProvider<?> metadataProvider) {
-		this.metadataProvider = metadataProvider;
-	}
-
 	public ISessionIdGenerator getSessionIdGenerator() {
 		return sessionIdGenerator;
 	}
@@ -502,9 +461,5 @@ public class GGConfig {
 	
 	public void setUseSessionGroup(boolean useSessionGroup) {
 		this.useSessionGroup = useSessionGroup;
-	}
-	
-	public GGSessionGroupManager getSessionGroupManager() {
-		return sessionGroupManager;
 	}
 }

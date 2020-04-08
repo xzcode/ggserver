@@ -6,10 +6,10 @@ import xzcode.ggserver.core.common.config.GGConfig;
 import xzcode.ggserver.core.common.event.IEventManager;
 import xzcode.ggserver.core.common.executor.ITaskExecutor;
 import xzcode.ggserver.core.common.filter.IFilterManager;
+import xzcode.ggserver.core.common.future.GGFailedFuture;
 import xzcode.ggserver.core.common.future.GGNettyFuture;
 import xzcode.ggserver.core.common.future.IGGFuture;
 import xzcode.ggserver.core.common.handler.serializer.ISerializer;
-import xzcode.ggserver.core.common.message.meta.provider.IMetadataProvider;
 import xzcode.ggserver.core.common.session.GGSession;
 
 /**
@@ -60,12 +60,6 @@ public abstract class AbstractSession<C extends GGConfig> implements GGSession {
 	}
 
 	@Override
-	public IMetadataProvider<?> getMetadataProvider() {
-		return getConfig().getMetadataProvider();
-	}
-	
-
-	@Override
 	public IEventManager getEventManagerImpl() {
 		return getConfig().getEventManager();
 	}
@@ -77,7 +71,10 @@ public abstract class AbstractSession<C extends GGConfig> implements GGSession {
 	
 	@Override
 	public IGGFuture disconnect() {
-		return new GGNettyFuture(this.getChannel().close());
+		if (this.getChannel() != null) {
+			return new GGNettyFuture(this.getChannel().close());
+		}
+		return GGFailedFuture.DEFAULT_FAILED_FUTURE;
 	}
 	
 	@Override

@@ -13,7 +13,6 @@ import xzcode.ggserver.core.common.future.GGNettyFuture;
 import xzcode.ggserver.core.common.future.IGGFuture;
 import xzcode.ggserver.core.common.message.MessageData;
 import xzcode.ggserver.core.common.message.Pack;
-import xzcode.ggserver.core.common.message.meta.provider.IMetadataProvider;
 import xzcode.ggserver.core.common.message.model.IMessage;
 import xzcode.ggserver.core.common.session.GGSession;
 import xzcode.ggserver.core.common.utils.json.GGServerJsonUtil;
@@ -54,14 +53,6 @@ public interface ISessionSendMessageSupport extends IMakePackSupport {
 	 */
 	GGSession getSession();
 	
-	/**
-	 * 获取元数据提供者
-	 * 
-	 * @return
-	 * @author zai
-	 * 2019-12-12 16:10:38
-	 */
-	IMetadataProvider<?> getMetadataProvider();
 	
 	/**
 	 * 发送消息

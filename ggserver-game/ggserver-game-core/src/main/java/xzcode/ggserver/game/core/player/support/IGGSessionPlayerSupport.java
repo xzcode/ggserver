@@ -2,8 +2,8 @@ package xzcode.ggserver.game.core.player.support;
 
 import xzcode.ggserver.core.common.future.GGFailedFuture;
 import xzcode.ggserver.core.common.future.IGGFuture;
+import xzcode.ggserver.core.common.message.MessageData;
 import xzcode.ggserver.core.common.message.model.IMessage;
-import xzcode.ggserver.core.common.message.response.Response;
 import xzcode.ggserver.core.common.session.GGSession;
 
 /**
@@ -36,7 +36,7 @@ public interface IGGSessionPlayerSupport{
 		if (session == null) {
 			return null;
 		}
-		return session.send(new Response(getSession(), null, actionId, message));
+		return session.send(new MessageData<>(getSession(), actionId, message));
 	}
 	
 	/**
@@ -52,7 +52,7 @@ public interface IGGSessionPlayerSupport{
 		if (session == null) {
 			return GGFailedFuture.DEFAULT_FAILED_FUTURE;
 		}
-		return session.send(new Response(getSession(), null, message.getActionId(), message));
+		return session.send(new MessageData<>(getSession(), message.getActionId(), message));
 	}
 	
 	/**
@@ -65,7 +65,7 @@ public interface IGGSessionPlayerSupport{
 	default IGGFuture send(String actionId) {
 		GGSession session = getSession();
 		if (session != null) {
-			return session.send(new Response(session, null, actionId, null));			
+			return session.send(new MessageData<>(session, actionId, null));			
 		}
 		return GGFailedFuture.DEFAULT_FAILED_FUTURE;
 	}

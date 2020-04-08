@@ -6,8 +6,6 @@ import xzcode.ggserver.core.common.filter.IFilterManager;
 import xzcode.ggserver.core.common.handler.serializer.ISerializer;
 import xzcode.ggserver.core.common.message.MessageData;
 import xzcode.ggserver.core.common.message.Pack;
-import xzcode.ggserver.core.common.message.meta.IMetadata;
-import xzcode.ggserver.core.common.message.meta.resolver.IMetadataResolver;
 import xzcode.ggserver.core.common.message.request.handler.IRequestMessageHandlerInfo;
 import xzcode.ggserver.core.common.session.GGSession;
 import xzcode.ggserver.core.common.utils.logger.GGLoggerUtil;
