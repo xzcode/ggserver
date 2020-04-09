@@ -5,6 +5,7 @@ import xzcode.ggserver.core.common.event.IEventSupport;
 import xzcode.ggserver.core.common.executor.support.IExecutorSupport;
 import xzcode.ggserver.core.common.future.IGGFuture;
 import xzcode.ggserver.core.common.message.response.support.ISessionSendMessageSupport;
+import xzcode.ggserver.core.common.session.listener.ISessionDisconnectListener;
 
 /**
  * 统一会话接口
@@ -129,31 +130,6 @@ public interface GGSession extends ISessionSendMessageSupport, IExecutorSupport,
 	void setChannel(Channel channel);
 
 	/**
-	 * 是否超时
-	 *
-	 * @return
-	 * @author zai
-	 * 2020-04-08 11:27:46
-	 */
-	boolean isExpired();
-
-	/**
-	 * 刷新超时时间
-	 *
-	 * @author zai
-	 * 2020-04-08 11:27:55
-	 */
-	void updateExpire();
-	
-	/**
-	 * 立即进行会话超时
-	 *
-	 * @author zai
-	 * 2020-04-08 11:28:12
-	 */
-	void expire();
-	
-	/**
 	 * 会话是否已准备就绪
 	 *
 	 * @return
@@ -169,6 +145,15 @@ public interface GGSession extends ISessionSendMessageSupport, IExecutorSupport,
 	 * 2020-04-08 17:05:34
 	 */
 	void setReady(boolean ready);
+	
+	/**
+	 * 添加断开连接监听器
+	 *
+	 * @param listener
+	 * @author zai
+	 * 2020-04-09 10:21:24
+	 */
+	void addDisconnectListener(ISessionDisconnectListener listener);
 	
 
 }

@@ -69,10 +69,6 @@ public class RequestMessageTask implements Runnable{
 			MessageData<?> request = new MessageData<>(session, action, message);
 			request.setChannel(channel);
 			
-			if (session == null) {
-				session = config.getSessionFactory().getSession(channel, request);
-			}
-			
 			//反序列化后的消息过滤器
 			if (!messageFilterManager.doRequestFilters(request)) {
 				return;

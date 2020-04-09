@@ -23,7 +23,7 @@ import xzcode.ggserver.core.common.handler.serializer.factory.SerializerFactory;
 import xzcode.ggserver.core.common.message.request.manager.IRequestMessageManager;
 import xzcode.ggserver.core.common.message.request.manager.RequestMessageManager;
 import xzcode.ggserver.core.common.session.factory.DefaultChannelSessionFactory;
-import xzcode.ggserver.core.common.session.factory.ISessionFactory;
+import xzcode.ggserver.core.common.session.factory.ChannelSessionFactory;
 import xzcode.ggserver.core.common.session.id.DefaultSessionIdGenerator;
 import xzcode.ggserver.core.common.session.id.ISessionIdGenerator;
 import xzcode.ggserver.core.common.session.manager.DefaultSessionManager;
@@ -83,7 +83,7 @@ public class GGConfig {
 
 	private int pingPongMaxLoseTimes = 3;// 最大心跳失败允许次数
 
-	protected ISessionFactory sessionFactory;
+	protected ChannelSessionFactory sessionFactory;
 	protected ISessionIdGenerator sessionIdGenerator;
 
 	protected ISerializer serializer = SerializerFactory.geSerializer(serializerType);
@@ -390,11 +390,11 @@ public class GGConfig {
 		this.inited = inited;
 	}
 
-	public ISessionFactory getSessionFactory() {
+	public ChannelSessionFactory getSessionFactory() {
 		return sessionFactory;
 	}
 
-	public void setSessionFactory(ISessionFactory sessionFactory) {
+	public void setSessionFactory(ChannelSessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
 	}
 

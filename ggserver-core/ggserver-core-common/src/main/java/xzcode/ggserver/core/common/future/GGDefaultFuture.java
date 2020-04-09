@@ -23,6 +23,8 @@ public class GGDefaultFuture implements IGGFuture {
 	private boolean done;
 
 	private boolean cancel;
+	
+	private GGSession session;
 
 	@Override
 	public void addListener(IGGFutureListener<IGGFuture> listener) {
@@ -39,6 +41,10 @@ public class GGDefaultFuture implements IGGFuture {
 	@Override
 	public boolean isSuccess() {
 		return this.success;
+	}
+	
+	public void setSuccess(boolean success) {
+		this.success = success;
 	}
 
 	@Override
@@ -83,15 +89,19 @@ public class GGDefaultFuture implements IGGFuture {
 
 	@Override
 	public GGSession getSession() {
-		return null;
+		return session;
 	}
 
+	public void setSession(GGSession session) {
+		this.session = session;
+	}
+	
 	public void setDone(boolean done) {
 		if (this.done) {
 			return;
 		}
 		this.done = done;
-		if (this.done) {
+		if (this.done && this.listeners.size() > 0) {
 			synchronized (this) {
 				triggerListeners();
 			}

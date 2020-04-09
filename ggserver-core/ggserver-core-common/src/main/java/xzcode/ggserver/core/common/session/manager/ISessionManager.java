@@ -48,7 +48,7 @@ public interface ISessionManager{
 	 * @author zai
 	 * 2019-11-24 21:49:51
 	 */
-	void clearAllSession();
+	void disconnectAllSession();
 	
 	
 	/**
