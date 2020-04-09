@@ -5,7 +5,7 @@ import io.netty.util.AttributeKey;
 import xzcode.ggserver.core.common.channel.DefaultChannelAttributeKeys;
 import xzcode.ggserver.core.common.config.GGConfig;
 import xzcode.ggserver.core.common.message.MessageData;
-import xzcode.ggserver.core.common.message.request.action.IRequestMessageHandler;
+import xzcode.ggserver.core.common.message.request.action.MessageDataHandler;
 import xzcode.ggserver.core.common.prefebs.pingpong.model.GGPingPongInfo;
 import xzcode.ggserver.core.common.prefebs.pingpong.model.GGPong;
 
@@ -15,7 +15,7 @@ import xzcode.ggserver.core.common.prefebs.pingpong.model.GGPong;
  * @author zai
  * 2020-01-16 17:04:11
  */
-public class GGPongResponseHandler implements IRequestMessageHandler<GGPong>{
+public class GGPongResponseHandler implements MessageDataHandler<GGPong>{
 	
 	protected GGConfig config;
 	

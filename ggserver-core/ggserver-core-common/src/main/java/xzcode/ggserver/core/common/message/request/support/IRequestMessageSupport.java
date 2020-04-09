@@ -4,7 +4,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Map;
 
-import xzcode.ggserver.core.common.message.request.action.IRequestMessageHandler;
+import xzcode.ggserver.core.common.message.request.action.MessageDataHandler;
 import xzcode.ggserver.core.common.message.request.handler.RequestMessagerHandlerInfo;
 import xzcode.ggserver.core.common.message.request.manager.IRequestMessageManager;
 
@@ -37,7 +37,7 @@ public interface IRequestMessageSupport {
 	 * 2019-01-02 09:41:59
 	 * @param <T>
 	 */
-	default <T> void onMessage(String actionId, IRequestMessageHandler<T> messageAcion) {
+	default <T> void onMessage(String actionId, MessageDataHandler<T> messageAcion) {
 		getRequestMessageManager().onMessage(actionId, messageAcion);
 	}
 

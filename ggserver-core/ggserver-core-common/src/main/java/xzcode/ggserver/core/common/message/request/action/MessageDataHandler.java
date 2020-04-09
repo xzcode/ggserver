@@ -10,7 +10,7 @@ import xzcode.ggserver.core.common.message.MessageData;
  * @author zai
  * 2019-01-01 22:09:24
  */
-public interface IRequestMessageHandler<T> {
+public interface MessageDataHandler<T> {
 
 	/**
 	 * 处理消息
@@ -20,6 +20,6 @@ public interface IRequestMessageHandler<T> {
 	 * @author zai
 	 * 2019-11-24 22:35:17
 	 */
-	void handle(MessageData<T> request);
+	void handle(MessageData<T> messageData);
 	
 }

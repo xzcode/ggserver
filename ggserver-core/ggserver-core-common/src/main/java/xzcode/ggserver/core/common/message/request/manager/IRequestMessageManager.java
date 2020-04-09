@@ -5,7 +5,7 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 import xzcode.ggserver.core.common.message.MessageData;
-import xzcode.ggserver.core.common.message.request.action.IRequestMessageHandler;
+import xzcode.ggserver.core.common.message.request.action.MessageDataHandler;
 import xzcode.ggserver.core.common.message.request.handler.IRequestMessageHandlerInfo;
 import xzcode.ggserver.core.common.message.request.handler.RequestMessagerHandlerInfo;
 
@@ -70,7 +70,7 @@ public interface IRequestMessageManager {
 	 * 2019-01-02 09:41:59
 	 * @param <T>
 	 */
-	default <T> void onMessage(String actionId, IRequestMessageHandler<T> messageAcion) {
+	default <T> void onMessage(String actionId, MessageDataHandler<T> messageAcion) {
 		
 		RequestMessagerHandlerInfo handler = new RequestMessagerHandlerInfo();
 		handler.setHandler(messageAcion);
@@ -93,8 +93,8 @@ public interface IRequestMessageManager {
 			msgClass = (Class<?>) superParameterizedType.getActualTypeArguments()[0];
 		}else {
 			Type type = genericInterfaces[0];
-			if (type == IRequestMessageHandler.class) {
-				msgClass = IRequestMessageHandler.class;
+			if (type == MessageDataHandler.class) {
+				msgClass = MessageDataHandler.class;
 			}else {
 				msgClass = (Class<?>) ((ParameterizedType)genericInterfaces[0]).getActualTypeArguments()[0];
 			}

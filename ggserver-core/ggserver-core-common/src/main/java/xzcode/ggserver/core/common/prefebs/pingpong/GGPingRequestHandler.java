@@ -8,7 +8,7 @@ import xzcode.ggserver.core.common.channel.DefaultChannelAttributeKeys;
 import xzcode.ggserver.core.common.config.GGConfig;
 import xzcode.ggserver.core.common.handler.serializer.ISerializer;
 import xzcode.ggserver.core.common.message.MessageData;
-import xzcode.ggserver.core.common.message.request.action.IRequestMessageHandler;
+import xzcode.ggserver.core.common.message.request.action.MessageDataHandler;
 import xzcode.ggserver.core.common.message.response.support.IMakePackSupport;
 import xzcode.ggserver.core.common.prefebs.pingpong.model.GGPing;
 import xzcode.ggserver.core.common.prefebs.pingpong.model.GGPingPongInfo;
@@ -20,7 +20,7 @@ import xzcode.ggserver.core.common.prefebs.pingpong.model.GGPong;
  * @author zai
  * 2020-01-16 17:04:11
  */
-public class GGPingRequestHandler implements IRequestMessageHandler<GGPing> , IMakePackSupport{
+public class GGPingRequestHandler implements MessageDataHandler<GGPing> , IMakePackSupport{
 	
 	protected GGConfig config;
 	

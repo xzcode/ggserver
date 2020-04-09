@@ -11,13 +11,12 @@ import xzcode.ggserver.core.common.session.GGSession;
 import xzcode.ggserver.core.common.utils.logger.GGLoggerUtil;
 
 /**
- * 请求消息任务
- * 
- * 
+ * 消息数据任务
+ *
  * @author zai
- * 2019-02-09 14:26:10
+ * 2020-04-09 16:02:12
  */
-public class RequestMessageTask implements Runnable{
+public class MessageDataTask implements Runnable{
 	
 	/**
 	 * 配置
@@ -30,11 +29,11 @@ public class RequestMessageTask implements Runnable{
 	private Pack pack;
 	
 	
-	public RequestMessageTask() {
+	public MessageDataTask() {
 		
 	}
 
-	public RequestMessageTask(Pack pack, GGConfig config) {
+	public MessageDataTask(Pack pack, GGConfig config) {
 		this.pack = pack;
 		this.config = config;
 	}

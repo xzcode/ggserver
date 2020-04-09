@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import xzcode.ggserver.core.common.config.GGConfig;
 import xzcode.ggserver.core.common.handler.pack.IReceivePackHandler;
 import xzcode.ggserver.core.common.message.Pack;
-import xzcode.ggserver.core.common.message.request.task.RequestMessageTask;
+import xzcode.ggserver.core.common.message.request.task.MessageDataTask;
 
 public class DefaultReceivePackHandler implements IReceivePackHandler {
 	
@@ -21,7 +21,7 @@ public class DefaultReceivePackHandler implements IReceivePackHandler {
 
 	@Override
 	public void handle(Pack pack) {
-		pack.getChannel().eventLoop().submit(new RequestMessageTask(pack, config));
+		pack.getChannel().eventLoop().submit(new MessageDataTask(pack, config));
 	}
 
 

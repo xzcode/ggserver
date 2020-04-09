@@ -1,7 +1,7 @@
 package xzcode.ggserver.core.common.message.request.handler;
 
 import xzcode.ggserver.core.common.message.MessageData;
-import xzcode.ggserver.core.common.message.request.action.IRequestMessageHandler;
+import xzcode.ggserver.core.common.message.request.action.MessageDataHandler;
 
 /**
  * 请求消息调用模型
@@ -27,7 +27,7 @@ public class RequestMessagerHandlerInfo implements IRequestMessageHandlerInfo{
 	/**
 	 * 消息调用对象
 	 */
-	private IRequestMessageHandler<Object> messageAcion;
+	private MessageDataHandler<Object> messageAcion;
 
 
 
@@ -57,14 +57,14 @@ public class RequestMessagerHandlerInfo implements IRequestMessageHandlerInfo{
 	}
 
 
-	public IRequestMessageHandler<?> getHandler() {
+	public MessageDataHandler<?> getHandler() {
 		return messageAcion;
 	}
 
 
 	@SuppressWarnings("unchecked")
-	public void setHandler(IRequestMessageHandler<?> messageAcion) {
-		this.messageAcion =  (IRequestMessageHandler<Object>) messageAcion;
+	public void setHandler(MessageDataHandler<?> messageAcion) {
+		this.messageAcion =  (MessageDataHandler<Object>) messageAcion;
 	}
 
 
