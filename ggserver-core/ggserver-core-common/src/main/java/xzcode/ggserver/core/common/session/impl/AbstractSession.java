@@ -23,31 +23,37 @@ import xzcode.ggserver.core.common.utils.logger.GGLoggerUtil;
  * @author zai 2019-10-02 22:48:34
  */
 public abstract class AbstractSession<C extends GGConfig> implements GGSession {
+	
 
 	// 具体的配置
 	protected C config;
-	
+
 	// sessionid
 	protected String sessionId;
-	
+
 	// 远端地址
 	protected String host;
 
 	// 远端端口号
 	protected int port;
-	
+
 	// 是否已准备就绪
 	protected boolean ready;
-	
-	//断开连接监听器
+
+	// 超时时间
+	protected long expireMs;
+
+	// 是否已超时
+	protected boolean expired = false;
+
+	// 断开连接监听器
 	protected List<ISessionDisconnectListener> disconnectListeners = new CopyOnWriteArrayList<ISessionDisconnectListener>();
 
 	public AbstractSession(String sessionId, C config) {
 		this.config = config;
 		this.sessionId = sessionId;
+		updateExpire();
 	}
-	
-	
 
 	@Override
 	public void addDisconnectListener(ISessionDisconnectListener listener) {
@@ -57,8 +63,7 @@ public abstract class AbstractSession<C extends GGConfig> implements GGSession {
 	/**
 	 * 触发断开连接监听器
 	 *
-	 * @author zai
-	 * 2020-04-09 10:39:37
+	 * @author zai 2020-04-09 10:39:37
 	 */
 	public void triggerDisconnectListeners() {
 		if (this.disconnectListeners.size() > 0) {
@@ -148,5 +153,32 @@ public abstract class AbstractSession<C extends GGConfig> implements GGSession {
 	public void setReady(boolean ready) {
 		this.ready = ready;
 	}
+
+	public long getExpireMs() {
+		return expireMs;
+	}
+
+	public void setExpireMs(long expireMs) {
+		this.expireMs = expireMs;
+	}
+
+	public boolean isExpired() {
+		return expired;
+	}
+
+	public void setExpired(boolean expired) {
+		this.expired = expired;
+	}
+
+	public String getSessionId() {
+		return sessionId;
+	}
+
+	@Override
+	public void updateExpire() {
+		this.expireMs = System.currentTimeMillis() + config.getSessionExpireMs();
+	}
+	
+	
 
 }

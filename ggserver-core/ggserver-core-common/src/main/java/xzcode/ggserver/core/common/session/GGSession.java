@@ -155,5 +155,22 @@ public interface GGSession extends ISessionSendMessageSupport, IExecutorSupport,
 	 */
 	void addDisconnectListener(ISessionDisconnectListener listener);
 	
+	/**
+	 * 是否超时
+	 *
+	 * @return
+	 * @author zai
+	 * 2020-04-10 15:16:49
+	 */
+	boolean isExpired();
+
+	/**
+	 * 更新超时
+	 *
+	 * @author zai
+	 * 2020-04-10 15:17:12
+	 */
+	void updateExpire();
+	
 
 }
