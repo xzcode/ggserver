@@ -38,7 +38,7 @@ public class ClientChannelSessionFactory extends DefaultChannelSessionFactory{
 		//初始化session
 		ClientChannelSession session = new ClientChannelSession(channel, config.getSessionIdGenerator().generateSessionId(channel), config);
 		InetSocketAddress remoteAddress = (InetSocketAddress)channel.remoteAddress();
-		session.setHost(remoteAddress.getHostName());
+		session.setHost(remoteAddress.getHostString());
 		session.setPort(remoteAddress.getPort());
 		channel.attr(AttributeKey.valueOf(DefaultChannelAttributeKeys.SESSION)).set(session);
 				
