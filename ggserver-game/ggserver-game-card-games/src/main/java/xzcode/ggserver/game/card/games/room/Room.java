@@ -92,10 +92,8 @@ H extends House<P, R, H>
 	public P removePlayer(P player) {
 		P remove = players.remove(player.getPlayerNo());
 		if (remove != null) {
-			if (player != null && playerLeaveListeners.size() > 0) {
-				for (IPlayerLeaveListener<P> listener : playerLeaveListeners) {
-					listener.leave(player);
-				}
+			for (IPlayerLeaveListener<P> listener : playerLeaveListeners) {
+				listener.leave(player);
 			}
 		}
 		return remove;
@@ -110,11 +108,9 @@ H extends House<P, R, H>
 	public void addPlayer(P player) {
 		if (player != null) {
 			this.players.put(player.getPlayerNo(), player);
-			if (playerLeaveListeners.size() > 0) {
 				for (IPlayerEnterListener<P> listener : playerEnterListeners) {
 					listener.enter(player);
 				}
-			}
 		}
 	}
 	/**
