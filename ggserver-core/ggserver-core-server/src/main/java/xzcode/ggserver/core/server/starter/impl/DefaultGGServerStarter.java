@@ -89,7 +89,7 @@ public class DefaultGGServerStarter implements IGGServerStarter {
             future.addListener((f) -> {
             	String logoString = getLogoString();
             	if (f.isSuccess()) {
-            		GGLoggerUtil.getLogger().warn("{}\n{} started SUCCESSFULLY on port {}!\n", logoString, config.getServerName(), config.getPort());
+            		GGLoggerUtil.getLogger().warn("{}\n{} started successfully on port {}!\n", logoString, config.getServerName(), config.getPort());
 				}else {
 					GGLoggerUtil.getLogger().warn("{}\n{} FAILED to start on port {}!\nError:{}\n", logoString, config.getServerName(), config.getPort(),f.cause());
 					

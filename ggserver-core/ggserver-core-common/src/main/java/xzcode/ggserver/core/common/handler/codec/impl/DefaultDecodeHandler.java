@@ -14,6 +14,7 @@ import xzcode.ggserver.core.common.handler.codec.IDecodeHandler;
 import xzcode.ggserver.core.common.message.Pack;
 import xzcode.ggserver.core.common.session.GGSession;
 import xzcode.ggserver.core.common.utils.logger.GGLoggerUtil;
+import xzcode.ggserver.core.common.utils.logger.PackLogger;
 
 /**
  * 自定协议解析
@@ -95,10 +96,12 @@ public class DefaultDecodeHandler implements IDecodeHandler {
 		// 接收包处理
 		config.getReceivePackHandler().handle(pack);
 		
-		
-		if(GGLoggerUtil.getLogger().isInfoEnabled()){
-			GGLoggerUtil.logPack(pack, Pack.OperType.REQUEST, ctx.channel(), config.isPrintPingPongInfo());
-        }
+		if (this.config.isEnablePackLogger()) {
+			pack.setChannel(channel);
+			pack.setOperType(Pack.OperType.REQUEST);
+			PackLogger packLogger = this.config.getPackLogger();
+			packLogger.logPack(pack);
+		}
 
 	}
 

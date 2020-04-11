@@ -16,18 +16,13 @@ public class Pack {
 	/* 会话 */
 	private GGSession session;
 	
-	/* 元数据 */
-	private byte[] metadata;
-
 	/* 消息标识 */
 	private byte[] action;
 
 	/* 消息体 */
 	private byte[] message;
 	
-	/**
-	 * 协议类型
-	 */
+	/* 协议类型 */
 	private String protocolType;
 	
 	/* 通道 */
@@ -37,6 +32,12 @@ public class Pack {
 	 * 缓存转换后的actionid
 	 */
 	private String cachedActionId;
+	
+	/* 包操作类型*/
+	private int operType;
+	
+	/* 包总长度 */
+	private int totalLength;
 	
 
 	public Pack(byte[] action, byte[] message) {
@@ -96,14 +97,7 @@ public class Pack {
 	public void setMessage(byte[] message) {
 		this.message = message;
 	}
-	public byte[] getMetadata() {
-		return metadata;
-	}
-	public void setMetadata(byte[] metadata) {
-		this.metadata = metadata;
-	}
-
-
+	
 	public GGSession getSession() {
 		return session;
 	}
@@ -127,6 +121,22 @@ public class Pack {
 	
 	public void setChannel(Channel channel) {
 		this.channel = channel;
+	}
+	
+	public void setOperType(int operType) {
+		this.operType = operType;
+	}
+	
+	public int getOperType() {
+		return operType;
+	}
+	
+	public void setTotalLength(int totalLength) {
+		this.totalLength = totalLength;
+	}
+	
+	public int getTotalLength() {
+		return totalLength;
 	}
 
 }

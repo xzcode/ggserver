@@ -6,9 +6,9 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import xzcode.ggserver.core.common.config.GGConfig;
 import xzcode.ggserver.core.common.event.GGEvents;
 import xzcode.ggserver.core.common.executor.thread.GGThreadFactory;
-import xzcode.ggserver.core.common.prefebs.pingpong.GGPingPongServerEventListener;
-import xzcode.ggserver.core.common.prefebs.pingpong.GGPingRequestHandler;
-import xzcode.ggserver.core.common.prefebs.pingpong.model.GGPing;
+import xzcode.ggserver.core.common.message.pingpong.GGPingPongServerEventListener;
+import xzcode.ggserver.core.common.message.pingpong.GGPingRequestHandler;
+import xzcode.ggserver.core.common.message.pingpong.model.GGPing;
 
 public class GGServerConfig extends GGConfig{
 	

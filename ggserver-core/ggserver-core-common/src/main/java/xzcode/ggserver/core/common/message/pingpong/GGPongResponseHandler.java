@@ -1,13 +1,13 @@
-package xzcode.ggserver.core.common.prefebs.pingpong;
+package xzcode.ggserver.core.common.message.pingpong;
 
 import io.netty.channel.Channel;
 import io.netty.util.AttributeKey;
 import xzcode.ggserver.core.common.channel.DefaultChannelAttributeKeys;
 import xzcode.ggserver.core.common.config.GGConfig;
 import xzcode.ggserver.core.common.message.MessageData;
+import xzcode.ggserver.core.common.message.pingpong.model.GGPingPongInfo;
+import xzcode.ggserver.core.common.message.pingpong.model.GGPong;
 import xzcode.ggserver.core.common.message.request.action.MessageDataHandler;
-import xzcode.ggserver.core.common.prefebs.pingpong.model.GGPingPongInfo;
-import xzcode.ggserver.core.common.prefebs.pingpong.model.GGPong;
 
 /**
  * 内置pingpong处理器

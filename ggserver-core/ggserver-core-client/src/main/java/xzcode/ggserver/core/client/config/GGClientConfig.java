@@ -3,9 +3,9 @@ package xzcode.ggserver.core.client.config;
 import io.netty.bootstrap.Bootstrap;
 import xzcode.ggserver.core.common.config.GGConfig;
 import xzcode.ggserver.core.common.event.GGEvents;
-import xzcode.ggserver.core.common.prefebs.pingpong.GGPingPongClientEventListener;
-import xzcode.ggserver.core.common.prefebs.pingpong.GGPongResponseHandler;
-import xzcode.ggserver.core.common.prefebs.pingpong.model.GGPong;
+import xzcode.ggserver.core.common.message.pingpong.GGPingPongClientEventListener;
+import xzcode.ggserver.core.common.message.pingpong.GGPongResponseHandler;
+import xzcode.ggserver.core.common.message.pingpong.model.GGPong;
 
 /**
  * 客户端配置

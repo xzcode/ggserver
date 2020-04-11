@@ -1,4 +1,4 @@
-package xzcode.ggserver.core.common.prefebs.pingpong;
+package xzcode.ggserver.core.common.message.pingpong;
 
 import java.nio.charset.Charset;
 
@@ -10,9 +10,9 @@ import xzcode.ggserver.core.common.event.IEventListener;
 import xzcode.ggserver.core.common.event.model.EventData;
 import xzcode.ggserver.core.common.handler.serializer.ISerializer;
 import xzcode.ggserver.core.common.message.MessageData;
+import xzcode.ggserver.core.common.message.pingpong.model.GGPing;
+import xzcode.ggserver.core.common.message.pingpong.model.GGPingPongInfo;
 import xzcode.ggserver.core.common.message.response.support.IMakePackSupport;
-import xzcode.ggserver.core.common.prefebs.pingpong.model.GGPing;
-import xzcode.ggserver.core.common.prefebs.pingpong.model.GGPingPongInfo;
 
 
 public class GGPingPongClientEventListener implements IEventListener<Void>, IMakePackSupport{

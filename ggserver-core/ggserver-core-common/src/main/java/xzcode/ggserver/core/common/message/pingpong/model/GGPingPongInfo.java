@@ -1,4 +1,4 @@
-package xzcode.ggserver.core.common.prefebs.pingpong.model;
+package xzcode.ggserver.core.common.message.pingpong.model;
 
 /**
  * 默认session实现

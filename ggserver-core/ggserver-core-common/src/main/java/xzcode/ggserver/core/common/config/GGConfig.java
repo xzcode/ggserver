@@ -20,14 +20,17 @@ import xzcode.ggserver.core.common.handler.pack.IReceivePackHandler;
 import xzcode.ggserver.core.common.handler.pack.impl.DefaultReceivePackHandler;
 import xzcode.ggserver.core.common.handler.serializer.ISerializer;
 import xzcode.ggserver.core.common.handler.serializer.factory.SerializerFactory;
+import xzcode.ggserver.core.common.message.pingpong.model.GGPing;
+import xzcode.ggserver.core.common.message.pingpong.model.GGPong;
 import xzcode.ggserver.core.common.message.request.manager.IRequestMessageManager;
 import xzcode.ggserver.core.common.message.request.manager.RequestMessageManager;
-import xzcode.ggserver.core.common.session.factory.DefaultChannelSessionFactory;
 import xzcode.ggserver.core.common.session.factory.ChannelSessionFactory;
+import xzcode.ggserver.core.common.session.factory.DefaultChannelSessionFactory;
 import xzcode.ggserver.core.common.session.id.DefaultSessionIdGenerator;
 import xzcode.ggserver.core.common.session.id.ISessionIdGenerator;
 import xzcode.ggserver.core.common.session.manager.DefaultSessionManager;
 import xzcode.ggserver.core.common.session.manager.ISessionManager;
+import xzcode.ggserver.core.common.utils.logger.PackLogger;
 
 /**
  * GGServer配置类
@@ -106,6 +109,10 @@ public class GGConfig {
 	protected ThreadFactory workerGroupThreadFactory;
 
 	protected boolean useSessionGroup = false;
+	
+	protected boolean enablePackLogger;
+	
+	protected PackLogger packLogger = new PackLogger(this);
 
 	public void init() {
 		requestMessageManager = new RequestMessageManager();
@@ -146,6 +153,15 @@ public class GGConfig {
 		}
 		if (sessionIdGenerator == null) {
 			sessionIdGenerator = new DefaultSessionIdGenerator();
+		}
+		
+		if (isPingPongEnabled()) {
+			if (!isPrintPingPongInfo()) {
+				this.packLogger.addPackLogFilter(pack -> {
+					String actionString = pack.getActionString();
+					return !(actionString.equals(GGPing.ACTION_ID) || actionString.equals(GGPong.ACTION_ID));
+				});
+			}
 		}
 
 		this.inited = true;
@@ -462,4 +478,22 @@ public class GGConfig {
 	public void setUseSessionGroup(boolean useSessionGroup) {
 		this.useSessionGroup = useSessionGroup;
 	}
+
+	public boolean isEnablePackLogger() {
+		return enablePackLogger;
+	}
+
+	public void setEnablePackLogger(boolean enablePackLogger) {
+		this.enablePackLogger = enablePackLogger;
+	}
+
+	public PackLogger getPackLogger() {
+		return packLogger;
+	}
+
+	public void setPackLogger(PackLogger packLogger) {
+		this.packLogger = packLogger;
+	}
+	
+	
 }
