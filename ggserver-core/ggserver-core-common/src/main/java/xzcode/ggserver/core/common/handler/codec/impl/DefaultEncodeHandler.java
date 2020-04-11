@@ -74,6 +74,7 @@ public class DefaultEncodeHandler implements IEncodeHandler {
 		if (this.config.isEnablePackLogger()) {
 			pack.setChannel(channel);
 			pack.setOperType(Pack.OperType.RESPONSE);
+			pack.setProtocolType(protocolType);
 			PackLogger packLogger = this.config.getPackLogger();
 			packLogger.logPack(pack);
 		}

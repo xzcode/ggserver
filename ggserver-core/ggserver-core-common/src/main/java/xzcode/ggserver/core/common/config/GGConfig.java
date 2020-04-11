@@ -110,7 +110,7 @@ public class GGConfig {
 
 	protected boolean useSessionGroup = false;
 	
-	protected boolean enablePackLogger;
+	protected boolean enablePackLogger = true;
 	
 	protected PackLogger packLogger = new PackLogger(this);
 
