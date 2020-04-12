@@ -54,7 +54,7 @@ public class DefaultChannelSession extends AbstractSession<GGConfig> {
 
 	@Override
 	public boolean isReady() {
-		return false;
+		return this.ready;
 	}
 	
 }

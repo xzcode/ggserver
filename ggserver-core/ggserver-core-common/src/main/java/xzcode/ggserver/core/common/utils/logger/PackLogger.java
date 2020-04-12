@@ -68,7 +68,9 @@ public class PackLogger {
 		
 		if (this.filters.size() > 0) {
 			for (PackLogFilter filter : filters) {
-				filter.filter(pack);
+				if (!filter.filter(pack)) {
+					return;
+				}
 			}
 		}
 		
