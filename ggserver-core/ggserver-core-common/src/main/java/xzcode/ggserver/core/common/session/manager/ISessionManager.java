@@ -59,5 +59,16 @@ public interface ISessionManager{
 	 * 2019-11-16 11:19:20
 	 */
 	void eachSession(IEachData<GGSession> eachData);
+	
+	
+	
+	/**
+	 * 随机获取一个session
+	 *
+	 * @return
+	 * @author zai
+	 * 2020-04-13 15:42:46
+	 */
+	GGSession randomGetSession();
 
 }

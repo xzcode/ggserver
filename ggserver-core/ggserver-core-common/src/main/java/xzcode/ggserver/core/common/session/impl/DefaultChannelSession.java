@@ -57,4 +57,9 @@ public class DefaultChannelSession extends AbstractSession<GGConfig> {
 		return this.ready;
 	}
 	
+	@Override
+		public String getGroupId() {
+			return null;
+		}
+	
 }

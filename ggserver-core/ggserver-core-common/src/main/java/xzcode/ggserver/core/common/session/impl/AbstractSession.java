@@ -45,6 +45,9 @@ public abstract class AbstractSession<C extends GGConfig> implements GGSession {
 
 	// 是否已超时
 	protected boolean expired = false;
+	
+	//会话组id
+	protected String groupId;
 
 	// 断开连接监听器
 	protected List<ISessionDisconnectListener> disconnectListeners = new CopyOnWriteArrayList<ISessionDisconnectListener>();
@@ -114,7 +117,11 @@ public abstract class AbstractSession<C extends GGConfig> implements GGSession {
 	@Override
 	public IGGFuture disconnect() {
 		if (this.getChannel() != null) {
-			return new GGNettyFuture(this.getChannel().close());
+			GGNettyFuture future = new GGNettyFuture(this.getChannel().close());
+			future.addListener(f -> {
+				triggerDisconnectListeners();
+			});
+			return future;
 		}
 		return GGFailedFuture.DEFAULT_FAILED_FUTURE;
 	}
@@ -177,6 +184,18 @@ public abstract class AbstractSession<C extends GGConfig> implements GGSession {
 	@Override
 	public void updateExpire() {
 		this.expireMs = System.currentTimeMillis() + config.getSessionExpireMs();
+	}
+
+	@Override
+	public void checkExpire() {
+		if (this.expireMs < System.currentTimeMillis()) {
+			this.setExpired(true);
+		}
+	}
+	
+	@Override
+	public String getGroupId() {
+		return this.groupId;
 	}
 	
 	

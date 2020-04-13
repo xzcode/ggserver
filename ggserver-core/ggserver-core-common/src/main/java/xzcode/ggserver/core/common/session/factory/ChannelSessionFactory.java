@@ -1,8 +1,6 @@
 package xzcode.ggserver.core.common.session.factory;
 
 import io.netty.channel.Channel;
-import xzcode.ggserver.core.common.message.MessageData;
-import xzcode.ggserver.core.common.message.Pack;
 import xzcode.ggserver.core.common.session.GGSession;
 
 /**

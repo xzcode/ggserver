@@ -55,7 +55,6 @@ public class MessageDataTask implements Runnable{
 			
 			action = new String(pack.getAction(), config.getCharset());
 			
-			
 			if (pack.getMessage() != null) {
 				IRequestMessageHandlerInfo messageHandler = config.getRequestMessageManager().getMessageHandler(action);
 				if (messageHandler != null) {

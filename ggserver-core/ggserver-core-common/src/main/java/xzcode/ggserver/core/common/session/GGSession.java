@@ -172,5 +172,21 @@ public interface GGSession extends ISessionSendMessageSupport, IExecutorSupport,
 	 */
 	void updateExpire();
 	
+	/**
+	 * 检查是否超时
+	 *
+	 * @author zai
+	 * 2020-04-13 10:23:22
+	 */
+	void checkExpire();
+	
+	/**
+	 * 获取会话组id
+	 *
+	 * @return
+	 * @author zai
+	 * 2020-04-13 18:22:12
+	 */
+	String getGroupId();
 
 }

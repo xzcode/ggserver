@@ -2,9 +2,12 @@ package xzcode.ggserver.core.common.session.manager;
 
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ThreadLocalRandom;
 
 import xzcode.ggserver.core.common.config.GGConfig;
+import xzcode.ggserver.core.common.executor.ITaskExecutor;
 import xzcode.ggserver.core.common.session.GGSession;
 
 /**
@@ -22,6 +25,28 @@ public class DefaultSessionManager implements ISessionManager {
 	
 	public DefaultSessionManager(GGConfig config) {
 		this.config = config;
+		
+		this.startSessionExpireCheckTask();
+	}
+	
+	
+	/**
+	 * 启动检查session过期任务
+	 *
+	 * @author zai
+	 * 2020-04-13 10:25:24
+	 */
+	protected void startSessionExpireCheckTask() {
+		ITaskExecutor taskExecutor = this.config.getTaskExecutor();
+		taskExecutor.schedule(10 * 1000L, () -> {
+			for (Entry<String, GGSession> entry : sessionMap.entrySet()) {
+				GGSession session = entry.getValue();
+				session.checkExpire();
+				if (session.isExpired()) {
+					session.disconnect();
+				}
+			}
+		});
 	}
 	
 	
@@ -43,6 +68,9 @@ public class DefaultSessionManager implements ISessionManager {
 	public GGSession getSession(String sessionId) {
 		if (sessionId != null) {
 			GGSession session = sessionMap.get(sessionId);
+			if (session != null) {
+				session.updateExpire();
+			}
 			return session;
 		}
 		return null;
@@ -74,6 +102,17 @@ public class DefaultSessionManager implements ISessionManager {
 				return true;
 			});
 		}
+	}
+
+
+	@Override
+	public GGSession randomGetSession() {
+		Set<Entry<String, GGSession>> entrySet = sessionMap.entrySet();
+		if (entrySet.size() == 0) {
+			return null;
+		}
+		Entry<String, GGSession> entry = (Entry<String, GGSession>) entrySet.toArray()[ThreadLocalRandom.current().nextInt(entrySet.size())];
+		return entry.getValue();
 	}
 
 }
