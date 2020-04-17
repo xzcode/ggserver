@@ -3,6 +3,7 @@ package xzcode.ggserver.core.common.config;
 import java.nio.charset.Charset;
 import java.util.concurrent.ThreadFactory;
 
+import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import xzcode.ggserver.core.common.constant.ProtocolTypeConstants;
 import xzcode.ggserver.core.common.event.IEventManager;
@@ -101,7 +102,7 @@ public class GGConfig {
 	protected IEventManager eventManager;
 	protected ISessionManager sessionManager;
 
-	protected NioEventLoopGroup workerGroup;
+	protected EventLoopGroup workerGroup;
 
 
 	protected ITaskExecutor taskExecutor;
@@ -171,11 +172,11 @@ public class GGConfig {
 		super();
 	}
 
-	public NioEventLoopGroup getWorkerGroup() {
+	public EventLoopGroup getWorkerGroup() {
 		return workerGroup;
 	}
 
-	public void setWorkerGroup(NioEventLoopGroup workerGroup) {
+	public void setWorkerGroup(EventLoopGroup workerGroup) {
 		this.workerGroup = workerGroup;
 	}
 
