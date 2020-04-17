@@ -1,9 +1,8 @@
 package xzcode.ggserver.core.common.filter;
 
 import xzcode.ggserver.core.common.event.model.EventData;
+import xzcode.ggserver.core.common.message.MessageData;
 import xzcode.ggserver.core.common.message.Pack;
-import xzcode.ggserver.core.common.message.request.Request;
-import xzcode.ggserver.core.common.message.response.Response;
 
 /**
  * 过滤器管理器统一接口
@@ -16,9 +15,9 @@ public interface IFilterManager {
 
 	boolean doBeforeDeserializeFilters(Pack pack);
 
-	boolean doRequestFilters(Request<?> request);
+	boolean doRequestFilters(MessageData<?> request);
 
-	boolean doResponseFilters(Response response);
+	boolean doResponseFilters(MessageData<?> response);
 
 	boolean doAfterSerializeFilters(Pack pack);
 	

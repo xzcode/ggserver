@@ -2,11 +2,20 @@ package xzcode.ggserver.core.common.handler;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.netty.buffer.ByteBuf;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPipeline;
 import io.netty.handler.codec.ByteToMessageDecoder;
+import io.netty.util.AttributeKey;
+import xzcode.ggserver.core.common.channel.DefaultChannelAttributeKeys;
 import xzcode.ggserver.core.common.config.GGConfig;
+import xzcode.ggserver.core.common.event.EventTask;
+import xzcode.ggserver.core.common.event.GGEvents;
+import xzcode.ggserver.core.common.session.GGSession;
 
 /**
  * socket类型选择处理器
@@ -16,7 +25,7 @@ import xzcode.ggserver.core.common.config.GGConfig;
  */
 public class SocketSelectHandler extends ByteToMessageDecoder {
 	
-	//private static final Logger LOGGER = LoggerFactory.getLogger(SocketSelectHandler.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SocketSelectHandler.class);
 	
 	protected GGConfig config;
 	
@@ -48,6 +57,40 @@ public class SocketSelectHandler extends ByteToMessageDecoder {
 		in.resetReaderIndex();
 		pipeline.remove(SocketSelectHandler.class);
 		super.channelActive(ctx);
+	}
+	
+	@Override
+	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+		if (cause instanceof java.io.IOException) {
+			LOGGER.error("Exception Caught! {}", cause.getMessage());
+			return;
+		}
+		if (cause instanceof UnsupportedOperationException) {
+			LOGGER.error("UnsupportedOperationException ! ", cause);
+			ctx.close();
+		}
+		LOGGER.error("Exception Caught! ", cause);
+	}
+	
+
+	@Override
+	public void channelActive(ChannelHandlerContext ctx) throws Exception {
+		Channel channel = ctx.channel();
+		config.getSessionFactory().channelActive(channel);
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("Channel Active:{}", channel);
+		}
+		GGSession session = (GGSession)channel.attr(AttributeKey.valueOf(DefaultChannelAttributeKeys.SESSION)).get();
+		config.getTaskExecutor().submitTask(new EventTask(session, GGEvents.Connection.OPENED, null, config, channel));
+	}
+	
+	@Override
+	public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+		config.getSessionFactory().channelInActive(ctx.channel());
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("channel Inactive:{}", ctx.channel());
+		}
+		config.getTaskExecutor().submitTask(new EventTask((GGSession)ctx.channel().attr(AttributeKey.valueOf(DefaultChannelAttributeKeys.SESSION)).get(), GGEvents.Connection.CLOSED, null, config));
 	}
 
 }

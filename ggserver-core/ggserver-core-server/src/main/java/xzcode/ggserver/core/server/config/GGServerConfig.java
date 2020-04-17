@@ -4,16 +4,20 @@ import java.util.concurrent.ThreadFactory;
 
 import io.netty.channel.nio.NioEventLoopGroup;
 import xzcode.ggserver.core.common.config.GGConfig;
-import xzcode.ggserver.core.common.executor.thread.SimpleThreadFactory;
+import xzcode.ggserver.core.common.event.GGEvents;
+import xzcode.ggserver.core.common.executor.thread.GGThreadFactory;
+import xzcode.ggserver.core.common.message.pingpong.GGPingPongServerEventListener;
+import xzcode.ggserver.core.common.message.pingpong.GGPingRequestHandler;
+import xzcode.ggserver.core.common.message.pingpong.model.GGPing;
 
 public class GGServerConfig extends GGConfig{
 	
 	protected String	serverName = "GGServer";
 	
 	protected String	host = "0.0.0.0";
-
+	
 	protected int 		port = 9999;
-
+	
 	protected NioEventLoopGroup bossGroup;
 	
 	protected ThreadFactory bossGroupThreadFactory;
@@ -23,12 +27,20 @@ public class GGServerConfig extends GGConfig{
 	public void init() {
 		
 		if (bossGroupThreadFactory == null) {
-			bossGroupThreadFactory = new SimpleThreadFactory("netty-boss-", false);
+			bossGroupThreadFactory = new GGThreadFactory("gg-boss-", false);
 		}
+		
 		if (bossGroup == null) {
 			bossGroup = new NioEventLoopGroup(getBossThreadSize(),bossGroupThreadFactory);				
 		}
+		
 		super.init();
+		
+
+		if (isPingPongEnabled()) {
+			requestMessageManager.onMessage(GGPing.ACTION_ID, new GGPingRequestHandler(this));			
+			eventManager.addEventListener(GGEvents.Idle.ALL, new GGPingPongServerEventListener(this));
+		}
 		
 	}
 	public NioEventLoopGroup getBossGroup() {

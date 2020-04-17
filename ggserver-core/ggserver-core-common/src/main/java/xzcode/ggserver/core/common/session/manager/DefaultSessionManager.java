@@ -1,13 +1,13 @@
 package xzcode.ggserver.core.common.session.manager;
 
-import java.util.Iterator;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.ThreadLocalRandom;
 
 import xzcode.ggserver.core.common.config.GGConfig;
-import xzcode.ggserver.core.common.event.GGEvents;
-import xzcode.ggserver.core.common.event.model.EventData;
+import xzcode.ggserver.core.common.executor.ITaskExecutor;
 import xzcode.ggserver.core.common.session.GGSession;
 
 /**
@@ -21,39 +21,47 @@ public class DefaultSessionManager implements ISessionManager {
 	
 	private GGConfig config;
 	
-	private final ConcurrentHashMap<String, GGSession> sessionMap;
+	private final Map<String, GGSession> sessionMap = new ConcurrentHashMap<>(1000);
 	
 	public DefaultSessionManager(GGConfig config) {
 		this.config = config;
-		int initSize = config.getWorkThreadSize() * 1000;
-		sessionMap = new ConcurrentHashMap<>(initSize);
-		this.startSessionExpireTask();
+		
+		this.startSessionExpireCheckTask();
 	}
 	
+	
 	/**
-	 * 启动会话超时检查任务
-	 * 
-	 * 
+	 * 启动检查session过期任务
+	 *
 	 * @author zai
-	 * 2019-11-17 00:40:04
+	 * 2020-04-13 10:25:24
 	 */
-	private void startSessionExpireTask() {
-		this.config.getTaskExecutor().scheduleWithFixedDelay( 1000L, 100L, TimeUnit.MILLISECONDS,() -> {
-			
-			Iterator<Entry<String, GGSession>> it = sessionMap.entrySet().iterator();
-			while (it.hasNext()) {
-				GGSession session = it.next().getValue();
+	protected void startSessionExpireCheckTask() {
+		ITaskExecutor taskExecutor = this.config.getTaskExecutor();
+		taskExecutor.schedule(10 * 1000L, () -> {
+			for (Entry<String, GGSession> entry : sessionMap.entrySet()) {
+				GGSession session = entry.getValue();
+				session.checkExpire();
 				if (session.isExpired()) {
-					config.getEventManager().emitEvent(new EventData<Void>(session, GGEvents.Session.EXPIRED, null));
-					it.remove();
+					session.disconnect();
 				}
 			}
 		});
 	}
 	
+	
 	@Override
 	public GGSession addSessionIfAbsent(GGSession session) {
-		return sessionMap.putIfAbsent(session.getSessonId(), session);
+		GGSession putIfAbsent = sessionMap.putIfAbsent(session.getSessonId(), session);
+		if (putIfAbsent == null) {
+			//添加断开监听
+			session.addDisconnectListener( s -> {
+				//断开连接从管理器中移除session
+				remove(s.getSessonId());
+				
+			});
+		}
+		return session;
 	}
 	
 	@Override
@@ -87,10 +95,24 @@ public class DefaultSessionManager implements ISessionManager {
 	}
 
 	@Override
-	public void clearAllSession() {
+	public void disconnectAllSession() {
 		if (sessionMap != null) {
-			sessionMap.clear();
+			eachSession(session -> {
+				session.disconnect();
+				return true;
+			});
 		}
+	}
+
+
+	@Override
+	public GGSession randomGetSession() {
+		Set<Entry<String, GGSession>> entrySet = sessionMap.entrySet();
+		if (entrySet.size() == 0) {
+			return null;
+		}
+		Entry<String, GGSession> entry = (Entry<String, GGSession>) entrySet.toArray()[ThreadLocalRandom.current().nextInt(entrySet.size())];
+		return entry.getValue();
 	}
 
 }

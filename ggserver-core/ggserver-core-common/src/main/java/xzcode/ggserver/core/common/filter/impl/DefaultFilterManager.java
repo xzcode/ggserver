@@ -10,9 +10,8 @@ import xzcode.ggserver.core.common.filter.IEventFilter;
 import xzcode.ggserver.core.common.filter.IFilterManager;
 import xzcode.ggserver.core.common.filter.IRequestFilter;
 import xzcode.ggserver.core.common.filter.IResponseFilter;
+import xzcode.ggserver.core.common.message.MessageData;
 import xzcode.ggserver.core.common.message.Pack;
-import xzcode.ggserver.core.common.message.request.Request;
-import xzcode.ggserver.core.common.message.response.Response;
 
 /**
  * 默认过滤器管理器
@@ -113,7 +112,7 @@ public class DefaultFilterManager implements IFilterManager {
 	}
 
 	@Override
-	public boolean doRequestFilters(Request<?> request) {
+	public boolean doRequestFilters(MessageData<?> request) {
 		for (IRequestFilter filter : requestFilters) {
 			if (!filter.doFilter(request)) {
 				return false;
@@ -123,7 +122,7 @@ public class DefaultFilterManager implements IFilterManager {
 	}
 
 	@Override
-	public boolean doResponseFilters(Response response) {
+	public boolean doResponseFilters(MessageData<?> response) {
 		for (IResponseFilter filter : responseFilters) {
 			if (!filter.doFilter(response)) {
 				return false;

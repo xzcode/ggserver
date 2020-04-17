@@ -1,6 +1,6 @@
 package xzcode.ggserver.core.common.filter;
 
-import xzcode.ggserver.core.common.message.response.Response;
+import xzcode.ggserver.core.common.message.MessageData;
 
 /**
  * 消息响应过滤器
@@ -8,6 +8,6 @@ import xzcode.ggserver.core.common.message.response.Response;
  * @author zai
  * 2019-11-08 10:43:53
  */
-public interface IResponseFilter extends IFilter<Response>{
+public interface IResponseFilter extends IFilter<MessageData<?>>{
 
 }

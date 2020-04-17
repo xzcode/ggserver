@@ -1,12 +1,10 @@
 package xzcode.ggserver.core.common.message.response.support;
 
-import java.util.concurrent.TimeUnit;
-
 import xzcode.ggserver.core.common.filter.IFilterManager;
 import xzcode.ggserver.core.common.future.IGGFuture;
+import xzcode.ggserver.core.common.message.MessageData;
 import xzcode.ggserver.core.common.message.Pack;
 import xzcode.ggserver.core.common.message.model.IMessage;
-import xzcode.ggserver.core.common.message.response.Response;
 import xzcode.ggserver.core.common.session.GGSession;
 import xzcode.ggserver.core.common.session.manager.ISessionManager;
 import xzcode.ggserver.core.common.utils.logger.GGLoggerUtil;
@@ -45,7 +43,7 @@ public interface ISendMessageSupport extends IMakePackSupport {
 	 * @author zai
 	 * 2019-11-27 22:09:14
 	 */
-	default void sendToAll(Response response) {
+	default void sendToAll(MessageData<?> response) {
 		try {
 			// 发送过滤器
 			if (!getFilterManager().doResponseFilters(response)) {
@@ -55,7 +53,7 @@ public interface ISendMessageSupport extends IMakePackSupport {
 			Pack pack = makePack(response);
 			ISessionManager sessionManager = getSessionManager();
 			sessionManager.eachSession(session -> {
-				session.send(pack, 0L, TimeUnit.MILLISECONDS);
+				session.send(pack);
 				return true;
 			});
 		} catch (Exception e) {
@@ -75,8 +73,8 @@ public interface ISendMessageSupport extends IMakePackSupport {
 	 * @author zai
 	 * 2019-11-27 22:09:31
 	 */
-	default IGGFuture send(GGSession session, Pack pack, long delay, TimeUnit timeUnit) {
-		return session.send(pack, delay, timeUnit);
+	default IGGFuture send(GGSession session, Pack pack) {
+		return session.send(pack);
 	}
 	
 	
@@ -91,11 +89,7 @@ public interface ISendMessageSupport extends IMakePackSupport {
 	 * 2019-11-29 15:24:23
 	 */
 	default IGGFuture send(GGSession session, String action, Object message) {
-		return send(new Response(session, null, action, message), 0L, TimeUnit.MILLISECONDS);
-	}
-	
-	default IGGFuture send(GGSession session, IMessage message) {
-		return send(new Response(session, null, message.getActionId(), message), 0L, TimeUnit.MILLISECONDS);
+		return send(new MessageData<>(session, action, message));
 	}
 	
 	/**
@@ -110,8 +104,8 @@ public interface ISendMessageSupport extends IMakePackSupport {
 	 * @author zai
 	 * 2019-11-29 15:23:47
 	 */
-	default IGGFuture send(GGSession session, IMessage message, long delay, TimeUnit timeUnit) {
-		return send(new Response(session, null, message.getActionId(), message), delay, timeUnit);
+	default IGGFuture send(GGSession session, IMessage message) {
+		return send(new MessageData<>(session, message.getActionId(), message));
 	}
 
 	/**
@@ -125,15 +119,15 @@ public interface ISendMessageSupport extends IMakePackSupport {
 	 * @author zai
 	 * 2019-11-27 21:53:08
 	 */
-	default IGGFuture send(Response response, long delay, TimeUnit timeUnit) {
-		GGSession session = response.getSession();
+	default IGGFuture send(MessageData<?> messageData) {
+		GGSession session = messageData.getSession();
 		if (session != null) {
 			try {
 			// 发送过滤器
-			if (!getFilterManager().doResponseFilters(response)) {
+			if (!getFilterManager().doResponseFilters(messageData)) {
 				return null;
 			}
-				session.send(makePack(response), delay, timeUnit);
+				session.send(makePack(messageData));
 			} catch (Exception e) {
 				GGLoggerUtil.getLogger().error("Send message Error!", e);
 			}
@@ -150,7 +144,7 @@ public interface ISendMessageSupport extends IMakePackSupport {
 	 * 2019-12-16 10:20:47
 	 */
 	default IGGFuture send(Pack pack) {
-		return send(null, pack, 0L, TimeUnit.MILLISECONDS);
+		return send(null, pack);
 	}
 	
 	

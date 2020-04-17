@@ -1,9 +1,8 @@
 package xzcode.ggserver.core.common.filter;
 
 import xzcode.ggserver.core.common.event.model.EventData;
+import xzcode.ggserver.core.common.message.MessageData;
 import xzcode.ggserver.core.common.message.Pack;
-import xzcode.ggserver.core.common.message.request.Request;
-import xzcode.ggserver.core.common.message.response.Response;
 
 /**
  * 过滤器支持接口
@@ -29,13 +28,13 @@ public interface IFilterSupport extends IFilterManager{
 	}
 
 	@Override
-	default boolean doRequestFilters(Request<?> request) {
+	default boolean doRequestFilters(MessageData<?> request) {
 		return getFilterManager().doRequestFilters(request);
 	}
 
 	@Override
-	default boolean doResponseFilters(Response response) {
-		return getFilterManager().doResponseFilters(response);
+	default boolean doResponseFilters(MessageData<?> messageData) {
+		return getFilterManager().doResponseFilters(messageData);
 	}
 
 	@Override

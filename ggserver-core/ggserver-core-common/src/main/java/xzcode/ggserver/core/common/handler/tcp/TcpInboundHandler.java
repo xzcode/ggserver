@@ -18,34 +18,24 @@ import xzcode.ggserver.core.common.handler.codec.impl.DefaultDecodeHandler;
  *
  */
 public class TcpInboundHandler extends ByteToMessageDecoder{
+	
 	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultDecodeHandler.class);
 
-	/**
-	 * 数据包长度标识 字节数
-	 */
+	//数据包长度标识 字节数
 	public static final int PACKAGE_LEN = 4;
-	
 	
 	private GGConfig config;
 	
-	
-
-
 	public TcpInboundHandler(GGConfig config) {
-		super();
 		this.config = config;
 	}
-
-
-
-
 
 	@Override
 	protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
 		
 		while (true) {
-			int readableBytes = in.readableBytes();
 			
+			int readableBytes = in.readableBytes();
 			
 			//如果长度不足4位，放弃并等待下次读取
 			if (readableBytes < PACKAGE_LEN) {
@@ -63,12 +53,12 @@ public class TcpInboundHandler extends ByteToMessageDecoder{
 			}
 			
 			if (readableBytes - PACKAGE_LEN < packLen) {
+				in.resetReaderIndex();
 				return;
 			}
 			//调用解码处理器
 			config.getDecodeHandler().handle(ctx, in, ProtocolTypeConstants.TCP);
 		}
-		
 	}
-
+	
 }

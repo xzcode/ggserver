@@ -1,11 +1,18 @@
 package xzcode.ggserver.core.common.future;
 
 
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
+import io.netty.util.AttributeKey;
+import xzcode.ggserver.core.common.channel.DefaultChannelAttributeKeys;
+import xzcode.ggserver.core.common.session.GGSession;
 import xzcode.ggserver.core.common.utils.logger.GGLoggerUtil;
 
 
@@ -15,15 +22,17 @@ import xzcode.ggserver.core.common.utils.logger.GGLoggerUtil;
  * @author zai
  * 2019-11-24 17:54:50
  */
-public class GGNettyFacadeFuture implements IGGFuture {
+public class GGNettyFuture implements IGGFuture {
 	
 	private io.netty.util.concurrent.Future<?> nettyFuture;
 	
+	private Set<IGGFutureListener<IGGFuture>> listeners;
 	
-	public GGNettyFacadeFuture() {
+	public GGNettyFuture() {
+		listeners = new LinkedHashSet<>(2);
 	}
 	
-	public GGNettyFacadeFuture(Future<?> nettyFuture) {
+	public GGNettyFuture(Future<?> nettyFuture) {
 		this.setFuture(nettyFuture);
 	}
 
@@ -31,22 +40,40 @@ public class GGNettyFacadeFuture implements IGGFuture {
 		if (this.nettyFuture != null) {
 			return;
 		}
-		this.nettyFuture = (io.netty.util.concurrent.Future<?>) future;
+		synchronized (this) {
+			this.nettyFuture = (io.netty.util.concurrent.Future<?>) future;			
+		}
+		if (listeners != null && listeners.size() > 0) {
+			for (IGGFutureListener<IGGFuture> listener : listeners) {
+				nettyFuture.addListener((f) -> {
+					listener.operationComplete(this);
+				});
+			}
+		}
 	}
 
 	@Override
 	public void addListener(IGGFutureListener<IGGFuture> listener) {
-			
 		try {
-			nettyFuture.addListener((f) -> {
-				listener.operationComplete(new GGNettyFacadeFuture((Future<?>) f));
-			});
+				synchronized (this) {
+					if (nettyFuture == null) {
+						listeners.add(listener);
+						return;
+					}
+					nettyFuture.addListener((f) -> {
+						listener.operationComplete(this);
+					});
+				}
 		} catch (Exception e) {
 			GGLoggerUtil.getLogger().error("IGGFuture 'operationComplete' Error!", e);
 		}
 		
 	}
 
+	@Override
+	public boolean isSuccess() {
+		return this.nettyFuture.isSuccess();
+	}
 
 	@Override
 	public boolean isDone() {
@@ -91,6 +118,17 @@ public class GGNettyFacadeFuture implements IGGFuture {
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	@Override
+	public GGSession getSession() {
+		if (this.nettyFuture instanceof ChannelFuture) {
+			Channel channel = ((ChannelFuture)this.nettyFuture).channel();
+			if (channel != null) {
+				return (GGSession) channel.attr(AttributeKey.valueOf(DefaultChannelAttributeKeys.SESSION)).get();
+			}
+		}
+		return null;
 	}
 
 

@@ -14,7 +14,7 @@ import xzcode.ggserver.game.card.games.robot.factory.IRobotFactory;
  * @author zai
  * 2019-12-21 10:38:30
  */
-public abstract class AbstractRobotManager<P> implements IRobotManager<P>{
+public abstract class AbstractRobotManager<P, R> implements IRobotManager<P>{
 	
 	/**
 	 * 机器人集合
@@ -31,7 +31,7 @@ public abstract class AbstractRobotManager<P> implements IRobotManager<P>{
 	/**
 	 * 机器人工厂
 	 */
-	protected IRobotFactory<P> robotFactory;
+	protected IRobotFactory<P, R> robotFactory;
 	
 	
 	/**
@@ -39,7 +39,7 @@ public abstract class AbstractRobotManager<P> implements IRobotManager<P>{
 	 * @param initRobotSize 初始化机器人数量
 	 * @param robotFactory 机器人工厂
 	 */
-	public AbstractRobotManager(int initRobotSize, IRobotFactory<P> robotFactory) {
+	public AbstractRobotManager(int initRobotSize, IRobotFactory<P, R> robotFactory) {
 		this.robotFactory = robotFactory;
 		initRobots(initRobotSize);
 	}
@@ -53,7 +53,7 @@ public abstract class AbstractRobotManager<P> implements IRobotManager<P>{
 	 */
 	protected void initRobots(int size){
 		for (int i = 0; i < size; i++) {
-			remainRobots.add(robotFactory.createRobot());
+			remainRobots.add(robotFactory.createRobot(null));
 		}
 	}
 	
@@ -115,17 +115,5 @@ public abstract class AbstractRobotManager<P> implements IRobotManager<P>{
 	public void setWorkingRobots(CopyOnWriteArraySet<P> workingRobots) {
 		this.workingRobots = workingRobots;
 	}
-
-
-	public IRobotFactory<P> getRobotFactory() {
-		return robotFactory;
-	}
-
-
-	public void setRobotFactory(IRobotFactory<P> robotFactory) {
-		this.robotFactory = robotFactory;
-	}
-	
-	
 
 }

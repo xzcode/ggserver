@@ -4,22 +4,19 @@ import io.netty.channel.Channel;
 import xzcode.ggserver.core.common.config.GGConfig;
 import xzcode.ggserver.core.common.filter.IFilterManager;
 import xzcode.ggserver.core.common.handler.serializer.ISerializer;
+import xzcode.ggserver.core.common.message.MessageData;
 import xzcode.ggserver.core.common.message.Pack;
-import xzcode.ggserver.core.common.message.meta.IMetadata;
-import xzcode.ggserver.core.common.message.meta.resolver.IMetadataResolver;
-import xzcode.ggserver.core.common.message.request.Request;
 import xzcode.ggserver.core.common.message.request.handler.IRequestMessageHandlerInfo;
 import xzcode.ggserver.core.common.session.GGSession;
 import xzcode.ggserver.core.common.utils.logger.GGLoggerUtil;
 
 /**
- * 请求消息任务
- * 
- * 
+ * 消息数据任务
+ *
  * @author zai
- * 2019-02-09 14:26:10
+ * 2020-04-09 16:02:12
  */
-public class RequestMessageTask implements Runnable{
+public class MessageDataTask implements Runnable{
 	
 	/**
 	 * 配置
@@ -32,11 +29,11 @@ public class RequestMessageTask implements Runnable{
 	private Pack pack;
 	
 	
-	public RequestMessageTask() {
+	public MessageDataTask() {
 		
 	}
 
-	public RequestMessageTask(Pack pack, GGConfig config) {
+	public MessageDataTask(Pack pack, GGConfig config) {
 		this.pack = pack;
 		this.config = config;
 	}
@@ -47,7 +44,6 @@ public class RequestMessageTask implements Runnable{
 	public void run() {
 		ISerializer serializer = config.getSerializer();
 		IFilterManager messageFilterManager = this.config.getFilterManager();
-		IMetadata metadata = null;
 		String action = null;
 		Object message = null;
 		GGSession session = pack.getSession();
@@ -59,11 +55,6 @@ public class RequestMessageTask implements Runnable{
 			
 			action = new String(pack.getAction(), config.getCharset());
 			
-			if (pack.getMetadata() != null) {
-				IMetadataResolver<?> metadataResolver = config.getMetadataResolver();
-				metadata = (IMetadata) metadataResolver.resolve(pack.getMetadata());
-			}
-			
 			if (pack.getMessage() != null) {
 				IRequestMessageHandlerInfo messageHandler = config.getRequestMessageManager().getMessageHandler(action);
 				if (messageHandler != null) {
@@ -73,12 +64,8 @@ public class RequestMessageTask implements Runnable{
 			
 			Channel channel = pack.getChannel();
 			
-			Request<?> request = new Request<>(session, metadata, action, message);
+			MessageData<?> request = new MessageData<>(session, action, message);
 			request.setChannel(channel);
-			
-			if (session == null) {
-				session = config.getSessionFactory().getSession(channel, request);
-			}
 			
 			//反序列化后的消息过滤器
 			if (!messageFilterManager.doRequestFilters(request)) {

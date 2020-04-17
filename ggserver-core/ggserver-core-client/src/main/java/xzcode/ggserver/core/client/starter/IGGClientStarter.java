@@ -6,7 +6,7 @@ import xzcode.ggserver.core.common.session.GGSession;
 
 public interface IGGClientStarter {
 	
-	GGSession connect(String host, int port);
+	IGGFuture connect(String host, int port);
 	
 	IGGFuture disconnect(GGSession session);
 	

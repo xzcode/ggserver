@@ -1,41 +1,83 @@
 package xzcode.ggserver.core.common.session.impl;
 
 import java.nio.charset.Charset;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import xzcode.ggserver.core.common.config.GGConfig;
 import xzcode.ggserver.core.common.event.IEventManager;
 import xzcode.ggserver.core.common.executor.ITaskExecutor;
 import xzcode.ggserver.core.common.filter.IFilterManager;
-import xzcode.ggserver.core.common.future.GGNettyFacadeFuture;
+import xzcode.ggserver.core.common.future.GGFailedFuture;
+import xzcode.ggserver.core.common.future.GGNettyFuture;
 import xzcode.ggserver.core.common.future.IGGFuture;
 import xzcode.ggserver.core.common.handler.serializer.ISerializer;
-import xzcode.ggserver.core.common.message.meta.provider.IMetadataProvider;
 import xzcode.ggserver.core.common.session.GGSession;
 import xzcode.ggserver.core.common.session.listener.ISessionDisconnectListener;
+import xzcode.ggserver.core.common.utils.logger.GGLoggerUtil;
 
 /**
  * sesson默认实现
  * 
  * 
- * @author zai
- * 2019-10-02 22:48:34
+ * @author zai 2019-10-02 22:48:34
  */
 public abstract class AbstractSession<C extends GGConfig> implements GGSession {
 	
-	protected C config;//具体的配置
-	protected long expireMs;//超时时间
-	protected boolean expired = false;//是否已超时
-	protected String sessionId;//sessionid
-	protected String host;//远端地址
-	protected int port;//远端端口号
-	protected List<ISessionDisconnectListener> disconnectListeners = new ArrayList<>();
+
+	// 具体的配置
+	protected C config;
+
+	// sessionid
+	protected String sessionId;
+
+	// 远端地址
+	protected String host;
+
+	// 远端端口号
+	protected int port;
+
+	// 是否已准备就绪
+	protected boolean ready;
+
+	// 超时时间
+	protected long expireMs;
+
+	// 是否已超时
+	protected boolean expired = false;
 	
+	//会话组id
+	protected String groupId;
+
+	// 断开连接监听器
+	protected List<ISessionDisconnectListener> disconnectListeners = new CopyOnWriteArrayList<ISessionDisconnectListener>();
+
 	public AbstractSession(String sessionId, C config) {
 		this.config = config;
 		this.sessionId = sessionId;
-		this.updateExpire();
+		updateExpire();
+	}
+
+	@Override
+	public void addDisconnectListener(ISessionDisconnectListener listener) {
+		this.disconnectListeners.add(listener);
+	}
+
+	/**
+	 * 触发断开连接监听器
+	 *
+	 * @author zai 2020-04-09 10:39:37
+	 */
+	public void triggerDisconnectListeners() {
+		if (this.disconnectListeners.size() > 0) {
+			for (ISessionDisconnectListener lis : disconnectListeners) {
+				try {
+					lis.onDisconnect(this);
+				} catch (Exception e) {
+					GGLoggerUtil.getLogger(this).error("Session disconnect Error!", e);
+				}
+			}
+		}
 	}
 
 	public C getConfig() {
@@ -63,12 +105,6 @@ public abstract class AbstractSession<C extends GGConfig> implements GGSession {
 	}
 
 	@Override
-	public IMetadataProvider<?> getMetadataProvider() {
-		return getConfig().getMetadataProvider();
-	}
-	
-
-	@Override
 	public IEventManager getEventManagerImpl() {
 		return getConfig().getEventManager();
 	}
@@ -77,12 +113,19 @@ public abstract class AbstractSession<C extends GGConfig> implements GGSession {
 	public GGSession getSession() {
 		return this;
 	}
-	
+
 	@Override
 	public IGGFuture disconnect() {
-		return new GGNettyFacadeFuture(this.getChannel().close());
+		if (this.getChannel() != null) {
+			GGNettyFuture future = new GGNettyFuture(this.getChannel().close());
+			future.addListener(f -> {
+				triggerDisconnectListeners();
+			});
+			return future;
+		}
+		return GGFailedFuture.DEFAULT_FAILED_FUTURE;
 	}
-	
+
 	@Override
 	public String getHost() {
 		return this.host;
@@ -92,7 +135,7 @@ public abstract class AbstractSession<C extends GGConfig> implements GGSession {
 	public int getPort() {
 		return this.port;
 	}
-	
+
 	@Override
 	public void setHost(String host) {
 		this.host = host;
@@ -101,29 +144,60 @@ public abstract class AbstractSession<C extends GGConfig> implements GGSession {
 	@Override
 	public void setPort(int port) {
 		this.port = port;
-		
-	}
-	@Override
-	public void expire() {
-		this.expired = true;
+
 	}
 
 	@Override
+	public String getSessonId() {
+		return this.sessionId;
+	}
+
+	@Override
+	public boolean isReady() {
+		return this.ready;
+	}
+
+	public void setReady(boolean ready) {
+		this.ready = ready;
+	}
+
+	public long getExpireMs() {
+		return expireMs;
+	}
+
+	public void setExpireMs(long expireMs) {
+		this.expireMs = expireMs;
+	}
+
 	public boolean isExpired() {
-		if (!this.expired) {
-			this.expired = expireMs < System.currentTimeMillis();
-		}
-		return this.expired;
+		return expired;
+	}
+
+	public void setExpired(boolean expired) {
+		this.expired = expired;
+	}
+
+	public String getSessionId() {
+		return sessionId;
 	}
 
 	@Override
 	public void updateExpire() {
 		this.expireMs = System.currentTimeMillis() + config.getSessionExpireMs();
 	}
-	@Override
-	public String getSessonId() {
-		return this.sessionId;
-	}
 
+	@Override
+	public void checkExpire() {
+		if (this.expireMs < System.currentTimeMillis()) {
+			this.setExpired(true);
+		}
+	}
+	
+	@Override
+	public String getGroupId() {
+		return this.groupId;
+	}
+	
+	
 
 }

@@ -9,12 +9,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import xzcode.ggserver.core.common.executor.support.IExecutorSupport;
 import xzcode.ggserver.core.common.message.model.IMessage;
-import xzcode.ggserver.core.common.message.response.Response;
 import xzcode.ggserver.core.common.message.response.support.ISendMessageSupport;
 import xzcode.ggserver.game.card.games.house.House;
 import xzcode.ggserver.game.card.games.interfaces.condition.ICheckCondition;
@@ -83,8 +81,8 @@ extends IExecutorSupport, ISendMessageSupport {
 	 * 
 	 * @author zai 2019-02-10 14:34:15
 	 */
-	default P getPlayer(Object playerId) {
-		return getPlayer(playerId);
+	default P getPlayer(Object playerNo) {
+		return getPlayers().get(playerNo);
 	}
 	
 	/**
@@ -356,18 +354,21 @@ extends IExecutorSupport, ISendMessageSupport {
 	 * @author zai
 	 * 2019-02-21 11:15:34
 	 */
-	default int getSeat() {
+	default int getNewSeat() {
 		
 		int maxPlayerNum = getMaxPlayerNum();
 		List<Integer> nums = new ArrayList<>(maxPlayerNum);
 		for (int i = 1; i <= maxPlayerNum; i++) {
 			nums.add(i);
 		}
-			Map<Object, P> players = getPlayers();
-			for (Entry<Object, P> entry : players.entrySet()) {
-				nums.remove(new Integer(entry.getValue().getSeat()));
-			}
-			return nums.get(0);
+		Map<Object, P> players = getPlayers();
+		for (Entry<Object, P> entry : players.entrySet()) {
+			nums.remove(new Integer(entry.getValue().getSeat()));
+		}
+		if (nums.size() == 0) {
+			return -1;
+		}
+		return nums.get(0);
 	}
 	
 	/**
@@ -550,7 +551,7 @@ extends IExecutorSupport, ISendMessageSupport {
 	 */
 	default void bcToAllPlayer(String actionId) {
 		eachPlayer(player -> {
-			send(new Response(player.getSession(), null, actionId, null), 0, TimeUnit.MILLISECONDS);
+			player.send(actionId);
 		});
 	}
 	
@@ -564,7 +565,7 @@ extends IExecutorSupport, ISendMessageSupport {
 	 */
 	default void bcToAllPlayer(String actionId, Object message) {
 		eachPlayer(player -> {
-			send(new Response(player.getSession(), null, actionId, message), 0, TimeUnit.MILLISECONDS);
+			player.send((IMessage) message);
 		});
 	}
 

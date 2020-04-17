@@ -1,16 +1,11 @@
 package xzcode.ggserver.core.client;
 
-import java.util.concurrent.TimeUnit;
-
 import xzcode.ggserver.core.client.config.GGClientConfig;
-import xzcode.ggserver.core.client.pool.IChannelPoolSendMessageSupport;
 import xzcode.ggserver.core.client.starter.IGGClientStarter;
 import xzcode.ggserver.core.client.starter.impl.DefaultClientStarter;
 import xzcode.ggserver.core.common.config.IGGConfigSupport;
 import xzcode.ggserver.core.common.control.IGGContolSupport;
 import xzcode.ggserver.core.common.future.IGGFuture;
-import xzcode.ggserver.core.common.message.Pack;
-import xzcode.ggserver.core.common.session.GGSession;
 
 /**
  * 客户端
@@ -20,7 +15,6 @@ import xzcode.ggserver.core.common.session.GGSession;
  */
 public class GGClient 
 implements 
-	IChannelPoolSendMessageSupport,
 	IGGConfigSupport<GGClientConfig>,
 	IGGContolSupport
 {
@@ -29,7 +23,7 @@ implements
 	
 	private IGGClientStarter clientStarter;
 	
-	public GGSession connect(String host, int port) {
+	public IGGFuture connect(String host, int port) {
 		return clientStarter.connect(host, port);
 	}
 	
@@ -49,14 +43,6 @@ implements
 	
 	public void shutdown() {
 		clientStarter.shutdown();
-	}
-
-	@Override
-	public IGGFuture send(GGSession session, Pack pack, long delay, TimeUnit timeUnit) {
-		if (!config.isChannelPoolEnabled()) {
-			return IGGConfigSupport.super.send(session, pack, delay, timeUnit);			
-		}
-		return poolSend(pack, delay, timeUnit);
 	}
 
 }

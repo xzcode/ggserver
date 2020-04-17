@@ -96,9 +96,7 @@ public class IdleHandler extends ChannelInboundHandlerAdapter{
 					
 			}
             
-        } else {  
-            super.userEventTriggered(ctx, evt);  
-        } 
-		
+        }  
+        super.userEventTriggered(ctx, evt);  
 	}
 }

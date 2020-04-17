@@ -1,6 +1,7 @@
 package xzcode.ggserver.core.common.executor;
 
 import java.util.concurrent.Callable;
+import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
@@ -14,7 +15,7 @@ import xzcode.ggserver.core.common.future.IGGFuture;
  * @author zai
  * 2019-12-01 15:46:06
  */
-public interface ITaskExecutor {
+public interface ITaskExecutor extends Executor{
 	
 	/**
 	 * 直接执行任务

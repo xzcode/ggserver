@@ -6,6 +6,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import xzcode.ggserver.core.common.event.IEventListener;
 import xzcode.ggserver.core.common.event.IEventListenerGroup;
 import xzcode.ggserver.core.common.event.model.EventData;
+import xzcode.ggserver.core.common.utils.logger.GGLoggerUtil;
 
 /**
  * 默认事件监听组
@@ -45,7 +46,11 @@ public class DefaultEventListenerGroup<T> implements IEventListenerGroup<T>{
 	@Override
 	public void onEvent(EventData<T> eventData) {
 		for (IEventListener<T> li : listeners) {
-			li.onEvent(eventData);
+			try {
+				li.onEvent(eventData);				
+			} catch (Exception e) {
+				GGLoggerUtil.getLogger(this.getClass()).error("Invoke Event Error!", e);
+			}
 		}
 		
 	}

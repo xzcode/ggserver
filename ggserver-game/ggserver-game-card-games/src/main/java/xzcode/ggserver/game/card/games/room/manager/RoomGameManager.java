@@ -10,7 +10,6 @@ import xzcode.ggserver.core.server.IGGServer;
 import xzcode.ggserver.game.card.games.house.House;
 import xzcode.ggserver.game.card.games.player.RoomPlayer;
 import xzcode.ggserver.game.card.games.player.factory.IPlayerFactory;
-import xzcode.ggserver.game.card.games.robot.IRobotManager;
 import xzcode.ggserver.game.card.games.room.Room;
 import xzcode.ggserver.game.card.games.room.factory.IRoomFactory;
 
@@ -56,8 +55,6 @@ H extends House<P, R, H>
 	
 	protected IRoomFactory<R> roomFactory;
 	
-	protected IRobotManager<P> robotManager;
-	
 	
 	/**
 	 * 构造器
@@ -67,14 +64,12 @@ H extends House<P, R, H>
 			IGGServer ggserver,
 			int designPlayerSize,
 			IPlayerFactory<P> playerFactory,
-			IRoomFactory<R> roomFactory,
-			IRobotManager<P> robotManager
+			IRoomFactory<R> roomFactory
 			) {
 		
 		this.ggserver = ggserver;
 		this.playerFactory = playerFactory;
 		this.roomFactory = roomFactory;
-		this.robotManager = robotManager;
 		
 		players = new ConcurrentHashMap<>(designPlayerSize);
 		
@@ -99,12 +94,6 @@ H extends House<P, R, H>
 		
 		return room;
 	}
-	
-	@Override
-	public IRobotManager<P> getRobotManager() {
-		return robotManager;
-	}
-	
 	
 	@Override
 	public IGGFuture submitTask(Runnable runnable) {

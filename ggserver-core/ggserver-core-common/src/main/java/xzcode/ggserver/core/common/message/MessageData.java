@@ -1,23 +1,19 @@
-package xzcode.ggserver.core.common.message.request;
+package xzcode.ggserver.core.common.message;
 
 import io.netty.channel.Channel;
-import xzcode.ggserver.core.common.message.meta.IMetadata;
 import xzcode.ggserver.core.common.session.GGSession;
 
 /**
- * 请求消息模型
+ * 消息模型
  * @param <T>
  * 
  * @author zai
  * 2019-12-01 17:15:54
  */
-public class Request<T> {
+public class MessageData<T> {
 	
 	//会话对象
 	private GGSession session;
-
-	//元数据
-	private IMetadata metadata;
 
 	//发送消息标识
 	private String action;
@@ -30,15 +26,13 @@ public class Request<T> {
 	
 	
 	
-	public Request(GGSession session, IMetadata metadata, String action, T message) {
+	public MessageData(GGSession session, String action, T message) {
 		this.session = session;
-		this.metadata = metadata;
 		this.action = action;
 		this.message = message;
 	}
 	
-	public Request(IMetadata metadata, String action, T message) {
-		this.metadata = metadata;
+	public MessageData(String action, T message) {
 		this.action = action;
 		this.message = message;
 	}
@@ -59,15 +53,6 @@ public class Request<T> {
 		this.session = session;
 	}
 	
-	public IMetadata getMetadata() {
-		return metadata;
-	}
-	
-	@SuppressWarnings({ "unchecked", "hiding" })
-	public <T> T getMetadata(Class<T> clazz) {
-		return (T) metadata;
-	}
-
 	public Channel getChannel() {
 		return channel;
 	}
@@ -75,4 +60,15 @@ public class Request<T> {
 	public void setChannel(Channel channel) {
 		this.channel = channel;
 	}
+
+	public void setAction(String action) {
+		this.action = action;
+	}
+
+	public void setMessage(T message) {
+		this.message = message;
+	}
+	
+	
+	
 }

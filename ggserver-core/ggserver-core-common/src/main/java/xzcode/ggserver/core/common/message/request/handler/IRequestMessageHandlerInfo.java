@@ -1,6 +1,6 @@
 package xzcode.ggserver.core.common.message.request.handler;
 
-import xzcode.ggserver.core.common.message.request.Request;
+import xzcode.ggserver.core.common.message.MessageData;
 
 /**
  * 统一消息调用接口
@@ -19,7 +19,7 @@ public interface IRequestMessageHandlerInfo {
 	 * @author zai
 	 * 2019-11-24 16:42:45
 	 */
-	public void handle(Request<?> request) throws Exception;
+	public void handle(MessageData<?> request) throws Exception;
 	
 	/**
 	 * 获取请求标识

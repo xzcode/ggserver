@@ -2,12 +2,10 @@ package xzcode.ggserver.game.card.games.room.manager;
 
 import java.util.Map;
 
-import xzcode.ggserver.core.common.executor.ITaskExecutor;
 import xzcode.ggserver.core.common.executor.support.IExecutorSupport;
 import xzcode.ggserver.core.common.future.IGGFuture;
 import xzcode.ggserver.game.card.games.house.House;
 import xzcode.ggserver.game.card.games.player.RoomPlayer;
-import xzcode.ggserver.game.card.games.robot.IRobotManager;
 import xzcode.ggserver.game.card.games.room.Room;
 
 public interface IRoomGameManager
@@ -23,7 +21,6 @@ extends IExecutorSupport
 
 	R createRoom();
 
-	IRobotManager<P> getRobotManager();
 
 	IGGFuture submitTask(Runnable runnable);
 
@@ -52,6 +49,8 @@ extends IExecutorSupport
 	Map<String, P> getPlayers();
 
 	P getPlayer(String playerNo);
+	
+	void updateHouses();
 
 
 }

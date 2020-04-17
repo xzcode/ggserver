@@ -1,10 +1,9 @@
 package xzcode.ggserver.game.core.player.support;
 
-import java.util.concurrent.TimeUnit;
-
+import xzcode.ggserver.core.common.future.GGFailedFuture;
 import xzcode.ggserver.core.common.future.IGGFuture;
+import xzcode.ggserver.core.common.message.MessageData;
 import xzcode.ggserver.core.common.message.model.IMessage;
-import xzcode.ggserver.core.common.message.response.Response;
 import xzcode.ggserver.core.common.session.GGSession;
 
 /**
@@ -33,7 +32,11 @@ public interface IGGSessionPlayerSupport{
 	 * 2019-09-22 10:29:42
 	 */
 	default IGGFuture send(String actionId, Object message) {
-		return getSession().send(new Response(getSession(), null, actionId, message), 0, TimeUnit.MILLISECONDS);
+		GGSession session = getSession();
+		if (session == null) {
+			return null;
+		}
+		return session.send(new MessageData<>(getSession(), actionId, message));
 	}
 	
 	/**
@@ -45,7 +48,11 @@ public interface IGGSessionPlayerSupport{
 	 * 2019-12-25 12:04:20
 	 */
 	default IGGFuture send(IMessage message) {
-		return getSession().send(new Response(getSession(), null, message.getActionId(), message), 0, TimeUnit.MILLISECONDS);
+		GGSession session = getSession();
+		if (session == null) {
+			return GGFailedFuture.DEFAULT_FAILED_FUTURE;
+		}
+		return session.send(new MessageData<>(getSession(), message.getActionId(), message));
 	}
 	
 	/**
@@ -56,7 +63,11 @@ public interface IGGSessionPlayerSupport{
 	 * 2019-09-22 10:29:42
 	 */
 	default IGGFuture send(String actionId) {
-		return getSession().send(new Response(getSession(), null, actionId, null), 0, TimeUnit.MILLISECONDS);
+		GGSession session = getSession();
+		if (session != null) {
+			return session.send(new MessageData<>(session, actionId, null));			
+		}
+		return GGFailedFuture.DEFAULT_FAILED_FUTURE;
 	}
 	
 	/**

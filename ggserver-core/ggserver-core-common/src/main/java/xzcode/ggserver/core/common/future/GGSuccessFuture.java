@@ -5,6 +5,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import xzcode.ggserver.core.common.session.GGSession;
 import xzcode.ggserver.core.common.utils.logger.GGLoggerUtil;
 
 
@@ -52,6 +53,7 @@ public class GGSuccessFuture<V> implements IGGFuture {
 			GGLoggerUtil.getLogger().error("IGGFuture 'operationComplete' Error!", e);
 		}
 	}
+	
 
 	@Override
 	public boolean cancel() {
@@ -66,6 +68,16 @@ public class GGSuccessFuture<V> implements IGGFuture {
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	@Override
+	public boolean isSuccess() {
+		return true;
+	}
+
+	@Override
+	public GGSession getSession() {
+		return null;
 	}
 
 }

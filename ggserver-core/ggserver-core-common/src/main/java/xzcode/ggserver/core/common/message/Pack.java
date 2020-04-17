@@ -16,35 +16,39 @@ public class Pack {
 	/* 会话 */
 	private GGSession session;
 	
-	/* 元数据 */
-	private byte[] metadata;
-
 	/* 消息标识 */
 	private byte[] action;
 
 	/* 消息体 */
 	private byte[] message;
 	
-	/**
-	 * 协议类型
-	 */
+	/* 协议类型 */
 	private String protocolType;
 	
 	/* 通道 */
 	private Channel channel;
 	
+	/**
+	 * 缓存转换后的actionid
+	 */
+	private String cachedActionId;
+	
+	/* 包操作类型*/
+	private int operType;
+	
+	/* 包总长度 */
+	private int totalLength;
+	
 
-	public Pack(byte[] metadata, byte[] action, byte[] message) {
-		this.metadata = metadata;
+	public Pack(byte[] action, byte[] message) {
 		this.action = action;
 		this.message = message;
 	}
 	
 
-	public Pack(GGSession session, byte[] metadata, byte[] action, byte[] message) {
+	public Pack(GGSession session, byte[] action, byte[] message) {
 		super();
 		this.session = session;
-		this.metadata = metadata;
 		this.action = action;
 		this.message = message;
 	}
@@ -73,10 +77,13 @@ public class Pack {
 	}
 	
 	public String getActionString() {
-		return new String(action, Charset.forName("utf-8"));
+		return getActionString(Charset.forName("utf-8"));
 	}
 	public String getActionString(Charset charset) {
-		return new String(action,charset);
+		if (this.cachedActionId == null) {
+			this.cachedActionId = new String(action,charset);
+		}
+		return this.cachedActionId;
 	}
 
 	public void setAction(byte[] sendTag) {
@@ -90,14 +97,7 @@ public class Pack {
 	public void setMessage(byte[] message) {
 		this.message = message;
 	}
-	public byte[] getMetadata() {
-		return metadata;
-	}
-	public void setMetadata(byte[] metadata) {
-		this.metadata = metadata;
-	}
-
-
+	
 	public GGSession getSession() {
 		return session;
 	}
@@ -121,6 +121,22 @@ public class Pack {
 	
 	public void setChannel(Channel channel) {
 		this.channel = channel;
+	}
+	
+	public void setOperType(int operType) {
+		this.operType = operType;
+	}
+	
+	public int getOperType() {
+		return operType;
+	}
+	
+	public void setTotalLength(int totalLength) {
+		this.totalLength = totalLength;
+	}
+	
+	public int getTotalLength() {
+		return totalLength;
 	}
 
 }

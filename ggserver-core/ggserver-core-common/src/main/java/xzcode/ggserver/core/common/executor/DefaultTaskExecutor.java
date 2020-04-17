@@ -8,9 +8,9 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.util.concurrent.ScheduledFuture;
 import xzcode.ggserver.core.common.executor.task.AsyncCallableTask;
 import xzcode.ggserver.core.common.executor.task.AsyncRunnableTask;
-import xzcode.ggserver.core.common.executor.thread.SimpleThreadFactory;
+import xzcode.ggserver.core.common.executor.thread.GGThreadFactory;
 import xzcode.ggserver.core.common.executor.timeout.TimeoutTask;
-import xzcode.ggserver.core.common.future.GGNettyFacadeFuture;
+import xzcode.ggserver.core.common.future.GGNettyFuture;
 import xzcode.ggserver.core.common.future.IGGFuture;
 
 public class DefaultTaskExecutor implements ITaskExecutor{
@@ -21,34 +21,34 @@ public class DefaultTaskExecutor implements ITaskExecutor{
 		this.executor = executor;
 	}
 	public DefaultTaskExecutor(String threadNamePrefix, int threadSize) {
-		this.executor = new DefaultEventLoopGroup(threadSize, new SimpleThreadFactory(threadNamePrefix, false));
+		this.executor = new DefaultEventLoopGroup(threadSize, new GGThreadFactory(threadNamePrefix, false));
 	}
 	public DefaultTaskExecutor(int threadSize) {
-		this.executor = new DefaultEventLoopGroup(threadSize, new SimpleThreadFactory("ITaskExecutor-", false));
+		this.executor = new DefaultEventLoopGroup(threadSize, new GGThreadFactory("ITaskExecutor-", false));
 	}
 
 	@Override
 	public IGGFuture submitTask(Runnable runnable) {
-		return new GGNettyFacadeFuture(executor.submit(new AsyncRunnableTask(runnable)));
+		return new GGNettyFuture(executor.submit(new AsyncRunnableTask(runnable)));
 	}
 
 	@Override
 	public <V> IGGFuture submitTask(Callable<V> callable) {
-		return new GGNettyFacadeFuture(executor.submit(new AsyncCallableTask<>(callable)));
+		return new GGNettyFuture(executor.submit(new AsyncCallableTask<>(callable)));
 	}
 	@Override
 	public IGGFuture schedule(long delay, TimeUnit timeUnit, Runnable runnable) {
-		return new GGNettyFacadeFuture(executor.schedule(new AsyncRunnableTask(runnable), delay, timeUnit));
+		return new GGNettyFuture(executor.schedule(new AsyncRunnableTask(runnable), delay, timeUnit));
 	}
 
 	@Override
 	public <V> IGGFuture schedule(long delay, TimeUnit timeUnit, Callable<V> callable) {
-		return new GGNettyFacadeFuture(executor.schedule(new AsyncCallableTask<>(callable), delay, timeUnit));
+		return new GGNettyFuture(executor.schedule(new AsyncCallableTask<>(callable), delay, timeUnit));
 	}
 
 	@Override
 	public IGGFuture scheduleAfter(IGGFuture afterFuture, long delay, TimeUnit timeUnit, Runnable runnable) {
-		GGNettyFacadeFuture taskFuture = new GGNettyFacadeFuture();
+		GGNettyFuture taskFuture = new GGNettyFuture();
 		afterFuture.addListener(f -> {
 			AsyncRunnableTask asyncTask = new AsyncRunnableTask(runnable);
 			ScheduledFuture<?> future = executor.schedule(asyncTask, delay, timeUnit);
@@ -65,7 +65,7 @@ public class DefaultTaskExecutor implements ITaskExecutor{
 
 	@Override
 	public <V> IGGFuture scheduleAfter(IGGFuture afterFuture, long delay, TimeUnit timeUnit, Callable<V> callable) {
-		GGNettyFacadeFuture taskFuture = new GGNettyFacadeFuture();
+		GGNettyFuture taskFuture = new GGNettyFuture();
 		afterFuture.addListener(f -> {
 			AsyncCallableTask<V> asyncTask = new AsyncCallableTask<>(callable);
 			ScheduledFuture<?> future = executor.schedule(asyncTask, delay, timeUnit);
@@ -76,7 +76,7 @@ public class DefaultTaskExecutor implements ITaskExecutor{
 
 	@Override
 	public IGGFuture scheduleWithFixedDelay(long initialDelay, long delay, TimeUnit timeUnit, Runnable runnable) {
-		return new GGNettyFacadeFuture(executor.scheduleWithFixedDelay(new AsyncRunnableTask(runnable), initialDelay, delay, timeUnit));
+		return new GGNettyFuture(executor.scheduleWithFixedDelay(new AsyncRunnableTask(runnable), initialDelay, delay, timeUnit));
 	}
 
 	@Override
@@ -91,6 +91,10 @@ public class DefaultTaskExecutor implements ITaskExecutor{
 	@Override
 	public TimeoutTask timeoutTask(long timeoutDelay, Runnable timeoutAction) {
 		return new TimeoutTask(this, timeoutDelay, timeoutAction);
+	}
+	@Override
+	public void execute(Runnable command) {
+		submitTask(command);
 	}
 
 

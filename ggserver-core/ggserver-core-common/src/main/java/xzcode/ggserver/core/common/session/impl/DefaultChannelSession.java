@@ -18,7 +18,6 @@ public class DefaultChannelSession extends AbstractSession<GGConfig> {
 	public DefaultChannelSession(Channel channel, String sessionId, GGConfig config) {
 		super(sessionId, config);
 		this.channel = channel;
-		updateExpire();
 	}
 
 	@Override
@@ -53,7 +52,14 @@ public class DefaultChannelSession extends AbstractSession<GGConfig> {
 		this.channel = channel;
 	}
 
-
-
+	@Override
+	public boolean isReady() {
+		return this.ready;
+	}
+	
+	@Override
+		public String getGroupId() {
+			return null;
+		}
 	
 }

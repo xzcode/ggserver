@@ -15,9 +15,15 @@ public interface DefaultChannelAttributeKeys {
 	String SESSION = "SESSION";
 	
 	/**
-	 * 会话key
+	 * 协议类型
 	 */
 	String PROTOCOL_TYPE = "PROTOCOL_TYPE";
+	
+	/**
+	 * 心跳信息
+	 */
+	String PING_INFO = "GG_PING_INFO";
+	
 	/**
 	 * 通道组id
 	 */
