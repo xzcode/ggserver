@@ -167,7 +167,6 @@
   	<module>ggserver-core</module>
   	<module>ggserver-session-group</module>
   	<module>ggserver-spring-starter</module>
-  	<module>ggserver-game</module>
   	<module>ggserver-docs</module>
   	<module>ggserver-test</module>
   </modules>
