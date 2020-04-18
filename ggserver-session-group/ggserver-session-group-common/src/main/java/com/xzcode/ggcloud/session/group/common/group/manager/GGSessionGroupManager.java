@@ -5,13 +5,12 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import com.xzcode.ggcloud.session.group.common.group.GGSessionGroup;
 import com.xzcode.ggcloud.session.group.common.group.impl.DefaultSessionGroup;
-
-import xzcode.ggserver.core.common.config.GGConfig;
-import xzcode.ggserver.core.common.future.GGFailedFuture;
-import xzcode.ggserver.core.common.future.IGGFuture;
-import xzcode.ggserver.core.common.message.Pack;
-import xzcode.ggserver.core.common.message.model.IMessage;
-import xzcode.ggserver.core.common.session.GGSession;
+import com.xzcode.ggserver.core.common.config.GGConfig;
+import com.xzcode.ggserver.core.common.future.GGFailedFuture;
+import com.xzcode.ggserver.core.common.future.IGGFuture;
+import com.xzcode.ggserver.core.common.message.Pack;
+import com.xzcode.ggserver.core.common.message.model.IMessage;
+import com.xzcode.ggserver.core.common.session.GGSession;
 
 /**
  * 会话组管理器

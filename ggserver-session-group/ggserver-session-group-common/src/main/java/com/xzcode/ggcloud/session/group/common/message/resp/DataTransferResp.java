@@ -1,8 +1,7 @@
 package com.xzcode.ggcloud.session.group.common.message.resp;
 
 import com.xzcode.ggcloud.session.group.common.constant.GGSesssionGroupConstant;
-
-import xzcode.ggserver.core.common.message.model.IMessage;
+import com.xzcode.ggserver.core.common.message.model.IMessage;
 
 /**
  * 数据传输推送

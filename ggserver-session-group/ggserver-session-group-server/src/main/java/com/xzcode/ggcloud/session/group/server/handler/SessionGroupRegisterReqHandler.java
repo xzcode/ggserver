@@ -5,13 +5,9 @@ import com.xzcode.ggcloud.session.group.common.message.req.SessionGroupRegisterR
 import com.xzcode.ggcloud.session.group.common.message.resp.SessionGroupRegisterResp;
 import com.xzcode.ggcloud.session.group.server.config.SessionGroupServerConfig;
 import com.xzcode.ggcloud.session.group.server.constant.SessionGroupServerSessionKeys;
-
-import io.netty.util.AttributeKey;
-import xzcode.ggserver.core.common.channel.DefaultChannelAttributeKeys;
-import xzcode.ggserver.core.common.message.MessageData;
-import xzcode.ggserver.core.common.message.pingpong.model.GGPingPongInfo;
-import xzcode.ggserver.core.common.message.request.action.MessageDataHandler;
-import xzcode.ggserver.core.common.session.GGSession;
+import com.xzcode.ggserver.core.common.message.MessageData;
+import com.xzcode.ggserver.core.common.message.request.action.MessageDataHandler;
+import com.xzcode.ggserver.core.common.session.GGSession;
 
 /**
  * 内置ping处理器

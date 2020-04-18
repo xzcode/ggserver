@@ -4,9 +4,9 @@ import java.util.concurrent.ThreadFactory;
 
 import com.xzcode.ggcloud.session.group.common.constant.GGSesssionGroupConstant;
 import com.xzcode.ggcloud.session.group.common.group.manager.GGSessionGroupManager;
+import com.xzcode.ggserver.core.server.IGGServer;
 
 import io.netty.channel.EventLoopGroup;
-import xzcode.ggserver.core.server.IGGServer;
 
 /**
  * 总配置

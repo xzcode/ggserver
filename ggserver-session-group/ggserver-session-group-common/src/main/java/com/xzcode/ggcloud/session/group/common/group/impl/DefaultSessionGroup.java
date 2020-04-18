@@ -5,10 +5,9 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.xzcode.ggcloud.session.group.common.group.GGSessionGroup;
-
-import xzcode.ggserver.core.common.config.GGConfig;
-import xzcode.ggserver.core.common.handler.serializer.ISerializer;
-import xzcode.ggserver.core.common.session.GGSession;
+import com.xzcode.ggserver.core.common.config.GGConfig;
+import com.xzcode.ggserver.core.common.handler.serializer.ISerializer;
+import com.xzcode.ggserver.core.common.session.GGSession;
 
 /**
  * 抽象会话组

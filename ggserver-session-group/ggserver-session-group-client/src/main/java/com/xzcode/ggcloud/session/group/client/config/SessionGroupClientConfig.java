@@ -5,11 +5,11 @@ import java.util.concurrent.ThreadFactory;
 import com.xzcode.ggcloud.session.group.client.SessionGroupClient;
 import com.xzcode.ggcloud.session.group.common.constant.GGSesssionGroupConstant;
 import com.xzcode.ggcloud.session.group.common.group.manager.GGSessionGroupManager;
+import com.xzcode.ggserver.core.client.GGClient;
+import com.xzcode.ggserver.core.common.utils.RandomIdUtil;
+import com.xzcode.ggserver.core.server.IGGServer;
 
 import io.netty.channel.EventLoopGroup;
-import xzcode.ggserver.core.client.GGClient;
-import xzcode.ggserver.core.common.utils.RandomIdUtil;
-import xzcode.ggserver.core.server.IGGServer;
 
 /**
  * 配置

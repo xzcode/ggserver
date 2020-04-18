@@ -4,12 +4,11 @@ import com.xzcode.ggcloud.session.group.client.config.SessionGroupClientConfig;
 import com.xzcode.ggcloud.session.group.client.session.ServiceClientSession;
 import com.xzcode.ggcloud.session.group.common.group.manager.GGSessionGroupManager;
 import com.xzcode.ggcloud.session.group.common.message.req.AuthReq;
-
-import xzcode.ggserver.core.client.config.GGClientConfig;
-import xzcode.ggserver.core.common.event.IEventListener;
-import xzcode.ggserver.core.common.event.model.EventData;
-import xzcode.ggserver.core.common.session.GGSession;
-import xzcode.ggserver.core.common.session.manager.ISessionManager;
+import com.xzcode.ggserver.core.client.config.GGClientConfig;
+import com.xzcode.ggserver.core.common.event.IEventListener;
+import com.xzcode.ggserver.core.common.event.model.EventData;
+import com.xzcode.ggserver.core.common.session.GGSession;
+import com.xzcode.ggserver.core.common.session.manager.ISessionManager;
 
 /**
  * 连接打开事件监听
