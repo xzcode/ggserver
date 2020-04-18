@@ -14,7 +14,7 @@ import com.xzcode.ggserver.core.common.future.IGGFuture;
  * @author zai
  * 2019-12-01 15:46:06
  */
-public interface ITaskExecutor extends Executor{
+public interface TaskExecutor extends Executor{
 	
 	/**
 	 * 直接执行任务
@@ -150,7 +150,7 @@ public interface ITaskExecutor extends Executor{
 	 * @author zai
 	 * 2019-12-22 17:12:55
 	 */
-	ITaskExecutor nextEvecutor();
+	TaskExecutor nextEvecutor();
 
 	
 }

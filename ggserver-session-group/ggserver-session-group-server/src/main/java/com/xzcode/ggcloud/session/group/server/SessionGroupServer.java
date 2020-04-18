@@ -16,9 +16,9 @@ import com.xzcode.ggserver.core.common.constant.ProtocolTypeConstants;
 import com.xzcode.ggserver.core.common.event.GGEvents;
 import com.xzcode.ggserver.core.common.executor.thread.GGThreadFactory;
 import com.xzcode.ggserver.core.common.future.IGGFuture;
-import com.xzcode.ggserver.core.server.IGGServer;
+import com.xzcode.ggserver.core.server.GGServer;
 import com.xzcode.ggserver.core.server.config.GGServerConfig;
-import com.xzcode.ggserver.core.server.impl.GGServer;
+import com.xzcode.ggserver.core.server.impl.GGDefaultServer;
 
 /**
  * 会话组服务器启动类
@@ -66,7 +66,7 @@ public class SessionGroupServer {
 		GGSessionGroupManager sessionGroupManager = new GGSessionGroupManager(sessionServerConfig);
 		this.config.setSessionGroupManager(sessionGroupManager);
 		
-		IGGServer sessionServer = new GGServer(sessionServerConfig);
+		GGServer sessionServer = new GGDefaultServer(sessionServerConfig);
 		sessionServer.addEventListener(GGEvents.Connection.OPENED, new ConnActiveEventListener(config));
 		sessionServer.addEventListener(GGEvents.Connection.CLOSED, new ConnCloseEventListener(config));
 		sessionServer.onMessage(AuthReq.ACTION, new AuthReqHandler(config));
@@ -83,7 +83,7 @@ public class SessionGroupServer {
 		serviceServerConfig.setWorkerGroup(sessionServerConfig.getWorkerGroup());
 		serviceServerConfig.init();
 		
-		IGGServer serviceServer = new GGServer(serviceServerConfig);
+		GGServer serviceServer = new GGDefaultServer(serviceServerConfig);
 		this.config.setServiceServer(serviceServer);
 		
 	}

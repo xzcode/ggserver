@@ -10,7 +10,7 @@ import com.xzcode.ggserver.core.common.message.request.action.MessageDataHandler
 import com.xzcode.ggserver.core.common.message.request.task.MessageDataTask;
 import com.xzcode.ggserver.core.common.session.GGSession;
 import com.xzcode.ggserver.core.common.session.manager.ISessionManager;
-import com.xzcode.ggserver.core.server.IGGServer;
+import com.xzcode.ggserver.core.server.GGServer;
 import com.xzcode.ggserver.core.server.config.GGServerConfig;
 
 /**
@@ -34,7 +34,7 @@ public class DataTransferReqHandler implements MessageDataHandler<DataTransferRe
 		GGSession groupSession = request.getSession();
 		String groupSessionId = groupSession.getSessonId();
 		
-		IGGServer serviceServer = config.getServiceServer();
+		GGServer serviceServer = config.getServiceServer();
 		GGServerConfig serviceServerConfig = serviceServer.getConfig();
 		
 		//判断是否开启业务服务端

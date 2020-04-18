@@ -8,6 +8,6 @@ import com.xzcode.ggserver.core.common.message.Pack;
  * @author zai
  * 2019-11-08 10:43:00
  */
-public interface IBeforeDeserializeFilter extends IFilter<Pack>{
+public interface BeforeDeserializeFilter extends Filter<Pack>{
 
 }

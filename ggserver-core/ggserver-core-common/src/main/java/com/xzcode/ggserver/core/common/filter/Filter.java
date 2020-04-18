@@ -7,7 +7,7 @@ package com.xzcode.ggserver.core.common.filter;
  * @author zzz
  * 2019-10-08 18:20:21
  */
-public interface IFilter<T> {
+public interface Filter<T> {
 	
 	boolean doFilter(T data);
 

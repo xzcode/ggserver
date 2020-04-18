@@ -1,11 +1,11 @@
 package com.xzcode.ggserver.core.common.message.request.task;
 
 import com.xzcode.ggserver.core.common.config.GGConfig;
-import com.xzcode.ggserver.core.common.filter.IFilterManager;
+import com.xzcode.ggserver.core.common.filter.FilterManager;
 import com.xzcode.ggserver.core.common.handler.serializer.ISerializer;
 import com.xzcode.ggserver.core.common.message.MessageData;
 import com.xzcode.ggserver.core.common.message.Pack;
-import com.xzcode.ggserver.core.common.message.request.handler.IRequestMessageHandlerInfo;
+import com.xzcode.ggserver.core.common.message.request.handler.ReceiveMessageHandlerInfo;
 import com.xzcode.ggserver.core.common.session.GGSession;
 import com.xzcode.ggserver.core.common.utils.logger.GGLoggerUtil;
 
@@ -44,7 +44,7 @@ public class MessageDataTask implements Runnable{
 	@Override
 	public void run() {
 		ISerializer serializer = config.getSerializer();
-		IFilterManager messageFilterManager = this.config.getFilterManager();
+		FilterManager messageFilterManager = this.config.getFilterManager();
 		String action = null;
 		Object message = null;
 		GGSession session = pack.getSession();
@@ -57,7 +57,7 @@ public class MessageDataTask implements Runnable{
 			action = new String(pack.getAction(), config.getCharset());
 			
 			if (pack.getMessage() != null) {
-				IRequestMessageHandlerInfo messageHandler = config.getRequestMessageManager().getMessageHandler(action);
+				ReceiveMessageHandlerInfo messageHandler = config.getRequestMessageManager().getMessageHandler(action);
 				if (messageHandler != null) {
 					message = serializer.deserialize(pack.getMessage(), messageHandler.getMessageClass());
 				}

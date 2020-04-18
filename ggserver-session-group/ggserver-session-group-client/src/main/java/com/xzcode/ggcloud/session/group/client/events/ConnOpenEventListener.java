@@ -5,7 +5,7 @@ import com.xzcode.ggcloud.session.group.client.session.ServiceClientSession;
 import com.xzcode.ggcloud.session.group.common.group.manager.GGSessionGroupManager;
 import com.xzcode.ggcloud.session.group.common.message.req.AuthReq;
 import com.xzcode.ggserver.core.client.config.GGClientConfig;
-import com.xzcode.ggserver.core.common.event.IEventListener;
+import com.xzcode.ggserver.core.common.event.EventListener;
 import com.xzcode.ggserver.core.common.event.model.EventData;
 import com.xzcode.ggserver.core.common.session.GGSession;
 import com.xzcode.ggserver.core.common.session.manager.ISessionManager;
@@ -16,7 +16,7 @@ import com.xzcode.ggserver.core.common.session.manager.ISessionManager;
  * @author zai
  * 2020-04-08 11:23:13
  */
-public class ConnOpenEventListener implements IEventListener<Void>{
+public class ConnOpenEventListener implements EventListener<Void>{
 
 	private SessionGroupClientConfig config;
 	

@@ -8,7 +8,7 @@ import com.xzcode.ggserver.core.common.message.MessageData;
  * @author zai
  * 2019-01-01 22:30:41
  */
-public interface IRequestMessageHandlerInfo {
+public interface ReceiveMessageHandlerInfo {
 	
 	/**
 	 * 执行方法调用

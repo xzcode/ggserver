@@ -1,6 +1,6 @@
 package com.xzcode.ggserver.core.common.executor.timeout;
 
-import com.xzcode.ggserver.core.common.executor.ITaskExecutor;
+import com.xzcode.ggserver.core.common.executor.TaskExecutor;
 import com.xzcode.ggserver.core.common.future.IGGFuture;
 
 /**
@@ -15,7 +15,7 @@ public class TimeoutTask{
 	/**
 	 * 任务执行器
 	 */
-	protected ITaskExecutor taskExecutor;
+	protected TaskExecutor taskExecutor;
 	
 	
 	
@@ -53,7 +53,7 @@ public class TimeoutTask{
 	 * @param timeoutDelay 超时延迟ms
 	 * @param timeoutAction 任务对象
 	 */
-	public TimeoutTask(ITaskExecutor taskExecutor, long timeoutDelay, Runnable timeoutAction) {
+	public TimeoutTask(TaskExecutor taskExecutor, long timeoutDelay, Runnable timeoutAction) {
 		this.taskExecutor = taskExecutor;
 		this.timeoutDelay = timeoutDelay;
 		this.timeoutAction = timeoutAction;

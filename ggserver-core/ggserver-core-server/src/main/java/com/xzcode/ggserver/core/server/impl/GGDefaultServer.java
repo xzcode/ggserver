@@ -1,7 +1,7 @@
 package com.xzcode.ggserver.core.server.impl;
 
 import com.xzcode.ggserver.core.common.future.IGGFuture;
-import com.xzcode.ggserver.core.server.IGGServer;
+import com.xzcode.ggserver.core.server.GGServer;
 import com.xzcode.ggserver.core.server.config.GGServerConfig;
 import com.xzcode.ggserver.core.server.starter.IGGServerStarter;
 import com.xzcode.ggserver.core.server.starter.impl.DefaultGGServerStarter;
@@ -12,14 +12,14 @@ import com.xzcode.ggserver.core.server.starter.impl.DefaultGGServerStarter;
  * @author zai
  * 2019-12-05 10:40:41
  */
-public class GGServer implements IGGServer {
+public class GGDefaultServer implements GGServer {
 
 	private GGServerConfig config;
 
 	private IGGServerStarter serverStarter;
 	
 
-	public GGServer(GGServerConfig serverConfig) {
+	public GGDefaultServer(GGServerConfig serverConfig) {
 		this.config = serverConfig;
 	}
 

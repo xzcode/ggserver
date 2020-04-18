@@ -10,7 +10,7 @@ import com.xzcode.ggserver.core.common.message.request.action.MessageDataHandler
  * 2019-01-01 22:11:15
  * @param <T>
  */
-public class RequestMessagerHandlerInfo implements IRequestMessageHandlerInfo{
+public class DefaultReceiveMessagerHandlerInfo implements ReceiveMessageHandlerInfo{
 	
 	
 	/**

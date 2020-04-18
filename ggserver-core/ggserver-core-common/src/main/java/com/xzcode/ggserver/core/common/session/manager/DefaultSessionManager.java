@@ -7,7 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadLocalRandom;
 
 import com.xzcode.ggserver.core.common.config.GGConfig;
-import com.xzcode.ggserver.core.common.executor.ITaskExecutor;
+import com.xzcode.ggserver.core.common.executor.TaskExecutor;
 import com.xzcode.ggserver.core.common.session.GGSession;
 
 /**
@@ -37,7 +37,7 @@ public class DefaultSessionManager implements ISessionManager {
 	 * 2020-04-13 10:25:24
 	 */
 	protected void startSessionExpireCheckTask() {
-		ITaskExecutor taskExecutor = this.config.getTaskExecutor();
+		TaskExecutor taskExecutor = this.config.getTaskExecutor();
 		taskExecutor.schedule(10 * 1000L, () -> {
 			for (Entry<String, GGSession> entry : sessionMap.entrySet()) {
 				GGSession session = entry.getValue();

@@ -4,7 +4,7 @@ import java.util.concurrent.ThreadFactory;
 
 import com.xzcode.ggcloud.session.group.common.constant.GGSesssionGroupConstant;
 import com.xzcode.ggcloud.session.group.common.group.manager.GGSessionGroupManager;
-import com.xzcode.ggserver.core.server.IGGServer;
+import com.xzcode.ggserver.core.server.GGServer;
 
 import io.netty.channel.EventLoopGroup;
 
@@ -17,10 +17,10 @@ import io.netty.channel.EventLoopGroup;
 public class SessionGroupServerConfig {
 	
 	//sessionServer对象
-	private IGGServer sessionServer;
+	private GGServer sessionServer;
 	
 	//业务服务端对象
-	private IGGServer serviceServer;
+	private GGServer serviceServer;
 	
 	//是否开启业务服务端
 	private boolean enableServiceServer = false;
@@ -68,11 +68,11 @@ public class SessionGroupServerConfig {
 		this.port = port;
 	}
 	
-	public IGGServer getSessionServer() {
+	public GGServer getSessionServer() {
 		return sessionServer;
 	}
 	
-	public void setSessionServer(IGGServer sessionServer) {
+	public void setSessionServer(GGServer sessionServer) {
 		this.sessionServer = sessionServer;
 	}
 	
@@ -93,11 +93,11 @@ public class SessionGroupServerConfig {
 	}
 	
 	
-	public IGGServer getServiceServer() {
+	public GGServer getServiceServer() {
 		return serviceServer;
 	}
 	
-	public void setServiceServer(IGGServer serviceServer) {
+	public void setServiceServer(GGServer serviceServer) {
 		this.serviceServer = serviceServer;
 	}
 

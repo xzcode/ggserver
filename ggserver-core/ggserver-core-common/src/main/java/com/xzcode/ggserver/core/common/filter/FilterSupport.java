@@ -11,7 +11,7 @@ import com.xzcode.ggserver.core.common.message.Pack;
  * @author zai
  * 2019-12-01 16:56:07
  */
-public interface IFilterSupport extends IFilterManager{
+public interface FilterSupport extends FilterManager{
 	
 	/**
 	 * 获取过滤器管理器
@@ -20,7 +20,7 @@ public interface IFilterSupport extends IFilterManager{
 	 * @author zai
 	 * 2019-12-01 16:56:15
 	 */
-	IFilterManager getFilterManager();
+	FilterManager getFilterManager();
 	
 	@Override
 	default boolean doBeforeDeserializeFilters(Pack pack) {
@@ -42,33 +42,33 @@ public interface IFilterSupport extends IFilterManager{
 		return getFilterManager().doAfterSerializeFilters(pack);
 	}
 
-	default void addBeforeDeserializeFilter(IBeforeDeserializeFilter filter) {
+	default void addBeforeDeserializeFilter(BeforeDeserializeFilter filter) {
 		getFilterManager().addBeforeDeserializeFilter(filter);
 	}
-	default void addRequestFilter(IRequestFilter filter) {
+	default void addRequestFilter(ReceiveMessageFilter filter) {
 		getFilterManager().addRequestFilter(filter);
 	}
-	default void addResponseFilter(IResponseFilter filter) {
+	default void addResponseFilter(SendMessageFilter filter) {
 		getFilterManager().addResponseFilter(filter);
 	}
 	
-	default void removeBeforeDeserializeFilter(IBeforeDeserializeFilter filter) {
+	default void removeBeforeDeserializeFilter(BeforeDeserializeFilter filter) {
 		getFilterManager().removeBeforeDeserializeFilter(filter);
 	}
 
-	default void removeResponseFilter(IResponseFilter filter) {
+	default void removeResponseFilter(SendMessageFilter filter) {
 		getFilterManager().removeResponseFilter(filter);
 	}
 
-	default void removeRequestFilter(IRequestFilter filter) {
+	default void removeRequestFilter(ReceiveMessageFilter filter) {
 		getFilterManager().removeRequestFilter(filter);
 	}
 
-	default void addAfterSerializeFilter(IAfterSerializeFilter filter) {
+	default void addAfterSerializeFilter(AfterSerializeFilter filter) {
 		getFilterManager().addAfterSerializeFilter(filter);
 	};
 
-	default void removeAfterSerializeFilter(IAfterSerializeFilter filter) {
+	default void removeAfterSerializeFilter(AfterSerializeFilter filter) {
 		getFilterManager().removeAfterSerializeFilter(filter);
 	}
 
@@ -78,12 +78,12 @@ public interface IFilterSupport extends IFilterManager{
 	}
 
 	@Override
-	default void addEventFilter(IEventFilter filter) {
+	default void addEventFilter(EventFilter filter) {
 		getFilterManager().addEventFilter(filter);
 	}
 
 	@Override
-	default void removeEventFilter(IEventFilter filter) {
+	default void removeEventFilter(EventFilter filter) {
 		getFilterManager().removeEventFilter(filter);
 	};
 	

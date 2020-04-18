@@ -7,7 +7,7 @@ import com.xzcode.ggcloud.session.group.common.constant.GGSesssionGroupConstant;
 import com.xzcode.ggcloud.session.group.common.group.manager.GGSessionGroupManager;
 import com.xzcode.ggserver.core.client.GGClient;
 import com.xzcode.ggserver.core.common.utils.RandomIdUtil;
-import com.xzcode.ggserver.core.server.IGGServer;
+import com.xzcode.ggserver.core.server.GGServer;
 
 import io.netty.channel.EventLoopGroup;
 
@@ -35,7 +35,7 @@ public class SessionGroupClientConfig {
 	protected boolean enableServiceServer;
 	
 	//业务客户端
-	protected IGGServer serviceServer;
+	protected GGServer serviceServer;
 	
 	//会话组管理器
 	protected GGSessionGroupManager sessionGroupManager;
@@ -198,11 +198,11 @@ public class SessionGroupClientConfig {
 		return enableServiceServer;
 	}
 	
-	public IGGServer getServiceServer() {
+	public GGServer getServiceServer() {
 		return serviceServer;
 	}
 	
-	public void setServiceServer(IGGServer serviceServer) {
+	public void setServiceServer(GGServer serviceServer) {
 		this.serviceServer = serviceServer;
 	}
 	

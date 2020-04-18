@@ -1,6 +1,6 @@
 package com.xzcode.ggserver.core.common.session;
 
-import com.xzcode.ggserver.core.common.event.IEventSupport;
+import com.xzcode.ggserver.core.common.event.EventSupport;
 import com.xzcode.ggserver.core.common.executor.support.IExecutorSupport;
 import com.xzcode.ggserver.core.common.future.IGGFuture;
 import com.xzcode.ggserver.core.common.message.response.support.ISessionSendMessageSupport;
@@ -14,7 +14,7 @@ import io.netty.channel.Channel;
  * 
  * @author zai 2019-11-16 23:35:39
  */
-public interface GGSession extends ISessionSendMessageSupport, IExecutorSupport, IEventSupport {
+public interface GGSession extends ISessionSendMessageSupport, IExecutorSupport, EventSupport {
 
 	/**
 	 * 添加属性

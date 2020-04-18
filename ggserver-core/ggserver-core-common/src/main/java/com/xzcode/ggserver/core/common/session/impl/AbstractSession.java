@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.xzcode.ggserver.core.common.config.GGConfig;
-import com.xzcode.ggserver.core.common.event.IEventManager;
-import com.xzcode.ggserver.core.common.executor.ITaskExecutor;
-import com.xzcode.ggserver.core.common.filter.IFilterManager;
+import com.xzcode.ggserver.core.common.event.EventManager;
+import com.xzcode.ggserver.core.common.executor.TaskExecutor;
+import com.xzcode.ggserver.core.common.filter.FilterManager;
 import com.xzcode.ggserver.core.common.future.GGFailedFuture;
 import com.xzcode.ggserver.core.common.future.GGNettyFuture;
 import com.xzcode.ggserver.core.common.future.IGGFuture;
@@ -85,12 +85,12 @@ public abstract class AbstractSession<C extends GGConfig> implements GGSession {
 	}
 
 	@Override
-	public IFilterManager getFilterManager() {
+	public FilterManager getFilterManager() {
 		return getConfig().getFilterManager();
 	}
 
 	@Override
-	public ITaskExecutor getTaskExecutor() {
+	public TaskExecutor getTaskExecutor() {
 		return getConfig().getTaskExecutor();
 	}
 
@@ -105,7 +105,7 @@ public abstract class AbstractSession<C extends GGConfig> implements GGSession {
 	}
 
 	@Override
-	public IEventManager getEventManagerImpl() {
+	public EventManager getEventManagerImpl() {
 		return getConfig().getEventManager();
 	}
 

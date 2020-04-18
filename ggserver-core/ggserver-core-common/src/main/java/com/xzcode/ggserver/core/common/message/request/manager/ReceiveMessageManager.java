@@ -4,11 +4,11 @@ import java.util.List;
 
 import com.xzcode.ggserver.core.common.message.MessageData;
 import com.xzcode.ggserver.core.common.message.request.action.MessageDataHandler;
-import com.xzcode.ggserver.core.common.message.request.handler.IRequestMessageHandlerInfo;
-import com.xzcode.ggserver.core.common.message.request.handler.RequestMessagerHandlerInfo;
+import com.xzcode.ggserver.core.common.message.request.handler.ReceiveMessageHandlerInfo;
+import com.xzcode.ggserver.core.common.message.request.handler.DefaultReceiveMessagerHandlerInfo;
 import com.xzcode.ggserver.core.common.utils.GenericClassUtil;
 
-public interface IRequestMessageManager {
+public interface ReceiveMessageManager {
 
 	/**
 	 * 调用被缓存的方法
@@ -28,7 +28,7 @@ public interface IRequestMessageManager {
 	 * @author zai
 	 * 2017-07-29
 	 */
-	void addMessageHandler(String action, IRequestMessageHandlerInfo receiveMessageHandler);
+	void addMessageHandler(String action, ReceiveMessageHandlerInfo receiveMessageHandler);
 
 	/**
 	 * 获取关联方法模型
@@ -38,7 +38,7 @@ public interface IRequestMessageManager {
 	 * @author zai
 	 * 2017-08-02
 	 */
-	IRequestMessageHandlerInfo getMessageHandler(String action);
+	ReceiveMessageHandlerInfo getMessageHandler(String action);
 
 	/**
 	 * 获取已注册的action名称集合
@@ -56,7 +56,7 @@ public interface IRequestMessageManager {
 	 * @author zai
 	 * 2019-10-23 16:40:34
 	 */
-	List<IRequestMessageHandlerInfo> getMappedInvokers();
+	List<ReceiveMessageHandlerInfo> getMappedInvokers();
 	
 	
 
@@ -71,7 +71,7 @@ public interface IRequestMessageManager {
 	 */
 	default <T> void onMessage(String actionId, MessageDataHandler<T> messageAcion) {
 		
-		RequestMessagerHandlerInfo handler = new RequestMessagerHandlerInfo();
+		DefaultReceiveMessagerHandlerInfo handler = new DefaultReceiveMessagerHandlerInfo();
 		handler.setHandler(messageAcion);
 		handler.setRequestTag(actionId);
 		Class<?> msgClass = GenericClassUtil.getGenericClass(messageAcion.getClass());

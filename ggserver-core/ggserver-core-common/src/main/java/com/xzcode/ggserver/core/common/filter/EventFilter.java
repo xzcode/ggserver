@@ -8,6 +8,6 @@ import com.xzcode.ggserver.core.common.event.model.EventData;
  * @author zai
  * 2019-12-25 15:02:37
  */
-public interface IEventFilter extends IFilter<EventData<?>>{
+public interface EventFilter extends Filter<EventData<?>>{
 
 }

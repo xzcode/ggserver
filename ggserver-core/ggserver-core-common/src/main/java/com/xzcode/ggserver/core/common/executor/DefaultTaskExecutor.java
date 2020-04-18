@@ -14,7 +14,7 @@ import io.netty.channel.DefaultEventLoopGroup;
 import io.netty.channel.EventLoopGroup;
 import io.netty.util.concurrent.ScheduledFuture;
 
-public class DefaultTaskExecutor implements ITaskExecutor{
+public class DefaultTaskExecutor implements TaskExecutor{
 	
 	protected EventLoopGroup executor;
 
@@ -86,7 +86,7 @@ public class DefaultTaskExecutor implements ITaskExecutor{
 	}
 
 	@Override
-	public ITaskExecutor nextEvecutor() {
+	public TaskExecutor nextEvecutor() {
 		return new DefaultTaskExecutor(executor.next());
 	}
 	@Override

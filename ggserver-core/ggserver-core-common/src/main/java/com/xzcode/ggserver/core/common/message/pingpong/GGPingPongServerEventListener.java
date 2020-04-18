@@ -2,7 +2,7 @@ package com.xzcode.ggserver.core.common.message.pingpong;
 
 import com.xzcode.ggserver.core.common.channel.DefaultChannelAttributeKeys;
 import com.xzcode.ggserver.core.common.config.GGConfig;
-import com.xzcode.ggserver.core.common.event.IEventListener;
+import com.xzcode.ggserver.core.common.event.EventListener;
 import com.xzcode.ggserver.core.common.event.model.EventData;
 import com.xzcode.ggserver.core.common.message.pingpong.model.GGPingPongInfo;
 
@@ -10,7 +10,7 @@ import io.netty.channel.Channel;
 import io.netty.util.AttributeKey;
 
 
-public class GGPingPongServerEventListener implements IEventListener<Void>{
+public class GGPingPongServerEventListener implements EventListener<Void>{
 	
 	protected GGConfig config;
 	

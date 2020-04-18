@@ -7,22 +7,22 @@ import com.xzcode.ggserver.core.common.event.model.EventData;
  * 
  * @author zai 2019-12-05 10:50:19
  */
-public interface IEventSupport extends IEventManager {
+public interface EventSupport extends EventManager {
 
-	IEventManager getEventManagerImpl();
+	EventManager getEventManagerImpl();
 
 	@Override
-	default <T> void addEventListener(String event, IEventListener<T> listener) {
+	default <T> void addEventListener(String event, EventListener<T> listener) {
 		getEventManagerImpl().addEventListener(event, listener);
 	}
 
 	@Override
-	default <T> void removeEventListener(String event, IEventListener<T> listener) {
+	default <T> void removeEventListener(String event, EventListener<T> listener) {
 		getEventManagerImpl().removeEventListener(event, listener);
 	}
 
 	@Override
-	default <T> boolean hasEventListener(String event, IEventListener<T> listener) {
+	default <T> boolean hasEventListener(String event, EventListener<T> listener) {
 		return getEventManagerImpl().hasEventListener(event, listener);
 	}
 
@@ -46,7 +46,7 @@ public interface IEventSupport extends IEventManager {
 	}
 
 	@Override
-	default <T> IEventListenerGroup<T> createEventListenerGroup() {
+	default <T> EventListenerGroup<T> createEventListenerGroup() {
 		return getEventManagerImpl().createEventListenerGroup();
 	}
 

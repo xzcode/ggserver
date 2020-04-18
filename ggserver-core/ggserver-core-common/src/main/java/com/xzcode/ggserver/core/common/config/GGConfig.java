@@ -4,12 +4,12 @@ import java.nio.charset.Charset;
 import java.util.concurrent.ThreadFactory;
 
 import com.xzcode.ggserver.core.common.constant.ProtocolTypeConstants;
-import com.xzcode.ggserver.core.common.event.IEventManager;
+import com.xzcode.ggserver.core.common.event.EventManager;
 import com.xzcode.ggserver.core.common.event.impl.DefaultEventManager;
 import com.xzcode.ggserver.core.common.executor.DefaultTaskExecutor;
-import com.xzcode.ggserver.core.common.executor.ITaskExecutor;
+import com.xzcode.ggserver.core.common.executor.TaskExecutor;
 import com.xzcode.ggserver.core.common.executor.thread.GGThreadFactory;
-import com.xzcode.ggserver.core.common.filter.IFilterManager;
+import com.xzcode.ggserver.core.common.filter.FilterManager;
 import com.xzcode.ggserver.core.common.filter.impl.DefaultFilterManager;
 import com.xzcode.ggserver.core.common.handler.codec.IDecodeHandler;
 import com.xzcode.ggserver.core.common.handler.codec.IEncodeHandler;
@@ -21,8 +21,8 @@ import com.xzcode.ggserver.core.common.handler.serializer.ISerializer;
 import com.xzcode.ggserver.core.common.handler.serializer.factory.SerializerFactory;
 import com.xzcode.ggserver.core.common.message.pingpong.model.GGPing;
 import com.xzcode.ggserver.core.common.message.pingpong.model.GGPong;
-import com.xzcode.ggserver.core.common.message.request.manager.IRequestMessageManager;
-import com.xzcode.ggserver.core.common.message.request.manager.RequestMessageManager;
+import com.xzcode.ggserver.core.common.message.request.manager.DefaultRequestMessageManager;
+import com.xzcode.ggserver.core.common.message.request.manager.ReceiveMessageManager;
 import com.xzcode.ggserver.core.common.session.factory.ChannelSessionFactory;
 import com.xzcode.ggserver.core.common.session.factory.DefaultChannelSessionFactory;
 import com.xzcode.ggserver.core.common.session.id.DefaultSessionIdGenerator;
@@ -98,15 +98,15 @@ public class GGConfig {
 
 	protected IReceivePackHandler receivePackHandler;
 
-	protected IRequestMessageManager requestMessageManager;
-	protected IFilterManager filterManager;
-	protected IEventManager eventManager;
+	protected ReceiveMessageManager requestMessageManager;
+	protected FilterManager filterManager;
+	protected EventManager eventManager;
 	protected ISessionManager sessionManager;
 
 	protected EventLoopGroup workerGroup;
 
 
-	protected ITaskExecutor taskExecutor;
+	protected TaskExecutor taskExecutor;
 
 	protected ThreadFactory workerGroupThreadFactory;
 
@@ -117,7 +117,7 @@ public class GGConfig {
 	protected PackLogger packLogger = new PackLogger(this);
 
 	public void init() {
-		requestMessageManager = new RequestMessageManager();
+		requestMessageManager = new DefaultRequestMessageManager();
 		filterManager = new DefaultFilterManager();
 		eventManager = new DefaultEventManager();
 
@@ -288,19 +288,19 @@ public class GGConfig {
 		this.serializerType = serializerType;
 	}
 
-	public IEventManager getEventManager() {
+	public EventManager getEventManager() {
 		return eventManager;
 	}
 
-	public void setEventManager(IEventManager eventManager) {
+	public void setEventManager(EventManager eventManager) {
 		this.eventManager = eventManager;
 	}
 
-	public IRequestMessageManager getRequestMessageManager() {
+	public ReceiveMessageManager getRequestMessageManager() {
 		return requestMessageManager;
 	}
 
-	public void setRequestMessageManager(IRequestMessageManager requestMessageManager) {
+	public void setRequestMessageManager(ReceiveMessageManager requestMessageManager) {
 		this.requestMessageManager = requestMessageManager;
 	}
 
@@ -320,11 +320,11 @@ public class GGConfig {
 		this.sessionManager = sessionManager;
 	}
 
-	public IFilterManager getFilterManager() {
+	public FilterManager getFilterManager() {
 		return filterManager;
 	}
 
-	public void setFilterManager(IFilterManager filterManager) {
+	public void setFilterManager(FilterManager filterManager) {
 		this.filterManager = filterManager;
 	}
 
@@ -336,11 +336,11 @@ public class GGConfig {
 		this.maxDataLength = maxDataLength;
 	}
 
-	public ITaskExecutor getTaskExecutor() {
+	public TaskExecutor getTaskExecutor() {
 		return taskExecutor;
 	}
 
-	public void setTaskExecutor(ITaskExecutor taskExecutor) {
+	public void setTaskExecutor(TaskExecutor taskExecutor) {
 		this.taskExecutor = taskExecutor;
 	}
 

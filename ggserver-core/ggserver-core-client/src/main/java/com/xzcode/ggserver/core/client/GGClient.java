@@ -3,7 +3,7 @@ package com.xzcode.ggserver.core.client;
 import com.xzcode.ggserver.core.client.config.GGClientConfig;
 import com.xzcode.ggserver.core.client.starter.IGGClientStarter;
 import com.xzcode.ggserver.core.client.starter.impl.DefaultClientStarter;
-import com.xzcode.ggserver.core.common.config.IGGConfigSupport;
+import com.xzcode.ggserver.core.common.config.GGConfigSupport;
 import com.xzcode.ggserver.core.common.control.IGGContolSupport;
 import com.xzcode.ggserver.core.common.future.IGGFuture;
 
@@ -15,7 +15,7 @@ import com.xzcode.ggserver.core.common.future.IGGFuture;
  */
 public class GGClient 
 implements 
-	IGGConfigSupport<GGClientConfig>,
+	GGConfigSupport<GGClientConfig>,
 	IGGContolSupport
 {
 	

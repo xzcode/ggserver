@@ -4,8 +4,8 @@ import java.util.concurrent.Future;
 
 import org.slf4j.Logger;
 
-import com.xzcode.ggserver.core.common.executor.ITaskExecutor;
-import com.xzcode.ggserver.core.common.filter.IFilterManager;
+import com.xzcode.ggserver.core.common.executor.TaskExecutor;
+import com.xzcode.ggserver.core.common.filter.FilterManager;
 import com.xzcode.ggserver.core.common.future.GGFailedFuture;
 import com.xzcode.ggserver.core.common.future.GGNettyFuture;
 import com.xzcode.ggserver.core.common.future.IGGFuture;
@@ -34,7 +34,7 @@ public interface ISessionSendMessageSupport extends IMakePackSupport {
 	 * @author zai
 	 * 2019-12-11 16:35:06
 	 */
-	IFilterManager getFilterManager();
+	FilterManager getFilterManager();
 
 	/**
 	 * 获取计划任务执行器
@@ -43,7 +43,7 @@ public interface ISessionSendMessageSupport extends IMakePackSupport {
 	 * @author zai
 	 * 2019-12-11 16:35:12
 	 */
-	ITaskExecutor getTaskExecutor();
+	TaskExecutor getTaskExecutor();
 
 	/**
 	 * 获取会话

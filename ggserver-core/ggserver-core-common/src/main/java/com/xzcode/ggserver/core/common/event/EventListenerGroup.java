@@ -2,13 +2,13 @@ package com.xzcode.ggserver.core.common.event;
 
 import com.xzcode.ggserver.core.common.event.model.EventData;
 
-public interface IEventListenerGroup<T> {
+public interface EventListenerGroup<T> {
 	
-	void addListener(IEventListener<T> listener);
+	void addListener(EventListener<T> listener);
 	
-	void removeListener(IEventListener<T> listener);
+	void removeListener(EventListener<T> listener);
 	
-	boolean hasListener(IEventListener<T> listener);
+	boolean hasListener(EventListener<T> listener);
 	
 	void onEvent(EventData<T> eventData);
 	

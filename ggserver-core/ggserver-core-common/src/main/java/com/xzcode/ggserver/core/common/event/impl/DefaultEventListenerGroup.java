@@ -3,8 +3,8 @@ package com.xzcode.ggserver.core.common.event.impl;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import com.xzcode.ggserver.core.common.event.IEventListener;
-import com.xzcode.ggserver.core.common.event.IEventListenerGroup;
+import com.xzcode.ggserver.core.common.event.EventListener;
+import com.xzcode.ggserver.core.common.event.EventListenerGroup;
 import com.xzcode.ggserver.core.common.event.model.EventData;
 import com.xzcode.ggserver.core.common.utils.logger.GGLoggerUtil;
 
@@ -15,26 +15,26 @@ import com.xzcode.ggserver.core.common.utils.logger.GGLoggerUtil;
  * @author zai
  * 2019-10-18 11:56:31
  */
-public class DefaultEventListenerGroup<T> implements IEventListenerGroup<T>{
+public class DefaultEventListenerGroup<T> implements EventListenerGroup<T>{
 	
-	protected List<IEventListener<T>> listeners = new CopyOnWriteArrayList<>();
+	protected List<EventListener<T>> listeners = new CopyOnWriteArrayList<>();
 	
 	
 
 	@Override
-	public void addListener(IEventListener<T> listener) {
+	public void addListener(EventListener<T> listener) {
 		listeners.add(listener);
 	}
 
 	@Override
-	public void removeListener(IEventListener<T> listener) {
+	public void removeListener(EventListener<T> listener) {
 		listeners.remove(listener);
 	}
 
 	
 
 	@Override
-	public boolean hasListener(IEventListener<T> listener) {
+	public boolean hasListener(EventListener<T> listener) {
 		return listeners.contains(listener);
 	}
 
@@ -45,7 +45,7 @@ public class DefaultEventListenerGroup<T> implements IEventListenerGroup<T>{
 
 	@Override
 	public void onEvent(EventData<T> eventData) {
-		for (IEventListener<T> li : listeners) {
+		for (EventListener<T> li : listeners) {
 			try {
 				li.onEvent(eventData);				
 			} catch (Exception e) {

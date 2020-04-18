@@ -1,11 +1,11 @@
 package com.xzcode.ggcloud.session.group.client.events;
 
 import com.xzcode.ggcloud.session.group.client.config.SessionGroupClientConfig;
-import com.xzcode.ggserver.core.common.event.IEventListener;
+import com.xzcode.ggserver.core.common.event.EventListener;
 import com.xzcode.ggserver.core.common.event.model.EventData;
 import com.xzcode.ggserver.core.common.session.manager.ISessionManager;
 
-public class ConnCloseEventListener implements IEventListener<Void>{
+public class ConnCloseEventListener implements EventListener<Void>{
 	
 	private SessionGroupClientConfig config;
 	

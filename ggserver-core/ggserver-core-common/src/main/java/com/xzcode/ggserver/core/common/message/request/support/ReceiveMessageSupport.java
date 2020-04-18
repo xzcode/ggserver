@@ -1,7 +1,7 @@
 package com.xzcode.ggserver.core.common.message.request.support;
 
 import com.xzcode.ggserver.core.common.message.request.action.MessageDataHandler;
-import com.xzcode.ggserver.core.common.message.request.manager.IRequestMessageManager;
+import com.xzcode.ggserver.core.common.message.request.manager.ReceiveMessageManager;
 
 /**
  * 消息发送接口
@@ -10,7 +10,7 @@ import com.xzcode.ggserver.core.common.message.request.manager.IRequestMessageMa
  * @author zai
  * 2019-02-09 14:50:27
  */
-public interface IRequestMessageSupport {
+public interface ReceiveMessageSupport {
 	
 	/**
 	 * 获取消息请求管理器
@@ -19,7 +19,7 @@ public interface IRequestMessageSupport {
 	 * @author zai
 	 * 2019-12-11 14:19:44
 	 */
-	IRequestMessageManager getRequestMessageManager();
+	ReceiveMessageManager getRequestMessageManager();
 	
 	
 

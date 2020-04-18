@@ -3,7 +3,7 @@ package com.xzcode.ggserver.core.common.executor.support;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
-import com.xzcode.ggserver.core.common.executor.ITaskExecutor;
+import com.xzcode.ggserver.core.common.executor.TaskExecutor;
 import com.xzcode.ggserver.core.common.executor.timeout.TimeoutTask;
 import com.xzcode.ggserver.core.common.future.IGGFuture;
 
@@ -14,7 +14,7 @@ import com.xzcode.ggserver.core.common.future.IGGFuture;
  * @author zai
  * 2019-12-01 16:15:52
  */
-public interface IExecutorSupport extends ITaskExecutor {
+public interface IExecutorSupport extends TaskExecutor {
 	
 	/**
 	 * 获取任务执行器
@@ -23,7 +23,7 @@ public interface IExecutorSupport extends ITaskExecutor {
 	 * @author zai
 	 * 2019-12-21 11:16:45
 	 */
-	ITaskExecutor getTaskExecutor();
+	TaskExecutor getTaskExecutor();
 
 	@Override
 	default IGGFuture submitTask(Runnable runnable) {
@@ -77,7 +77,7 @@ public interface IExecutorSupport extends ITaskExecutor {
 	}
 
 	@Override
-	default ITaskExecutor nextEvecutor() {
+	default TaskExecutor nextEvecutor() {
 		return getTaskExecutor().nextEvecutor();
 	}
 	

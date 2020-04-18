@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.xzcode.ggserver.core.common.event.model.EventData;
-import com.xzcode.ggserver.core.common.filter.IAfterSerializeFilter;
-import com.xzcode.ggserver.core.common.filter.IBeforeDeserializeFilter;
-import com.xzcode.ggserver.core.common.filter.IEventFilter;
-import com.xzcode.ggserver.core.common.filter.IFilterManager;
-import com.xzcode.ggserver.core.common.filter.IRequestFilter;
-import com.xzcode.ggserver.core.common.filter.IResponseFilter;
+import com.xzcode.ggserver.core.common.filter.AfterSerializeFilter;
+import com.xzcode.ggserver.core.common.filter.BeforeDeserializeFilter;
+import com.xzcode.ggserver.core.common.filter.EventFilter;
+import com.xzcode.ggserver.core.common.filter.FilterManager;
+import com.xzcode.ggserver.core.common.filter.ReceiveMessageFilter;
+import com.xzcode.ggserver.core.common.filter.SendMessageFilter;
 import com.xzcode.ggserver.core.common.message.MessageData;
 import com.xzcode.ggserver.core.common.message.Pack;
 
@@ -19,42 +19,42 @@ import com.xzcode.ggserver.core.common.message.Pack;
  * @author zai
  * 2019-12-25 15:08:41
  */
-public class DefaultFilterManager implements IFilterManager {
+public class DefaultFilterManager implements FilterManager {
 
-	private List<IBeforeDeserializeFilter> beforeDeserializeFilters = new ArrayList<>();
-	private List<IRequestFilter> requestFilters = new ArrayList<>();
-	private List<IResponseFilter> responseFilters = new ArrayList<>();
-	private List<IAfterSerializeFilter> afterSerializeFilters = new ArrayList<>();
-	private List<IEventFilter> eventFilters = new ArrayList<>();
+	private List<BeforeDeserializeFilter> beforeDeserializeFilters = new ArrayList<>();
+	private List<ReceiveMessageFilter> requestFilters = new ArrayList<>();
+	private List<SendMessageFilter> responseFilters = new ArrayList<>();
+	private List<AfterSerializeFilter> afterSerializeFilters = new ArrayList<>();
+	private List<EventFilter> eventFilters = new ArrayList<>();
 
 	public DefaultFilterManager() {
 		super();
 	}
 
 	@Override
-	public void addRequestFilter(IRequestFilter filter) {
+	public void addRequestFilter(ReceiveMessageFilter filter) {
 		requestFilters.add(filter);
 	}
 
 
 	@Override
-	public void addResponseFilter(IResponseFilter filter) {
+	public void addResponseFilter(SendMessageFilter filter) {
 
 		responseFilters.add(filter);
 	}
 	
 	@Override
-	public void addBeforeDeserializeFilter(IBeforeDeserializeFilter filter) {
+	public void addBeforeDeserializeFilter(BeforeDeserializeFilter filter) {
 		beforeDeserializeFilters.add(filter);
 	}
 	
 	@Override
-	public void addAfterSerializeFilter(IAfterSerializeFilter filter) {
+	public void addAfterSerializeFilter(AfterSerializeFilter filter) {
 		afterSerializeFilters.add(filter);
 	}
 	
 	@Override
-	public void addEventFilter(IEventFilter filter) {
+	public void addEventFilter(EventFilter filter) {
 		eventFilters.add(filter);
 		
 	}
@@ -64,36 +64,36 @@ public class DefaultFilterManager implements IFilterManager {
 	
 	
 	@Override
-	public void removeBeforeDeserializeFilter(IBeforeDeserializeFilter filter) {
+	public void removeBeforeDeserializeFilter(BeforeDeserializeFilter filter) {
 		beforeDeserializeFilters.remove(filter);
 	}
 
 	@Override
-	public void removeAfterSerializeFilter(IAfterSerializeFilter filter) {
+	public void removeAfterSerializeFilter(AfterSerializeFilter filter) {
 		afterSerializeFilters.remove(filter);
 	}
 
 
 	@Override
-	public void removeResponseFilter(IResponseFilter filter) {
+	public void removeResponseFilter(SendMessageFilter filter) {
 		responseFilters.remove(filter);
 	}
 
 
 	@Override
-	public void removeRequestFilter(IRequestFilter filter) {
+	public void removeRequestFilter(ReceiveMessageFilter filter) {
 		requestFilters.remove(filter);
 	}
 	
 	@Override
-	public void removeEventFilter(IEventFilter filter) {
+	public void removeEventFilter(EventFilter filter) {
 		eventFilters.remove(filter);
 		
 	}
 
 	@Override
 	public boolean doBeforeDeserializeFilters(Pack pack) {
-		for (IBeforeDeserializeFilter filter : beforeDeserializeFilters) {
+		for (BeforeDeserializeFilter filter : beforeDeserializeFilters) {
 			if (!filter.doFilter(pack)) {
 				return false;
 			}
@@ -103,7 +103,7 @@ public class DefaultFilterManager implements IFilterManager {
 
 	@Override
 	public boolean doAfterSerializeFilters(Pack pack) {
-		for (IAfterSerializeFilter filter : afterSerializeFilters) {
+		for (AfterSerializeFilter filter : afterSerializeFilters) {
 			if (!filter.doFilter(pack)) {
 				return false;
 			}
@@ -113,7 +113,7 @@ public class DefaultFilterManager implements IFilterManager {
 
 	@Override
 	public boolean doRequestFilters(MessageData<?> request) {
-		for (IRequestFilter filter : requestFilters) {
+		for (ReceiveMessageFilter filter : requestFilters) {
 			if (!filter.doFilter(request)) {
 				return false;
 			}
@@ -123,7 +123,7 @@ public class DefaultFilterManager implements IFilterManager {
 
 	@Override
 	public boolean doResponseFilters(MessageData<?> response) {
-		for (IResponseFilter filter : responseFilters) {
+		for (SendMessageFilter filter : responseFilters) {
 			if (!filter.doFilter(response)) {
 				return false;
 			}
@@ -133,7 +133,7 @@ public class DefaultFilterManager implements IFilterManager {
 	
 	@Override
 	public boolean doEventFilters(EventData<?> eventData) {
-		for (IEventFilter filter : eventFilters) {
+		for (EventFilter filter : eventFilters) {
 			if (!filter.doFilter(eventData)) {
 				return false;
 			}

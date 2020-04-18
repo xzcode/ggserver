@@ -9,7 +9,7 @@ import com.xzcode.ggserver.core.common.event.model.EventData;
  * @author zai
  * 2019-11-27 21:49:33
  */
-public interface IEventManager {
+public interface EventManager {
 	
 	/**
 	 * 发射事件
@@ -29,7 +29,7 @@ public interface IEventManager {
 	 * @author zai
 	 * 2019-12-05 10:50:46
 	 */
-	<T> void addEventListener(String event, IEventListener<T> listener);
+	<T> void addEventListener(String event, EventListener<T> listener);
 
 	/**
 	 * 移除事件监听
@@ -39,7 +39,7 @@ public interface IEventManager {
 	 * @author zai
 	 * 2019-12-05 10:50:55
 	 */
-	<T> void removeEventListener(String event, IEventListener<T> listener);
+	<T> void removeEventListener(String event, EventListener<T> listener);
 
 	/**
 	 * 是否存在事件监听
@@ -50,7 +50,7 @@ public interface IEventManager {
 	 * @author zai
 	 * 2019-12-05 10:51:04
 	 */
-	<T> boolean hasEventListener(String event, IEventListener<T> listener);
+	<T> boolean hasEventListener(String event, EventListener<T> listener);
 	
 	/**
 	 * 是否存在事件监听
@@ -87,6 +87,6 @@ public interface IEventManager {
 	 * @author zai
 	 * 2019-12-05 10:51:45
 	 */
-	<T> IEventListenerGroup<T> createEventListenerGroup();
+	<T> EventListenerGroup<T> createEventListenerGroup();
 
 }

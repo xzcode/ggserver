@@ -4,7 +4,7 @@ import java.nio.charset.Charset;
 
 import com.xzcode.ggserver.core.common.channel.DefaultChannelAttributeKeys;
 import com.xzcode.ggserver.core.common.config.GGConfig;
-import com.xzcode.ggserver.core.common.event.IEventListener;
+import com.xzcode.ggserver.core.common.event.EventListener;
 import com.xzcode.ggserver.core.common.event.model.EventData;
 import com.xzcode.ggserver.core.common.handler.serializer.ISerializer;
 import com.xzcode.ggserver.core.common.message.MessageData;
@@ -16,7 +16,7 @@ import io.netty.channel.Channel;
 import io.netty.util.AttributeKey;
 
 
-public class GGPingPongClientEventListener implements IEventListener<Void>, IMakePackSupport{
+public class GGPingPongClientEventListener implements EventListener<Void>, IMakePackSupport{
 	
 	protected GGConfig config;
 	

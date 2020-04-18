@@ -10,7 +10,7 @@ import com.xzcode.ggserver.core.common.message.Pack;
  * @author zai
  * 2019-12-25 15:05:30
  */
-public interface IFilterManager {
+public interface FilterManager {
 	
 
 	boolean doBeforeDeserializeFilters(Pack pack);
@@ -27,28 +27,28 @@ public interface IFilterManager {
 	
 	
 
-	void addBeforeDeserializeFilter(IBeforeDeserializeFilter filter);
+	void addBeforeDeserializeFilter(BeforeDeserializeFilter filter);
 
-	void addRequestFilter(IRequestFilter filter);
+	void addRequestFilter(ReceiveMessageFilter filter);
 
-	void addResponseFilter(IResponseFilter filter);
+	void addResponseFilter(SendMessageFilter filter);
 	
-	void addAfterSerializeFilter(IAfterSerializeFilter filter);
+	void addAfterSerializeFilter(AfterSerializeFilter filter);
 	
-	void addEventFilter(IEventFilter filter);
+	void addEventFilter(EventFilter filter);
 	
 	
 	
 
-	void removeBeforeDeserializeFilter(IBeforeDeserializeFilter filter);
+	void removeBeforeDeserializeFilter(BeforeDeserializeFilter filter);
 
-	void removeResponseFilter(IResponseFilter filter);
+	void removeResponseFilter(SendMessageFilter filter);
 
-	void removeRequestFilter(IRequestFilter filter);
+	void removeRequestFilter(ReceiveMessageFilter filter);
 
-	void removeAfterSerializeFilter(IAfterSerializeFilter filter);
+	void removeAfterSerializeFilter(AfterSerializeFilter filter);
 	
-	void removeEventFilter(IEventFilter filter);
+	void removeEventFilter(EventFilter filter);
 	
 	
 

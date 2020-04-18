@@ -2,16 +2,16 @@ package com.xzcode.ggserver.core.common.config;
 
 import java.nio.charset.Charset;
 
-import com.xzcode.ggserver.core.common.event.IEventManager;
-import com.xzcode.ggserver.core.common.event.IEventSupport;
-import com.xzcode.ggserver.core.common.executor.ITaskExecutor;
+import com.xzcode.ggserver.core.common.event.EventManager;
+import com.xzcode.ggserver.core.common.event.EventSupport;
+import com.xzcode.ggserver.core.common.executor.TaskExecutor;
 import com.xzcode.ggserver.core.common.executor.support.IExecutorSupport;
-import com.xzcode.ggserver.core.common.filter.IFilterManager;
-import com.xzcode.ggserver.core.common.filter.IFilterSupport;
+import com.xzcode.ggserver.core.common.filter.FilterManager;
+import com.xzcode.ggserver.core.common.filter.FilterSupport;
 import com.xzcode.ggserver.core.common.handler.serializer.ISerializer;
-import com.xzcode.ggserver.core.common.message.request.manager.IRequestMessageManager;
-import com.xzcode.ggserver.core.common.message.request.support.IRequestMessageSupport;
-import com.xzcode.ggserver.core.common.message.response.support.ISendMessageSupport;
+import com.xzcode.ggserver.core.common.message.request.manager.ReceiveMessageManager;
+import com.xzcode.ggserver.core.common.message.request.support.ReceiveMessageSupport;
+import com.xzcode.ggserver.core.common.message.response.support.SendMessageSupport;
 import com.xzcode.ggserver.core.common.session.manager.ISessionManager;
 
 /**
@@ -20,13 +20,13 @@ import com.xzcode.ggserver.core.common.session.manager.ISessionManager;
  * @param <C>
  * @author zai 2019-12-11 10:11:31
  */
-public interface IGGConfigSupport<C extends GGConfig> 
+public interface GGConfigSupport<C extends GGConfig> 
 extends
-ISendMessageSupport, 
-IRequestMessageSupport, 
-IFilterSupport, 
+SendMessageSupport, 
+ReceiveMessageSupport, 
+FilterSupport, 
 IExecutorSupport, 
-IEventSupport
+EventSupport
 
 {
 
@@ -43,15 +43,15 @@ IEventSupport
 		return getConfig().getSerializer();
 	}
 	@Override
-	default IEventManager getEventManagerImpl() {
+	default EventManager getEventManagerImpl() {
 		return getConfig().getEventManager();
 	}
 	@Override
-	default ITaskExecutor getTaskExecutor() {
+	default TaskExecutor getTaskExecutor() {
 		return getConfig().getTaskExecutor();
 	}
 	@Override
-	default IRequestMessageManager getRequestMessageManager() {
+	default ReceiveMessageManager getRequestMessageManager() {
 		return getConfig().getRequestMessageManager();
 	}
 
@@ -59,7 +59,7 @@ IEventSupport
 		return getConfig().getSessionManager();
 	}
 	@Override
-	default IFilterManager getFilterManager() {
+	default FilterManager getFilterManager() {
 		return getConfig().getFilterManager();
 	}
 	@Override

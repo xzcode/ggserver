@@ -7,7 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import com.xzcode.ggserver.core.common.message.MessageData;
-import com.xzcode.ggserver.core.common.message.request.handler.IRequestMessageHandlerInfo;
+import com.xzcode.ggserver.core.common.message.request.handler.ReceiveMessageHandlerInfo;
 import com.xzcode.ggserver.core.common.utils.logger.GGLoggerUtil;
 
 
@@ -17,9 +17,9 @@ import com.xzcode.ggserver.core.common.utils.logger.GGLoggerUtil;
  * @author zai
  * 2019-01-01 23:25:21
  */
-public class RequestMessageManager implements IRequestMessageManager {
+public class DefaultRequestMessageManager implements ReceiveMessageManager {
 
-	private final Map<String, IRequestMessageHandlerInfo> handlerMap = new ConcurrentHashMap<>();
+	private final Map<String, ReceiveMessageHandlerInfo> handlerMap = new ConcurrentHashMap<>();
 
 	/**
 	 * 调用被缓存的方法
@@ -32,7 +32,7 @@ public class RequestMessageManager implements IRequestMessageManager {
 	 */
 	@Override
 	public void handle(MessageData<?> request){
-		IRequestMessageHandlerInfo invoker = handlerMap.get(request.getAction());
+		ReceiveMessageHandlerInfo invoker = handlerMap.get(request.getAction());
 		if (invoker != null) {
 			try {
 				invoker.handle(request);
@@ -52,7 +52,7 @@ public class RequestMessageManager implements IRequestMessageManager {
 	 * 2017-07-29
 	 */
 	@Override
-	public void addMessageHandler(String action, IRequestMessageHandlerInfo receiveMessageHandler) {
+	public void addMessageHandler(String action, ReceiveMessageHandlerInfo receiveMessageHandler) {
 		if (handlerMap.containsKey(action)) {
 			throw new RuntimeException("Action '"+action+"' has been mapped!");
 		}
@@ -72,7 +72,7 @@ public class RequestMessageManager implements IRequestMessageManager {
 	 * 2017-08-02
 	 */
 	@Override
-	public IRequestMessageHandlerInfo getMessageHandler(String action){
+	public ReceiveMessageHandlerInfo getMessageHandler(String action){
 		return handlerMap.get(action);
 	}
 	
@@ -96,7 +96,7 @@ public class RequestMessageManager implements IRequestMessageManager {
 	 * 2019-10-23 16:40:34
 	 */
 	@Override
-	public List<IRequestMessageHandlerInfo> getMappedInvokers() {
+	public List<ReceiveMessageHandlerInfo> getMappedInvokers() {
 		return handlerMap.entrySet().stream().map(e -> e.getValue()).collect(Collectors.toList());
 	}
 

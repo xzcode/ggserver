@@ -1,6 +1,6 @@
 package com.xzcode.ggserver.core.common.message.response.support;
 
-import com.xzcode.ggserver.core.common.filter.IFilterManager;
+import com.xzcode.ggserver.core.common.filter.FilterManager;
 import com.xzcode.ggserver.core.common.future.IGGFuture;
 import com.xzcode.ggserver.core.common.message.MessageData;
 import com.xzcode.ggserver.core.common.message.Pack;
@@ -15,7 +15,7 @@ import com.xzcode.ggserver.core.common.utils.logger.GGLoggerUtil;
  * 
  * @author zai 2019-02-09 14:50:27
  */
-public interface ISendMessageSupport extends IMakePackSupport {
+public interface SendMessageSupport extends IMakePackSupport {
 	
 	/**
 	 * 获取会话管理器
@@ -33,7 +33,7 @@ public interface ISendMessageSupport extends IMakePackSupport {
 	 * @author zai
 	 * 2019-12-11 16:34:01
 	 */
-	IFilterManager getFilterManager();
+	FilterManager getFilterManager();
 
 
 	/**

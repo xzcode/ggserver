@@ -18,8 +18,8 @@ import com.xzcode.ggserver.core.client.GGClient;
 import com.xzcode.ggserver.core.client.config.GGClientConfig;
 import com.xzcode.ggserver.core.common.constant.ProtocolTypeConstants;
 import com.xzcode.ggserver.core.common.event.GGEvents;
-import com.xzcode.ggserver.core.common.event.IEventManager;
-import com.xzcode.ggserver.core.common.event.IEventSupport;
+import com.xzcode.ggserver.core.common.event.EventManager;
+import com.xzcode.ggserver.core.common.event.EventSupport;
 import com.xzcode.ggserver.core.common.executor.thread.GGThreadFactory;
 import com.xzcode.ggserver.core.common.handler.serializer.ISerializer;
 import com.xzcode.ggserver.core.common.message.response.support.IMakePackSupport;
@@ -30,7 +30,7 @@ import com.xzcode.ggserver.core.common.utils.logger.GGLoggerUtil;
  *
  * @author zai 2020-04-08 11:47:15
  */
-public class SessionGroupClient implements IEventSupport, IMakePackSupport{
+public class SessionGroupClient implements EventSupport, IMakePackSupport{
 
 	private SessionGroupClientConfig config;
 
@@ -153,7 +153,7 @@ public class SessionGroupClient implements IEventSupport, IMakePackSupport{
 
 
 	@Override
-	public IEventManager getEventManagerImpl() {
+	public EventManager getEventManagerImpl() {
 		return this.config.getSessionClient();
 	}
 
