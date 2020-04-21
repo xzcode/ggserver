@@ -20,6 +20,6 @@
 		<artifactId>ggserver-core-client</artifactId>
 		<version>${project.version}</version>
 	</dependency>
-  
+	
   </dependencies>
 </project>

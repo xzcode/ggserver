@@ -18,12 +18,12 @@ import xzcode.ggserver.core.common.message.request.action.IRequestMessageHandler
  * @author zai
  * 2019-10-04 14:29:53
  */
-public class RegisterRespHandler implements IRequestMessageHandler<AuthResp>{
+public class AuthRespHandler implements IRequestMessageHandler<AuthResp>{
 	
 	private GameMonitorClientConfig config;
 	
 
-	public RegisterRespHandler(GameMonitorClientConfig config) {
+	public AuthRespHandler(GameMonitorClientConfig config) {
 		super();
 		this.config = config;
 	}

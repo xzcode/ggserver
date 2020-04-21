@@ -9,8 +9,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import com.xzcode.ggserver.game.monitor.client.GameMonitorClient;
 import com.xzcode.ggserver.game.monitor.client.registry.RegistryInfo;
 import com.xzcode.ggserver.game.monitor.client.registry.RegistryManager;
-import com.xzcode.ggserver.game.monitor.common.constant.MonitorConstant;
-import com.xzcode.ggserver.game.monitor.common.service.ServiceManager;
+import com.xzcode.ggserver.game.monitor.common.constant.GameMonitorConstant;
+import com.xzcode.ggserver.game.monitor.common.data.GameDataManager;
 import com.xzcode.ggserver.game.monitor.common.util.DiscoveryServiceIdUtil;
 
 import xzcode.ggserver.core.client.GGClient;
@@ -44,7 +44,7 @@ public class GameMonitorClientConfig {
 	protected boolean 	pingPongEnabled = false;
 	
 	//服务管理器
-	protected ServiceManager serviceManager = new ServiceManager();
+	protected GameDataManager serviceManager = new GameDataManager();
 	
 	//注册中心信息
 	protected List<RegistryInfo> registries = new ArrayList<>();
@@ -62,7 +62,7 @@ public class GameMonitorClientConfig {
 	protected long tryRegisterInterval = 10L * 1000L;
 	
 	//验证token
-	protected String authToken = MonitorConstant.DEFAULT_AUTH_TOKEN;
+	protected String authToken = GameMonitorConstant.DEFAULT_AUTH_TOKEN;
 
 	//服务id
 	protected String serviceId = DiscoveryServiceIdUtil.newServiceId();
@@ -114,11 +114,11 @@ public class GameMonitorClientConfig {
 		this.ggclient = ggclient;
 	}
 
-	public ServiceManager getServiceManager() {
+	public GameDataManager getServiceManager() {
 		return serviceManager;
 	}
 
-	public void setServiceManager(ServiceManager serviceManager) {
+	public void setServiceManager(GameDataManager serviceManager) {
 		this.serviceManager = serviceManager;
 	}
 

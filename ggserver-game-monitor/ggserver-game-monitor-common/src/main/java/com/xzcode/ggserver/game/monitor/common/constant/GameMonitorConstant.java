@@ -1,7 +1,7 @@
 package com.xzcode.ggserver.game.monitor.common.constant;
 
 
-public interface MonitorConstant {
+public interface GameMonitorConstant {
 	
 	/**
 	 * 默认验证token

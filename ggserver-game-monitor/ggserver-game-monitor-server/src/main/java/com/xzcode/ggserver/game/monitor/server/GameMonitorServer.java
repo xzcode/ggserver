@@ -6,9 +6,7 @@ import com.xzcode.ggserver.game.monitor.common.message.req.DiscoveryServiceUpdat
 import com.xzcode.ggserver.game.monitor.server.config.GameMonitorServerConfig;
 import com.xzcode.ggserver.game.monitor.server.events.ConnActiveEventListener;
 import com.xzcode.ggserver.game.monitor.server.events.ConnCloseEventListener;
-import com.xzcode.ggserver.game.monitor.server.handler.RegisterReqHandler;
-import com.xzcode.ggserver.game.monitor.server.handler.ServiceListReqHandler;
-import com.xzcode.ggserver.game.monitor.server.handler.ServiceUpdateReqHandler;
+import com.xzcode.ggserver.game.monitor.server.handler.AuthReqHandler;
 
 import xzcode.ggserver.core.common.constant.ProtocolTypeConstants;
 import xzcode.ggserver.core.common.event.GGEvents;
@@ -44,9 +42,7 @@ public class GameMonitorServer {
 		
 		ggServer.addEventListener(GGEvents.Connection.CLOSED, new ConnCloseEventListener(config));
 		
-		ggServer.onMessage(AuthReq.ACTION, new RegisterReqHandler(config));
-		ggServer.onMessage(DiscoveryServiceListReq.ACTION, new ServiceListReqHandler(config));
-		ggServer.onMessage(DiscoveryServiceUpdateReq.ACTION, new ServiceUpdateReqHandler(config));
+		ggServer.onMessage(AuthReq.ACTION, new AuthReqHandler(config));
 		
 		ggServer.start();
 		

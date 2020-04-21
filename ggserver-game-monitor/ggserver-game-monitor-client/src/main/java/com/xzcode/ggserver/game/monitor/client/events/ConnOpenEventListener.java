@@ -1,8 +1,8 @@
 package com.xzcode.ggserver.game.monitor.client.events;
 
 import com.xzcode.ggserver.game.monitor.client.config.GameMonitorClientConfig;
+import com.xzcode.ggserver.game.monitor.common.data.ServiceInfo;
 import com.xzcode.ggserver.game.monitor.common.message.req.AuthReq;
-import com.xzcode.ggserver.game.monitor.common.service.ServiceInfo;
 
 import xzcode.ggserver.core.common.event.IEventListener;
 import xzcode.ggserver.core.common.event.model.EventData;

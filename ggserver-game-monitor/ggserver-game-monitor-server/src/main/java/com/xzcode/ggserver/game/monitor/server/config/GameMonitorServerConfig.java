@@ -1,7 +1,7 @@
 package com.xzcode.ggserver.game.monitor.server.config;
 
-import com.xzcode.ggserver.game.monitor.common.constant.MonitorConstant;
-import com.xzcode.ggserver.game.monitor.common.service.ServiceManager;
+import com.xzcode.ggserver.game.monitor.common.constant.GameMonitorConstant;
+import com.xzcode.ggserver.game.monitor.common.data.GameDataManager;
 
 import xzcode.ggserver.core.server.IGGServer;
 
@@ -21,13 +21,13 @@ public class GameMonitorServerConfig {
 	protected boolean 	printPingPongInfo = false;
 	
 	//服务管理器
-	private ServiceManager serviceManager = new ServiceManager();
+	private GameDataManager serviceManager = new GameDataManager();
 	
 	//服务端口
 	private int port = 19394;
 	
 	//认证token
-	private String authToken = MonitorConstant.DEFAULT_AUTH_TOKEN;
+	private String authToken = GameMonitorConstant.DEFAULT_AUTH_TOKEN;
 	
 	//客户端汇报周期(毫秒)
 	private long clientReportInterval = 30L * 1000L;
@@ -75,11 +75,11 @@ public class GameMonitorServerConfig {
 		this.server = server;
 	}
 	
-	public ServiceManager getServiceManager() {
+	public GameDataManager getServiceManager() {
 		return serviceManager;
 	}
 	
-	public void setServiceManager(ServiceManager serviceManager) {
+	public void setServiceManager(GameDataManager serviceManager) {
 		this.serviceManager = serviceManager;
 	}
 

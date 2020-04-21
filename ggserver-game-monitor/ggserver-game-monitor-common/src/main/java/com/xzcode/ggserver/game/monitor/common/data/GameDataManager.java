@@ -1,4 +1,4 @@
-package com.xzcode.ggserver.game.monitor.common.service;
+package com.xzcode.ggserver.game.monitor.common.data;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -7,10 +7,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.xzcode.ggserver.game.monitor.common.data.listener.IRegisterServiceListener;
+import com.xzcode.ggserver.game.monitor.common.data.listener.IUnregisterServiceListener;
+import com.xzcode.ggserver.game.monitor.common.data.listener.IUpdateServiceListener;
 import com.xzcode.ggserver.game.monitor.common.message.resp.DiscoveryAddServiceResp;
-import com.xzcode.ggserver.game.monitor.common.service.listener.IRegisterServiceListener;
-import com.xzcode.ggserver.game.monitor.common.service.listener.IUnregisterServiceListener;
-import com.xzcode.ggserver.game.monitor.common.service.listener.IUpdateServiceListener;
 
 import xzcode.ggserver.core.common.message.model.IMessage;
 import xzcode.ggserver.core.common.session.GGSession;
@@ -21,7 +21,7 @@ import xzcode.ggserver.core.common.session.GGSession;
  * @author zai
  * 2020-02-04 14:33:19
  */
-public class ServiceManager {
+public class GameDataManager {
 	
 	/**
 	 * 服务组集合

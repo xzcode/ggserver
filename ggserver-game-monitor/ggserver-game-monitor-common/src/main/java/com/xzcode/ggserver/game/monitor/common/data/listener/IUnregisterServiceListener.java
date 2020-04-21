@@ -1,6 +1,6 @@
-package com.xzcode.ggserver.game.monitor.common.service.listener;
+package com.xzcode.ggserver.game.monitor.common.data.listener;
 
-import com.xzcode.ggserver.game.monitor.common.service.ServiceInfo;
+import com.xzcode.ggserver.game.monitor.common.data.ServiceInfo;
 
 /**
  * 取消注册服务监听器接口

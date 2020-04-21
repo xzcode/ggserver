@@ -1,8 +1,8 @@
 package com.xzcode.ggserver.game.monitor.server.events;
 
+import com.xzcode.ggserver.game.monitor.common.data.ServiceInfo;
+import com.xzcode.ggserver.game.monitor.common.data.GameDataManager;
 import com.xzcode.ggserver.game.monitor.common.message.resp.DiscoveryServiceUnregisterResp;
-import com.xzcode.ggserver.game.monitor.common.service.ServiceInfo;
-import com.xzcode.ggserver.game.monitor.common.service.ServiceManager;
 import com.xzcode.ggserver.game.monitor.server.config.GameMonitorServerConfig;
 import com.xzcode.ggserver.game.monitor.server.constant.DiscoveryServerSessionKeys;
 
@@ -37,7 +37,7 @@ public class ConnCloseEventListener implements IEventListener<Void>{
 		resp.setServiceName(serviceInfo.getServiceName());
 		resp.setServiceId(serviceInfo.getServiceId());
 		
-		ServiceManager serviceManager = config.getServiceManager();
+		GameDataManager serviceManager = config.getServiceManager();
 		serviceManager.sendToAllServices(resp);
 		
 		GGLoggerUtil.getLogger(this).warn("Service unregristry! serviceName: {}, serviceId: {}", serviceInfo.getServiceName(), serviceInfo.getServiceId());

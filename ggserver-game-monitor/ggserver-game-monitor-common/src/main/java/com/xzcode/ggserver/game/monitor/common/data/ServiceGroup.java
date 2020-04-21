@@ -1,4 +1,4 @@
-package com.xzcode.ggserver.game.monitor.common.service;
+package com.xzcode.ggserver.game.monitor.common.data;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

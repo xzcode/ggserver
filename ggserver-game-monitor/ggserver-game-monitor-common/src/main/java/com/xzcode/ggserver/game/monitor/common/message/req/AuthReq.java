@@ -1,6 +1,6 @@
 package com.xzcode.ggserver.game.monitor.common.message.req;
 
-import com.xzcode.ggserver.game.monitor.common.service.ServiceInfo;
+import com.xzcode.ggserver.game.monitor.common.data.ServiceInfo;
 
 import xzcode.ggserver.core.common.message.model.IMessage;
 
