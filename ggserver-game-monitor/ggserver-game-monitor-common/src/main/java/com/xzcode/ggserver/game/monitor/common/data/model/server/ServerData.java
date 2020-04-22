@@ -122,5 +122,23 @@ public class ServerData {
 	public void setFileStoreInfos(List<FileStoreInfo> fileStoreInfos) {
 		this.fileStoreInfos = fileStoreInfos;
 	}
+
+	public List<NetworkInfo> getNetworkInfos() {
+		return networkInfos;
+	}
+
+	public void setNetworkInfos(List<NetworkInfo> networkInfos) {
+		this.networkInfos = networkInfos;
+	}
+
+	public Map<String, String> getCustomData() {
+		return customData;
+	}
+
+	public void setCustomData(Map<String, String> customData) {
+		this.customData = customData;
+	}
+	
+	
 	
 }

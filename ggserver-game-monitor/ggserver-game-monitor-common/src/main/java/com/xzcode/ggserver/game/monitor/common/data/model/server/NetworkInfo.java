@@ -1,13 +1,22 @@
 package com.xzcode.ggserver.game.monitor.common.data.model.server;
 
+/**
+ * 网络（网卡）信息
+ *
+ * @author zai
+ * 2020-04-22 14:12:40
+ */
 public class NetworkInfo {
 	
-	protected String name;
-	protected String mac;
+	protected String name;//网卡名称
+	
+	protected String displayName;//显示名称
+	protected int mtu;//Maximum Transmission Unit
+	protected String mac;//Media Access Control Address
 	protected String ipv4;
 	protected String ipv6;
-	protected long sendSpeed;
-	protected long receiveSpeed;
+	protected long currentUpload;//当前上行速度 bytes/s
+	protected long currentDownload;//当前下行发送速度 bytes/s
 	public String getName() {
 		return name;
 	}
@@ -32,17 +41,31 @@ public class NetworkInfo {
 	public void setIpv6(String ipv6) {
 		this.ipv6 = ipv6;
 	}
-	public long getSendSpeed() {
-		return sendSpeed;
+	
+	public String getDisplayName() {
+		return displayName;
 	}
-	public void setSendSpeed(long sendSpeed) {
-		this.sendSpeed = sendSpeed;
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
 	}
-	public long getReceiveSpeed() {
-		return receiveSpeed;
+	public long getCurrentUpload() {
+		return currentUpload;
 	}
-	public void setReceiveSpeed(long receiveSpeed) {
-		this.receiveSpeed = receiveSpeed;
+	public void setCurrentUpload(long currentUploadSpeed) {
+		this.currentUpload = currentUploadSpeed;
+	}
+	public long getCurrentDownload() {
+		return currentDownload;
+	}
+	public void setCurrentDownload(long currentdownloadSpeed) {
+		this.currentDownload = currentdownloadSpeed;
+	}
+	public int getMtu() {
+		return mtu;
+	}
+	
+	public void setMtu(int mtu) {
+		this.mtu = mtu;
 	}
 
 }
