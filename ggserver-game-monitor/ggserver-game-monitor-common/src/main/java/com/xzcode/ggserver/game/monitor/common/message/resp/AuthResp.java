@@ -3,11 +3,10 @@ package com.xzcode.ggserver.game.monitor.common.message.resp;
 import xzcode.ggserver.core.common.message.model.IMessage;
 
 /**
- * 客户端注册响应
- * 
- * 
+ * 认证响应
+ *
  * @author zai
- * 2019-10-04 16:44:38
+ * 2020-04-23 14:38:28
  */
 public class AuthResp implements IMessage{
 	
@@ -19,7 +18,7 @@ public class AuthResp implements IMessage{
 	}
 	
 	/**
-	 * 是否注册成功
+	 * 是否认证成功
 	 */
 	private boolean success;
 	

@@ -2,18 +2,13 @@ package com.xzcode.ggserver.game.monitor.client;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import com.xzcode.ggserver.game.monitor.client.config.GameMonitorClientConfig;
 import com.xzcode.ggserver.game.monitor.client.events.ConnCloseEventListener;
 import com.xzcode.ggserver.game.monitor.client.events.ConnOpenEventListener;
 import com.xzcode.ggserver.game.monitor.client.handler.AuthRespHandler;
 import com.xzcode.ggserver.game.monitor.client.listener.IClientRegisterSuccessListener;
-import com.xzcode.ggserver.game.monitor.client.registry.RegistryInfo;
-import com.xzcode.ggserver.game.monitor.common.data.ServiceInfo;
-import com.xzcode.ggserver.game.monitor.common.message.req.DiscoveryServiceListReq;
-import com.xzcode.ggserver.game.monitor.common.message.req.DiscoveryServiceUpdateReq;
+import com.xzcode.ggserver.game.monitor.common.message.req.GameServerRegisterReq;
 import com.xzcode.ggserver.game.monitor.common.message.resp.AuthResp;
 
 import xzcode.ggserver.core.client.GGClient;
@@ -32,7 +27,7 @@ public class GameMonitorClient {
 
 	public GameMonitorClient(GameMonitorClientConfig config) {
 		this.config = config;
-		this.config.setDiscoveryClient(this);
+		this.config.setGameMonitorClient(this);
 	}
 
 	public void start() {
@@ -54,83 +49,29 @@ public class GameMonitorClient {
 
 		connect();
 
-		startCheckTask();
-
-	}
-
-	/**
-	 * 启动检查任务
-	 * 
-	 * @author zai 2020-02-10 18:58:31
-	 */
-	public void startCheckTask() {
-		this.config.getTaskExecutor().scheduleWithFixedDelay(5, 10, TimeUnit.SECONDS, () -> {
-			checkAndUpdateService();
-		});
-	}
-
-	/**
-	 * 检查并更新服务信息到注册中心
-	 * 
-	 * @author zai 2020-02-10 19:00:52
-	 */
-	public void checkAndUpdateService() {
-		AtomicInteger extraDataUpdateTimes = config.getCustomDataUpdateTimes();
-		int times = extraDataUpdateTimes.get();
-		if (times > 0) {
-			this.updateService();
-			extraDataUpdateTimes.getAndAdd(-times);
-		}
 	}
 
 	public void connect() {
 		GGClient ggClient = config.getGGclient();
-		RegistryInfo registry = config.getRegistryManager().getRandomRegistry();
-		ggClient.connect(registry.getDomain(), registry.getPort()).addListener(f -> {
+		String host = config.getServerHost();
+		int port = config.getServerPort();
+		ggClient.connect(host, port).addListener(f -> {
 			if (!f.isSuccess()) {
 				// 连接失败，进行进行重连操作
-				GGLoggerUtil.getLogger(this).info("Monitor Client Connect Server[{}:{}] Failed!", registry.getDomain(),
-						registry.getPort());
+				GGLoggerUtil.getLogger(this).info("Game Monitor Client Connect Server[{}:{}] Failed!", host, port);
 				ggClient.schedule(config.getTryRegisterInterval(), () -> {
 					connect();
 				});
 				return;
 			}
-			GGLoggerUtil.getLogger(this).info("Monitor Client Connect Server[{}:{}] Successfully!",
-					registry.getDomain(), registry.getPort());
+			GGLoggerUtil.getLogger(this).info("Game Monitor Client Connect Server[{}:{}] Successfully!", host, port);
 		});
-	}
-
-	/**
-	 * 更新服务
-	 * 
-	 * @author zai 2020-02-04 17:11:08
-	 */
-	private void updateService() {
-		GGSession session = config.getSession();
-		if (session == null) {
-			return;
-		}
-		DiscoveryServiceUpdateReq req = new DiscoveryServiceUpdateReq();
-
-		ServiceInfo serviceInfo = new ServiceInfo();
-
-		serviceInfo.setRegion(config.getRegion());
-		serviceInfo.setZone(config.getZone());
-		serviceInfo.setServiceId(config.getServiceId());
-		serviceInfo.setServiceName(config.getServiceName());
-
-		serviceInfo.setCustomData(config.getCustomData());
-
-		req.setServiceInfo(serviceInfo);
-		session.send(req);
-
 	}
 
 	public void syncServiceInfos() {
 		GGSession session = config.getSession();
 		if (session != null) {
-			session.send(DiscoveryServiceListReq.DEFAULT_INSTANT);
+			session.send(GameServerRegisterReq.DEFAULT_INSTANT);
 		}
 	}
 

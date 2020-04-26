@@ -1,6 +1,6 @@
 package com.xzcode.ggserver.game.monitor.common.message.req;
 
-import com.xzcode.ggserver.game.monitor.common.data.ServiceInfo;
+import com.xzcode.ggserver.game.monitor.common.constant.GameMonitorConstant;
 
 import xzcode.ggserver.core.common.message.model.IMessage;
 
@@ -13,35 +13,20 @@ import xzcode.ggserver.core.common.message.model.IMessage;
  */
 public class AuthReq implements IMessage {
 	
-	public static final String ACTION = "GG.MONITOR.AUTH.REQ";
+	public static final String ACTION_ID = GameMonitorConstant.ACTION_ID_PREFIX + "AUTH.REQ";
 	
 	@Override
 	public String getActionId() {
-		return ACTION;
+		return ACTION_ID;
 	}
 	
 	//认证token
 	private String authToken;
 	
-	//服务信息
-	private ServiceInfo serviceInfo;
-	
 
 	public AuthReq() {
 	}
 
-	public AuthReq(ServiceInfo serviceInfo) {
-		this.serviceInfo = serviceInfo;
-	}
-
-	public ServiceInfo getServiceInfo() {
-		return serviceInfo;
-	}
-
-	public void setServiceInfo(ServiceInfo serviceInfo) {
-		this.serviceInfo = serviceInfo;
-	}
-	
 	public void setAuthToken(String authToken) {
 		this.authToken = authToken;
 	}
