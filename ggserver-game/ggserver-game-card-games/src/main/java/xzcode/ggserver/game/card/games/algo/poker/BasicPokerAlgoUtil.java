@@ -20,14 +20,42 @@ public class BasicPokerAlgoUtil extends BasicAlgoUtil{
 	/**
 	 * 扑克牌默认值
 	 */
-	public static final List<Integer> CARD_VAL_LIST = Arrays.asList(
-			101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113,//方块1 到 K
-			201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213,//梅花1 到 K
-			301, 302, 303, 304, 305, 306, 307, 308, 309, 310, 311, 312, 313,//红桃1 到 K
-			401, 402, 403, 404, 405, 406, 407, 408, 409, 410, 411, 412, 413,//黑桃1 到 K
-			501, //小王
-			502 //大王
-		);
+	
+	
+	public static final List<Integer> CARD_VAL_NO_JOKER_LIST_1 = Arrays.asList(
+		    101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113//方块1 到 K
+		  );
+		  
+		  public static final List<Integer> CARD_VAL_NO_JOKER_LIST_2 = Arrays.asList(
+		    201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213//梅花1 到 K
+		  );
+		  
+		  public static final List<Integer> CARD_VAL_NO_JOKER_LIST_3 = Arrays.asList(
+		    301, 302, 303, 304, 305, 306, 307, 308, 309, 310, 311, 312, 313//红桃1 到 K
+		  );
+		  
+		  public static final List<Integer> CARD_VAL_NO_JOKER_LIST_4 = Arrays.asList(
+		    401, 402, 403, 404, 405, 406, 407, 408, 409, 410, 411, 412, 413//黑桃1 到 K
+		  );
+		  
+		  public static final List<Integer> CARD_VAL_JOKER_LIST = Arrays.asList(
+		    501, //小王
+		    502 //大王
+		  );
+		  
+		  @SuppressWarnings("serial")
+		  public static final List<Integer> CARD_VAL_NO_JOKER_LIST = new ArrayList<Integer>() {{
+		    addAll(CARD_VAL_NO_JOKER_LIST_1);
+		    addAll(CARD_VAL_NO_JOKER_LIST_2);
+		    addAll(CARD_VAL_NO_JOKER_LIST_3);
+		    addAll(CARD_VAL_NO_JOKER_LIST_4);
+		  }};
+		  
+		  @SuppressWarnings("serial")
+		  public static final List<Integer> CARD_VAL_TOTAL_LIST = new ArrayList<Integer>() {{
+		    addAll(CARD_VAL_NO_JOKER_LIST);
+		    addAll(CARD_VAL_JOKER_LIST);
+		  }};
 	
 	
 	/**
@@ -38,7 +66,7 @@ public class BasicPokerAlgoUtil extends BasicAlgoUtil{
 	 * 2019-07-02 15:46:11
 	 */
 	public static List<Integer> getCardValList() {
-		return CARD_VAL_LIST;
+		return CARD_VAL_TOTAL_LIST;
 	}
 	
 	
